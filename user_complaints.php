@@ -149,7 +149,7 @@ $totalCount = $totalCountRow['total'];
 
     .table-bordered th,
     .table-bordered td {
-      border: 2px solid #dee2e6;
+      border-bottom: 2px solid #dee2e6;
     }
 
     .actions-column {
@@ -272,17 +272,17 @@ $totalCount = $totalCountRow['total'];
           $offset = ($page - 1) * $complaintsPerPage; // Assuming you have pagination
           ?>
 
-          <table id="complaints-table" class="table">
+          <table id="complaints-table" class="w-full">
             <thead class="thead">
-              <tr>
-                <th class="case-number">No.</th>
-                <th class="title-column">Title</th>
-                <th class="complainants-column">Complainants</th>
-                <th class="respondents-column">Respondents</th>
-                <th class="date-column">Date</th>
-                <th class="status-column">Status</th>
-                <th class="hearing-column">Hearing</th>
-                <th class="actions-column">Actions</th>
+            <tr class="flex w-full p-2 text-sm">
+                <th class="flex-1 mx-2 case-number">No.</th>
+                <th class="flex-1 mx-2 title-column">Title</th>
+                <th class="flex-1 mx-2 complainants-column">Complainants</th>
+                <th class="flex-1 mx-2 respondents-column">Respondents</th>
+                <th class="flex-1 mx-2 date-column">Date</th>
+                <th class="flex-1 mx-2 status-column">Status</th>
+                <th class="flex-1 mx-2 hearing-column">Hearing</th>
+                <th class="flex-1 mx-2 text-center actions-column">Actions</th>
               </tr>
             </thead>
 
@@ -302,23 +302,25 @@ $totalCount = $totalCountRow['total'];
 
                 // Check if the complaint is settled, pending, or unsettled
                 if ($isSettled) {
-                  $backgroundColor = '#dcfadf'; // Light green for settled cases
+                  $borderColor = 'border-2 border-green-500'; // Light green for settled cases
                 } elseif ($elapsedDays >= 10 && $elapsedDays <= 13) {
-                  $backgroundColor = '#FFE181'; // Light yellow for cases between 10 and 13 days
+                  $borderColor = 'border-2 border-yellow-500'; // Light yellow for cases between 10 and 13 days
                 } elseif ($elapsedDays >= 14 && $elapsedDays <= 30 && !$isSettled) {
-                  $backgroundColor = '#F88D96'; // Light red for cases between 14 and 30 days that are not settled
+                  $borderColor = 'border-2 border-red-500'; // Light red for cases between 14 and 30 days that are not settled
                 } else {
                   // Default case for 1-9 days or cases over 30 days, no color
-                  $backgroundColor = '';
+                  $borderColor = 'border-1';
                 }
                 ?>
-                <tr style="background-color: <?= $backgroundColor ?>">
-                  <td class="case-number"><?= str_pad($row['CNum'], 11, '0', STR_PAD_LEFT) ?></td>
-                  <td class="title-column" style="white-space: pre-line;"><?= $row['ForTitle'] ?></td>
-                  <td class="complainants-column" style="white-space: pre-line;"><?= $row['CNames'] ?></td>
-                  <td class="respondents-column" style="white-space: pre-line;"><?= $row['RspndtNames'] ?></td>
-                  <td class="date-column"><?= date('Y-m-d', strtotime($row['Mdate'])) ?></td>
-                  <td class="status-column" style="white-space: nowrap;"><?= $row['CMethod'] ?></td>
+               
+               <tr class="flex w-full p-2 text-sm <?= $borderColor ?>">
+                 
+                  <td class="flex-1 mx-2 case-number"><?= str_pad($row['CNum'], 11, '0', STR_PAD_LEFT) ?></td>
+                  <td class="flex-1 mx-2 title-column" style="white-space: pre-line;"><?= $row['ForTitle'] ?></td>
+                  <td class="flex-1 mx-2 complainants-column" style="white-space: pre-line;"><?= $row['CNames'] ?></td>
+                  <td class="flex-1 mx-2 respondents-column" style="white-space: pre-line;"><?= $row['RspndtNames'] ?></td>
+                  <td class="flex-1 mx-2 date-column"><?= date('Y-m-d', strtotime($row['Mdate'])) ?></td>
+                  <td class="flex-1 mx-2 status-column" style="white-space: nowrap;"><?= $row['CMethod'] ?></td>
 
                   <!-- for hearing column table -->
                   <?php
@@ -327,7 +329,7 @@ $totalCount = $totalCountRow['total'];
                   $caseProgressResult = $conn->query($caseProgressQuery);
                   $caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
                   ?>
-                  <td class="hearing-column" style="white-space: nowrap;">
+                  <td class="flex-1 mx-2 hearing-column" style="white-space: nowrap;">
                     <?php if ($caseProgressRow): ?>
                       <?php $currentHearing = $caseProgressRow['current_hearing']; ?>
                       <?php if ($currentHearing === '0'): ?>
@@ -342,7 +344,7 @@ $totalCount = $totalCountRow['total'];
                   </td>
                   <!-- ----------------------------------- -->
 
-                  <td class="actions-column">
+                  <td class="flex-1 mx-2 actions-column">
                     <a
                       href="user_edit_complaint.php?id=<?= $row['id'] ?>&page=<?= $page ?>"
                       class="btn btn-sm btn-secondary"
