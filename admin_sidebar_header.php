@@ -9,8 +9,6 @@ $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 $stmt->execute();
 $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$_SESSION['test'] = $admin;
-
 function isActive($path)
 {
   $currentPage = basename($_SERVER['SCRIPT_NAME']);

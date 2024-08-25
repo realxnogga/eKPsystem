@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 include 'connection.php';
 $userId = $_SESSION['user_id'];
@@ -54,23 +54,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) 
             $error = $existingSecurity ? "Failed to update Security Questions. Please try again." : "Failed to add Security Questions. Please try again.";
         }
     }
-    
-  if ($usertype === "user") {
-         header('Location: user_setting.php');
-         exit();
-}
-        elseif ($usertype === "superadmin") {
-    header('Location: sa_setting.php');
-    exit();
-        }
-        elseif($usertype === "admin"){
-      header('Location: admin_setting.php');
-    exit();
 
-        }
-        
-       
+    if ($usertype === "user") {
+        header('Location: user_setting.php');
+        exit();
+    } elseif ($usertype === "superadmin") {
+        header('Location: sa_setting.php');
+        exit();
+    } elseif ($usertype === "admin") {
+        header('Location: admin_setting.php');
+        exit();
+    }
+
+
     exit();
 }
-
-?>

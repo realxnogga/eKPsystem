@@ -176,3 +176,5 @@ function isActive($path)
     </ul>
   </div>
 </aside>
+
+<?php include "user_security_question_modal.php"; ?>

@@ -4,38 +4,38 @@ include 'connection.php';
 session_start(); // Starting the session
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
+  $email = $_POST['email'];
 
-    // Check if the email exists in 'users' table
-    $check_email_query = "SELECT * FROM users WHERE email = :email";
-    $stmt = $conn->prepare($check_email_query);
-    $stmt->bindParam(':email', $email);
+  // Check if the email exists in 'users' table
+  $check_email_query = "SELECT * FROM users WHERE email = :email";
+  $stmt = $conn->prepare($check_email_query);
+  $stmt->bindParam(':email', $email);
+  $stmt->execute();
+  $user_row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  if (!$user_row) {
+    echo "This email is not yet registered into the system. Please check your spelling.";
+  } else {
+    $user_id = $user_row['id'];
+
+    // Check if security questions exist for the user
+    $check_security_query = "SELECT * FROM security WHERE user_id = :user_id";
+    $stmt = $conn->prepare($check_security_query);
+    $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
-    $user_row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $security_row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$user_row) {
-        echo "This email is not yet registered into the system. Please check your spelling.";
+    if (!$security_row) {
+      echo "This user has not yet set their Security Questions, therefore unable to reset the password. Please request an admin to reset your password.";
     } else {
-        $user_id = $user_row['id'];
+      // Storing user_id in session
+      $_SESSION['user_id'] = $user_id;
 
-        // Check if security questions exist for the user
-        $check_security_query = "SELECT * FROM security WHERE user_id = :user_id";
-        $stmt = $conn->prepare($check_security_query);
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->execute();
-        $security_row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$security_row) {
-            echo "This user has not yet set their Security Questions, therefore unable to reset the password. Please request an admin to reset your password.";
-        } else {
-            // Storing user_id in session
-            $_SESSION['user_id'] = $user_id;
-
-            // Redirecting without user_id in URL
-            header("Location: verify_account.php");
-            exit;
-        }
+      // Redirecting without user_id in URL
+      header("Location: verify_account.php");
+      exit;
     }
+  }
 }
 ?>
 
@@ -65,23 +65,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
                 </a>
                 <div class="text-center">
-    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle"><br><br>
-    <b><h5 class="card-title mb-9 fw-semibold">Forgot Password</h5></b>
-</div>
+                  <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle"><br><br>
+                  <b>
+                    <h5 class="card-title mb-9 fw-semibold">Forgot Password</h5>
+                  </b>
+                </div>
 
-                
-<form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-        <input type="email" class="form-control" placeholder="Email" name="email" required><br>
-        <input type="submit" class="btn btn-primary w-100" value="Search">
-    </form> 
 
-       </div>
+                <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+                  <input type="email" class="form-control" placeholder="Email" name="email" required><br>
+                  <input type="submit" class="btn btn-primary w-100" value="Search">
+                </form>
               </div>
+              <a href="login.php" style="padding: 2rem;">Back to Login</a>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
   </div>
   <script src="assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
