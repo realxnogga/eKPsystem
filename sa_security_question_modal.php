@@ -1,5 +1,7 @@
 
 
+
+
 <?php
 include "connection.php";
 
@@ -13,6 +15,7 @@ $stmt->execute();
 $isModalHidden = ($stmt->rowCount() > 0) ? "hidden" : "flex";
 
 // ----------------------
+
 
 // Fetch the user's security questions from the database
 $stmt = $conn->prepare("SELECT question1, question2, question3 FROM security WHERE user_id = :user_id");

@@ -38,7 +38,7 @@ if ($securityQuestions) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Settings</title>
-  <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
   <link rel="stylesheet" href="assets/css/styles.min.css" />
 
 </head>
@@ -126,7 +126,7 @@ if ($securityQuestions) {
               <!-- Yearly Breakup -->
               <div class="card overflow-hidden">
                 <div class="card-body p-4">
-                  <h5 class="card-title mb-9 fw-semibold">Security Settings</h5>
+                  <h5 class="card-title mb-9 fw-semibold">Update Security Settings</h5>
                   <hr>
 
                   <form id="securityForm" method="post" action="security_handler.php">

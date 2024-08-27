@@ -8,6 +8,8 @@ $message = '';
 $error = '';
 $usertype = $_SESSION['user_type'];
 
+$isFirstTimeToAddSecurity = null;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) {
     // Get security question values
     $question1 = isset($_POST['question1']) ? $_POST['question1'] : '';
@@ -34,10 +36,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) 
         if (!$existingSecurity) {
             $insertSecurityStmt = $conn->prepare("INSERT INTO security (user_id, question1, answer1, question2, answer2, question3, answer3) VALUES (:user_id, :question1, :answer1, :question2, :answer2, :question3, :answer3)");
             $insertSecurityStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+
+            $isFirstTimeToAddSecurity = true;
         } else {
             // Update security questions and answers for an existing row
             $insertSecurityStmt = $conn->prepare("UPDATE security SET question1 = :question1, answer1 = :answer1, question2 = :question2, answer2 = :answer2, question3 = :question3, answer3 = :answer3 WHERE user_id = :user_id");
             $insertSecurityStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+
+            $isFirstTimeToAddSecurity = false;
         }
 
         // Bind parameters and execute query
@@ -55,17 +61,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) 
         }
     }
 
-    if ($usertype === "user") {
-        header('Location: user_setting.php');
-        exit();
-    } elseif ($usertype === "superadmin") {
-        header('Location: sa_setting.php');
-        exit();
-    } elseif ($usertype === "admin") {
-        header('Location: admin_setting.php');
-        exit();
+    switch ($usertype) {
+        case "user":
+            $isFirstTimeToAddSecurity ? header('Location: user_dashboard.php') : header('Location: user_setting.php');
+            break;
+        case "superadmin":
+            $isFirstTimeToAddSecurity ? header('Location: sa_dashboard.php') : header('Location: sa_setting.php');
+            break;
+        case "admin":
+            $isFirstTimeToAddSecurity ? header('Location: admin_dashboard.php') : header('Location: admin_setting.php');
+            break;
     }
-
 
     exit();
 }

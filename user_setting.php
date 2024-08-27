@@ -174,7 +174,7 @@ function uploadFile($file, $directory)
               <!-- Yearly Breakup -->
               <div class="card overflow-hidden">
                 <div class="card-body p-4">
-                  <h5 class="card-title mb-9 fw-semibold">Security Settings</h5>
+                  <h5 class="card-title mb-9 fw-semibold">Update Security Settings</h5>
                   <hr>
                   <form id="securityForm" method="post" action="security_handler.php">
                     <div class="tab-pane fade <?php echo !isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-security">
