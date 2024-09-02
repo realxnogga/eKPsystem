@@ -6,7 +6,7 @@ function populateSecondDropdown() {
       secondDropdown.innerHTML = "";
       
       if (selectedOption === "Alaminos") {
-        var barangays = ["Alos", "Palamis", "Amandiego", "Pandan", "Amangbangan", "Pangapisan", "Balangobong", "Poblacion", "Balayang", "Pocal-pocal", "Baleyadaan", "Pogo", "Bisocol", "Polo", "Bolaney", "Quibuar", "Bued", "Sabangan", "Cabatuan", "San Antonio", "Cayucay", "San Jose", "Dulacac", "San Roque", "Inerangan", "San Vicente", "Landoc", "Sta Maria", "Linmansangan", "Tanaytay", "Lucap", "Tangcarang", "Maawi", "Tawin-tawin", "Macatiw", "Telbang", "Magsaysay", "Victoria", "Mona"];
+        var barangays = ["Alos", "Palamis", "Amandiego", "Pandan", "Amangbangan", "Pangapisan", "Balangobong", "Poblacion(Alaminos)", "Balayang", "Pocal-pocal", "Baleyadaan", "Pogo", "Bisocol", "Polo", "Bolaney", "Quibuar", "Bued", "Sabangan", "Cabatuan", "San Antonio", "Cayucay", "San Jose", "Dulacac", "San Roque", "Inerangan", "San Vicente", "Landoc", "Sta Maria", "Linmansangan", "Tanaytay", "Lucap", "Tangcarang", "Maawi", "Tawin-tawin", "Macatiw", "Telbang", "Magsaysay", "Victoria", "Mona"];
         
         for (var i = 0; i < barangays.length; i++) {
           var option = document.createElement("option");
@@ -16,7 +16,7 @@ function populateSecondDropdown() {
         }
 
       } else if (selectedOption === "Bay") {
-        var barangays = ["Bitin", "Calo", "Dila", "Maitim", "Masaya", "Paciano Rizal", "Puypuy", "San Antonio", "San Isidro", "Santa Cruz", "Santo Domingo", "Tagumpay", "Tranca", "San Agustin (Poblacion)", "San Nicolas (Poblacion)"];
+        var barangays = ["Bitin", "Calo", "Dila", "Maitim", "Masaya", "Paciano Rizal", "Puypuy", "San Antonio", "San Isidro(Bay)", "Santa Cruz", "Santo Domingo", "Tagumpay", "Tranca", "San Agustin (Poblacion)", "San Nicolas (Poblacion)"];
         
         for (var i = 0; i < barangays.length; i++) {
           var option = document.createElement("option");
@@ -25,7 +25,7 @@ function populateSecondDropdown() {
           secondDropdown.add(option);
         }
       } else if (selectedOption === "Binan") {
-        var barangays = ["Biñan", "Bungahan", "Santo Tomas (Calabuso)", "Canlalay", "Casile", "De La Paz", "Ganado", "San Francisco (Halang)", "Langkiwa", "Loma", "Malaban", "Malamig", "Mampalasan (Mamplasan)", "Platero", "Poblacion", "Santo Niño", "San Antonio", "San Jose", "San Vicente", "Soro-soro", "Santo Domingo", "Timbao", "Tubigan", "Zapote"];
+        var barangays = ["Biñan", "Bungahan", "Santo Tomas (Calabuso)", "Canlalay", "Casile", "De La Paz", "Ganado", "San Francisco (Halang)", "Langkiwa", "Loma", "Malaban", "Malamig", "Mampalasan (Mamplasan)", "Platero", "Poblacion(Biñan)", "Santo Niño", "San Antonio", "San Jose", "San Vicente", "Soro-soro", "Santo Domingo", "Timbao", "Tubigan", "Zapote"];
         
         for (var i = 0; i < barangays.length; i++) {
           var option = document.createElement("option");
@@ -34,7 +34,7 @@ function populateSecondDropdown() {
           secondDropdown.add(option);
         }
       } else if (selectedOption === "Cabuyao") {
-        var barangays = ["Baclaran", "Banaybanay", "Banlic", "Bigaa", "Butong", "Casile", "Diezmo", "Gulod", "Mamatid", "Marinig", "Niugan", "Pittland", "Poblacion Uno", "Poblacion Dos", "Poblacion Tres", "Pulo", "Sala", "San Isidro"];
+        var barangays = ["Baclaran", "Banaybanay", "Banlic", "Bigaa", "Butong", "Casile", "Diezmo", "Gulod", "Mamatid", "Marinig", "Niugan", "Pittland", "Poblacion Uno", "Poblacion Dos", "Poblacion Tres", "Pulo", "Sala", "San Isidro(Cabuyao)"];
         
         for (var i = 0; i < barangays.length; i++) {
           var option = document.createElement("option");
@@ -43,7 +43,7 @@ function populateSecondDropdown() {
           secondDropdown.add(option);
         }
       } else if (selectedOption === "Calauan") {
-        var barangays = ["Balayhangin", "Bangyas", "Dayap", "Hanggan", "Imok", "Lamot 1", "Lamot 2", "Limao", "Mabacan", "Masiit", "Paliparan", "Pérez", "Kanluran (Poblacion)", "Silangan (Poblacion)", "Prinza", "San Isidro", "Santo Tomas"];
+        var barangays = ["Balayhangin", "Bangyas", "Dayap", "Hanggan", "Imok", "Lamot 1", "Lamot 2", "Limao", "Mabacan", "Masiit", "Paliparan", "Pérez", "Kanluran (Poblacion)", "Silangan (Poblacion)", "Prinza", "San Isidro(Calauan)", "Santo Tomas"];
         
         for (var i = 0; i < barangays.length; i++) {
           var option = document.createElement("option");
@@ -79,7 +79,7 @@ function populateSecondDropdown() {
           secondDropdown.add(option);
         }
       } else if (selectedOption === "San Pedro") {
-        var barangays = ["Bagong Silang", "Calendola", "Chrysanthemum[a]", "Cuyab", "Estrella", "Fatima[a]", "G.S.I.S.", "Landayan", "Langgam", "Laram", "Maharlika[a]", "Magsaysay", "Narra", "Nueva", "Pacita 1[a]", "Pacita 2[a]", "Poblacion", "Riverside", "Rosario[a]", "Sampaguita Village", "San Antonio", "San Roque", "San Vicente", "San Lorenzo Ruiz[a]", "Santo Niño", "United Bayanihan", "United Better Living"];
+        var barangays = ["Bagong Silang", "Calendola", "Chrysanthemum[a]", "Cuyab", "Estrella", "Fatima[a]", "G.S.I.S.", "Landayan", "Langgam", "Laram", "Maharlika[a]", "Magsaysay", "Narra", "Nueva", "Pacita 1[a]", "Pacita 2[a]", "Poblacion(San Pedro)", "Riverside", "Rosario[a]", "Sampaguita Village", "San Antonio", "San Roque", "San Vicente", "San Lorenzo Ruiz[a]", "Santo Niño", "United Bayanihan", "United Better Living"];
         
         for (var i = 0; i < barangays.length; i++) {
           var option = document.createElement("option");
