@@ -213,7 +213,9 @@ include 'add_handler.php';
         "Violation of P.D. No. 1612 or the Anti-Fencing Law",
         "Violation of Republic Act No. 11313 or 'The Safe Spaces Act' Gender-based sexual harassment in streets and public spaces.",
         "Others",
-
+        "Sample tagalog1",
+        "Sample tagalog2",
+        "Sample tagalog3",
       ];
 
       // Initialize Select2
