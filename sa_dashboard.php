@@ -1,10 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-// include('header.php');
 
-//include 'superadmin-navigation.php';
-// include 'admin-nav.php';
 include 'functions.php';
 
 // Check if the user is a superadmin

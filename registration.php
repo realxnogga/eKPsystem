@@ -89,7 +89,7 @@ include 'functions.php';
                         <option value="Los Baños">Los Baños</option>
                         <option value="San Pablo">San Pablo</option>
                         <option value="San Pedro">San Pedro</option>
-                        <option value="Sta Rosa">Sta. Rosa</option>
+                        <option value="Sta Rosa">Sta Rosa</option>
                       </select>
                       <?php if (isset($errors['municipality'])): ?>
                         <p style="color: red; font-style: italic;"><?php echo $errors['municipality']; ?></p>
