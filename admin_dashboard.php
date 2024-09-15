@@ -2,7 +2,6 @@
 session_start();
 
 include 'connection.php';
-//include 'admin-navigation.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
   header("Location: login.php");
@@ -38,7 +37,7 @@ if ($action_submitted) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Secretaries Corner</title>
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
   <style>

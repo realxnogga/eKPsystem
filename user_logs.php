@@ -35,7 +35,7 @@ if (isset($_POST['view_logs'])) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>User Logs</title>
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

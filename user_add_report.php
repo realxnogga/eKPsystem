@@ -8,7 +8,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   exit;
 }
 
-
 $user_id = $_SESSION['user_id'] ?? '';
 $barangay_id = $_SESSION['barangay_id'] ?? '';
 
@@ -58,15 +57,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     // Report already exists for the specified month and year
     $message = "A report already exists for " . date('F Y', strtotime($report_date));
   } else {
+
     // Insert new row into the reports table
-    $insert_query = "INSERT INTO reports (user_id, barangay_id, report_date, mayor, region, budget, population, totalcase, numlupon, male, female, landarea, criminal, civil, others, totalNature, media, concil, arbit, totalSet, pending, dismissed, repudiated, certcourt, dropped, totalUnset, outsideBrgy)
-                         VALUES (:user_id, :barangay_id, :report_date, :mayor, :region, :budget, :population, :totalcase, :numlupon, :male, :female, :landarea, :criminal, :civil, :others, :totalNature, :media, :concil, :arbit, :totalSet, :pending, :dismissed, :repudiated, :certcourt, :dropped, :totalUnset, :outsideBrgy)";
+    $insert_query = "INSERT INTO reports (user_id, barangay_id, report_date, mayor, region, municipality, budget, population, totalcase, numlupon, male, female, landarea, criminal, civil, others, totalNature, media, concil, arbit, totalSet, pending, dismissed, repudiated, certcourt, dropped, totalUnset, outsideBrgy)
+                         VALUES (:user_id, :barangay_id, :report_date, :mayor, :region, :municipality, :budget, :population, :totalcase, :numlupon, :male, :female, :landarea, :criminal, :civil, :others, :totalNature, :media, :concil, :arbit, :totalSet, :pending, :dismissed, :repudiated, :certcourt, :dropped, :totalUnset, :outsideBrgy)";
     $stmt = $conn->prepare($insert_query);
     $stmt->bindParam(':user_id', $user_id);
     $stmt->bindParam(':barangay_id', $barangay_id);
     $stmt->bindParam(':report_date', $report_date);
     $stmt->bindParam(':mayor', $mayor);
     $stmt->bindParam(':region', $region);
+    $stmt->bindParam(':municipality', $_SESSION['municipality_name']); // add this for municipality
     $stmt->bindParam(':budget', $budget);
     $stmt->bindParam(':population', $population);
     $stmt->bindParam(':totalcase', $totalcase);
@@ -108,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reports</title>
   <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
   <style>
     .card {
       box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);

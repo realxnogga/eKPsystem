@@ -31,7 +31,9 @@ function isActive($path)
   });
 </script>
 
-<!-- <link rel="stylesheet" href="assets/css/styles.min.css" /> -->
+
+<link rel="stylesheet" href="assets/css/styles.min.css" />
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -39,13 +41,6 @@ function isActive($path)
 <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 
-<script src="assets/libs/jquery/dist/jquery.min.js"></script>
-<script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/sidebarmenu.js"></script>
-<script src="assets/js/app.min.js"></script>
-<script src="assets/libs/apexcharts/dist/apexcharts.min.js"></script>
-<script src="assets/libs/simplebar/dist/simplebar.js"></script>
-<script src="assets/js/dashboard.js"></script>
 
 
 <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">

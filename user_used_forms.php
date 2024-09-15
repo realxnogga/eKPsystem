@@ -17,7 +17,7 @@ if (!isset($_SESSION['language'])) {
   $_SESSION['language'] = 'english'; // Set default language to English
 }
 
-$folderName =  ($_SESSION['language'] === 'english') ? 'forms' : 'formsT';
+$folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_tagalog';
 
 ?>
 
@@ -31,7 +31,7 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms' : 'formsT';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lupon</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
 
 </head>
 

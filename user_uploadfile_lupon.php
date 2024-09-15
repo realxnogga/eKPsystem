@@ -89,7 +89,7 @@ $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Upload File for Lupon</title>
   <link rel="shortcut icon" type="image/png" href="assets/images/logos/favicon.png" />
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
 </head>
 
 <body class="bg-[#E8E8E7]">

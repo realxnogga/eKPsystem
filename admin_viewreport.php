@@ -28,7 +28,7 @@ include 'viewreporthandler.php';
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Secretaries Corner</title>
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-    <link rel="stylesheet" href="assets/css/styles.min.css" />
+    
     <style>
     .searchInput {
         display: flex;

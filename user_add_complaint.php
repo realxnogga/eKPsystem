@@ -20,7 +20,7 @@ include 'add_handler.php';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Complaints</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
 
   <style>
     .select2-container--default .select2-selection--single {
@@ -215,6 +215,9 @@ include 'add_handler.php';
         "Others",
         "dasdsad",
 
+        "Sample tagalog1",
+        "Sample tagalog2",
+        "Sample tagalog3",
       ];
 
       // Initialize Select2

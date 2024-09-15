@@ -198,7 +198,7 @@ $summaryData = [
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 
     <title>Dashboard</title>
-    <link rel="stylesheet" href="assets/css/styles.min.css" />
+
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
   </head>

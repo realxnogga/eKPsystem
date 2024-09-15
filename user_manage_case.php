@@ -296,7 +296,7 @@ if (isset($_POST['language'])) {
 }
 
 // Define folder name based on selected language
-$folderName = ($_SESSION['language'] === 'tl') ? 'formsT' : 'forms';
+$folderName = ($_SESSION['language'] === 'tl') ? 'forms_tagalog' : 'forms_english';
 ?>
 
 
@@ -308,7 +308,7 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'formsT' : 'forms';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Manage Case</title>
   <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
   <style>
     body,
     html {
@@ -485,7 +485,7 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'formsT' : 'forms';
                       $formIdentifier = null; // Initialize $formIdentifier
 
                       // Define folder name based on selected language
-                      $languageFolder = ($_SESSION['language'] === 'tl') ? 'formsT/' : 'forms/';
+                      $languageFolder = ($_SESSION['language'] === 'tl') ? 'forms_tagalog/' : 'forms_english/';
 
                       // Construct file path based on language
                       $formPath = $languageFolder . $formFileName;
@@ -515,7 +515,7 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'formsT' : 'forms';
                       const language = document.querySelector(".active").getAttribute("value");
 
                       // Construct file path based on language
-                      const languageFolder = (language === 'english') ? 'forms/' : 'formsT/';
+                      const languageFolder = (language === 'english') ? 'forms_english/' : 'forms_tagalog/';
                       const formPath = languageFolder + formFileName;
 
                       // Open a new window or modal with the form content

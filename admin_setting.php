@@ -38,7 +38,7 @@ if ($securityQuestions) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Setting</title>
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
 
@@ -48,9 +48,6 @@ if ($securityQuestions) {
 
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
-
-      <a href="user_dashboard.php" class="btn btn-dark m-1">Back to Dashboard</a>
-      <br><br>
 
       <!--  Row 1 -->
       <div class="row">
