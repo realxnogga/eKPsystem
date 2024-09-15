@@ -159,6 +159,14 @@ function isActive($path)
         </a>
       </li>
 
+      <li>
+        <a href="user_signed_documents.php" class="<?php echo isActive('user_signed_documents.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+          <i class="ti ti-file-check text-2xl"></i> 
+          <span>Signed Documents</span>
+        </a>
+      </li>
+
+
       <hr class="my-3">
 
       <li>
