@@ -26,7 +26,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://rawgit.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="assets/css/styles.min.css" />
+    
 
     <script>
     function generatePDF() {

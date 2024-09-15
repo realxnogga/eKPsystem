@@ -146,7 +146,7 @@ if ($userID && $barangayID && isset($_GET['id'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Upload Files</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
 
   <style>
     .card {

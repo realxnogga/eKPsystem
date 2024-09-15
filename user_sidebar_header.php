@@ -8,11 +8,29 @@ $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-function isActive($path)
-{
+
+function isActive($path) {
   $currentPage = basename($_SERVER['SCRIPT_NAME']);
   return $currentPage == $path ? '!bg-blue-400 text-white' : '';
 }
+
+function getFullUrl() {
+  $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+  $host = $_SERVER['HTTP_HOST'];
+  $requestUri = $_SERVER['REQUEST_URI'];
+
+  return $scheme . '://' . $host . $requestUri;
+}
+
+function containsWord($haystack, $needle) {
+  return strpos($haystack, $needle) !== false;
+}
+
+function traverseDirectory() {
+  return containsWord(getFullUrl(), 'LTIA') ? '../' : '';
+}
+
+$_SESSION['test'] = getFullUrl();
 
 ?>
 
@@ -30,26 +48,22 @@ function isActive($path)
   });
 </script>
 
-<!-- <link rel="stylesheet" href="assets/css/styles.min.css" /> -->
+
+<link rel="stylesheet" href="assets/css/styles.min.css" />
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 
-<script src="assets/libs/jquery/dist/jquery.min.js"></script>
-<script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/sidebarmenu.js"></script>
-<script src="assets/js/app.min.js"></script>
-<script src="assets/libs/apexcharts/dist/apexcharts.min.js"></script>
-<script src="assets/libs/simplebar/dist/simplebar.js"></script>
-<script src="assets/js/dashboard.js"></script>
 
-  <!-- Include Select2 CSS -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+<!-- Include Select2 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
 
-  <!-- Include Select2 JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<!-- Include Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">
@@ -77,7 +91,8 @@ function isActive($path)
             <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
               <span class="sr-only">Open user menu</span>
 
-              <img class="w-8 h-8 rounded-full" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+              <img class="w-8 h-8 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+
 
             </button>
           </div>
@@ -95,15 +110,15 @@ function isActive($path)
             <ul class="py-1" role="none">
 
               <li>
-                <a href="user_logs.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">User Logs</a>
+                <a href="<?php echo traverseDirectory(); ?>user_logs.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">User Logs</a>
               </li>
 
               <li>
-                <a href="user_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
+                <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
               </li>
 
               <li>
-                <a href="logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
               </li>
             </ul>
           </div>
@@ -117,7 +132,7 @@ function isActive($path)
   <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
 
     <div class="w-full flex flex-col gap-y-1 items-center mb-3">
-      <img class="w-20 h-20 rounded-full" src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+      <img class="w-20 h-20 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
 
       <p><?php echo $user['first_name']; ?> </p>
     </div>
@@ -125,19 +140,19 @@ function isActive($path)
 
     <ul class="font-medium">
       <li>
-        <a href="user_dashboard.php" class="<?php echo isActive('user_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="<?php echo isActive('user_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-dashboard text-2xl"></i>
           <span>Dashboard</span>
         </a>
       </li>
       <li>
-        <a href="user_lupon.php" class="<?php echo isActive('user_lupon.php') . ' ' . isActive('user_used_forms.php') . ' ' . isActive('user_uploadfile_lupon.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_lupon.php" class="<?php echo isActive('user_lupon.php') . ' ' . isActive('user_used_forms.php') . ' ' . isActive('user_uploadfile_lupon.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-user text-2xl"></i>
           <span>Lupon</span>
         </a>
       </li>
       <li>
-        <a href="user_complaints.php" class="
+        <a href="<?php echo traverseDirectory(); ?>user_complaints.php" class="
         <?php
         echo isActive('user_complaints.php') . ' ' . isActive('user_add_complaint.php') . ' ' . isActive('user_edit_complaint.php') . ' ' . isActive('user_manage_case.php') . ' ' . isActive('user_uploadfile_complaint.php');
         ?> 
@@ -147,28 +162,34 @@ function isActive($path)
         </a>
       </li>
       <li>
-        <a href="user_archives.php" class="<?php echo isActive('user_archives.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_archives.php" class="<?php echo isActive('user_archives.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-archive text-2xl"></i>
           <span>Archives</span>
         </a>
       </li>
       <li>
-        <a href="user_report.php" class="<?php echo isActive('user_report.php') . ' ' . isActive('user_add_report.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_report.php" class="<?php echo isActive('user_report.php') . ' ' . isActive('user_add_report.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-report text-2xl"></i>
           <span>Reports</span>
         </a>
       </li>
 
-      <hr class="my-3">
+      <hr class="my-1">
+      <li>
+        <a href="LTIA/user_sample.php" class="<?php echo isActive('user_sample.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+          <span>LTIA</span>
+        </a>
+      </li>
+      <hr class="my-1">
 
       <li>
-        <a href="user_logs.php" class="<?php echo isActive('user_logs.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_logs.php" class="<?php echo isActive('user_logs.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-address-book text-2xl"></i>
           <span>User Logs</span>
         </a>
       </li>
       <li>
-        <a href="user_setting.php" class="<?php echo isActive('user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
         </a>

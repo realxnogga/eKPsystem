@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reports</title>
   <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
   <style>
     .card {
       box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);

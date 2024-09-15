@@ -424,9 +424,6 @@ $budgetCountArray = [
   $temp['starosa_budget_count'],
 ];
 
-
-$_SESSION['test'] = $civilCountArray;
-
 ?>
 
 

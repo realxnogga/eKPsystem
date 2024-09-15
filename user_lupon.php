@@ -16,7 +16,7 @@ if (!isset($_SESSION['language'])) {
   $_SESSION['language'] = 'english'; // Set default language to English
 }
 
-$folderName =  ($_SESSION['language'] === 'english') ? 'forms' : 'formsT';
+$folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_tagalog';
 
 ?>
 
@@ -32,7 +32,7 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms' : 'formsT';
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
   <title>Lupon</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
 </head>
@@ -106,7 +106,7 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms' : 'formsT';
               $formIdentifier = null; // Initialize $formIdentifier
 
               // Construct file path based on language
-              $languageFolder = ($_SESSION['language'] === 'english') ? 'forms/' : 'formsT/';
+              $languageFolder = ($_SESSION['language'] === 'english') ? 'forms_english/' : 'forms_tagalog/';
               $formPath = $languageFolder . $formFileName;
 
               // Display form buttons with data-form attribute
