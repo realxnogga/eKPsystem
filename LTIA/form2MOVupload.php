@@ -1,14 +1,11 @@
 <?php
 session_start();
 include '../connection.php';
-//include 'index-navigation.php';
 
-// Check if the user is logged in
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
 }
-
 ?>
 
 <!doctype html>

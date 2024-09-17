@@ -33,7 +33,7 @@ function traverseDirectory() {
 
 ?>
 
-<link rel="stylesheet" href="assets/css/styles.min.css" />
+<link rel="stylesheet" href="<?php echo traverseDirectory(); ?>assets/css/styles.min.css" />
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -41,6 +41,7 @@ function traverseDirectory() {
 
 <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 
 <!-- Include Select2 CSS -->
@@ -126,13 +127,13 @@ function traverseDirectory() {
     <ul class="font-medium">
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="<?php echo isActive('user_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-ad-2 text-2xl"></i>
+        <i class="ti ti-dashboard text-2xl"></i>
           <span>Dashboard</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_lupon.php" class="<?php echo isActive('user_lupon.php') . ' ' . isActive('user_used_forms.php') . ' ' . isActive('user_uploadfile_lupon.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-users-group text-2xl"></i>
+        <i class="ti ti-users text-2xl"></i>
           <span>Lupon</span>
         </a>
       </li>

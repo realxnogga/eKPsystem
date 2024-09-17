@@ -27,7 +27,7 @@ function isActive($path)
 <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 
 <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">
@@ -114,7 +114,7 @@ function isActive($path)
       <hr class="my-3">
 
       <li>
-        <a href="/LTIA/user_sample.php" class="<?php echo isActive('/LTIA/user_sample.php') .' '.isActive('/LTIA/user_sample.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="LTIA/user_sample.php" class="<?php echo isActive('LTIA/user_sample.php') .' '.isActive('LTIA/user_sample.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-user text-2xl"></i>
           <span>LTIA</span>
         </a>
