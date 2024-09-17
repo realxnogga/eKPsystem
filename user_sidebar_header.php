@@ -77,7 +77,7 @@ $_SESSION['test'] = getFullUrl();
           </svg>
         </button>
 
-        <a href="user_dashboard.php" class="flex ms-2 md:me-24">
+        <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="flex ms-2 md:me-24">
           <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
             EKPsys
           </p>
@@ -176,7 +176,8 @@ $_SESSION['test'] = getFullUrl();
 
       <hr class="my-1">
       <li>
-        <a href="LTIA/user_sample.php" class="<?php echo isActive('user_sample.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>LTIA/user_sample.php" class="<?php echo isActive('user_sample.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <i class="ti ti-lamp text-2xl"></i>
           <span>LTIA</span>
         </a>
       </li>
