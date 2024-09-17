@@ -17,20 +17,6 @@ function isActive($path)
 
 ?>
 
-<script>
-  $(document).ready(function() {
-    $("#userProfile").click(function() {
-      $("#userProfileDropdown").toggle();
-
-      if ($("#userProfileDropdown").is(":visible")) {
-        $("#userProfileDropdown").css("display", "flex");
-      } else {
-        $("#userProfileDropdown").css("display", "none");
-      }
-    });
-  });
-</script>
-
 
 <link rel="stylesheet" href="assets/css/styles.min.css" />
 

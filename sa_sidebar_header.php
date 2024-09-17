@@ -16,20 +16,6 @@ function isActive($path)
 
 ?>
 
-<script>
-  $(document).ready(function() {
-    $("#userProfile").click(function() {
-      $("#userProfileDropdown").toggle();
-
-      if ($("#userProfileDropdown").is(":visible")) {
-        $("#userProfileDropdown").css("display", "flex");
-      } else {
-        $("#userProfileDropdown").css("display", "none");
-      }
-    });
-  });
-</script>
-
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

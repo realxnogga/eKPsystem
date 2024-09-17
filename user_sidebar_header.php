@@ -34,21 +34,6 @@ $_SESSION['test'] = getFullUrl();
 
 ?>
 
-<script>
-  $(document).ready(function() {
-    $("#userProfile").click(function() {
-      $("#userProfileDropdown").toggle();
-
-      if ($("#userProfileDropdown").is(":visible")) {
-        $("#userProfileDropdown").css("display", "flex");
-      } else {
-        $("#userProfileDropdown").css("display", "none");
-      }
-    });
-  });
-</script>
-
-
 <link rel="stylesheet" href="assets/css/styles.min.css" />
 
 <script src="https://cdn.tailwindcss.com"></script>
@@ -129,6 +114,7 @@ $_SESSION['test'] = getFullUrl();
 </nav>
 
 <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-44 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0" aria-label="Sidebar">
+
   <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
 
     <div class="w-full flex flex-col gap-y-1 items-center mb-3">
