@@ -1,0 +1,97 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: Arial, sans-serif;
+}
+.container{
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.head{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.head img {
+    max-width: 100px;
+    margin-bottom: 20px;
+}
+select{
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+}
+.RegInputs{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.FEP, .LCC{
+    flex: 1 1 calc(50% - 20px);
+    min-width: 200px;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+input[type="text"], input[type="email"], input[type="tel"], input[type="password"]{
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+}
+.PAsubmit{
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}
+input[type="submit"]{
+    padding: 15px 80px;
+    border-radius: 10px;
+    background-color: #0099FF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+form a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+form a:hover {
+    text-decoration: underline;
+}
+input[type="submit"]:hover {
+    background-color: #007ACC;
+}
+@media (max-width: 600px) {
+    .RegInputs {
+        flex-direction: column;
+    }
+    .FEP, .LCC {
+        flex: 1 1 100%;
+    }
+    input[type="submit"] {
+        width: 100%;
+    }
+}
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin: 10px 0;
+}

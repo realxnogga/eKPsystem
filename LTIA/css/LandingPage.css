@@ -1,0 +1,250 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  .header {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    text-align: center;
+    width: 100%;
+  }
+  .header .dilglogo {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+  }
+  .header .dilglogo img {
+    width: 170px;
+  }
+  .header h1 {
+    font-size: 4rem;
+    margin-top: 0;
+  }
+  .content {
+    display: flex;
+    margin: 20px;
+  }
+  .menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+  }
+  .btn-67,
+  .btn-67 *,
+  .btn-67 :after,
+  .btn-67 :before,
+  .btn-67:after,
+  .btn-67:before {
+    border: 0 solid;
+    box-sizing: border-box;
+  }
+  .btn-67 {
+    --border: 4px solid #0099FF; /* Declare variable */
+    -webkit-tap-highlight-color: transparent;
+    appearance: button;
+    -webkit-appearance: button;
+    background-color: #0099FF;
+    background-image: none;
+    color: #fff;
+    cursor: pointer;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    display: block;
+    font-weight: 900;
+    padding: 1.2rem 3rem;
+    position: relative;
+    text-transform: uppercase;
+    transition: color 0.1s linear;
+  }
+  .btn-67:disabled {
+    cursor: default;
+  }
+  .btn-67:-moz-focusring {
+    outline: auto;
+  }
+  .btn-67 svg {
+    display: block;
+  }
+  .btn-67 [hidden] {
+    display: none;
+  }
+  .btn-67:hover {
+    color: #fff;
+    transition: color 0.1s linear 1s;
+  }
+  .btn-67:after,
+  .btn-67:before {
+    content: "";
+    height: 0;
+    position: absolute;
+    width: 0;
+  }
+  .btn-67:before {
+    border-right: var(--border);
+    border-top: var(--border);
+    left: 0;
+    top: 0;
+  }
+  .btn-67:hover:before {
+    -webkit-animation: border-top-and-right 1s forwards;
+    animation: border-top-and-right 1s forwards;
+  }
+  .btn-67:after {
+    border-bottom: var(--border);
+    border-left: var(--border);
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+  }
+  .btn-67:hover:after {
+    -webkit-animation: border-bottom-and-left 1s 1s forwards;
+    animation: border-bottom-and-left 1s 1s forwards;
+  }
+  @-webkit-keyframes border-top-and-right {
+    0% {
+      height: 0;
+      width: 0;
+    }
+    50% {
+      height: 0;
+      width: 100%;
+    }
+    to {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  @keyframes border-top-and-right {
+    0% {
+      height: 0;
+      width: 0;
+    }
+    50% {
+      height: 0;
+      width: 100%;
+    }
+    to {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  @-webkit-keyframes border-bottom-and-left {
+    0% {
+      height: 0;
+      width: 0;
+    }
+    50% {
+      height: 0;
+      width: 100%;
+    }
+    to {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  @keyframes border-bottom-and-left {
+    0% {
+      height: 0;
+      width: 0;
+    }
+    50% {
+      height: 0;
+      width: 100%;
+    }
+    to {
+      height: 100%;
+      width: 100%;
+    }
+  }
+  .menu ul {
+    list-style-type: none;
+  }
+  .menu li a {
+    text-decoration: none;
+    font-size: 1.25rem;
+    display: block;
+    margin: 10px 0;
+    padding: 10px 25px;
+    background-color: #0099FF;
+    color: #fff;
+    border-radius: 5px;
+    text-align: center;
+  }
+  .content .infos {
+    font-size: 2rem;
+    text-align: justify;
+    flex-grow: 1;
+    margin-left: 20px;
+  }
+  .footer {
+    position: relative;
+    width: 100%;
+  }
+  .footer .ltialogo img {
+    position: absolute;
+    right: 60px;
+  }
+  .footer footer {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: -1;
+  }
+  
+  /* Media Queries for Mobile */
+  @media (max-width: 768px) {
+    .header {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+      justify-items: center;
+      align-items: center;
+      height: auto;
+      text-align: center;
+    }
+    .header .dilglogo {
+      margin: 0;
+    }
+    .header h1 {
+      margin-top: 10px;
+      font-size: 2.5rem;
+    }
+    .content {
+      display: block;
+      margin: 10px;
+    }
+    .menu {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+    .menu li {
+      margin: 0 5px;
+    }
+    .content .infos {
+      margin-left: 0;
+      font-size: 1.5rem;
+    }
+    .footer .ltialogo img {
+      position: absolute;
+      display: block;
+      margin: 0 auto;
+      width: 150px; /* Adjust width as needed */
+    }
+    .footer footer {
+      position: absolute;
+      text-align: center;
+    }
+  }
+  
