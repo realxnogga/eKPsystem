@@ -30,7 +30,6 @@ function traverseDirectory() {
   return containsWord(getFullUrl(), 'LTIA') ? '../' : '';
 }
 
-$_SESSION['test'] = getFullUrl();
 
 ?>
 
@@ -42,7 +41,7 @@ $_SESSION['test'] = getFullUrl();
 
 <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 
 <!-- Include Select2 CSS -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
@@ -127,13 +126,13 @@ $_SESSION['test'] = getFullUrl();
     <ul class="font-medium">
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="<?php echo isActive('user_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-dashboard text-2xl"></i>
+        <i class="ti ti-ad-2 text-2xl"></i>
           <span>Dashboard</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_lupon.php" class="<?php echo isActive('user_lupon.php') . ' ' . isActive('user_used_forms.php') . ' ' . isActive('user_uploadfile_lupon.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-user text-2xl"></i>
+        <i class="ti ti-users-group text-2xl"></i>
           <span>Lupon</span>
         </a>
       </li>
@@ -143,48 +142,48 @@ $_SESSION['test'] = getFullUrl();
         echo isActive('user_complaints.php') . ' ' . isActive('user_add_complaint.php') . ' ' . isActive('user_edit_complaint.php') . ' ' . isActive('user_manage_case.php') . ' ' . isActive('user_uploadfile_complaint.php');
         ?> 
         flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-file text-2xl"></i>
+        <i class="ti ti-files text-2xl"></i>
           <span>Complaints</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_archives.php" class="<?php echo isActive('user_archives.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-archive text-2xl"></i>
+        <i class="ti ti-archive text-2xl"></i>
           <span>Archives</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_report.php" class="<?php echo isActive('user_report.php') . ' ' . isActive('user_add_report.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-report text-2xl"></i>
+        <i class="ti ti-report text-2xl"></i>
           <span>Reports</span>
         </a>
       </li>
 
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_signed_documents.php" class="<?php echo isActive('user_signed_documents.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-file-check text-2xl"></i> 
+        <i class="ti ti-writing-sign text-2xl"></i>
           <span>Signed Documents</span>
         </a>
       </li>
 
       <hr class="my-1">
       <li>
-        <a href="<?php echo traverseDirectory(); ?>LTIA/user_sample.php" class="<?php echo isActive('user_sample.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-lamp text-2xl"></i>
-          <span>LTIA</span>
+        <a href="<?php echo traverseDirectory(); ?>LTIA/form2MOVupload.php" class="<?php echo isActive('form2MOVupload.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <i class="ti ti-certificate-2 text-2xl"></i>
+        <span>LTIA</span>
         </a>
       </li>
       <hr class="my-1">
 
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_logs.php" class="<?php echo isActive('user_logs.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-address-book text-2xl"></i>
+        <i class="ti ti-user-check text-2xl"></i>
           <span>User Logs</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-settings text-2xl"></i>
+        <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
         </a>
       </li>
