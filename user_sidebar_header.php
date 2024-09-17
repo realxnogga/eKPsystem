@@ -181,8 +181,6 @@ $_SESSION['test'] = getFullUrl();
         </a>
       </li>
 
-
-      <hr class="my-3">
       <hr class="my-1">
       <li>
         <a href="<?php echo traverseDirectory(); ?>LTIA/user_sample.php" class="<?php echo isActive('user_sample.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
