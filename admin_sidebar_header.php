@@ -128,6 +128,14 @@ function isActive($path)
       <hr class="my-3">
 
       <li>
+        <a href="/LTIA/user_sample.php" class="<?php echo isActive('/LTIA/user_sample.php') .' '.isActive('/LTIA/user_sample.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+          <i class="ti ti-user text-2xl"></i>
+          <span>LTIA</span>
+        </a>
+      </li>
+
+      <hr class="my-3">
+      <li>
         <a href="admin_setting.php" class="<?php echo isActive('admin_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
