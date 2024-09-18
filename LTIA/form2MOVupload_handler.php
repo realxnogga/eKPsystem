@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 include '../connection.php';
 
@@ -25,9 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     'IA_2a_pdf_File',
     'IA_2b_pdf_File',
     'IA_2c_pdf_File',
-     'IA_2d_pdf_File',
-     'IA_2e_pdf_File',
-   'IB_1forcities_pdf_File',
+    'IA_2d_pdf_File',
+    'IA_2e_pdf_File',
+    'IB_1forcities_pdf_File',
     'IB_1aformuni_pdf_File',
     'IB_1bformuni_pdf_File',
     'IB_2_pdf_File',
@@ -63,6 +64,8 @@ foreach ($files as $file) {
         $fileNames[$file] = uniqueNameConverter($_FILES[$file]['name']);
     }
 }
+
+$_SESSION['test'] = $fileNames;
 
   // Prepare the SQL query
   $insert_query = "INSERT INTO mov (
@@ -166,4 +169,5 @@ foreach ($files as $file) {
     exit();
   }
 }
+
 ?>
