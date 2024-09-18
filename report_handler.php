@@ -41,12 +41,8 @@ try {
     $stmt->bindParam(':barangay_id', $barangay_id); // Make sure to set the barangay_id variable
     $stmt->execute();
 
-    
-
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $last_report_date = $row['last_report_date'];
-
-    $_SESSION['test'] = $row;
 
     if (!$last_report_date) {
       // No report exists for this user and barangay, insert new row
