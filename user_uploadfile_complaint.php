@@ -2,7 +2,7 @@
 session_start();
 include 'connection.php';
 include 'functions.php';
-//include 'index-navigation.php';
+
 
 $uploadMessage = 'Click Choose File and select the file to Upload.';
 

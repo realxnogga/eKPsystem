@@ -9,12 +9,14 @@ $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
-function isActive($path) {
+function isActive($path)
+{
   $currentPage = basename($_SERVER['SCRIPT_NAME']);
   return $currentPage == $path ? '!bg-blue-400 text-white' : '';
 }
 
-function getFullUrl() {
+function getFullUrl()
+{
   $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
   $host = $_SERVER['HTTP_HOST'];
   $requestUri = $_SERVER['REQUEST_URI'];
@@ -22,11 +24,13 @@ function getFullUrl() {
   return $scheme . '://' . $host . $requestUri;
 }
 
-function containsWord($haystack, $needle) {
+function containsWord($haystack, $needle)
+{
   return strpos($haystack, $needle) !== false;
 }
 
-function traverseDirectory() {
+function traverseDirectory()
+{
   return containsWord(getFullUrl(), 'LTIA') ? '../' : '';
 }
 
@@ -35,13 +39,19 @@ function traverseDirectory() {
 
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>assets/css/styles.min.css" />
 
+
+
+<!-- tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
+<!-- flowbite component -->
 <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
 
+<!-- tabler icon -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
 
 <!-- Include Select2 CSS -->
@@ -71,6 +81,18 @@ function traverseDirectory() {
       </div>
       <div class="flex items-center">
         <div class="flex items-center ms-3">
+
+          <!-- --------------------- -->
+          <a href="user_notification.php">
+            <section class="relative mr-5 cursor-pointer flex items-center justify-center">
+              <i class="ti ti-bell text-3xl"></i>  
+              <div class="absolute bg-green-500 top-[-10] right-[-10] rounded-[25px] flex items-center justify-center">
+                <p class="text-white text-xs px-[.3rem]">4</p>
+              </div>
+            </section>
+          </a>
+          <!-- --------------------- -->
+
 
           <div>
             <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
@@ -127,13 +149,13 @@ function traverseDirectory() {
     <ul class="font-medium">
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="<?php echo isActive('user_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-dashboard text-2xl"></i>
+          <i class="ti ti-dashboard text-2xl"></i>
           <span>Dashboard</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_lupon.php" class="<?php echo isActive('user_lupon.php') . ' ' . isActive('user_used_forms.php') . ' ' . isActive('user_uploadfile_lupon.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-users text-2xl"></i>
+          <i class="ti ti-users text-2xl"></i>
           <span>Lupon</span>
         </a>
       </li>
@@ -143,26 +165,26 @@ function traverseDirectory() {
         echo isActive('user_complaints.php') . ' ' . isActive('user_add_complaint.php') . ' ' . isActive('user_edit_complaint.php') . ' ' . isActive('user_manage_case.php') . ' ' . isActive('user_uploadfile_complaint.php');
         ?> 
         flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-files text-2xl"></i>
+          <i class="ti ti-files text-2xl"></i>
           <span>Complaints</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_archives.php" class="<?php echo isActive('user_archives.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-archive text-2xl"></i>
+          <i class="ti ti-archive text-2xl"></i>
           <span>Archives</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_report.php" class="<?php echo isActive('user_report.php') . ' ' . isActive('user_add_report.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-report text-2xl"></i>
+          <i class="ti ti-report text-2xl"></i>
           <span>Reports</span>
         </a>
       </li>
 
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_signed_documents.php" class="<?php echo isActive('user_signed_documents.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-writing-sign text-2xl"></i>
+          <i class="ti ti-writing-sign text-2xl"></i>
           <span>Signed Documents</span>
         </a>
       </li>
@@ -170,21 +192,21 @@ function traverseDirectory() {
       <hr class="my-1">
       <li>
         <a href="<?php echo traverseDirectory(); ?>LTIA/form2MOVupload.php" class="<?php echo isActive('form2MOVupload.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-certificate-2 text-2xl"></i>
-        <span>LTIA</span>
+          <i class="ti ti-certificate-2 text-2xl"></i>
+          <span>LTIA</span>
         </a>
       </li>
       <hr class="my-1">
 
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_logs.php" class="<?php echo isActive('user_logs.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-user-check text-2xl"></i>
+          <i class="ti ti-user-check text-2xl"></i>
           <span>User Logs</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-settings text-2xl"></i>
+          <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
         </a>
       </li>

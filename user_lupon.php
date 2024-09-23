@@ -1,6 +1,6 @@
 <?php
 session_start();
-//include 'index-navigation.php';
+
 include 'connection.php';
 include 'functions.php';
 
@@ -33,7 +33,7 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_
   <title>Lupon</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
   
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 </head>
 

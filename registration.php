@@ -15,6 +15,11 @@ include 'functions.php';
   <title>Register</title>
   <link rel="stylesheet" href="assets/css/styles.min.css" />
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+  <!-- font awesome icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+  <!-- jquery link -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
 <style>
@@ -61,7 +66,7 @@ include 'functions.php';
           <div class="col-md-8 col-lg-6 col-xxl-5">
             <div class="card mb-0">
               <div class="card-body">
-             
+
                 <div class="text-center">
                   <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle"><br><br>
                   <b>
@@ -72,7 +77,9 @@ include 'functions.php';
 
                   <?php if (isset($errors['registration'])): ?>
                     <p style="color: <?php echo $errors['registration'] ? 'green' : 'red'; ?>; font-style: italic;"><?php echo $errors['registration']; ?></p>
-                  <?php endif; ?><b>
+                  <?php endif; ?>
+
+                  <b>
 
                     <form action="" method="POST">
                       <label for="mediation">Select Municipality:</label>
@@ -175,7 +182,8 @@ include 'functions.php';
                       <p>Already have an account?<a href="login.php"> Login here</a>.</p>
                       <input type="submit" name="register" class="btn btn-primary m1" value="Register"><br><br>
                     </form>
-
+                  </b>
+                </b>
               </div>
             </div>
           </div>
@@ -183,11 +191,6 @@ include 'functions.php';
       </div>
     </div>
   </div>
-  </div>
-  <script src="assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI/tZGggzOJ3bMEfIfmDZJQMy2F5J1PIPa4c/o9A=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" integrity="sha384-ZJwD0qMzETBwUp3g1b7IqEXmGw1pTUGlFHp5FLF3xvqzI2uUxgTOMoA/JV+hI2D" crossorigin="anonymous"></script>
 </body>
 
 </html>
