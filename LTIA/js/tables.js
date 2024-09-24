@@ -1,10 +1,10 @@
 function validateFileType(input) {
-    const file = input.files[0];
+    var file = input.files[0];
     if (file) {
-        const fileType = file.type;
-        if (fileType !== 'application/pdf') {
-            alert('Please select a PDF file.');
-            input.value = ''; // Clear the input
+        var fileType = file.type;
+        if (fileType !== "application/pdf") {
+            alert("Please upload a valid PDF file.");
+            input.value = ''; // Reset file input
         }
     }
 }

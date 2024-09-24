@@ -20,13 +20,31 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script src="../js/tables.js" defer></script>
+  <script src="js/tables.js" defer></script>
 
 <body class="bg-[#E8E8E7]">
   <?php include "../user_sidebar_header.php"; ?>
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
-      <h2 class="custom-h2">LUPONG TAGAPAMAYAPA INCENTIVES AWARDS (LTIA - Form 1)</h2>
+    <div class="card">
+                <div class="card-body">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center">
+                            <div class="dilglogo">
+                                <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" /> <!-- Adjusted height here -->
+                            </div>
+                            <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA)</h1>
+                        </div>
+                        <div class="menu">
+                            <ul class="flex space-x-4">
+                            <li>
+                            <input type="button" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" value="Uploaded File" onclick="location.href='test.php';" style="margin-left: 0;">
+                        </li>                     
+                            </ul>
+                        </div>
+                    </div>
+      <h2 class="text-left text-2xl font-semibold">FORM 1</h2>
+      <h2 class="custom-h2"> </h2>
 
       <form method="post" action="form2MOVupload_handler.php" enctype="multipart/form-data">
         <div class="container mt-4">
@@ -270,9 +288,21 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
             </tbody>
           </table>
         
-          <input type="submit" value="Submit" class="btn btn-primary mt-3" />
-
-      </form>
+          <input type="submit" value="Submit" class="btn btn-dark btn-block mt-5" style="height: 50px; width: 50%; background-color: #000000; color: #ffffff;" />
+          </form>
+      <footer class="relative">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="w-full">
+                <path fill="#0099ff" fill-opacity="1" d="M0,224L30,224C60,224,120,224,180,208C240,192,300,160,360,149.3C420,139,480,149,540,160C600,171,660,181,720,154.7C780,128,840,64,900,58.7C960,53,1020,107,1080,117.3C1140,128,1200,96,1260,69.3C1320,43,1380,21,1410,10.7L1440,0L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"></path>
+            </svg>
+            <div class="absolute right-0 bottom-0 mb-4 mr-4">
+                <img src="images/ltialogo.png" alt="LTIA Logo" class="h-20" /> <!-- Adjust height as needed -->
+            </div>
+        </footer>
+        </div>
+                </div>
+            </div>
+        </div>
+    </div>
     </div>
     <style>
       .custom-h2 {
@@ -292,11 +322,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
         /* Add a blue underline */
         margin-bottom: 20px;
         /* Space below the heading */
-      }
-
-      .table th,
-      .table td {
-        vertical-align: middle;
       }
 
       .bg-info {
@@ -329,6 +354,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
       .table td {
         vertical-align: middle;
       }
+      table tbody tr:hover {
+      background-color: #f0f0f0; /* Change this color as desired */
+      cursor: pointer; /* Optional: change cursor to pointer when hovering */
+    }
     </style>
 </body>
 
