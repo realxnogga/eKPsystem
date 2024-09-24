@@ -676,7 +676,7 @@ $budgetCountArray = [
           <td colspan="1"><?php echo $certcourtCountArray[$i]; ?></td>
           <td colspan="1"><?php echo $outsideBrgyCountArray[$i]; ?></td> 
           <td colspan="1"><?php echo $totalCountArray3[$i]; ?></td>
-          <td colspan="1"><?php echo $budgetCountArray[$i]; ?></td>
+          <td colspan="1"><?php echo number_format($budgetCountArray[$i]); ?></td>
         </tr>
       <?php endfor; ?>
     </table>

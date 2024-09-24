@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-//include 'index-navigation.php';
+
 include 'functions.php';
 
 // Set default language to English if not set

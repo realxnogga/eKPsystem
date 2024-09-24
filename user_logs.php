@@ -1,8 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-//include 'index-navigation.php';
-
+include 'functions.php';
 // Check if the user is logged in
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
@@ -38,7 +37,6 @@ if (isset($_POST['view_logs'])) {
   
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
   <style>
     .card {

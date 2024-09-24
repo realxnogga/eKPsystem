@@ -1,7 +1,7 @@
 <?php
 session_start();
 include_once("connection.php");
-//include 'index-navigation.php';
+
 
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {

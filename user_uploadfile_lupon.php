@@ -2,7 +2,7 @@
 session_start();
 include 'connection.php';
 include 'functions.php';
-//include 'index-navigation.php';
+
 
 $userID = $_SESSION['user_id'] ?? null; // Get user ID from session
 $barangayID = $_SESSION['barangay_id'] ?? null; // Get barangay ID from session

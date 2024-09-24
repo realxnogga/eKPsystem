@@ -1,7 +1,8 @@
 <?php
 session_start();
 include 'connection.php';
-//include 'index-navigation.php';
+include 'functions.php';
+
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
@@ -21,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
   $report_date = $_POST['report_date'];
   $mayor = $_POST['mayor'];
   $region = $_POST['region'];
-  $budget = $_POST['budget'];
+  $budget = str_replace(',', '', $_POST['budget']); // remove ,
   $population = $_POST['population'];
   $totalcase = $_POST['totalcase'];
   $numlupon = $_POST['numlupon'];
@@ -108,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reports</title>
-  <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
+  <link rel="shortcut icon" type="image/png" href="assets/images/logos/favicon.png" />
   
   <style>
     .card {

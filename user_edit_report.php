@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-//include 'index-navigation.php';
+include 'functions.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
@@ -38,7 +38,7 @@ if (isset($_POST['update'])) {
   // Retrieve form data
   $report_date = $_POST['report_date'];
   $mayor = $_POST['mayor'];
-  $budget = $_POST['budget'];
+  $budget = str_replace(',', '', $_POST['budget']); // remove ,
   $totalcase = $_POST['totalcase'];
   $numlupon = $_POST['numlupon'];
   $landarea = $_POST['landarea'];
@@ -134,9 +134,6 @@ if (isset($_POST['update'])) {
 
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
-
-      <a href="user_add_report.php" class="btn btn-primary">Back to Add Report</a>
-      <br><br>
 
       <!--  Row 1 -->
       <div class="row">

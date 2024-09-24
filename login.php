@@ -15,6 +15,9 @@ include 'connection.php';
   <link rel="stylesheet" href="assets/css/styles.min.css" />
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+  <!-- jquery link -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
 <style>
@@ -58,7 +61,7 @@ include 'connection.php';
                     alt="Logo"
                     style="max-width: 120px; max-height: 120px; margin-right: 10px;"
                     class="align-middle">
-                    <h5 class="card-title my-9 fw-semibold">Login</h5>           
+                  <h5 class="card-title my-9 fw-semibold">Login</h5>
                 </div>
 
 
@@ -99,11 +102,11 @@ include 'connection.php';
                         </div>
                       </div>
                     </div>
-                    
+
                     <br>
 
                   </div>
-                  
+
                   <br>
 
                   <b>
@@ -113,8 +116,9 @@ include 'connection.php';
 
                     <b>
                       <p> <a href="javascript:void(0);" onclick="location.href='forgot_pass.php';" style="font-size:16px;">Forgot Password?</a></p>
-
-
+                    </b>
+                  </b>
+                </form>
               </div>
             </div>
           </div>
@@ -122,9 +126,6 @@ include 'connection.php';
       </div>
     </div>
   </div>
-  </div>
-  <script src="assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 <script>

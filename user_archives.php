@@ -1,7 +1,8 @@
 <?php
 session_start();
 include 'connection.php';
-//include 'index-navigation.php';
+include 'functions.php';
+
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
@@ -36,8 +37,8 @@ include 'report_handler.php';
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Archives</title>
-  
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+  
   <style>
     .table {
       font-size: 14px;

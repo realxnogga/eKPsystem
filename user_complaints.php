@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-//include 'index-navigation.php';
+
 include 'functions.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
@@ -218,6 +218,7 @@ $totalCount = $totalCountRow['total'];
   <title>Complaints</title>
   
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
