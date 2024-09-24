@@ -191,16 +191,10 @@ function traverseDirectory()
 
       <hr class="my-1">
       <li>
-<<<<<<< HEAD
         <a href="<?php echo traverseDirectory(); ?>LTIA/LTIAdashboard.php" class="<?php echo isActive('LTIAdashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
         <i class="ti ti-certificate-2 text-2xl"></i>
         <span>LTIA</span>
-=======
-        <a href="<?php echo traverseDirectory(); ?>LTIA/form2MOVupload.php" class="<?php echo isActive('form2MOVupload.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-certificate-2 text-2xl"></i>
-          <span>LTIA</span>
->>>>>>> 6e61b1d1ac68246678cfcf71ec11f1758ee0052a
-        </a>
+</a>
       </li>
       <hr class="my-1">
 
