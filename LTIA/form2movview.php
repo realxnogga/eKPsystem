@@ -62,14 +62,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body class="bg-[#E8E8E7]">
-  <?php include "../user_sidebar_header.php"; ?>
+
+<!--?php include "../user_sidebar_header.php"; ?>-->
+
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
     <div class="card">
                 <div class="card-body">
   <div class="container mt-5">
     <h2 class="text-left text-2xl font-semibold">FORM 1</h2>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" action="form2update.php" enctype="multipart/form-data">
       <table class="table table-bordered">
         <thead>
           <tr>
