@@ -39,8 +39,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
                         <div class="menu">
                             <ul class="flex space-x-4">
                             <li>
-                            <input type="button" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" value="Uploaded File" onclick="location.href='test.php';" style="margin-left: 0;">
-                        </li>                     
+                            <input type="button" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" value="Uploaded File" onclick="location.href='form2movview.php';" style="margin-left: 0;">
+                        </li>             
+                        <li>
+                            <input type="button" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" value="Back" onclick="location.href='LTIAdashboard.php';" style="margin-left: 0;">
+                        </li>             
                             </ul>
                         </div>
                     </div>
@@ -49,7 +52,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 
       <form method="post" action="form2MOVupload_handler.php" enctype="multipart/form-data">
         <div class="container mt-4">
-          <table>
+        <table class="table table-bordered">
             <thead>
               <tr>
                 <th>CRITERIA</th>
