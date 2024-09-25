@@ -1,6 +1,9 @@
 <?php
+
 require 'connection.php';
 require "include/custom-scrollbar.php";
+
+include 'user_notification_handler.php';
 
 $userId = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
@@ -44,7 +47,6 @@ function traverseDirectory()
 <!-- tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
 
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 <!-- flowbite component -->
@@ -85,9 +87,9 @@ function traverseDirectory()
           <!-- --------------------- -->
           <a href="user_notification.php">
             <section class="relative mr-5 cursor-pointer flex items-center justify-center">
-              <i class="ti ti-bell text-3xl"></i>  
+              <i class="ti ti-bell text-3xl"></i>
               <div class="absolute bg-green-500 top-[-5] right-[-5] rounded-[25px] flex items-center justify-center">
-                <p class="text-white text-xs px-[.3rem]">4</p>
+                <p class="text-white text-xs px-[.3rem]"><?php echo $notifCount; ?></p>
               </div>
             </section>
           </a>
@@ -191,7 +193,7 @@ function traverseDirectory()
 
       <hr class="my-1">
       <li>
-        <a href="<?php echo traverseDirectory(); ?>LTIA/form2MOVupload.php" class="<?php echo isActive('form2MOVupload.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>LTIA/LTIAdashboard.php" class="<?php echo isActive('LTIAdashboard.php') . ' ' . isActive('form2MOVupload.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-certificate-2 text-2xl"></i>
           <span>LTIA</span>
         </a>

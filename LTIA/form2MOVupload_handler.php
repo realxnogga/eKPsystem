@@ -6,7 +6,14 @@ include '../connection.php';
 $user_id = $_SESSION['user_id'] ?? '';
 $barangay_id = $_SESSION['barangay_id'] ?? '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// Check if the barangay has already uploaded files
+$check_query = "SELECT COUNT(*) FROM mov WHERE barangay_id = :barangay_id";
+$check_stmt = $conn->prepare($check_query);
+$check_stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
+$check_stmt->execute();
+$already_uploaded = $check_stmt->fetchColumn();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
 
   function uniqueNameConverter($arg)
   {
@@ -18,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     return $filename . "_" . $timestamp . "_" . $randomString . "." . $extension;
   }
 
- 
   $files = [
     'IA_1a_pdf_File',
     'IA_1b_pdf_File',
@@ -49,23 +55,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     'IIIC_1forcities3_pdf_File',
     'IIIC_2formuni1_pdf_File',
     'IIIC_2formuni2_pdf_File',
-    'IIIC_2formuni3_pdf_File',
-    'IIID_pdf_File',
-    'IV_forcities_pdf_File',
+    'IIIC_2formuni3_pdf_File', 
+    'IIID_pdf_File', 
+    'IV_forcities_pdf_File', 
     'IV_muni_pdf_File',
-    'V_1_pdf_File',
+    'V_1_pdf_File', 
     'threepeoplesorg'
   ];
 
-
-$fileNames = [];
-foreach ($files as $file) {
+  $fileNames = [];
+  foreach ($files as $file) {
     if (isset($_FILES[$file])) {
         $fileNames[$file] = uniqueNameConverter($_FILES[$file]['name']);
     }
-}
+  }
 
-$_SESSION['test'] = $fileNames;
 
   // Prepare the SQL query
   $insert_query = "INSERT INTO mov (
@@ -79,9 +83,9 @@ $_SESSION['test'] = $fileNames;
     IA_2c_pdf_File,
     IA_2d_pdf_File,
     IA_2e_pdf_File,
-   IB_1forcities_pdf_File,
-     IB_1aformuni_pdf_File,
-     IB_1bformuni_pdf_File,
+    IB_1forcities_pdf_File,
+    IB_1aformuni_pdf_File,
+    IB_1bformuni_pdf_File,
     IB_2_pdf_File,
     IB_3_pdf_File,
     IB_4_pdf_File,
@@ -162,12 +166,17 @@ $_SESSION['test'] = $fileNames;
         $fileTMP = $_FILES[$file]['tmp_name'];
         $fileDestination = 'movfolder/' . $fileNames[$file];
         move_uploaded_file($fileTMP, $fileDestination);
-         
       }
     }
-    header("Location: http://localhost/eKPsys-main/LTIA/form2MOVupload.php");
+    echo "<script>alert('Files uploaded successfully!'); 
+    window.location.href='form2MOVupload.php';</script>";
     exit();
-  }
+} else {
+    echo "<script>alert('Error inserting into database.');</script>";
+}
+} else {
+echo "<script>alert('Files already uploaded for this barangay.');
+window.location.href='form2MOVupload.php';</script>";
 }
 
 ?>
