@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       }
     }
     echo "<script>alert('Files updated successfully!'); 
-    window.location.href='form2MOVupload.php';</script>";
+    window.location.href='form2movview.php';</script>";
     exit();
   } else {
     echo "<script>alert('Error updating the database.');</script>";
