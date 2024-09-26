@@ -88,7 +88,7 @@ function traverseDirectory()
           <a href="user_notification.php">
             <section class="relative mr-5 cursor-pointer flex items-center justify-center">
               <i class="ti ti-bell text-3xl"></i>
-              <div class="absolute bg-green-500 top-[-5] right-[-5] rounded-[25px] flex items-center justify-center">
+              <div class="<?php echo $notifCount == 0 ? 'hidden' : ''; ?> absolute bg-green-500 top-[-5] right-[-5] rounded-[25px] flex items-center justify-center">
                 <p class="text-white text-xs px-[.3rem]"><?php echo $notifCount; ?></p>
               </div>
             </section>
