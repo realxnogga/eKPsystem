@@ -3,7 +3,8 @@
 
 $user_id = $_SESSION['user_id'];
 
-function getAllNotificationData($conn, $user_id)
+// select all funcion
+function getAllNotificationData($conn, $user_id, $extraCondition = "")
 {
     $query = "SELECT * FROM complaints 
           WHERE UserID = :user_id 
@@ -14,8 +15,11 @@ function getAllNotificationData($conn, $user_id)
               (CMethod = 'Conciliation' AND NOW() > DATE_ADD(Mdate, INTERVAL 30 DAY))
           )
           AND isArchived = 0
-          AND YEAR(Mdate) = YEAR(NOW())
-          ORDER BY Mdate DESC";
+          AND YEAR(Mdate) = YEAR(NOW())";
+  
+    $query .= !empty($extraCondition) ? " AND $extraCondition" : "";
+
+    $query .= " ORDER BY Mdate DESC";
 
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':user_id', $user_id);
@@ -24,6 +28,28 @@ function getAllNotificationData($conn, $user_id)
 }
 $notifData = getAllNotificationData($conn, $user_id);
 
+
+// update function
+function updateSeenStatus($conn, $user_id, $setFields = "")
+{
+    $query = "UPDATE complaints ";
+
+    $query .= !empty($setFields) ? "SET $setFields " : "";
+
+    $query .= "WHERE UserID = :user_id 
+                AND CStatus = 'Settled' 
+                AND (       
+                    (CMethod = 'Mediation' AND NOW() > DATE_ADD(Mdate, INTERVAL 15 DAY))
+                    OR 
+                    (CMethod = 'Conciliation' AND NOW() > DATE_ADD(Mdate, INTERVAL 30 DAY))
+                )
+                AND isArchived = 0
+                AND YEAR(Mdate) = YEAR(NOW())";
+
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':user_id', $user_id);
+    $stmt->execute(); 
+}
 
 // for count notification
 $count_notif_query = "SELECT 
