@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 }
 
 // Get the user ID from the session (assuming user is logged in)
-$userId = $_SESSION['user_id'];
+$userID = $_SESSION['user_id'];
 
 // Handle file deletion
 if (isset($_POST['delete_file'])) {
@@ -25,7 +25,7 @@ if (isset($_POST['delete_file'])) {
     // Delete file record from database
     $stmt = $conn->prepare("DELETE FROM upload_files WHERE file_path = :file_path AND user_id = :user_id");
     $stmt->bindParam(':file_path', $filePath, PDO::PARAM_STR);
-    $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+    $stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
     $stmt->execute();
 
     // Redirect to the same page to avoid resubmission of the form
@@ -44,7 +44,7 @@ $stmt = $conn->prepare("
     WHERE uf.user_id = :user_id
     ORDER BY b.barangay_name
 ");
-$stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+$stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
 $stmt->execute();
 $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

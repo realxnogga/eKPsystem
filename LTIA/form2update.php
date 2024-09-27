@@ -2,7 +2,7 @@
 session_start();
 include '../connection.php';
 
-$user_id = $_SESSION['user_id'] ?? '';
+$userID = $_SESSION['user_id'] ?? '';
 $barangay_id = $_SESSION['barangay_id'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

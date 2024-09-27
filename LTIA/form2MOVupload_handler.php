@@ -3,7 +3,7 @@
 session_start();
 include '../connection.php';
 
-$user_id = $_SESSION['user_id'] ?? '';
+$userID = $_SESSION['user_id'] ?? '';
 $barangay_id = $_SESSION['barangay_id'] ?? '';
 
 // Check if the barangay has already uploaded files
@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
 
   $stmt = $conn->prepare($insert_query);
   
-  $stmt->bindParam(':user_id', $user_id);
+  $stmt->bindParam(':user_id', $userID);
   $stmt->bindParam(':barangay_id', $barangay_id);
 
   foreach ($files as $file) {

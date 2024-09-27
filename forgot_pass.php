@@ -16,12 +16,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (!$user_row) {
     echo "This email is not yet registered into the system. Please check your spelling.";
   } else {
-    $user_id = $user_row['id'];
+    $userID = $user_row['id'];
 
     // Check if security questions exist for the user
     $check_security_query = "SELECT * FROM security WHERE user_id = :user_id";
     $stmt = $conn->prepare($check_security_query);
-    $stmt->bindParam(':user_id', $user_id);
+    $stmt->bindParam(':user_id', $userID);
     $stmt->execute();
     $security_row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       echo "This user has not yet set their Security Questions, therefore unable to reset the password. Please request an admin to reset your password.";
     } else {
       // Storing user_id in session
-      $_SESSION['user_id'] = $user_id;
+      $_SESSION['user_id'] = $userID;
 
       // Redirecting without user_id in URL
       header("Location: verify_account.php");

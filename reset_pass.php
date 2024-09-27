@@ -15,7 +15,7 @@ if (!isset($_SESSION['verification_complete']) || !$_SESSION['verification_compl
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $user_id = $_SESSION['user_id'];
+    $userID = $_SESSION['user_id'];
     $new_password = $_POST['new_password'];
 
     // Check if the password meets certain criteria (e.g., minimum length)
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $update_password_query = "UPDATE users SET password = :password WHERE id = :user_id";
         $stmt = $conn->prepare($update_password_query);
         $stmt->bindParam(':password', $hashed_password);
-        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':user_id', $userID);
         $result = $stmt->execute();
 
         if ($result) {

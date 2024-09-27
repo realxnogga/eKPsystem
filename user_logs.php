@@ -2,7 +2,9 @@
 session_start();
 include 'connection.php';
 include 'functions.php';
-// Check if the user is logged in
+
+$userID = $_SESSION['user_id'];
+
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
@@ -13,7 +15,7 @@ if (isset($_POST['view_logs'])) {
   $selected_date = $_POST['selected_date'];
   $query = "SELECT user_id, timestamp, activity FROM user_logs WHERE user_id = :user_id AND DATE(timestamp) = :selected_date ORDER BY timestamp DESC";
   $stmt = $conn->prepare($query);
-  $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+  $stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
   $stmt->bindParam(':selected_date', $selected_date);
   $stmt->execute();
   $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -21,7 +23,7 @@ if (isset($_POST['view_logs'])) {
   // Fetch today's date logs by default
   $query = "SELECT user_id, timestamp, activity FROM user_logs WHERE user_id = :user_id AND DATE(timestamp) = CURDATE() ORDER BY timestamp DESC";
   $stmt = $conn->prepare($query);
-  $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+  $stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
   $stmt->execute();
   $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }

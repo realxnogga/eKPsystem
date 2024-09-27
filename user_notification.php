@@ -3,6 +3,8 @@ session_start();
 
 include 'connection.php';
 
+$userID = $_SESSION['user_id'];
+
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
@@ -14,25 +16,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if (isset($_POST['submit_read'])) {
     $notif_id = $_POST['notif_id'];
-    $query = "UPDATE complaints SET seen = 1 WHERE userID = :user_id AND id = :notif_id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':user_id', $user_id);
-    $stmt->bindParam(':notif_id', $notif_id);
-    $stmt->execute();
-    $notifData = getAllNotificationData($conn, $user_id); // refresh data
+    updateSeenStatus($conn, $userID, "seen = 1", "id = $notif_id");
+    $notifData = getAllNotificationData($conn, $userID);
   }
 
   if (isset($_POST['submit_readAll'])) {
-    updateSeenStatus($conn, $user_id, "seen = 1");
-    $notifData = getAllNotificationData($conn, $user_id);
+    updateSeenStatus($conn, $userID, "seen = 1");
+    $notifData = getAllNotificationData($conn, $userID);
   }
 
   if (isset($_POST['submit_unread'])) {
-    $notifData = getAllNotificationData($conn, $user_id, "seen = 0");
+    $notifData = getAllNotificationData($conn, $userID, "seen = 0");
   }
 
   if (isset($_POST['submit_all'])) {
-    $notifData = getAllNotificationData($conn, $user_id);
+    $notifData = getAllNotificationData($conn, $userID);
   }
 }
 
@@ -68,14 +66,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form action="" method="POST" class="m-0 p-0 flex gap-x-3">
       <input
-       
         type="submit"
         value="All"
         name="submit_all"
         class="p-1 border border-gray-400">
 
       <input
-       
         type="submit"
         value="Unread"
         name="submit_unread"
@@ -84,7 +80,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form action="" method="POST" class="m-0 p-0">
       <input
-      
         type="submit"
         value="Mark all as read"
         name="submit_readAll"

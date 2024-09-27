@@ -18,7 +18,7 @@ $questions = [
 ];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
+    $userID = $_SESSION['user_id'];
 
     $answer1 = $_POST['answer1'];
     $answer2 = $_POST['answer2'];
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
 
     $get_answers_query = "SELECT answer1, answer2, answer3 FROM security WHERE user_id = :user_id";
     $stmt = $conn->prepare($get_answers_query);
-    $stmt->bindParam(':user_id', $user_id);
+    $stmt->bindParam(':user_id', $userID);
     $stmt->execute();
     $security_answers = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
     } else {
         $get_user_data_query = "SELECT attempt_count, restrict_end FROM users WHERE id = :user_id";
         $stmt = $conn->prepare($get_user_data_query);
-        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':user_id', $userID);
         $stmt->execute();
         $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
                 $update_attempts_query = "UPDATE users SET attempt_count = 0, restrict_end = :restrict_end WHERE id = :user_id";
                 $stmt = $conn->prepare($update_attempts_query);
                 $stmt->bindParam(':restrict_end', $restrict_end);
-                $stmt->bindParam(':user_id', $user_id);
+                $stmt->bindParam(':user_id', $userID);
                 $stmt->execute();
             }
         } else {
@@ -67,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
             $update_attempts_query = "UPDATE users SET attempt_count = :attempts WHERE id = :user_id";
             $stmt = $conn->prepare($update_attempts_query);
             $stmt->bindParam(':attempts', $new_attempts);
-            $stmt->bindParam(':user_id', $user_id);
+            $stmt->bindParam(':user_id', $userID);
             $stmt->execute();
         }
     }
@@ -75,11 +75,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['user_id'])) {
 
 // Display security questions
 if (isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
+    $userID = $_SESSION['user_id'];
 
     $get_questions_query = "SELECT question1, question2, question3 FROM security WHERE user_id = :user_id";
     $stmt = $conn->prepare($get_questions_query);
-    $stmt->bindParam(':user_id', $user_id);
+    $stmt->bindParam(':user_id', $userID);
     $stmt->execute();
     $security_row = $stmt->fetch(PDO::FETCH_ASSOC);
 

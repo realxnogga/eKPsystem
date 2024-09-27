@@ -93,12 +93,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Function to log user activity
-function logUserActivity($user_id, $activity) {
+function logUserActivity($userID, $activity) {
     global $conn; // Assuming $conn is your database connection variable
 
     $query = "INSERT INTO user_logs (user_id, activity) VALUES (?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bindParam(1, $user_id, PDO::PARAM_INT);
+    $stmt->bindParam(1, $userID, PDO::PARAM_INT);
     $stmt->bindParam(2, $activity, PDO::PARAM_STR);
     $stmt->execute();
     $stmt = null; // Close the cursor

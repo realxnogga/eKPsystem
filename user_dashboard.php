@@ -1,5 +1,6 @@
   <?php
   session_start();
+
   include 'connection.php';
   include 'functions.php';
 
@@ -8,7 +9,7 @@
     exit;
   }
 
-  $user_id = $_SESSION['user_id'] ?? '';
+  $userID = $_SESSION['user_id'] ?? '';
   $barangay_id = $_SESSION['barangay_id'] ?? '';
 
   $stmt_casetype_query = "SELECT 
@@ -19,7 +20,7 @@
                         WHERE UserID = :user_id AND BarangayID = :barangay_id AND MONTH(Mdate) = MONTH(NOW())";
 
   $stmt_casetype_count = $conn->prepare($stmt_casetype_query);
-  $stmt_casetype_count->bindParam(':user_id', $user_id);
+  $stmt_casetype_count->bindParam(':user_id', $userID);
   $stmt_casetype_count->bindParam(':barangay_id', $barangay_id);
   $stmt_casetype_count->execute();
   $stmt_casetype_count_temp = $stmt_casetype_count->fetch(PDO::FETCH_ASSOC);
@@ -39,7 +40,7 @@
                         WHERE UserID = :user_id AND BarangayID = :barangay_id AND MONTH(Mdate) = MONTH(NOW())";
 
 $stmt_casestatus_count = $conn->prepare($stmt_casestatus_query);
-$stmt_casestatus_count->bindParam(':user_id', $user_id);
+$stmt_casestatus_count->bindParam(':user_id', $userID);
 $stmt_casestatus_count->bindParam(':barangay_id', $barangay_id);
 $stmt_casestatus_count->execute();
 $stmt_casestatus_count_temp = $stmt_casestatus_count->fetch(PDO::FETCH_ASSOC);
@@ -66,7 +67,7 @@ $totalPendingCount = $stmt_casestatus_count_temp['total_pending_count'] ?? 0;
                         WHERE UserID = :user_id AND BarangayID = :barangay_id AND YEAR(Mdate) = YEAR(NOW())";
 
 $stmt_complaint_count = $conn->prepare($stmt_complaint_query);
-$stmt_complaint_count->bindParam(':user_id', $user_id);
+$stmt_complaint_count->bindParam(':user_id', $userID);
 $stmt_complaint_count->bindParam(':barangay_id', $barangay_id);
 $stmt_complaint_count->execute();
 $stmt_complaint_count_temp = $stmt_complaint_count->fetch(PDO::FETCH_ASSOC);

@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   exit;
 }
 
-$user_id = $_SESSION['user_id'] ?? '';
+$userID = $_SESSION['user_id'] ?? '';
 $barangay_id = $_SESSION['barangay_id'] ?? '';
 
 // Check if there's a delete message to display
@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
   // Check if a report already exists for the specified month and year
   $existing_report_query = "SELECT * FROM reports WHERE user_id = :user_id AND barangay_id = :barangay_id AND MONTH(report_date) = MONTH(:report_date) AND YEAR(report_date) = YEAR(:report_date)";
   $stmt = $conn->prepare($existing_report_query);
-  $stmt->bindParam(':user_id', $user_id);
+  $stmt->bindParam(':user_id', $userID);
   $stmt->bindParam(':barangay_id', $barangay_id);
   $stmt->bindParam(':report_date', $report_date);
   $stmt->execute();
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     $insert_query = "INSERT INTO reports (user_id, barangay_id, report_date, mayor, region, municipality, budget, population, totalcase, numlupon, male, female, landarea, criminal, civil, others, totalNature, media, concil, arbit, totalSet, pending, dismissed, repudiated, certcourt, dropped, totalUnset, outsideBrgy)
                          VALUES (:user_id, :barangay_id, :report_date, :mayor, :region, :municipality, :budget, :population, :totalcase, :numlupon, :male, :female, :landarea, :criminal, :civil, :others, :totalNature, :media, :concil, :arbit, :totalSet, :pending, :dismissed, :repudiated, :certcourt, :dropped, :totalUnset, :outsideBrgy)";
     $stmt = $conn->prepare($insert_query);
-    $stmt->bindParam(':user_id', $user_id);
+    $stmt->bindParam(':user_id', $userID);
     $stmt->bindParam(':barangay_id', $barangay_id);
     $stmt->bindParam(':report_date', $report_date);
     $stmt->bindParam(':mayor', $mayor);
@@ -240,7 +240,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                       // Fetch existing reports from the database
                       $existing_reports_query = "SELECT * FROM reports WHERE user_id = :user_id AND barangay_id = :barangay_id";
                       $stmt = $conn->prepare($existing_reports_query);
-                      $stmt->bindParam(':user_id', $user_id);
+                      $stmt->bindParam(':user_id', $userID);
                       $stmt->bindParam(':barangay_id', $barangay_id);
                       $stmt->execute();
                       $existing_reports = $stmt->fetchAll(PDO::FETCH_ASSOC);

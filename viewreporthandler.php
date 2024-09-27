@@ -2,7 +2,7 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt = $conn->prepare("SELECT mayor, region, budget, population, landarea, totalcase, numlupon, male, female, criminal, civil, others, totalNature, media, concil, arbit, totalSet, pending, dismissed, repudiated, certcourt, dropped, totalUnset, outsideBrgy FROM reports WHERE user_id = :user_id AND barangay_id = :barangay_id ORDER BY report_date DESC LIMIT 1");
-$stmt->bindParam(':user_id', $user_id);
+$stmt->bindParam(':user_id', $userID);
 $stmt->bindParam(':barangay_id', $barangay_id);
 $stmt->execute();
 
@@ -35,11 +35,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $totalUnsetCount = $row['totalUnset'] ?? '';
 
 $months_query = $conn->prepare("SELECT DISTINCT DATE_FORMAT(report_date, '%M %Y') AS month_year FROM reports WHERE user_id = :user_id");
-$months_query->execute(['user_id' => $user_id]);
+$months_query->execute(['user_id' => $userID]);
 $months = $months_query->fetchAll(PDO::FETCH_ASSOC);
 
 $years_query = $conn->prepare("SELECT DISTINCT DATE_FORMAT(report_date, '%Y') AS year FROM reports WHERE user_id = :user_id");
-$years_query->execute(['user_id' => $user_id]);
+$years_query->execute(['user_id' => $userID]);
 $years = $years_query->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -50,7 +50,7 @@ $selected_month = isset($_POST['selected_month']) ? $_POST['selected_month'] : d
 $selected_year = isset($_POST['selected_year']) ? $_POST['selected_year'] : date('Y');
 
 // Function to fetch annual report data
-function fetchAnnualReportData($conn, $user_id, $selected_year) {
+function fetchAnnualReportData($conn, $userID, $selected_year) {
     $annual_report_query = $conn->prepare("SELECT 
             SUM(totalcase) AS totalcase_sum,
             SUM(criminal) AS criminal_sum,
@@ -73,57 +73,57 @@ function fetchAnnualReportData($conn, $user_id, $selected_year) {
             AND YEAR(report_date) = :selected_year");
 
     $annual_report_query->execute([
-        'user_id' => $user_id,
+        'user_id' => $userID,
         'selected_year' => $selected_year
     ]);
 
     return $annual_report_query->fetch(PDO::FETCH_ASSOC);
 }
 // Function to fetch monthly report data
-function fetchMonthlyReportData($conn, $user_id, $selected_month) {
+function fetchMonthlyReportData($conn, $userID, $selected_month) {
     $report_query = $conn->prepare("SELECT * FROM reports WHERE user_id = :user_id AND DATE_FORMAT(report_date, '%M %Y') = :selected_month");
-    $report_query->execute(['user_id' => $user_id, 'selected_month' => $selected_month]);
+    $report_query->execute(['user_id' => $userID, 'selected_month' => $selected_month]);
 
     return $report_query->fetch(PDO::FETCH_ASSOC);
 }
 
 // Function to handle year selection
-function handleYearSelection($conn, $user_id, &$selected_year, &$annual_report_data) {
+function handleYearSelection($conn, $userID, &$selected_year, &$annual_report_data) {
     if (isset($_POST['selected_year'])) {
         $selected_year = $_POST['selected_year'];
-        $annual_report_data = fetchAnnualReportData($conn, $user_id, $selected_year);
+        $annual_report_data = fetchAnnualReportData($conn, $userID, $selected_year);
     }
 }
 
 // Function to handle month selection
-function handleMonthSelection($conn, $user_id, &$selected_month, &$report_data) {
+function handleMonthSelection($conn, $userID, &$selected_month, &$report_data) {
     if (isset($_POST['selected_month'])) {
         $selected_month = $_POST['selected_month'];
-        $report_data = fetchMonthlyReportData($conn, $user_id, $selected_month);
+        $report_data = fetchMonthlyReportData($conn, $userID, $selected_month);
     }
 }
 
 // Function to handle default behavior
-function handleDefaultBehavior($conn, $user_id, &$default_report_data) {
+function handleDefaultBehavior($conn, $userID, &$default_report_data) {
     if (!isset($_POST['selected_year']) && !isset($_POST['selected_month'])) {
         $default_report_query = $conn->prepare("SELECT * FROM reports WHERE user_id = :user_id ORDER BY report_date DESC LIMIT 1");
-        $default_report_query->execute(['user_id' => $user_id]);
+        $default_report_query->execute(['user_id' => $userID]);
         $default_report_data = $default_report_query->fetch(PDO::FETCH_ASSOC);
     }
 }
 
 // Usage
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    handleYearSelection($conn, $user_id, $selected_year, $annual_report_data);
-    handleMonthSelection($conn, $user_id, $selected_month, $report_data);
-    handleDefaultBehavior($conn, $user_id, $default_report_data);
+    handleYearSelection($conn, $userID, $selected_year, $annual_report_data);
+    handleMonthSelection($conn, $userID, $selected_month, $report_data);
+    handleDefaultBehavior($conn, $userID, $default_report_data);
 
     // Update displayed data based on the selected options
     // Adjust the values displayed in the input fields based on selected_month and selected_year
 
     // Check if the "Annual Report" select button is pressed
   if (isset($_POST['submit_annual'])) {
-        $annual_report_data = fetchAnnualReportData($conn, $user_id, $selected_year);
+        $annual_report_data = fetchAnnualReportData($conn, $userID, $selected_year);
         $selected_year = $_POST['selected_year'];
 
         // Fetch annual report data for the selected year

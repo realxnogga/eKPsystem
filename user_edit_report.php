@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   exit;
 }
 
-$user_id = $_SESSION['user_id'] ?? '';
+$userID = $_SESSION['user_id'] ?? '';
 $barangay_id = $_SESSION['barangay_id'] ?? '';
 
 // Check if the report_id is provided in the URL

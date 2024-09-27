@@ -3,15 +3,15 @@ session_start();
 include 'connection.php';
 include 'functions.php';
 
-$userId = $_SESSION['user_id'];
+$userID = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
-$stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+$stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Fetch the user's security questions from the database
 $stmt = $conn->prepare("SELECT question1, question2, question3 FROM security WHERE user_id = :user_id");
-$stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+$stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
 $stmt->execute();
 $securityQuestions = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Update the LGU logo filename in the database for the current user
     $stmt = $conn->prepare("UPDATE users SET lgu_logo = :lgulogo_name WHERE id = :user_id");
     $stmt->bindParam(':lgulogo_name', $lgulogo_name);
-    $stmt->bindParam(':user_id', $userId);
+    $stmt->bindParam(':user_id', $userID);
     $stmt->execute();
 
     // Optionally, you can show a success message
@@ -59,7 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Update the KP logo filename in the database for the current user
     $stmt = $conn->prepare("UPDATE users SET city_logo = :kplogo_name WHERE id = :user_id");
     $stmt->bindParam(':kplogo_name', $kplogo_name);
-    $stmt->bindParam(':user_id', $userId);
+    $stmt->bindParam(':user_id', $userID);
     $stmt->execute();
 
     // Optionally, you can show a success message

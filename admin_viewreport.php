@@ -5,7 +5,7 @@ include 'connection.php';
 include 'admin_func.php';   
 //include 'admin-navigation.php';
 include 'functions.php';
-$user_id = isset($_POST['user_id']) ? $_POST['user_id'] : '';
+$userID = isset($_POST['user_id']) ? $_POST['user_id'] : '';
 $barangay_id = isset($_POST['barangay_id']) ? $_POST['barangay_id'] : '';
 
 
@@ -259,7 +259,7 @@ include 'viewreporthandler.php';
                 <input type="number" class="form-control" id="totalUnset" name="totalUnset" readonly value="<?php  if ($selected_month && $selected_month !== date('F Y')) {
             echo $s_totalUnset; // Display the selected month's value
         } else {echo $totalUnsetCount;} ?>">
-         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+         <input type="hidden" name="user_id" value="<?php echo $userID; ?>">
     <input type="hidden" name="barangay_id" value="<?php echo $barangay_id; ?>">
             </div>
                         </div>
