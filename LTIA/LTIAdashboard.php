@@ -33,7 +33,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
           <div class="flex justify-between items-center mb-4">
             <div class="flex items-center">
               <div class="dilglogo">
-                <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" /> <!-- Adjusted height here -->
+              <img src="../img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
               </div>
               <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA)</h1>
             </div>
