@@ -19,22 +19,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
-  
-  <style>
-    .searchInput {
-      display: flex;
-      align-items: center;
-    }
-
-    .searchInput input[type="text"] {
-      flex: 1;
-    }
-
-    .searchInput input[type="submit"] {
-      margin-left: 5px;
-      /* Adjust the margin as needed */
-    }
-  </style>
 
 </head>
 
