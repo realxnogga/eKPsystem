@@ -10,7 +10,7 @@ $superadmin = $stmt->fetch(PDO::FETCH_ASSOC);
 
 function isActive($path)
 {
-  $currentPage = basename($_SERVER['SCRIPT_NAME']);
+  $currentPage = $_SERVER['SCRIPT_NAME'];
   return $currentPage == $path ? '!bg-blue-400 text-white' : '';
 }
 
@@ -94,21 +94,21 @@ function isActive($path)
 
     <ul class="font-medium">
       <li>
-        <a href="sa_dashboard.php" class="<?php echo isActive('sa_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="sa_dashboard.php" class="<?php echo isActive('/eKPsystem/sa_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-dashboard text-2xl"></i>
           <span>Dashboard</span>
         </a>
       </li>
 
       <li>
-        <a href="sa_registeredmuni.php" class="<?php echo isActive('sa_registeredmuni.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="sa_registeredmuni.php" class="<?php echo isActive('/eKPsystem/sa_registeredmuni.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-archive text-2xl"></i>
           <span>Registered Municipalities</span>
         </a>
       </li>
 
       <li>
-        <a href="sa_reports.php" class="<?php echo isActive('sa_reports.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="sa_reports.php" class="<?php echo isActive('/eKPsystem/sa_reports.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-report text-2xl"></i>
           <span>Reports</span>
         </a>
@@ -117,7 +117,7 @@ function isActive($path)
       <hr class="my-3">
 
       <li>
-        <a href="sa_setting.php" class="<?php echo isActive('sa_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="sa_setting.php" class="<?php echo isActive('/eKPsystem/sa_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
         </a>

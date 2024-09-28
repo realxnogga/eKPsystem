@@ -15,7 +15,7 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 function isActive($path)
 {
-  $currentPage = basename($_SERVER['SCRIPT_NAME']);
+  $currentPage = $_SERVER['SCRIPT_NAME'];
   return $currentPage == $path ? '!bg-blue-400 text-white' : '';
 }
 
@@ -42,8 +42,6 @@ function traverseDirectory()
 ?>
 
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>assets/css/styles.min.css" />
-
-
 
 <!-- tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>
@@ -151,13 +149,13 @@ function traverseDirectory()
 
     <ul class="font-medium">
       <li>
-        <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="<?php echo isActive('user_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="<?php echo isActive('/eKPsystem/user_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-dashboard text-2xl"></i>
           <span>Dashboard</span>
         </a>
       </li>
       <li>
-        <a href="<?php echo traverseDirectory(); ?>user_lupon.php" class="<?php echo isActive('user_lupon.php') . ' ' . isActive('user_used_forms.php') . ' ' . isActive('user_uploadfile_lupon.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_lupon.php" class="<?php echo isActive('/eKPsystem/user_lupon.php') . ' ' . isActive('/eKPsystem/user_used_forms.php') . ' ' . isActive('/eKPsystem/user_uploadfile_lupon.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-users text-2xl"></i>
           <span>Lupon</span>
         </a>
@@ -165,7 +163,7 @@ function traverseDirectory()
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_complaints.php" class="
         <?php
-        echo isActive('user_complaints.php') . ' ' . isActive('user_add_complaint.php') . ' ' . isActive('user_edit_complaint.php') . ' ' . isActive('user_manage_case.php') . ' ' . isActive('user_uploadfile_complaint.php');
+        echo isActive('/eKPsystem/user_complaints.php') . ' ' . isActive('/eKPsystem/user_add_complaint.php') . ' ' . isActive('/eKPsystem/user_edit_complaint.php') . ' ' . isActive('/eKPsystem/user_manage_case.php') . ' ' . isActive('/eKPsystem/user_uploadfile_complaint.php');
         ?> 
         flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-files text-2xl"></i>
@@ -173,20 +171,20 @@ function traverseDirectory()
         </a>
       </li>
       <li>
-        <a href="<?php echo traverseDirectory(); ?>user_archives.php" class="<?php echo isActive('user_archives.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_archives.php" class="<?php echo isActive('/eKPsystem/user_archives.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-archive text-2xl"></i>
           <span>Archives</span>
         </a>
       </li>
       <li>
-        <a href="<?php echo traverseDirectory(); ?>user_report.php" class="<?php echo isActive('user_report.php') . ' ' . isActive('user_add_report.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_report.php" class="<?php echo isActive('/eKPsystem/user_report.php') . ' ' . isActive('/eKPsystem/user_add_report.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-report text-2xl"></i>
           <span>Reports</span>
         </a>
       </li>
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>user_signed_documents.php" class="<?php echo isActive('user_signed_documents.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_signed_documents.php" class="<?php echo isActive('/eKPsystem/user_signed_documents.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-writing-sign text-2xl"></i>
           <span>Signed Documents</span>
         </a>
@@ -194,7 +192,7 @@ function traverseDirectory()
 
       <hr class="my-1">
       <li>
-        <a href="<?php echo traverseDirectory(); ?>LTIA/LTIAdashboard.php" class="<?php echo isActive('LTIAdashboard.php') . ' ' . isActive('form2MOVupload.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>LTIA/LTIAdashboard.php" class="<?php echo isActive('/eKPsystem/LTIA/LTIAdashboard.php') . ' ' . isActive('/eKPsystem/LTIA/form2MOVupload.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-certificate-2 text-2xl"></i>
           <span>LTIA</span>
         </a>
@@ -202,13 +200,13 @@ function traverseDirectory()
       <hr class="my-1">
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>user_logs.php" class="<?php echo isActive('user_logs.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_logs.php" class="<?php echo isActive('/eKPsystem/user_logs.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-user-check text-2xl"></i>
           <span>User Logs</span>
         </a>
       </li>
       <li>
-        <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('/eKPsystem/user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
         </a>

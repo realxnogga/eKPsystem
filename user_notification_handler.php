@@ -57,32 +57,16 @@ function updateSeenStatus($conn, $userID, $setFields = "", $extraCondition = "")
     $stmt->execute();
 }
 
+
 // count notification function
-function countNotification($conn, $userID)
+function countNotification($arg)
 {
-    $count_notif_query = "SELECT 
-    SUM(CASE WHEN seen = 0 
-      AND CStatus = 'Settled' 
-      AND (         
-            (CMethod = 'Mediation' AND NOW() > DATE_ADD(Mdate, INTERVAL 15 DAY))
-            OR 
-            (CMethod = 'Conciliation' AND NOW() > DATE_ADD(Mdate, INTERVAL 30 DAY))
-        )
-      AND isArchived = 0
-      AND seen = 0 /*  add seen = 0 to count only not seen*/
-      AND YEAR(Mdate) = YEAR(NOW())
-    
-    THEN 1 ELSE 0 END) AS count_notif
-    
-    FROM complaints WHERE UserID = :user_id";
-
-    $stmt_notif_count = $conn->prepare($count_notif_query);
-    $stmt_notif_count->bindParam(':user_id', $userID);
-    $stmt_notif_count->execute();
-    $stmt_notif_count_temp = $stmt_notif_count->fetch(PDO::FETCH_ASSOC);
-
-    return $stmt_notif_count_temp['count_notif'] ?? 0;
+    $flag = 0;
+    foreach ($arg as $val) {
+       $flag = $val['seen'] == 0 ? ++$flag : $flag;
+    }
+    return $flag;
 }
-$notifCount = countNotification($conn, $userID);
+$notifCount = countNotification($notifData);
 
 ?>
