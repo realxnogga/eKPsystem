@@ -79,11 +79,41 @@ if (isset($_POST['submit'])) {
     $cMethod = null; // Or $cMethod = ''; depending on how you handle null values in the database
   }
 
-  // Update the complaint in the 'complaints' table using an UPDATE query
-  $stmt = $conn->prepare("UPDATE complaints SET CNum = :caseNum, ForTitle = :forTitle, CNames = :complainants, RspndtNames = :respondents, CDesc = :complaintDesc, Petition = :petition, Mdate = :madeDate, RDate = :receivedDate, Pangkat = :pangkat, CType = :caseType, CStatus = :cStatus, CMethod = :cMethod, CAddress = :complainantAddress, RAddress = :respondentAddress WHERE id = :complaintId");
+  $_SESSION['test'] = $madeDate;
 
-  $stmt->bindParam(':complainantAddress', $complainantAddress, PDO::PARAM_STR);
-  $stmt->bindParam(':respondentAddress', $respondentAddress, PDO::PARAM_STR);
+
+  // only update seen column condition inside if is met
+  $seen = "";
+  if ($cStatus != 'Settled' && ($cMethod != 'Mediation' && $cMethod != 'Conciliation')) {
+
+    $seen = " seen = 0,";
+  }
+
+  if ($cStatus == 'Settled' && ($cMethod == 'Mediation' || $cMethod == 'Conciliation')) {
+
+    if ($cMethod == 'Mediation' && date('Y-m-d', strtotime($madeDate . ' + 15 days')) < date('Y-m-d')) {
+      $seen = " seen = 0,";
+    }
+    if ($cMethod == 'Conciliation' && date('Y-m-d', strtotime($madeDate . ' + 30 days')) < date('Y-m-d')) {
+      $seen = " seen = 0,";
+    }
+  }
+
+
+
+  // Update the complaint in the 'complaints' table using an UPDATE query
+  $query = "UPDATE complaints SET CNum = :caseNum, ForTitle = :forTitle, CNames = :complainants, RspndtNames = :respondents, CDesc = :complaintDesc, Petition = :petition, Mdate = :madeDate, RDate = :receivedDate, Pangkat = :pangkat, CType = :caseType, CStatus = :cStatus, CMethod = :cMethod, CAddress = :complainantAddress, RAddress = :respondentAddress,";
+
+  // Only add the `seen` column update if needed
+  $query .= !empty($seen) ? $seen : "";
+
+  // Remove trailing comma if there is no `seen` update
+  $query = rtrim($query, ",");
+
+  $query .= " WHERE id = :complaintId";
+
+  $stmt = $conn->prepare($query);
+
   $stmt->bindParam(':caseNum', $caseNum, PDO::PARAM_STR);
   $stmt->bindParam(':forTitle', $forTitle, PDO::PARAM_STR);
   $stmt->bindParam(':complainants', $complainants, PDO::PARAM_STR);
@@ -97,6 +127,8 @@ if (isset($_POST['submit'])) {
   $stmt->bindParam(':complaintId', $complaintId, PDO::PARAM_INT);
   $stmt->bindParam(':cStatus', $cStatus, PDO::PARAM_STR);
   $stmt->bindParam(':cMethod', $cMethod, PDO::PARAM_STR);
+  $stmt->bindParam(':complainantAddress', $complainantAddress, PDO::PARAM_STR);
+  $stmt->bindParam(':respondentAddress', $respondentAddress, PDO::PARAM_STR);
 
   $updateSuccessful = $stmt->execute();
 
@@ -129,7 +161,7 @@ if (isset($_POST['submit'])) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Edit Information</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  
+
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 

@@ -13,8 +13,6 @@ function isActive($path)
 {
   $currentPage = $_SERVER['SCRIPT_NAME'];
 
-  $_SESSION['test'] = $currentPage;
-
   return $currentPage == $path ? '!bg-blue-400 text-white' : '';
 }
 

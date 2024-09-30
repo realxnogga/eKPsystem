@@ -2,6 +2,8 @@
 session_start();
 
 include 'connection.php';
+include 'include/custom-scrollbar.php';
+
 
 $userID = $_SESSION['user_id'];
 
@@ -18,6 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $notif_id = $_POST['notif_id'];
     updateSeenStatus($conn, $userID, "seen = 1", "id = $notif_id");
     $notifData = getAllNotificationData($conn, $userID);
+
+    header("location: user_edit_complaint.php?id=$notif_id&page=1");
   }
 
   if (isset($_POST['submit_readAll'])) {
@@ -58,8 +62,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body class="bg-[#E8E8E7] h-screen w-screen flex flex-col gap-y-2 items-center justify-start">
 
-  <section class="w-[60rem] max-w-[90%] flex justify-end mt-2">
-    <a class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white" href="user_dashboard.php">back to dashboard</a>
+  <section class="w-[60rem] max-w-[90%] flex justify-between mt-2">
+    <h3 class="text-4xl font-bold text-gray-700">Notifications</h3>
+    <a href="user_dashboard.php" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">back to dashboard</a>
   </section>
 
   <section class="bg-white shadow rounded-lg h-[5rem] w-[60rem] max-w-[90%] flex items-center justify-between p-5">
@@ -91,30 +96,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <section class="bg-white shadow h-[30rem] w-[60rem] max-w-[90%] overflow-y-auto">
     <?php if (!empty($notifData)) { ?>
       <?php foreach ($notifData as $row) { ?>
-        <div class="relative <?php echo $row['seen'] === 1 ? 'bg-white' : 'bg-blue-100' ?> h-fit w-full border p-5 flex items-center justify-between">
-          <p>The case
-            <span id="textToCopy<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['CNum']); ?></span>
-            has lapse
-            <?php echo $row['CMethod'] == 'Mediation' ? '15 days for mediation' : ($row['CMethod'] == 'Conciliation' ? '30 days for conciliation' : ''); ?>
-          </p>
 
-          <section class="flex gap-x-4 items-center">
+        <div class="relative <?php echo $row['seen'] === 1 ? 'bg-white' : 'bg-blue-100' ?> hover:bg-gray-100 h-fit w-full border p-5 flex items-center justify-between">
 
-            <i class="ti ti-copy text-2xl" onclick="copyText(<?php echo $row['id']; ?>)"></i>
+
+          <div class="flex items-center text-wrap">
+            <p>The case </p>
 
             <form action="" method="POST" class="m-0 p-0">
               <input
                 type="hidden"
                 name="notif_id"
                 value="<?php echo $row['id']; ?>">
-
               <input
-                <?php echo $row['seen'] === 1 ? 'disabled' : '' ?>
+                id="textToCopy<?php echo $row['id']; ?>"
                 type="submit"
-                value="read"
+                value="<?php echo htmlspecialchars($row['CNum']); ?>"
                 name="submit_read"
-                class="p-1 border border-gray-400">
+                class="px-1 underline text-blue-500">
             </form>
+
+            <p>
+              has lapse
+              <?php echo $row['CMethod'] == 'Mediation' ? '15 days for mediation' : ($row['CMethod'] == 'Conciliation' ? '30 days for conciliation' : ''); ?>
+            </p>
+
+          </div>
+
+
+          <section class="flex gap-x-4 items-center">
+
+            <i class="ti ti-copy text-2xl" onclick="copyText(<?php echo $row['id']; ?>)"></i>
 
           </section>
         </div>
@@ -137,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <script>
     function copyText(index) {
 
-      var text = document.getElementById("textToCopy" + index).innerText;
+      var text = document.getElementById("textToCopy" + index).value;
 
       navigator.clipboard.writeText(text).then(function() {
 

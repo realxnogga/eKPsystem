@@ -69,16 +69,12 @@ include 'connection.php';
 
                 // Check if the 'error' query parameter is present in the URL
                 if (isset($_GET['error']) && $_GET['error'] === 'invalid_credentials') {
-                  // Display the error message below the input fields
                   echo '<div class="alert alert-danger" role="alert">Invalid email or password. Please try again.</div>';
                 } elseif (isset($_GET['error']) && $_GET['error'] === 'not_verified') {
-                  // Display the error message below the input fields
                   echo '<div class="alert alert-danger" role="alert">This account is not verified yet. Please contact your Admin.</div>';
                 } elseif (isset($_GET['error']) && $_GET['error'] === 'account_already_open') {
-                  // Display the error message below the input fields
                   echo '<div class="alert alert-danger" role="alert">Your Account is already open on another device.</div>';
                 }
-
                 ?>
 
                 <form action="login_handler.php" method="POST">
@@ -87,6 +83,9 @@ include 'connection.php';
                     <div class="col">
                       <label for="email" class="form-label">Email Address</label>
                       <input type="email" class="form-control" id="email" name="email">
+                      <?php 
+                       echo isset($_GET['error']) && ($_GET['error'] === 'emailIsEmpty' || $_GET['error'] === 'passwordAndEmailIsEmpty') ? '<p class="text-danger">Email is required</p>': ''
+                       ?>
                     </div>
                   </div>
 
@@ -97,10 +96,14 @@ include 'connection.php';
                       <label for="login-password" class="form-label">Password</label>
                       <div class="input-group">
                         <input type="password" class="form-control" name="password" id="login-password">
+                       
                         <div class="input-group-append">
                           <button class="btn btn-outline-secondary" type="button" id="toggle-login-password"><i class="fas fa-eye"></i></button>
                         </div>
                       </div>
+                      <?php 
+                       echo isset($_GET['error']) && ($_GET['error'] === 'passwordIsEmpty' || $_GET['error'] === 'passwordAndEmailIsEmpty') ? '<p class="text-danger">Password is required</p>': ''
+                       ?>
                     </div>
 
                     <br>
