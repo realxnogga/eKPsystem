@@ -1,6 +1,7 @@
 <?php
 session_start();
 include '../connection.php';
+include '../functions.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: login.php");
@@ -63,16 +64,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LTIA</title>
 
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- <link rel="stylesheet" href="../assets/css/styles.min.css" /> -->
+  <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+  
+  <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+
+  <!-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script> -->
 
 </head>
 
 <body class="bg-[#E8E8E7]">
 
-<!--?php include "../user_sidebar_header.php"; ?>-->
+<?php include "../user_sidebar_header.php"; ?>
 
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
@@ -627,33 +632,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <input type="submit" value="Update" class="btn btn-dark mt-3" />
     </form>
 
-    <!-- Modal for PDF Viewer -->
-    <div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-labelledby="pdfModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="pdfModalLabel">PDF Viewer</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <iframe id="pdfViewer" src="" width="100%" height="500px"></iframe>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
+
+<!-- Main modal -->
+<div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-4xl max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white shadow rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                PDF Viewer
+                </h3>
+
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="large-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+
+            </div>
+            <!-- Modal body -->
+            <div class="p-4 md:p-5 space-y-4">
+              <iframe id="pdfViewer" src="" class="h-[75%] w-full "></iframe>
+            </div>     
         </div>
-      </div>
     </div>
-  </div>
+</div>
 
   <script>
     $(document).ready(function() {
+        $('.view-pdf').attr('data-modal-target', 'large-modal');
+        $('.view-pdf').attr('data-modal-toggle', 'large-modal');
+
         $('.view-pdf').click(function() {
             var pdfFile = $(this).data('file'); // Get the PDF file path from data attribute
-            $('#pdfViewer').attr('src', pdfFile); // Set the file path in the iframe
-            $('#pdfModal').modal('show'); // Show the modal
+            $('#pdfViewer').attr('src', pdfFile); // Set the file path in the iframe   
+
         });
     });
   </script>
