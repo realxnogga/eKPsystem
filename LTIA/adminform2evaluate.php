@@ -69,7 +69,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
         <thead>
           <tr>
             <th>CRITERIA</th>
-            <th>Means Of Verification</th>
+            <th>Assignee Points</th>
             <th>File</th>
             <th>Rate</th>
             <th>Remarks</th>
@@ -96,9 +96,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
                     </ul>
                 </p>
                 </details>
-
         </td>
-            <td><input type="file" id="IA_1a_pdf_File" name="IA_1a_pdf_File" accept=".pdf" /></td>
+            <td>20</td>
             <td>
               <?php if (!empty($row['IA_1a_pdf_File'])) : ?>
                 <button type="button" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_1a_pdf_File']; ?>">View</button>
@@ -110,8 +109,24 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
             <td><textarea name="" placeholder="Remarks"></textarea></td>
           </tr>
           <tr>
-            <td>b) Sending of Notices and Summons</td>
-            <td><input type="file" id="IA_1b_pdf_File" name="IA_1b_pdf_File" accept=".pdf" /></td>
+            <td><details>
+          <summary><b> b. ) Sending of Notices/Summons to Parties - Evaluation Criteria</b></summary>
+          <p>
+            <b>Criteria:</b> Sending of Notices/Summons to parties within the prescribed period (within the next working day upon receipt of complaint).
+          </p>
+
+          <p><b>Scoring Breakdown:</b></p>
+          <ul>
+            <li><b>5 points</b> - Submitted/presented 80-100% of summons with complete and accurate information issued within the prescribed period.</li>
+            <li><b>3 points</b> - Submitted/presented 50-79% of summons with complete and accurate information issued within the prescribed period.</li>
+            <li><b>2 points</b> - Submitted/presented 1-49% of summons with complete and accurate information issued within the prescribed period.</li>
+            <li><b>0 points</b> - No summons/notices submitted/presented.</li>
+          </ul>
+
+          <p><b>Note:</b> Scores will be given only when a file copy of the summons issued within the next working day is stamped with the date and time of receipt.</p>
+        </details>
+        </td>
+            <td>10</td>
             <td>
               <?php if (!empty($row['IA_1b_pdf_File'])) : ?>
                 <button type="button" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_1b_pdf_File']; ?>">View</button>
@@ -122,7 +137,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
             <td><input type="number" value="" name=""></td>
             <td><textarea name="" placeholder="Remarks"></textarea></td>
           </tr>
-
           <tr>
                 <td>2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
                 <td><input type="file" id="IA_2_pdf_File" name="IA_2_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>

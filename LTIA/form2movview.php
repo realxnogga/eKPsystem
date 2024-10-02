@@ -83,8 +83,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       
     <div class="card">
                 <div class="card-body">
-                <input type="button" class="bg-gray-800 hover:bg-black-700 px-3 py-2 rounded-md text-white" value="Back" onclick="location.href='form2MOVupload.php';" style="margin-left: 0;">
-
+                <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center">
+                            <div class="dilglogo">
+                                <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" /> <!-- Adjusted height here -->
+                            </div>
+                            <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA)</h1>
+                        </div>
+                        <div class="menu">
+                            <ul class="flex space-x-4">
+                            <li>
+                            <input type="button" class="bg-gray-800 hover:bg-black-700 px-3 py-2 rounded-md text-white" value="Back" onclick="location.href='form2MOVupload.php';" style="margin-left: 0;">
+                            </li>                      
+                            </ul>
+                        </div>
+                    </div>
   <div class="container mt-5">
     <h2 class="text-left text-2xl font-semibold">FORM 1</h2>
     <form method="post" action="form2update.php" enctype="multipart/form-data">
@@ -114,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </tr>
           <tr>
             <td>b) Sending of Notices and Summons</td>
-            <td><input type="file" id="IA_1b_pdf_File" name="IA_1b_pdf_File" accept=".pdf" /></td>
+            <td><input type="file" id="IA_1b_pdf_File" name="IA_1b_pdf_File" accept=".pdf" read/></td>
             <td>
               <?php if (!empty($row['IA_1b_pdf_File'])) : ?>
                 <button type="button" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_1b_pdf_File']; ?>">View</button>
