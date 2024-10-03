@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
   $files = [
     'IA_1a_pdf_File',
     'IA_1b_pdf_File',
-    'IA_2_pdf_File',
     'IA_2a_pdf_File',
     'IA_2b_pdf_File',
     'IA_2c_pdf_File',
@@ -77,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
     barangay_id,
     IA_1a_pdf_File,
     IA_1b_pdf_File,
-    IA_2_pdf_File,
     IA_2a_pdf_File,
     IA_2b_pdf_File,
     IA_2c_pdf_File,

@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 
 // Define all allowed file columns
 $allowed_columns = [
-    'IA_1a_pdf_File', 'IA_1b_pdf_File', 'IA_2_pdf_File', 'IA_2a_pdf_File', 'IA_2b_pdf_File', 
+    'IA_1a_pdf_File', 'IA_1b_pdf_File', 'IA_2a_pdf_File', 'IA_2b_pdf_File', 
     'IA_2c_pdf_File', 'IA_2d_pdf_File', 'IA_2e_pdf_File', 'IB_1forcities_pdf_File', 
     'IB_1aformuni_pdf_File', 'IB_1bformuni_pdf_File', 'IB_2_pdf_File', 'IB_3_pdf_File', 
     'IB_4_pdf_File', 'IC_1_pdf_File', 'IC_2_pdf_File', 'ID_1_pdf_File', 'ID_2_pdf_File', 
@@ -141,16 +141,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           <tr>
                 <td>2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
-                <td><input type="file" id="IA_2_pdf_File" name="IA_2_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
-                <td>
-                  <?php if (!empty($row['IA_2_pdf_File'])) : ?>
-                <button type="button" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_2_pdf_File']; ?>">View</button>
-              <?php else : ?>
-                <span>No file uploaded</span>
-              <?php endif; ?>
-            </td>
-            <td>rate here</td>
-            <td>this is remark</td>
+                <td></td>
+                <td> </td>
+            <td></td>
+            <td></td>
               </tr>
                <tr>
                 <td>a) Mediation (within 15 days from initial confrontation with the Lupon Chairman)</td>

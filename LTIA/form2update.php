@@ -20,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $files = [
     'IA_1a_pdf_File',
     'IA_1b_pdf_File',
-    'IA_2_pdf_File',
     'IA_2a_pdf_File',
     'IA_2b_pdf_File',
     'IA_2c_pdf_File',
@@ -66,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $update_query = "UPDATE mov SET 
     IA_1a_pdf_File = :IA_1a_pdf_File,
     IA_1b_pdf_File = :IA_1b_pdf_File,
-    IA_2_pdf_File = :IA_2_pdf_File,
     IA_2a_pdf_File = :IA_2a_pdf_File,
     IA_2b_pdf_File = :IA_2b_pdf_File,
     IA_2c_pdf_File = :IA_2c_pdf_File,

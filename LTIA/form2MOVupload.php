@@ -78,7 +78,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
               </tr>
               <tr>
                 <td>2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
-                <td><input type="file" id="IA_2_pdf_File" name="IA_2_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
+                <td></td>
               </tr>
                <tr>
                 <td>a) Mediation (within 15 days from initial confrontation with the Lupon Chairman)</td>
