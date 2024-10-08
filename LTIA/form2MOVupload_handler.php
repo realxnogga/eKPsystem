@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
     'IIA_pdf_File',
     'IIB_1_pdf_File',
     'IIB_2_pdf_File',
-    'IIC_pdf_File', 
+    'IIC_pdf_File',
     'IIIA_pdf_File',
     'IIIB_pdf_File',
     'IIIC_1forcities_pdf_File',
@@ -54,21 +54,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
     'IIIC_1forcities3_pdf_File',
     'IIIC_2formuni1_pdf_File',
     'IIIC_2formuni2_pdf_File',
-    'IIIC_2formuni3_pdf_File', 
-    'IIID_pdf_File', 
-    'IV_forcities_pdf_File', 
+    'IIIC_2formuni3_pdf_File',
+    'IIID_pdf_File',
+    'IV_forcities_pdf_File',
     'IV_muni_pdf_File',
-    'V_1_pdf_File', 
+    'V_1_pdf_File',
     'threepeoplesorg'
   ];
 
   $fileNames = [];
   foreach ($files as $file) {
     if (isset($_FILES[$file])) {
-        $fileNames[$file] = uniqueNameConverter($_FILES[$file]['name']);
+      $fileNames[$file] = uniqueNameConverter($_FILES[$file]['name']);
     }
   }
-
 
   // Prepare the SQL query
   $insert_query = "INSERT INTO mov (
@@ -113,7 +112,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
     :barangay_id, 
     :IA_1a_pdf_File,
     :IA_1b_pdf_File,
-    :IA_2_pdf_File,
     :IA_2a_pdf_File,
     :IA_2b_pdf_File,
     :IA_2c_pdf_File,
@@ -169,12 +167,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
     echo "<script>alert('Files uploaded successfully!'); 
     window.location.href='form2movview.php';</script>";
     exit();
-} else {
+  } else {
     echo "<script>alert('Error inserting into database.');</script>";
-}
+  }
 } else {
-echo "<script>alert('Files already uploaded for this barangay.');
-window.location.href='form2movview.php';</script>";
+  echo "<script>alert('Files already uploaded for this barangay.');
+  window.location.href='form2movview.php';</script>";
 }
 
 ?>
