@@ -14,6 +14,25 @@ function isActive($path)
   return $currentPage == $path ? '!bg-blue-400 text-white' : '';
 }
 
+function getFullUrl()
+{
+  $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+  $host = $_SERVER['HTTP_HOST'];
+  $requestUri = $_SERVER['REQUEST_URI'];
+
+  return $scheme . '://' . $host . $requestUri;
+}
+
+function containsWord($haystack, $needle)
+{
+  return strpos($haystack, $needle) !== false;
+}
+
+function traverseDirectory()
+{
+  return containsWord(getFullUrl(), 'LTIA') ? '../' : '';
+}
+
 ?>
 
 <script src="https://cdn.tailwindcss.com"></script>
@@ -36,9 +55,9 @@ function isActive($path)
           </svg>
         </button>
 
-        <a href="user_dashboard.php" class="flex ms-2 md:me-24">
+        <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="flex ms-2 md:me-24">
           <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-              EKPsys
+            EKPsys
           </p>
         </a>
 
@@ -50,7 +69,7 @@ function isActive($path)
             <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
               <span class="sr-only">Open user menu</span>
 
-              <img class="w-8 h-8 rounded-full" src="profile_pictures/<?php echo $superadmin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+              <img class="w-8 h-8 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $superadmin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
 
             </button>
           </div>
@@ -68,11 +87,11 @@ function isActive($path)
             <ul class="py-1" role="none">
 
               <li>
-                <a href="sa_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
+                <a href="<?php echo traverseDirectory(); ?>sa_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
               </li>
 
               <li>
-                <a href="logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
               </li>
             </ul>
           </div>
@@ -86,7 +105,7 @@ function isActive($path)
   <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
 
     <div class="w-full flex flex-col gap-y-1 items-center mb-3">
-      <img class="w-20 h-20 rounded-full" src="profile_pictures/<?php echo $superadmin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+      <img class="w-20 h-20 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $superadmin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
 
       <p><?php echo $superadmin['first_name']; ?> </p>
     </div>
@@ -94,30 +113,37 @@ function isActive($path)
 
     <ul class="font-medium">
       <li>
-        <a href="sa_dashboard.php" class="<?php echo isActive('/eKPsystem/sa_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>sa_dashboard.php" class="<?php echo isActive('/eKPsystem/sa_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-dashboard text-2xl"></i>
           <span>Dashboard</span>
         </a>
       </li>
 
       <li>
-        <a href="sa_registeredmuni.php" class="<?php echo isActive('/eKPsystem/sa_registeredmuni.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>sa_registeredmuni.php" class="<?php echo isActive('/eKPsystem/sa_registeredmuni.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-archive text-2xl"></i>
           <span>Registered Municipalities</span>
         </a>
       </li>
 
       <li>
-        <a href="sa_reports.php" class="<?php echo isActive('/eKPsystem/sa_reports.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>sa_reports.php" class="<?php echo isActive('/eKPsystem/sa_reports.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-report text-2xl"></i>
           <span>Reports</span>
         </a>
       </li>
 
-      <hr class="my-3">
+      <hr class="my-1">
+      <li>
+        <a href="<?php echo traverseDirectory(); ?>LTIA/sa_dashboard.php" class="<?php echo isActive('/eKPsystem/LTIA/sa_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+          <i class="ti ti-certificate-2 text-2xl"></i>
+          <span>LTIA</span>
+        </a>
+      </li>
+      <hr class="my-1">
 
       <li>
-        <a href="sa_setting.php" class="<?php echo isActive('/eKPsystem/sa_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>sa_setting.php" class="<?php echo isActive('/eKPsystem/sa_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
         </a>
