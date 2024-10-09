@@ -21,7 +21,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="css/td_hover.css">
   <script src="js/tables.js" defer></script>
+  
 
 <body class="bg-[#E8E8E7]">
   <?php include "../user_sidebar_header.php"; ?>
@@ -39,10 +41,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
                         <div class="menu">
                             <ul class="flex space-x-4">
                             <li>
-                            <input type="button" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" value="Uploaded File" onclick="location.href='form2movview.php';" style="margin-left: 0;">
+                            <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='form2movview.php';" style="margin-left: 0;">
+                          <i class="ti ti-circle-dashed-check mr-2"></i>
+                          Uploaded File
+                          </button>
                         </li>             
                         <li>
-                            <input type="button" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" value="Back" onclick="location.href='LTIAdashboard.php';" style="margin-left: 0;">
+                        <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='LTIAdashboard.php';" style="margin-left: 0;">
+                          <i class="ti ti-arrow-narrow-left-dashed mr-2"></i>
+                          Back
+                          </button>
                         </li>             
                             </ul>
                         </div>
@@ -308,61 +316,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
         </div>
     </div>
     </div>
-    <style>
-      .custom-h2 {
-        font-size: 2rem;
-        /* Adjust the font size */
-        font-weight: bold;
-        /* Make the text bold */
-        color: #007bff;
-        /* Bootstrap primary color (blue) */
-        text-align: center;
-        /* Center align the heading */
-        text-transform: uppercase;
-        /* Uppercase the text */
-        padding: 10px 0;
-        /* Add padding above and below */
-        border-bottom: 2px solid #007bff;
-        /* Add a blue underline */
-        margin-bottom: 20px;
-        /* Space below the heading */
-      }
-
-      .bg-info {
-        background-color: #17a2b8 !important;
-        /* Sky blue */
-      }
-
-      .table-responsive {
-        margin-top: 20px;
-      }
-
-      /* Sky Blue for header and subheaders */
-      .bg-skyblue {
-        background-color: #87CEEB;
-        /* Sky blue */
-      }
-
-      /* Yellow for Efficiency in Operation */
-      .bg-yellow {
-        background-color: #FFD700;
-        /* Yellow */
-      }
-
-      /* Center text and add white color for sky blue headers */
-      .text-white {
-        color: white;
-      }
-
-      .table th,
-      .table td {
-        vertical-align: middle;
-      }
-      table tbody tr:hover {
-      background-color: #f0f0f0; /* Change this color as desired */
-      cursor: pointer; /* Optional: change cursor to pointer when hovering */
-    }
-    </style>
 </body>
 
 </html>

@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 include '../connection.php';
 
@@ -64,8 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
 
   $fileNames = [];
   foreach ($files as $file) {
-    if (isset($_FILES[$file])) {
+    if (isset($_FILES[$file]) && $_FILES[$file]['error'] == 0) {
       $fileNames[$file] = uniqueNameConverter($_FILES[$file]['name']);
+    } else {
+      $fileNames[$file] = null; // Assign NULL if the file is not uploaded
     }
   }
 
@@ -158,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
   // Execute and move files
   if ($stmt->execute()) {
     foreach ($files as $file) {
-      if (isset($fileNames[$file])) {
+      if (isset($fileNames[$file]) && $fileNames[$file] !== null) {
         $fileTMP = $_FILES[$file]['tmp_name'];
         $fileDestination = 'movfolder/' . $fileNames[$file];
         move_uploaded_file($fileTMP, $fileDestination);
