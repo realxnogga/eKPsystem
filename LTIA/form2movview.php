@@ -1,7 +1,7 @@
 <?php
 session_start();
 include '../connection.php';
-include '../functions.php';
+
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: ../login.php");
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LTIA</title>
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
-  <link rel="stylesheet" href="css/td_hover.css">
+
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -113,10 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="menu">
                         <ul class="flex space-x-4">
                             <li>
-                            <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='form2MOVupload.php';" style="margin-left: 0;">
-                          <i class="ti ti-arrow-narrow-left-dashed mr-2"></i>
-                          Back
-                          </button>
+                                <input type="button" class="bg-gray-800 hover:bg-black-700 px-3 py-2 rounded-md text-white" value="Back" onclick="location.href='form2MOVupload.php';">
                             </li>
                         </ul>
                     </div>
@@ -830,5 +827,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     });
   </script>
+
 </body>
 </html>

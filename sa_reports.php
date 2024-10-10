@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-include 'functions.php';
+
 
 // Check if the user is a superadmin
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {

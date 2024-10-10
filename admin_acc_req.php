@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 }
 
 include 'admin_func.php';
-include 'functions.php';
+
 
 $currentMunicipalityID = $_SESSION['municipality_id'] ?? null;
 

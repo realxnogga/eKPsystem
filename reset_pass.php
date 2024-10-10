@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
     <title>Reset Password</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="output.css" rel="stylesheet">
 </head>
 
 <body class="bg-[#EDF3FC] h-screen w-screen flex items-center justify-center ">

@@ -2,7 +2,7 @@
 session_start();
 
 include 'connection.php';
-include 'functions.php';
+
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
@@ -25,15 +25,15 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_
 <html lang="en">
 
 <head>
-  <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
   <title>Lupon</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <script src="node_modules/@popperjs/dist/umd/popper.min.js"></script>
+
+  <!-- <script src="node_modules/jquery/dist/jquery.min.js"></script> -->
 
 </head>
 
@@ -186,7 +186,7 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_
                       <button type="submit" class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white" id="save-button" name="save">Appoint</button>
                       <button type="submit" class="bg-yellow-500 hover:bg-yellow-400 px-3 py-2 rounded-md text-white" id="save-button" name="appoint">Notice</button>
                       <button type="button" class="bg-gray-300 hover:bg-gray-200 px-3 py-2 rounded-md text-black" id="clear-button" name="clear">Clear All</button>
-                      <a href="user_uploadfile_lupon.php" class="btn btn-sm btn-primary" title="Upload" data-placement="top"><i class="fas fa-upload"></i> </a>
+                      <a href="user_uploadfile_lupon.php" class="btn btn-sm btn-primary" title="Upload" data-placement="top"><i class="ti ti-upload"></i> </a>
                     </form>
                    </b>
 

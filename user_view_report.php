@@ -133,8 +133,6 @@ html2pdf(newWindow.document.body, {
         text-align: left;
     }
 
-    .sub-header {
-    }
 
 
     @media print {

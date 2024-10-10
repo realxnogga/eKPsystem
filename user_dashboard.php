@@ -2,7 +2,7 @@
   session_start();
 
   include 'connection.php';
-  include 'functions.php';
+  
 
   if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: login.php");
@@ -193,11 +193,12 @@ $summaryData = [
       }
     </style>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="node_modules/chart.js/dist/chart.umd.js"></script>
 
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+    <script src="node_modules/@popperjs/dist/umd/popper.min.js"></script>
+    
     <title>Dashboard</title>
 
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">

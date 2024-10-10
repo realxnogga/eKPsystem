@@ -4,7 +4,7 @@ session_start();
 // Ensure the user is a superadmin
 include 'connection.php';
 
-include 'functions.php';
+
 
 // Check if the user is a superadmin
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
@@ -79,7 +79,7 @@ $colors = [
     <title>Dashboard</title>
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
     <link rel="stylesheet" href="assets/css/styles.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
     <style>
         .card {
             box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);

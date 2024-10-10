@@ -2,7 +2,7 @@
 session_start();
 include 'connection.php';
 include 'registration_handler.php';
-include 'functions.php';
+
 ?>
 
 
@@ -19,7 +19,8 @@ include 'functions.php';
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
   <!-- jquery link -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
 </head>
 
 <style>
