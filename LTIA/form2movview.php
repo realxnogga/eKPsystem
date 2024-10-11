@@ -134,8 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Example for IA_1a -->
-                                <tr>
+          <tr>
             <td><b>1. a) Proper Recording of every dispute/complaint</b></td>
             <td><input type="file" id="IA_1a_pdf_File" name="IA_1a_pdf_File" accept=".pdf" readonly/>
             <input type="hidden" name="IA_1a_pdf_File" id="IA_1a_pdf_File" value="<?php echo $row['IA_1a_pdf_File']; ?>">
@@ -786,47 +785,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </table>
       <input type="submit" value="Update" class="btn btn-dark mt-3" />
     </form>
-    
-<!-- Main modal -->
-<div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-4xl max-h-full">
+  <!-- Main modal -->
+<div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed inset-0 z-50 justify-center items-center w-full h-full">
+    <div class="relative p-4 w-full max-w-6xl h-auto">
         <!-- Modal content -->
-        <div class="relative bg-white shadow rounded-lg shadow dark:bg-gray-700">
+        <div class="relative bg-white shadow rounded-lg dark:bg-gray-700 w-full h-full max-h-screen">
             <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                PDF Viewer
-                </h3>
-
+            <div class="flex items-center justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">PDF Viewer</h3>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="large-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                     </svg>
                     <span class="sr-only">Close modal</span>
                 </button>
-
             </div>
             <!-- Modal body -->
-            <div class="p-4 md:p-5 space-y-4">
-              <iframe id="pdfViewer" src="" class="h-[75%] w-full "></iframe>
-            </div>     
+            <div class="p-4 space-y-4 h-[85vh]">
+                <iframe id="pdfViewer" src="" class="w-full h-full border rounded-md"></iframe>
+            </div>
         </div>
     </div>
 </div>
 
-  <script>
+<!-- Script for modal interaction -->
+<script>
     $(document).ready(function() {
+        // Set up modal target
         $('.view-pdf').attr('data-modal-target', 'large-modal');
         $('.view-pdf').attr('data-modal-toggle', 'large-modal');
 
+        // When the button is clicked, load the PDF
         $('.view-pdf').click(function() {
-            var pdfFile = $(this).data('file'); // Get the PDF file path from data attribute
-            $('#pdfViewer').attr('src', pdfFile); // Set the file path in the iframe   
+            var pdfFile = $(this).data('file'); // Get the PDF file path from the data attribute
+            $('#pdfViewer').attr('src', pdfFile); // Set the PDF file in the iframe
 
+            // Show modal
+            $('#large-modal').removeClass('hidden').addClass('flex'); // Show modal by changing its CSS classes
+        });
+
+        // Close modal when clicking the close button or outside
+        $('[data-modal-hide="large-modal"]').click(function() {
+            $('#large-modal').addClass('hidden').removeClass('flex'); // Hide modal
         });
     });
-  </script>
+</script>
 
 </body>
 </html>
