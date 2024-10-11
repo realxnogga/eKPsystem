@@ -36,7 +36,6 @@ try {
         } else {
             $municipality_name = 'No municipality found for this user';
         }
-
         // Step 4: Fetch barangays associated with this municipality
         $query = "SELECT id, barangay_name FROM barangays WHERE municipality_id = :municipality_id";
         $stmt = $conn->prepare($query);
@@ -110,16 +109,15 @@ $(document).ready(function () {
                         'IIID', 'IV_forcities', 'IV_muni', 'V_1', 'threepeoplesorg'
                     ];
 
-                    // Loop through each file type and handle visibility
                     fileTypes.forEach(function (type) {
-                        var fileColumn = $('.file-column[data-type="' + type + '"]'); // Get the specific file column
+                        var fileColumn = $('.file-column[data-type="' + type + '"]'); 
 
                         if (data[type + '_pdf_File'] || data['threepeoplesorg']) {
                             var filePath = 'movfolder/' + (data[type + '_pdf_File'] || data['threepeoplesorg']);
-                            $('.view-pdf[data-type="' + type + '"]').attr('data-file', filePath).show(); // Show view button
+                            $('.view-pdf[data-type="' + type + '"]').attr('data-file', filePath).show();
                             fileColumn.html('<button type="button" class="btn btn-primary view-pdf" data-type="' + type + '" data-file="' + filePath + '">View</button>'); // Add view button to the file column
                         } else {
-                            // No file uploaded, show "No uploaded file" message
+                            
                             fileColumn.html('<div class="alert alert-warning mb-0">No uploaded file</div>');
                         }
                     });
@@ -158,11 +156,9 @@ $(document).ready(function () {
 });
 
 </script>
-
 </head>
 
 <body class="bg-[#E8E8E7]">
-
   <?php include "../admin_sidebar_header.php"; ?>
 
   <div class="p-4 sm:ml-44 ">
@@ -214,19 +210,36 @@ $(document).ready(function () {
                             <?php endforeach; ?>
                         </select>
                     </div>
-<form method="post" action="form2update.php" enctype="multipart/form-data">
-<input type="hidden" id="selected_barangay" name="selected_barangay" value="" />
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>CRITERIA</th>
-            <th>Assignee Points</th>
-            <th>File</th>
-            <th>Rate</th>
-            <th>Remarks</th>
+    <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
+    <input type="hidden" id="selected_barangay" name="selected_barangay" value="" />
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>CRITERIA</th>
+                <th>Assigned Points</th>
+                <th>File</th>
+                <th>Rate</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+            <td><b>I. EFFICIENCY IN OPERATION</b>
+
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
-        </thead>
-        <tbody>
+          <tr>
+        <td><b>A. Observance of Settlement Procedure and Settlement Deadlines</b>
+        </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
           <tr>
             <td>
             <details>
@@ -248,106 +261,112 @@ $(document).ready(function () {
                 </p>
                 </details>
         </td>
-            <td>20</td>
+            <td>5</td>
             <td class="file-column" data-type="IA_1a">
               <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td>  
+            <div class="btn-group" role="group" aria-label="Action buttons">
+              <button type="button" class="btn btn-warning">Request Change</button>
+              <button type="button" class="btn btn-success">Passed</button>
+              <button type="button" class="btn btn-danger">Reject</button>
+            </div>
+            <hr class="my-1">
+              <input type="number" value="" name="IA_1a_pdf_rate">
+            <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
+          </td>
+            <td><textarea name="IA_1a_pdf_remark" placeholder="Remarks"></textarea></td>
           </tr>
           <tr>
             <td><details>
-          <summary><b> b. ) Sending of Notices/Summons to Parties - Evaluation Criteria</b></summary>
-          <p>
-            <b>Criteria:</b> Sending of Notices/Summons to parties within the prescribed period (within the next working day upon receipt of complaint).
-          </p>
+        <summary><b>b) Sending of Notices/Summons to Parties within the Prescribed Period (within the next working day upon receipt of complaint)</b></summary>
+        <p><br>
+          <b>Scoring Details:</b> <br><br>
+          <b>5 points</b> - Submitted/presented 80-100% of summons with complete and accurate information issued within the prescribed period.<br>
+          <b>3 points</b> - Submitted/presented 50-79% of summons with complete and accurate information issued within the prescribed period.<br>
+          <b>2 points</b> - Submitted/presented 1-49% of summons with complete and accurate information issued within the prescribed period.<br>
+          <b>0 points</b> - Have not submitted/presented any summons/notices.<br><br>
 
-          <p><b>Scoring Breakdown:</b></p>
-          <ul>
-            <li><b>5 points</b> - Submitted/presented 80-100% of summons with complete and accurate information issued within the prescribed period.</li>
-            <li><b>3 points</b> - Submitted/presented 50-79% of summons with complete and accurate information issued within the prescribed period.</li>
-            <li><b>2 points</b> - Submitted/presented 1-49% of summons with complete and accurate information issued within the prescribed period.</li>
-            <li><b>0 points</b> - No summons/notices submitted/presented.</li>
-          </ul>
+          <b>Note:</b> Scores will be given only when file copies of the summons issued within the next working day are stamped with the date and time of receipt.
+        </p>
+      </details>
 
-          <p><b>Note:</b> Scores will be given only when a file copy of the summons issued within the next working day is stamped with the date and time of receipt.</p>
-        </details>
         </td>
-            <td>10</td>
+            <td>5</td>
             <td class="file-column" data-type="IA_1b">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
-          </tr>
-          <tr>
+            <td>
+            <input type="number" value="" name="IA_1b_pdf_rate">
+          <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
+            </td>
+            <td><textarea name="IA_1b_pdf_remark" placeholder="Remarks"></textarea></td>
+                    </tr>
           <tr>
   <td>
-    <details>
-      <summary>
-        2. Settlement and Award Period (with at least 10 settled cases within the assessment period)
-      </summary>
-      <p>10 points – 80-100% cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period</p>
-      <p>8 points – 60-79% cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period</p>
-      <p>6 points – 40-59% cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period</p>
-      <p>4 points – 20-39% cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period</p>
-      <p>2 points – 1-19% cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period</p>
-      <p>0 points – 0 cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period</p>
-    </details>
+  <details>
+  <summary><b>2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</b></summary>
+  <p><br>
+    <b>10 points</b> – 80-100% of cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period.<br><br>
+    <b>8 points</b> – 60-79% of cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period.<br><br>
+    <b>6 points</b> – 40-59% of cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period.<br><br>
+    <b>4 points</b> – 20-39% of cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period.<br><br>
+    <b>2 points</b> – 1-19% of cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period.<br><br>
+    <b>0 points</b> – 0 cases were resolved using any mode of ADR (supported by minutes of proceedings) within the prescribed period.
+  </p>
+
+</details>
+
   </td>
-  <td>10</td>
+  <td></td>
   <td></td>
   <td></td>
   <td></td>
 </tr>
-
                <tr>
                 <td>a) Mediation (within 15 days from initial confrontation with the Lupon Chairman)</td>
-                <td></td>
+                <td>2</td>
                 <td class="file-column" data-type="IA_2a">
               <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
           </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IA_2a_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><textarea name="IA_2a_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>b) Conciliation (15 days from initial confrontation with the Pangkat)</td>
-                <td></td>
+                <td>2</td>
                 <td class="file-column" data-type="IA_2b">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IA_2b_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><textarea name="IA_2b_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>c) Conciliation (15 days from initial confrontation with the Pangkat)</td>
-                <td></td>
-                
-
-
+                <td>2</td>
                 <td class="file-column" data-type="IA_2c">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IA_2c_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><textarea name="IA_2c_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>d) Arbitration (within 10 days from the date of the agreement to arbitrate)</td>
-                <td></td>
+                <td>2</td>
                 <td class="file-column" data-type="IA_2d">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IA_2d_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><textarea name="IA_2d_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>e) Conciliation beyond 46 days but not more than 60 days on a clearly meritorious case</td>
-                <td></td>
+                <td>2</td>
                 <td class="file-column" data-type="IA_2e">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IA_2e_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><textarea name="IA_2e_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>B. Systematic Maintenance of Records</th>
@@ -365,12 +384,12 @@ $(document).ready(function () {
               </tr>
               <tr>
                 <td>For Cities - computer database with searchable case information</td>
-                <td></td>
+                <td>2</td>
                 <td class="file-column" data-type="IB_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
-    </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+                </td>
+            <td><input type="number" value="" name="IB_1forcities_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>For Municipalities:</td>
@@ -381,48 +400,48 @@ $(document).ready(function () {
               </tr>
               <tr>
                 <td>a. Manual Records</td>
-                <td></td>
+                <td>1</td>
                 <td class="file-column" data-type="IB_1aformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IB_1aformuni_pdf_rate"></td>
+            <td><textarea name="IB_1aformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>b. Digital Record Filing</td>
-                <td></td>
+                <td>1</td>
                 <td class="file-column" data-type="IB_1bformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IB_1bformuni_pdf_rate"></td>
+            <td><textarea name="IB_1bformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>2. Copies of Minutes of Lupon meetings with attendance sheets and notices</td>
-                <td></td>
+                <td>1</td>
                 <td class="file-column" data-type="IB_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IB_2_pdf_rate"></td>
+            <td><textarea name="IB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>3. Copies of reports submitted to the Court and to the DILG on file</td>
-                <td></td>
+                <td>1</td>
                 <td class="file-column" data-type="IB_3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IB_3_pdf_rate"></td>
+            <td><textarea name="IB_3_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>4. All records are kept on file in a secured filing cabinet(s)</td>
-                <td></td>
+                <td>1</td>
                 <td class="file-column" data-type="IB_4">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IB_4_pdf_rate"></td>
+            <td><textarea name="IB_4_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>C. Timely Submissions to the Court and the DILG</th>
@@ -432,22 +451,53 @@ $(document).ready(function () {
                 <th></th>
               </tr>
               <tr>
-                <td>1. <b>To the Court:</b> Submitted/ presented copies of settlement agreement to the Court from the lapse of the ten-day period repudiating the mediation/ conciliation settlement agreement, or within five (5) calendar days from the date of the arbitration award</td>
-                <td></td>
+                <td>
+                <details>
+                <summary><b>1. To the Court: Submitted/presented copies of settlement agreement to the Court</b></summary>
+                <p><br>
+                  <b>Criteria Description:</b> <br>
+                  Copies of the settlement agreement must be submitted to the Court within the following periods: 
+                  <ul>
+                    <li>After the lapse of the ten-day period repudiating the mediation/conciliation settlement agreement</li>
+                    <li>Or within five (5) calendar days from the date of the arbitration award</li>
+                  </ul>
+                  <br>
+                  
+                  <b>Scoring Details:</b> <br><br>
+                  <b>5.0 points</b> - 80%-100% of the settlement agreements were submitted on time.<br>
+                  <b>4.0 points</b> - 60%-79% of the settlement agreements were submitted on time.<br>
+                  <b>3.0 points</b> - 40%-59% of the settlement agreements were submitted on time.<br>
+                  <b>2.0 points</b> - 20%-39% of the settlement agreements were submitted on time.<br>
+                  <b>1.0 point</b> - 1%-19% of the settlement agreements were submitted on time.<br>
+                  <b>0 points</b> - 0% of the reports were submitted on time.<br><br>
+
+                  <b>Note:</b> Timeliness is critical. Submission is considered on time only if it adheres strictly to the ten-day period after mediation/conciliation or five (5) days post-arbitration award.
+                </p>
+               </details>
+                </td>
+                <td>5</td>
                 <td class="file-column" data-type="IC_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IC_1_pdf_rate"></td>
+            <td><textarea name="IC_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <td>2. To the DILG (Quarterly)</td>
-                <td></td>
+                <td><details>
+                <summary><b>2. To the DILG (Monthly): Submission of required report to the DILG</b></summary>
+                <p><br>
+                  2 points - Submitted/presented the required report to the DILG within the prescribed period<br>
+                  1 point - Submitted/presented a partial report to the DILG within the prescribed period<br>
+                  0 point - The required report to the DILG was not submitted or was submitted beyond the prescribed period
+                </p>
+              </details>
+              </td>
+                <td>2</td>
                 <td class="file-column" data-type="IC_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IC_2_pdf_rate"></td>
+            <td><textarea name="IC_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
@@ -457,22 +507,45 @@ $(document).ready(function () {
                 <th></th>
               </tr>
               <tr>
-                <td>1. Notice of Meeting</td>
-                <td></td>
+                <td>
+                <details>
+              <summary><b>Notice of Meeting</b></summary>
+              <p><br>
+                <b>2.0 points</b> - Minimum of 12 meetings with KP-related matters, complete details, each Lupon member must sign (indicating their name, date, and time of receipt) when receiving notices of the meeting.<br>
+                <b>1.0 point</b> - Anything beyond the compliance document, with incomplete details.<br>
+                <b>0 point</b> - No data presented.
+              </p>
+            </details>
+                    </td>
+                <td>2</td>
                 <td class="file-column" data-type="ID_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="ID_1_pdf_rate"></td>
+            <td><textarea name="ID_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <td>2. Minutes of the Meeting</td>
-                <td></td>
+                <td>
+                <details>
+                <summary><b>Minutes of the Meeting</b></summary>
+                <p><br>
+                  <b>Number of months with KP-related meetings with minutes and attendance sheets conducted:</b><br><br>
+                  <b>8.0 points</b> - 12 months.<br>
+                  <b>6.0 points</b> - 9-11 months.<br>
+                  <b>4.0 points</b> - 6-8 months.<br>
+                  <b>2.0 points</b> - 3-5 months.<br>
+                  <b>1.0 point</b> - 1-2 months.<br>
+                  <b>0 point</b> - No meeting.
+                </p>
+              </details>
+
+                </td>
+                <td>8</td>
                 <td class="file-column" data-type="ID_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="ID_2_pdf_rate"></td>
+            <td><textarea name="ID_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>II. EFFECTIVENESS IN SECURING THE SETTLEMENT OF INTERPERSONAL DISPUTE OBJECTIVE OF THE KATARUNGANG PAMBARANGAY</th>
@@ -482,16 +555,37 @@ $(document).ready(function () {
                 <th></th>
               </tr>
               <tr>
-                <td>A. Quantity of settled cases against filed</td>
-                <td></td>
+                <td>
+                <details>
+                <summary><b>A. Quantity of settled cases against filed</b></summary>
+                <p><br>
+                  <b>With a minimum of 10 cases settled, the percentage of cases received by the Lupon resulting in settlement:</b><br><br>
+                  <b>10.0 points</b> - 100%.<br>
+                  <b>8.0 points</b> - 80%-99%.<br>
+                  <b>6.0 points</b> - 60%-79%.<br>
+                  <b>4.0 points</b> - 40%-59%.<br>
+                  <b>2.0 points</b> - 1%-39%.<br>
+                  <b>0 point</b> - 0%.
+                </p>
+              </details>
+                    </td>
+                <td>10</td>
                 <td class="file-column" data-type="IIA">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIA_pdf_rate"></td>
+            <td><textarea name="IIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <td>B. Quality of Settlement of Cases</td>
+                <td>
+                <details>
+                <summary><b>B. Quality of Settlement of Cases</b></summary>
+                <p><br>
+                  <b>1 point</b> - for non-recurrence and zero cases repudiated (out of the total number of settled cases).<br>
+                  <b>0 point</b> - at least one (1) case repudiated (out of the total number of settled cases).
+                </p>
+              </details>
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -499,30 +593,41 @@ $(document).ready(function () {
               </tr>
               <tr>
                 <td>1. Zero cases repudiated</td>
-                <td></td>
+                <td>1</td>
                 <td class="file-column" data-type="IIB_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIB_1_pdf_rate"></td>
+            <td><textarea name="IIB_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>2. Non-recurrence of cases settled</td>
-                <td></td>
+                <td>1</td>
                 <td class="file-column" data-type="IIB_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIB_2_pdf_rate"></td>
+            <td><textarea name="IIB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <td>C. At least 80% compliance with the terms of settlement or award after the cases have been settled</td>
-                <td></td>
+                <td>
+                <details>
+              <summary><b>At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
+              <p><br>
+                <b>8 points</b> - 80%-100% compliance with the terms of settlement or award.<br>
+                <b>6 points</b> - 70%-79% compliance with the terms of settlement or award.<br>
+                <b>4 points</b> - 60%-69% compliance with the terms of settlement or award.<br>
+                <b>2 points</b> - 50%-51% compliance with the terms of settlement or award.<br>
+                <b>1 point</b> - 49% and below compliance with the terms of settlement or award.
+              </p>
+            </details>
+                </td>
+                <td>8</td>
                 <td class="file-column" data-type="IIC">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIC_pdf_rate"></td>
+            <td><textarea name="IIC_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>III. CREATIVITY AND RESOURCEFULNESS OF THE LUPONG TAGAPAMAYAPA</th>
@@ -532,22 +637,43 @@ $(document).ready(function () {
                 <th></th>
               </tr>
               <tr>
-                <td>A. Settlement Technique utilized by the Lupon</td>
-                <td></td>
+                <td>
+                <details>
+              <summary><b>A. Settlement Technique Utilized by the Lupon</b></summary>
+              <p><br>
+                <b>10 points</b> – Five or more settlement techniques utilized.<br>
+                <b>8 points</b> – At least four settlement techniques utilized.<br>
+                <b>6 points</b> – At least three settlement techniques utilized.<br>
+                <b>4 points</b> – At least two settlement techniques utilized.<br>
+                <b>2 points</b> – At least one settlement technique utilized.<br>
+                <b>0 points</b> – No report submitted.
+              </p>
+              <p><b>Note:</b> Settlement techniques to be considered are those that are within the KP process and procedures.</p>
+            </details>
+                </td>
+                <td>10</td>
                 <td class="file-column" data-type="IIIA">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIIA_pdf_rate"></td>
+            <td><textarea name="IIIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <td>B. Coordination with Concerned Agencies relating to disputes filed (PNP, DSWD, DILG, DAR, DENR, Office of the Prosecutor, Court, DOJ, CHR, etc.)</td>
-                <td></td>
+                <td>
+                <details>
+                <summary><b>B. Coordination with Concerned Agencies Relating to Disputes Filed</b></summary>
+                <p><br>
+                  <b>5 points</b> – With proof of coordination relative to the filed disputes.<br>
+                  <b>0 points</b> – Without proof of coordination relative to the filed disputes.
+                </p>
+              </details>
+                </td>
+                <td>5</td>
                 <td class="file-column" data-type="IIIB">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIIB_pdf_rate"></td>
+            <td><textarea name="IIIB_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>C. Sustained information drive to promote Katarungang Pambarangay</td>
@@ -566,12 +692,12 @@ $(document).ready(function () {
                     <li>IEC materials developed</li>
                   </ul>
                 </td>
-                <td></td>
+                <td>2</td>
                 <td class="file-column" data-type="IIIC_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIIC_1forcities_pdf_rate"></td>
+            <td><textarea name="IIIC_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
                 <td>
@@ -579,12 +705,12 @@ $(document).ready(function () {
                     <li>IEC activities conducted</li>
                   </ul>
                 </td>
-                <td></td>
+                <td>1</td>
                 <td class="file-column" data-type="IIIC_1forcities2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIIC_1forcities2_pdf_rate"></td>
+            <td><textarea name="IIIC_1forcities2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
                 <td>
@@ -592,12 +718,12 @@ $(document).ready(function () {
                     <li>Innovative Campaign Strategy</li>
                   </ul>
                 </td>
-                <td></td>
+                <td>2</td>
                 <td class="file-column" data-type="IIIC_1forcities3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIIC_1forcities3_pdf_rate"></td>
+            <td><textarea name="IIIC_1forcities3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
                 <td>2. For Municipalities</td>
@@ -612,12 +738,12 @@ $(document).ready(function () {
                     <li>IEC materials developed</li>
                   </ul>
                 </td>
-                <td></td>
+                <td>2</td>
                 <td class="file-column" data-type="IIIC_2formuni1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIIC_2formuni1_pdf_rate"></td>
+            <td><textarea name="IIIC_2formuni1_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
                 <td>
@@ -625,12 +751,12 @@ $(document).ready(function () {
                     <li>IEC activities conducted</li>
                   </ul>
                 </td>
-                <td></td>
+                <td>2</td>
                 <td class="file-column" data-type="IIIC_2formuni2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIIC_2formuni2_pdf_rate"></td>
+            <td><textarea name="IIIC_2formuni2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
                 <td>
@@ -638,22 +764,38 @@ $(document).ready(function () {
                     <li>Innovative Campaign Strategy</li>
                   </ul>
                 </td>
-                <td></td>
+                <td>1</td>
                 <td class="file-column" data-type="IIIC_2formuni3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIIC_2formuni3_pdf_rate"></td>
+            <td><textarea name="IIIC_2formuni3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
-                <td>D. KP Training or seminar within the assessment period<br />
-                  Organized skills training participated by the Lupong Tagapamayapa</td>
-                <td></td>
+                <td><details>
+              <summary><b>D. KP Training or Seminar Participated Within the Assessment Period</b></summary>
+              <p><br>
+                Organized skills training participated by the Lupong Tagapamayapa. Trainings or seminars should cover the following, and the Lupon should be able to articulate during validation their learnings therefrom:
+                <ul>
+                  <li>1) General/basic orientation or review of the KP system</li>
+                  <li>2) Skills training on conduct of KP proceedings (e.g., relevant ADR systems, KP case management)</li>
+                  <li>3) Advanced knowledge on laws, policies, and standards in relation to the KP system (e.g., gender and human rights, criminal/civil justice)</li>
+                </ul>
+                <b>10 points</b> = At least 6 qualified trainings/seminars.<br>
+                <b>8 points</b> = At least 5 qualified trainings/seminars.<br>
+                <b>6 points</b> = At least 4 qualified trainings/seminars.<br>
+                <b>4 points</b> = At least 3 qualified trainings/seminars.<br>
+                <b>2 points</b> = At least 2 qualified trainings/seminars.<br>
+                <b>0 points</b> = No qualified information on training/seminar.
+              </p>
+            </details>
+            </td>
+                <td>10</td>
                 <td class="file-column" data-type="IIID">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IIID_pdf_rate"></td>
+            <td><textarea name="IIID_pdf_rate_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
@@ -675,8 +817,8 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IV_forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IV_forcities_pdf_rate"></td>
+            <td><textarea name="IV_forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
                 <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
@@ -684,8 +826,8 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IV_muni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="IV_muni_pdf_rate"></td>
+            <td><textarea name="IV_muni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
@@ -696,21 +838,21 @@ $(document).ready(function () {
               </tr>
               <tr>
                 <td>1. From City, Municipal, Provincial or NGAs</td>
-                <td></td>
+                <td>2</td>
                 <td class="file-column" data-type="V_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="V_1_pdf_rate"></td>
+            <td><textarea name="V_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
-                <td></td>
+                <td>1</td>
                 <td class="file-column" data-type="threepeoplesorg">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name=""></td>
-            <td><textarea name="" placeholder="Remarks"></textarea></td>
+            <td><input type="number" value="" name="threepeoplesorg_rate"></td>
+            <td><textarea name="threepeoplesorg_remark" placeholder="Remarks"></textarea></td>
               </tr>
             </tbody>
           </table>
