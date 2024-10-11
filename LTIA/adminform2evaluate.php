@@ -58,7 +58,6 @@ try {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="css/td_hover.css">
   <title>Secretaries Corner</title>
 <style>
 /* CSS to ensure alerts fit well within the table cells */

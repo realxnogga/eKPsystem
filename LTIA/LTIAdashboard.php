@@ -1,7 +1,7 @@
 <?php
 session_start();
 include '../connection.php';
-include '../functions.php';
+
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
@@ -17,9 +17,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LTIA</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
   <link rel="stylesheet" href="assets/css/styles.min.css" />
 </head>
 

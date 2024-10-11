@@ -4,7 +4,7 @@ include 'connection.php';
 
 include 'admin_func.php';   
 //include 'admin-navigation.php';
-include 'functions.php';
+
 $userID = isset($_POST['user_id']) ? $_POST['user_id'] : '';
 $barangay_id = isset($_POST['barangay_id']) ? $_POST['barangay_id'] : '';
 

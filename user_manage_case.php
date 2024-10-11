@@ -2,7 +2,7 @@
 session_start();
 include 'connection.php';
 
-include 'functions.php';
+
 
 // Set default language to English if not set
 $_SESSION['language'] = isset($_SESSION['language']) ? $_SESSION['language'] : 'english';

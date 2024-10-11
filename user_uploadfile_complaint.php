@@ -1,7 +1,7 @@
 <?php
 session_start();
 include 'connection.php';
-include 'functions.php';
+
 
 
 $uploadMessage = 'Click Choose File and select the file to Upload.';

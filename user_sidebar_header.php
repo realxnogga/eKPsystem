@@ -1,3 +1,4 @@
+
 <?php
 
 require 'connection.php';
@@ -44,22 +45,22 @@ function traverseDirectory()
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>assets/css/styles.min.css" />
 
 <!-- tailwind -->
-<script src="https://cdn.tailwindcss.com"></script>
+<link href="<?php echo traverseDirectory(); ?>output.css" rel="stylesheet">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- jquery -->
+<script src="<?php echo traverseDirectory(); ?>node_modules/jquery/dist/jquery.min.js"></script>
+
+<!-- select2 for dropdown -->
+<link href="<?php echo traverseDirectory(); ?>node_modules/select2/dist/css/select2.min.css" rel="stylesheet" />
+<script src="<?php echo traverseDirectory(); ?>node_modules/select2/dist/js/select2.min.js"></script>
 
 <!-- flowbite component -->
-<link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.1/dist/flowbite.min.js"></script>
+<script src="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.js"></script>
+<link href="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.css"  rel="stylesheet" />
 
 <!-- tabler icon -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+<link rel="stylesheet" href="<?php echo traverseDirectory(); ?>node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
-<!-- Include Select2 CSS -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-
-<!-- Include Select2 JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
 <nav class="fixed top-0 z-40 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">

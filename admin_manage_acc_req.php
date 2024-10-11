@@ -2,7 +2,7 @@
 session_start();
 include 'connection.php';
 //include 'admin-navigation.php';
-include 'functions.php';
+
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {

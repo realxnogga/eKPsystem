@@ -17,7 +17,8 @@ include 'connection.php';
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
   <!-- jquery link -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
 </head>
 
 <style>
@@ -133,13 +134,13 @@ include 'connection.php';
 
 <script>
   $(document).ready(function() {
-    // Initially disable the toggle button
-    $('#toggle-login-password').prop('disabled', true);
+    // // Initially disable the toggle button
+    // $('#toggle-login-password').prop('disabled', true);
 
-    // Enable the toggle button only if there is text in the password field
-    $('#login-password').keyup(function() {
-      $('#toggle-login-password').prop('disabled', this.value === "" ? true : false);
-    });
+    // // Enable the toggle button only if there is text in the password field
+    // $('#login-password').keyup(function() {
+    //   $('#toggle-login-password').prop('disabled', this.value === "" ? true : false);
+    // });
 
     // Password toggle for the login password field
     $('#toggle-login-password').click(function() {
