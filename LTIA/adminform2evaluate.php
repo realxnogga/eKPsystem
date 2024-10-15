@@ -50,7 +50,39 @@ try {
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
+
+try {
+  // Fetch the `barangay_id` based on the selected barangay name
+  $query = "SELECT id FROM barangays WHERE barangay_name = :barangay_name";
+  $stmt = $conn->prepare($query);
+  $stmt->bindParam(':barangay_name', $selected_barangay_name, PDO::PARAM_STR);
+  $stmt->execute();
+  $barangay_row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  if ($barangay_row && isset($barangay_row['id'])) {
+      $barangay_id = $barangay_row['id'];
+
+      // Fetch the `mov_id` from the `mov` table based on the `barangay_id`
+      $query = "SELECT id FROM mov WHERE barangay_id = :barangay_id LIMIT 1";
+      $stmt = $conn->prepare($query);
+      $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
+      $stmt->execute();
+      $mov_row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if ($mov_row && isset($mov_row['id'])) {
+          $mov_id = $mov_row['id']; // Retrieved `mov_id`
+      } else {
+          $mov_id = null; // No `mov_id` found
+      }
+  } else {
+      $mov_id = null; // No `barangay_id` found
+  }
+} catch (PDOException $e) {
+  echo "Error fetching mov_id: " . $e->getMessage();
+}
+
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -82,7 +114,10 @@ try {
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <script>
+
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+ <script>
 $(document).ready(function () {
     // Handle barangay selection
     $('#barangay_select').on('change', function () {
@@ -98,25 +133,42 @@ $(document).ready(function () {
                 success: function (data) {
                     console.log('Returned data:', data);
 
+                    // Check if there is an error in the response
+                    if (data.error) {
+                        alert(data.error); // Display the error message
+                        return;
+                    }
+
+                    // Extract barangay_id and mov_id from the response
+                    var barangayId = data.barangay_id;
+                    var movId = data.mov_id;
+
+                    // Log the IDs for debugging
+                    console.log('Barangay ID:', barangayId);
+                    console.log('MOV ID:', movId);
+
+                    // Populate the input fields
+                    $('#barangay_id').val(barangayId); // Set barangay_id input
+                    $('#mov_id').val(movId); // Set mov_id input
+
                     // Handle each PDF file from the returned data
                     var fileTypes = [
-                        'IA_1a', 'IA_1b', 'IA_2a', 'IA_2b', 'IA_2c', 'IA_2d', 'IA_2e',
-                        'IB_1forcities', 'IB_1aformuni', 'IB_1bformuni', 'IB_2', 'IB_3',
-                        'IB_4', 'IC_1', 'IC_2', 'ID_1', 'ID_2', 'IIA', 'IIB_1', 'IIB_2',
-                        'IIC', 'IIIA', 'IIIB', 'IIIC_1forcities', 'IIIC_1forcities2',
-                        'IIIC_1forcities3', 'IIIC_2formuni1', 'IIIC_2formuni2', 'IIIC_2formuni3',
-                        'IIID', 'IV_forcities', 'IV_muni', 'V_1', 'threepeoplesorg'
+                        'IA_1a', 'IA_1b', 'IA_2a', 'IA_2b', 'IA_2c', 'IA_2d', 'IA_2e', 'IB_1forcities', 'IB_1aformuni', 'IB_1bformuni', 'IB_2', 'IB_3', 'IB_4', 'IC_1', 'IC_2', 'ID_1', 'ID_2', 'IIA', 'IIB_1', 'IIB_2', 'IIC', 'IIIA', 'IIIB', 'IIIC_1forcities', 'IIIC_1forcities2', 'IIIC_1forcities3', 'IIIC_2formuni1', 'IIIC_2formuni2', 'IIIC_2formuni3', 'IIID', 'IV_forcities', 'IV_muni', 'V_1', 'threepeoplesorg'
                     ];
+
+                    // Clear previous file columns
+                    $('.file-column').html(''); 
 
                     fileTypes.forEach(function (type) {
                         var fileColumn = $('.file-column[data-type="' + type + '"]'); 
 
-                        if (data[type + '_pdf_File'] || data['threepeoplesorg']) {
-                            var filePath = 'movfolder/' + (data[type + '_pdf_File'] || data['threepeoplesorg']);
+                        // Check for the specific PDF file types
+                        var fileKey = type + '_pdf_File';
+                        if (data[fileKey]) {
+                            var filePath = 'movfolder/' + data[fileKey];
                             $('.view-pdf[data-type="' + type + '"]').attr('data-file', filePath).show();
                             fileColumn.html('<button type="button" class="btn btn-primary view-pdf" data-type="' + type + '" data-file="' + filePath + '">View</button>'); // Add view button to the file column
                         } else {
-                            
                             fileColumn.html('<div class="alert alert-warning mb-0">No uploaded file</div>');
                         }
                     });
@@ -126,8 +178,10 @@ $(document).ready(function () {
                 }
             });
         } else {
-            // If no barangay is selected, clear all file columns
+            // If no barangay is selected, clear all file columns and input fields
             $('.file-column').html('<div class="alert alert-info mb-0">Select barangay</div>');
+            $('#barangay_id').val(''); // Clear barangay_id input
+            $('#mov_id').val(''); // Clear mov_id input
         }
     });
 
@@ -155,6 +209,8 @@ $(document).ready(function () {
 });
 
 </script>
+
+
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -211,7 +267,12 @@ $(document).ready(function () {
                     </div>
     <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
     <input type="hidden" id="selected_barangay" name="selected_barangay" value="" />
-          <table class="table table-bordered">
+    <!-- Example form input for mov_id -->
+    <input type="hidden" id="mov_id" name="mov_id"> <!-- Display fetched mov_id -->
+    <input type="hidden" id="barangay_id" name="barangay_id"> <!-- I want the barangay_id fetch here -->
+    <!-- mov_id is fetched here -->
+
+    <table class="table table-bordered">
             <thead>
               <tr>
                 <th>CRITERIA</th>
@@ -855,6 +916,7 @@ $(document).ready(function () {
               </tr>
             </tbody>
           </table>
+
       <input type="submit" value="Okay" class="btn btn-dark mt-3" />
     </form>
         </div>

@@ -1340,20 +1340,16 @@ input:checked + .toggle-bg {
   height: 2.5rem;
 }
 
+.h-\[28rem\] {
+  height: 28rem;
+}
+
 .h-\[30rem\] {
   height: 30rem;
 }
 
 .h-\[5rem\] {
   height: 5rem;
-}
-
-.h-\[75\%\] {
-  height: 75%;
-}
-
-.h-\[85\%\] {
-  height: 85%;
 }
 
 .h-\[calc\(100\%-1rem\)\] {
@@ -1371,6 +1367,10 @@ input:checked + .toggle-bg {
 
 .h-screen {
   height: 100vh;
+}
+
+.h-\[85\%\] {
+  height: 85%;
 }
 
 .max-h-full {
@@ -1437,12 +1437,12 @@ input:checked + .toggle-bg {
   max-width: 56rem;
 }
 
-.max-w-6xl {
-  max-width: 72rem;
-}
-
 .max-w-\[90\%\] {
   max-width: 90%;
+}
+
+.max-w-6xl {
+  max-width: 72rem;
 }
 
 .flex-1 {
@@ -2232,11 +2232,6 @@ input:checked + .toggle-bg {
 .hover\:bg-green-400:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(49 196 141 / var(--tw-bg-opacity));
-}
-
-.hover\:bg-green-500:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(14 159 110 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-red-400:hover {
