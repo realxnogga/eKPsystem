@@ -21,6 +21,8 @@ include 'registration_handler.php';
   <!-- jquery link -->
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
 
+  <script src="service-worker-registration.js"></script>
+  
 </head>
 
 <style>

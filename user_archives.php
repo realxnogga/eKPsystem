@@ -2,32 +2,42 @@
 session_start();
 include 'connection.php';
 
-
-
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
 }
 
-// Retrieve user-specific archived complaints from the database
 $userID = $_SESSION['user_id'];
-$query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 1";
-$result = $conn->query($query);
 
-// Handle unarchiving of complaints
-if (isset($_GET['unarchive_id'])) {
-  $unarchiveID = $_GET['unarchive_id'];
+# function to get all unarchive case from database
+function getAllUnarchive($conn, $userID) {
+  $query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 1";
+  return $conn->query($query);
+}
+# always get unarchive case hwen the page rendered
+$result = getAllUnarchive($conn, $userID);
 
-  // Update the complaint's IsArchived status to unarchive it
-  $unarchiveQuery = "UPDATE complaints SET IsArchived = 0 WHERE id = '$unarchiveID'";
-  $conn->query($unarchiveQuery);
 
-  // Redirect back to the user_archives.php page after unarchiving
-  header("Location: user_archives.php");
-  exit;
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  $inputData = json_decode(file_get_contents('php://input'), true);
+
+  if (isset($POST[$inputData['selected_id']])) {
+
+    $unarchiveID = $inputData['selected_id'];
+    
+    $unarchiveQuery = "UPDATE complaints SET IsArchived = 0 WHERE id = $unarchiveID";
+    $stmt = $conn->prepare($unarchiveQuery);
+    
+    if ($stmt->execute()) {
+       $result = getAllUnarchive($conn, $userID);
+       echo json_encode($result);
+       exit;
+    }   
+}
 }
 
-include 'report_handler.php';
+// include 'report_handler.php';
 ?>
 
 <!doctype html>
@@ -38,33 +48,80 @@ include 'report_handler.php';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Archives</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  
-  <style>
-    .table {
-      font-size: 14px;
-      /* Adjust the font size as needed */
-      font-weight: bold;
+
+  <script>
+    // Send data via POST using fetch API
+    async function sendData(unarchiveId) {
+      try {
+        const response = await fetch("", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            selected_id: unarchiveId
+          })
+        });
+
+        const result = await response.json();
+
+        // Clear previous table content
+        const tableBody = document.querySelector("tbody");
+        tableBody.innerHTML = '';
+
+        // Populate table with new data
+        result.forEach(row => {
+          const newRow = `<tr>
+                                <td>${row.CNum}</td>
+                                <td>${row.ForTitle}</td>
+                                <td>${row.CNames}</td>
+                                <td>${row.RspndtNames}</td>
+                                <td>${row.Mdate}</td>
+                               
+                          </tr>`;
+                          
+          tableBody.innerHTML += newRow;
+        });
+
+      } catch (error) {
+        console.error("Error:", error);
+      }
     }
 
-    tr:hover {
-      background-color: #D6EEEE;
-    }
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('formArchive');
+      form.onsubmit = function(event) {
+        event.preventDefault();
+        const unarchiveId = document.querySelector('input[name="unarchive_id"]').value;
 
+        if (navigator.onLine) {
+          sendData(unarchiveId);
+        } else {
+          localStorage.setItem('unarchiveId', unarchiveId);
+          alert('No internet. Data will be inserted once the internet is restored.');
+        }
+      };
 
-    .card {
-      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
-      border-radius: 15px;
+      // Sync when back online
+      window.addEventListener('online', function() {
+        const unarchiveId = localStorage.getItem('unarchiveId');
+        if (unarchiveId) {
+          sendData(unarchiveId);
+          localStorage.removeItem('unarchiveId');
+        }
+      });
+    });
+  </script>
 
-    }
-  </style>
 </head>
 
 <body class="bg-[#E8E8E7]">
 
-<?php include "user_sidebar_header.php"; ?>
+  <?php include "user_sidebar_header.php"; ?>
 
   <div class="p-4 sm:ml-44 ">
-  <div class="rounded-lg mt-16">
+    <div class="rounded-lg mt-16">
 
       <!--  Row 1 -->
       <div class="card">
@@ -83,8 +140,7 @@ include 'report_handler.php';
 
             <form method="GET" action="" class="searchInput">
               <div style="display: flex; align-items: center;">
-                <input type="text" class="form-control" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" class="searchInput" style="flex: 1; margin-right: 5px;">
-                <input type="button" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" value="Search" onclick="location.href='user_complaints.php';" class="refresh-button">
+                <input type="text" class="form-control" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" onkeyup="liveSearch()" class="searchInput" style="flex: 1; margin-right: 5px;">
               </div>
             </form>
 
@@ -101,20 +157,33 @@ include 'report_handler.php';
                 </tr>
               </thead>
               <tbody>
-                <?php
-                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                  echo "<tr>";
-                  echo "<td>" . $row['CNum'] . "</td>";
-                  echo "<td>" . $row['ForTitle'] . "</td>";
-                  echo "<td>" . $row['CNames'] . "</td>";
-                  echo "<td>" . $row['RspndtNames'] . "</td>";
-                  echo "<td>" . date('Y-m-d', strtotime($row['Mdate'])) . "</td>";
-                  echo "<td>";
-                  echo '<a href="unarchive_complaint.php?unarchive_id=' . $row['id'] . '" class="btn btn-sm btn-danger"><i class="fa fa-file-o"></i> Unarchive</a>';
-                  echo "</td>";
-                  echo "</tr>";
-                }
-                ?>
+
+                <?php foreach($result as $row) { ?>
+                  <tr>
+                    <td><?php echo $row['CNum']; ?></td>
+                    <td><?php echo $row['ForTitle']; ?></td>
+                    <td><?php echo $row['CNames']; ?></td>
+                    <td><?php echo $row['RspndtNames']; ?></td>
+                    <td><?php echo $row['Mdate']; ?></td>
+
+                    <td>
+                      <form id="formArchive">
+                        <input
+                          type="hidden"
+                          name="unarchive_id"
+                          value="<?php echo $row['id'] ?>">
+
+                        <input
+                          type="submit"
+                          value="unarchive"
+                          name="submit_unarchive"
+                          class="p-2 bg-red-400 text-white rounded-md">
+                      </form>
+                    </td>
+
+                  </tr>
+                <?php } ?>
+
               </tbody>
             </table>
 
@@ -122,11 +191,7 @@ include 'report_handler.php';
 
         </div>
       </div>
-
-
     </div>
-
-
   </div>
 
 </body>

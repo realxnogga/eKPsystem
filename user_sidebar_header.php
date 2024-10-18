@@ -51,7 +51,7 @@ function traverseDirectory()
 <script src="<?php echo traverseDirectory(); ?>node_modules/jquery/dist/jquery.min.js"></script>
 
 <!-- select2 for dropdown -->
-<link href="<?php echo traverseDirectory(); ?>node_modules/select2/dist/css/select2.min.css" rel="stylesheet" />
+<link href="<?php echo traverseDirectory(); ?>node_modules/select2/dist/js/select2.min.js" rel="stylesheet" />
 <script src="<?php echo traverseDirectory(); ?>node_modules/select2/dist/js/select2.min.js"></script>
 
 <!-- flowbite component -->
@@ -60,7 +60,6 @@ function traverseDirectory()
 
 <!-- tabler icon -->
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
-
 
 <nav class="fixed top-0 z-40 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">
@@ -206,6 +205,7 @@ function traverseDirectory()
           <span>User Logs</span>
         </a>
       </li>
+      
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('/eKPsystem/user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>

@@ -49,7 +49,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <link rel="stylesheet" href="assets/css/styles.min.css" />
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-
+  
+  <script src="service-worker-registration.js"></script>
+  
 </head>
 
 <body>

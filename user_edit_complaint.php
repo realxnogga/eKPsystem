@@ -79,8 +79,6 @@ if (isset($_POST['submit'])) {
     $cMethod = null; // Or $cMethod = ''; depending on how you handle null values in the database
   }
 
-  $_SESSION['test'] = $madeDate;
-
 
   // only update seen column condition inside if is met
   $seen = "";

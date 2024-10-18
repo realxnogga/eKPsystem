@@ -197,12 +197,13 @@ $summaryData = [
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
 
-    <script src="node_modules/@popperjs/dist/umd/popper.min.js"></script>
+    <script src="node_modules/@popperjs/core/dist/umd/popper.min.js"></script>
     
     <title>Dashboard</title>
 
     <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
+    
   </head>
 
   <body class="bg-[#E8E8E7]">
