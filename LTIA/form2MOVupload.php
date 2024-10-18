@@ -8,6 +8,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   exit;
 }
 
+
 ?>
 
 <!doctype html>
@@ -39,10 +40,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
                         <div class="menu">
                             <ul class="flex space-x-4">
                             <li>
-                            <input type="button" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" value="Uploaded File" onclick="location.href='form2movview.php';" style="margin-left: 0;">
+                            <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='form2movview.php';" style="margin-left: 0;">
+                    <i class="ti ti-file-upload mr-2"></i> <!-- Icon -->
+                    Uploaded File
+                  </button>
                         </li>             
                         <li>
-                            <input type="button" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" value="Back" onclick="location.href='LTIAdashboard.php';" style="margin-left: 0;">
+                        <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='LTIAdashboard.php';" style="margin-left: 0;">
+                    <i class="ti ti-arrow-left-dashed mr-2"></i>
+                    Back
                         </li>             
                             </ul>
                         </div>

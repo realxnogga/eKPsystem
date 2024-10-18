@@ -1352,10 +1352,13 @@ input:checked + .toggle-bg {
   height: 5rem;
 }
 
+<<<<<<< HEAD
 .h-\[85\%\] {
   height: 85%;
 }
 
+=======
+>>>>>>> 1066329599de2b3468b6f117d877e0491d277624
 .h-\[calc\(100\%-1rem\)\] {
   height: calc(100% - 1rem);
 }
@@ -1373,6 +1376,7 @@ input:checked + .toggle-bg {
   height: 100vh;
 }
 
+<<<<<<< HEAD
 .h-\[\] {
   height: ;
 }
@@ -1399,6 +1403,10 @@ input:checked + .toggle-bg {
 
 .h-\[23rem\] {
   height: 23rem;
+=======
+.h-\[85\%\] {
+  height: 85%;
+>>>>>>> 1066329599de2b3468b6f117d877e0491d277624
 }
 
 .max-h-full {
@@ -1465,12 +1473,12 @@ input:checked + .toggle-bg {
   max-width: 56rem;
 }
 
-.max-w-6xl {
-  max-width: 72rem;
-}
-
 .max-w-\[90\%\] {
   max-width: 90%;
+}
+
+.max-w-6xl {
+  max-width: 72rem;
 }
 
 .flex-1 {
