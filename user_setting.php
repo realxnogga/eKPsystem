@@ -2,7 +2,6 @@
 session_start();
 include 'connection.php';
 
-
 $userID = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
 $stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
@@ -94,7 +93,7 @@ function uploadFile($file, $directory)
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Settings</title>
-  
+
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
   <style>
@@ -108,10 +107,10 @@ function uploadFile($file, $directory)
 
 <body class="bg-[#E8E8E7]">
 
-<?php include "user_sidebar_header.php"; ?>
+  <?php include "user_sidebar_header.php"; ?>
 
   <div class="p-4 sm:ml-44 ">
-  <div class="rounded-lg mt-16">
+    <div class="rounded-lg mt-16">
 
       <!-- Row 1 -->
       <div class="row">
@@ -121,8 +120,27 @@ function uploadFile($file, $directory)
               <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                 <div class="mb-3 mb-sm-0">
                   <div class="d-flex align-items-center prof-container">
-                    <img src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle"> <input type="file" id="fileInput" name="profile_pic" style="display: none;">
-                    <button type="button" id="uploadButton" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">Upload a picture</button>
+
+                    <img
+                      src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>"
+                      alt=""
+                      class="d-block ui-w-80"
+                      style="max-width: 120px; max-height: 120px; margin-right: 10px;"
+                      class="align-middle">
+
+                    <input
+                      type="file"
+                      id="fileInput"
+                      name="profile_pic"
+                      style="display: none;">
+
+                    <button
+                      type="button"
+                      id="uploadButton"
+                      class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">
+                      Upload a picture
+                    </button>
+
                   </div>
                   <br>
                   <h5 class="card-title mb-9 fw-semibold">Account Settings</h5>
@@ -133,34 +151,48 @@ function uploadFile($file, $directory)
                   <?php if (!empty($error)) { ?>
                     <p class="text-danger"><?php echo $error; ?></p>
                   <?php } ?>
+                  <!-- ################################################################### -->
                   <form id="userSettingsForm" method="post" action="general_handler.php">
+
                     <div class="form-group">
                       <label for="first_name">Username:</label>
                       <input type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>">
                     </div>
+
                     <div class="form-group">
                       <label for="first_name">First Name:</label>
                       <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>">
                     </div>
+
                     <div class="form-group">
                       <label for="last_name">Last Name:</label>
                       <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>">
                     </div>
+
                     <div class="form-group">
                       <label for="contact_number">Contact Number:</label>
                       <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>">
                     </div>
+
                     <div class="form-group">
                       <label for="email">Email:</label>
                       <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>">
                     </div>
+
                     <div class="form-group">
                       <label for="new_password">New Password (Leave empty to keep current password):</label>
                       <input type="password" class="form-control" pattern=".{8,}" title="Password must be at least 8 characters long" id="new_password" name="new_password" placeholder="">
                     </div>
+
                     <input type="hidden" name="active_tab" value="general"><br>
-                    <button type="submit" name="general_settings" class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white">Save Changes</button>
+                    <button
+                      type="submit"
+                      name="general_settings"
+                      class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white">
+                      Save Changes
+                    </button>
                   </form>
+                  <!-- ################################################################### -->
                 </div>
               </div>
             </div>
@@ -175,6 +207,9 @@ function uploadFile($file, $directory)
                 <div class="card-body p-4">
                   <h5 class="card-title mb-9 fw-semibold">Update Security Settings</h5>
                   <hr>
+
+                  <!-- ################################################################### -->
+
                   <form id="securityForm" method="post" action="security_handler.php">
                     <div class="tab-pane fade <?php echo !isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-security">
                       <h6>
@@ -226,6 +261,7 @@ function uploadFile($file, $directory)
                       <input type="hidden" name="active_tab" value="security">
                     </div>
                   </form>
+                  <!-- ################################################################### -->
                 </div>
               </div>
             </div>

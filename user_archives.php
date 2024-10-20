@@ -9,35 +9,36 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 
 $userID = $_SESSION['user_id'];
 
-# function to get all unarchive case from database
-function getAllUnarchive($conn, $userID) {
-  $query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 1";
-  return $conn->query($query);
+# function to get all unarchived cases from the database
+function getAllUnarchive($conn, $userID)
+{
+  $query = "SELECT * FROM complaints WHERE UserID = :userID AND IsArchived = 1";
+  $stmt = $conn->prepare($query);
+  $stmt->bindParam(':userID', $userID);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-# always get unarchive case hwen the page rendered
+
+# always get unarchive cases when the page is rendered
 $result = getAllUnarchive($conn, $userID);
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
   $inputData = json_decode(file_get_contents('php://input'), true);
 
-  if (isset($POST[$inputData['selected_id']])) {
+  if (isset($inputData['selected_id']) && is_array($inputData['selected_id'])) {
+    $unarchiveIDs = $inputData['selected_id'];
 
-    $unarchiveID = $inputData['selected_id'];
-    
-    $unarchiveQuery = "UPDATE complaints SET IsArchived = 0 WHERE id = $unarchiveID";
+    // Prepare the query to unarchive multiple rows
+    $unarchiveQuery = "UPDATE complaints SET IsArchived = 0 WHERE id IN (" . implode(",", array_map('intval', $unarchiveIDs)) . ")";
     $stmt = $conn->prepare($unarchiveQuery);
-    
-    if ($stmt->execute()) {
-       $result = getAllUnarchive($conn, $userID);
-       echo json_encode($result);
-       exit;
-    }   
-}
-}
 
-// include 'report_handler.php';
+    if ($stmt->execute()) {
+      $updatedResult = getAllUnarchive($conn, $userID);  // Fetch updated data
+      echo json_encode($updatedResult);  // Return updated data in JSON
+      exit;
+    }
+  }
+}
 ?>
 
 <!doctype html>
@@ -50,67 +51,82 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
   <script>
-    // Send data via POST using fetch API
-    async function sendData(unarchiveId) {
-      try {
-        const response = await fetch("", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            selected_id: unarchiveId
-          })
-        });
+    async function sendData(selectedIds) {
 
-        const result = await response.json();
+      const response = await fetch("", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          selected_id: selectedIds
+        })
+      });
 
-        // Clear previous table content
-        const tableBody = document.querySelector("tbody");
-        tableBody.innerHTML = '';
+      const result = await response.json();
 
-        // Populate table with new data
-        result.forEach(row => {
-          const newRow = `<tr>
-                                <td>${row.CNum}</td>
-                                <td>${row.ForTitle}</td>
-                                <td>${row.CNames}</td>
-                                <td>${row.RspndtNames}</td>
-                                <td>${row.Mdate}</td>
-                               
-                          </tr>`;
-                          
-          tableBody.innerHTML += newRow;
-        });
+      // Clear previous table content
+      const tableBody = document.querySelector("tbody"); // Get the actual element
+      tableBody.innerHTML = '';
 
-      } catch (error) {
-        console.error("Error:", error);
+      // Populate table with new data
+      result.forEach(row => {
+        const newRow = `
+              <tr>                 
+                <td>${row.CNum}</td>
+                <td>${row.ForTitle}</td>
+                <td>${row.CNames}</td>
+                <td>${row.RspndtNames}</td>
+                <td>${row.Mdate}</td>
+                <td><input type="checkbox" class="case-checkbox" value="${row.id}"></td>
+              </tr>`;
+        tableBody.innerHTML += newRow;
+      });
+
+      if (result.length === 0) {
+        document.getElementById('unarchiveButtonSection').classList.add('hidden');
       }
+
     }
+  </script>
 
-    // Handle form submission
+  <script>
+    // Handle form submission for unarchiving multiple rows
     document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('formArchive');
-      form.onsubmit = function(event) {
+      document.getElementById('unarchiveSelected').addEventListener('click', function(event) {
         event.preventDefault();
-        const unarchiveId = document.querySelector('input[name="unarchive_id"]').value;
 
-        if (navigator.onLine) {
-          sendData(unarchiveId);
+        // Get all selected checkboxes
+        const checkboxes = document.querySelectorAll('.case-checkbox:checked');
+        const selectedIds = Array.from(checkboxes).map(checkbox => checkbox.value);
+
+        if (selectedIds.length > 0) {
+          if (navigator.onLine) {
+            sendData(selectedIds); // Send selected IDs
+          } else {
+            localStorage.setItem('unarchiveIds', JSON.stringify(selectedIds));
+            alert('No internet. Your request will be executed once the internet is restored.');
+          }
         } else {
-          localStorage.setItem('unarchiveId', unarchiveId);
-          alert('No internet. Data will be inserted once the internet is restored.');
-        }
-      };
-
-      // Sync when back online
-      window.addEventListener('online', function() {
-        const unarchiveId = localStorage.getItem('unarchiveId');
-        if (unarchiveId) {
-          sendData(unarchiveId);
-          localStorage.removeItem('unarchiveId');
+          alert('Please select at least one case to unarchive.');
         }
       });
+
+      // Sync function when back online
+      function syncWhenOnline() {
+        const unarchiveIds = JSON.parse(localStorage.getItem('unarchiveIds'));
+        if (unarchiveIds && unarchiveIds.length > 0) {
+          sendData(unarchiveIds);
+          localStorage.removeItem('unarchiveIds');
+        }
+      }
+
+      if (navigator.onLine) {
+        syncWhenOnline();
+      }
+
+      window.addEventListener('online', syncWhenOnline);
+
     });
   </script>
 
@@ -120,79 +136,82 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <?php include "user_sidebar_header.php"; ?>
 
-  <div class="p-4 sm:ml-44 ">
+  <div class="p-4 sm:ml-44">
     <div class="rounded-lg mt-16">
 
       <!--  Row 1 -->
       <div class="card">
         <div class="card-body">
 
-          <div class="d-flex align-items-center">
-            <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
-            <div>
-              <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
-            </div>
-          </div>
-          <br>
-
           <h5 class="card-title mb-9 fw-semibold">Barangay Complaint Archives</h5>
-          <b>
 
-            <form method="GET" action="" class="searchInput">
-              <div style="display: flex; align-items: center;">
-                <input type="text" class="form-control" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" onkeyup="liveSearch()" class="searchInput" style="flex: 1; margin-right: 5px;">
-              </div>
-            </form>
+          <input type="text" class="form-control" name="search" id="searchUnarchive" placeholder="Search by Case No., Title, Complainants, or Respondents" onkeyup="searchTable()" class="searchInput" style="flex: 1; margin-right: 5px;">
 
-            <br>
-            <table class="table table-striped">
-              <thead class="thead-dark">
+
+          <br>
+          <table id="UnarchiveTable" class="table table-striped">
+            <thead class="thead-dark">
+              <tr>
+                <th>No.</th>
+                <th>Title</th>
+                <th>Complainants</th>
+                <th>Respondents</th>
+                <th>Date</th>
+                <th>Unarchive</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <?php foreach ($result as $row) { ?>
                 <tr>
-                  <th>No.</th>
-                  <th>Title</th>
-                  <th>Complainants</th>
-                  <th>Respondents</th>
-                  <th>Date</th>
-                  <th>Actions</th>
+                  <td><?php echo $row['CNum']; ?></td>
+                  <td><?php echo $row['ForTitle']; ?></td>
+                  <td><?php echo $row['CNames']; ?></td>
+                  <td><?php echo $row['RspndtNames']; ?></td>
+                  <td><?php echo $row['Mdate']; ?></td>
+                  <td><input type="checkbox" class="case-checkbox" value="<?php echo $row['id']; ?>"></td>
                 </tr>
-              </thead>
-              <tbody>
+              <?php } ?>
 
-                <?php foreach($result as $row) { ?>
-                  <tr>
-                    <td><?php echo $row['CNum']; ?></td>
-                    <td><?php echo $row['ForTitle']; ?></td>
-                    <td><?php echo $row['CNames']; ?></td>
-                    <td><?php echo $row['RspndtNames']; ?></td>
-                    <td><?php echo $row['Mdate']; ?></td>
+            </tbody>
+          </table>
 
-                    <td>
-                      <form id="formArchive">
-                        <input
-                          type="hidden"
-                          name="unarchive_id"
-                          value="<?php echo $row['id'] ?>">
-
-                        <input
-                          type="submit"
-                          value="unarchive"
-                          name="submit_unarchive"
-                          class="p-2 bg-red-400 text-white rounded-md">
-                      </form>
-                    </td>
-
-                  </tr>
-                <?php } ?>
-
-              </tbody>
-            </table>
-
-          </b>
+          <section id="unarchiveButtonSection" class="w-full flex justify-end">
+            <button id="unarchiveSelected" class="p-2 bg-red-400 text-white rounded-md">Unarchive</button>
+          </section>
 
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    function searchTable() {
+      // Declare variables
+      let input = document.getElementById('searchUnarchive');
+      let filter = input.value.toLowerCase();
+      let table = document.getElementById('UnarchiveTable');
+      let tr = table.getElementsByTagName('tr');
+
+      // Loop through all table rows, excluding the header
+      for (let i = 1; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName('td');
+        let rowText = '';
+
+        // Concatenate all text content from each cell
+        for (let j = 0; j < td.length - 1; j++) {
+          rowText += td[j].textContent || td[j].innerText;
+        }
+
+        // If the row matches the search term, show it, otherwise hide it
+        if (rowText.toLowerCase().indexOf(filter) > -1) {
+          tr[i].style.display = '';
+        } else {
+          tr[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
 
 </body>
 

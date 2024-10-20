@@ -96,14 +96,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
       };
 
-      // Sync when back online
-      window.addEventListener('online', function() {
+      function syncWhenOnline() {
         const selectedDate = localStorage.getItem('selectedDate');
         if (selectedDate) {
           sendData(selectedDate);
           localStorage.removeItem('selectedDate');
         }
-      });
+      }
+
+      if (navigator.onLine) {
+        syncWhenOnline();
+      }
+
+      window.addEventListener('online', syncWhenOnline);
+
     });
   </script>
 
@@ -112,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="bg-[#E8E8E7]">
 
-<?php include "user_sidebar_header.php"; ?>
+  <?php include "user_sidebar_header.php"; ?>
 
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">

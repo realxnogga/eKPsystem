@@ -51,7 +51,7 @@ function traverseDirectory()
 <script src="<?php echo traverseDirectory(); ?>node_modules/jquery/dist/jquery.min.js"></script>
 
 <!-- select2 for dropdown -->
-<link href="<?php echo traverseDirectory(); ?>node_modules/select2/dist/js/select2.min.js" rel="stylesheet" />
+<link href="<?php echo traverseDirectory(); ?>node_modules/select2/dist/css/select2.min.css" rel="stylesheet" />
 <script src="<?php echo traverseDirectory(); ?>node_modules/select2/dist/js/select2.min.js"></script>
 
 <!-- flowbite component -->
@@ -87,7 +87,7 @@ function traverseDirectory()
           <a href="<?php echo traverseDirectory(); ?>user_notification.php">
             <section class="relative mr-5 cursor-pointer flex items-center justify-center">
               <i class="ti ti-bell text-3xl"></i>
-              <div class="<?php echo $notifCount == 0 ? 'hidden' : ''; ?> absolute bg-green-500 top-[-5] right-[-5] rounded-[25px] flex items-center justify-center">
+              <div class="<?php echo $notifCount == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-1 -right-1 rounded-[25px] flex items-center justify-center">
                 <p class="text-white text-xs px-[.3rem]"><?php echo $notifCount; ?></p>
               </div>
             </section>

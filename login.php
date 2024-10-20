@@ -66,7 +66,7 @@ include 'connection.php';
             email,
             password
           }));
-          alert('No internet. Data will be inserted once the internet was restored.');
+          alert('No internet. Your request will be executed once the internet is restored.');
         }
       };
 

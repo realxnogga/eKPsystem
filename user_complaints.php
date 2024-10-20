@@ -376,7 +376,7 @@ $totalCount = $totalCountRow['total'];
                       Manage
                     </a>
 
-                    <a
+                    <!-- <a
                       href="user_uploadfile_complaint.php?id=<?= $row['id'] ?>&page=<?= $page ?>"
                       class="btn btn-sm btn-primary"
                       title="Upload"
@@ -384,7 +384,7 @@ $totalCount = $totalCountRow['total'];
                       style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
                       <i class="fas fa-upload" style="margin-right: 5px;"></i>
                       Upload
-                    </a>
+                    </a> -->
 
                   </td>
                 </tr>

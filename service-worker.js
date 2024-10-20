@@ -109,3 +109,7 @@ self.addEventListener("activate", (event) => {
       .catch((error) => console.error("Activate Error: Cache cleanup failed.", error))
   );
 });
+
+// --------------------------------------
+
+
