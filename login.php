@@ -19,68 +19,6 @@ include 'connection.php';
   <!-- jquery link -->
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
 
-  <script src="service-worker-registration.js"></script>
-
-  <script>
-    // Send data via POST using fetch API
-    async function sendData(email, password) {
-      try {
-        const response = await fetch("http://localhost/eKPsystem/login_handler.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-                email: email,
-                password: password
-            })
-        });
-
-        const result = await response.json();
-
-        if (result.redirect && result.redirect != '') {
-          window.location.href = result.redirect;
-        }
-
-        if (result.error && result.error != '') {
-          document.getElementById('error').textContent = result.error;
-        }
-    
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    }
-
-    // Handle form submission
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.querySelector('form');
-      form.onsubmit = function(event) {
-        event.preventDefault();
-        const email = document.querySelector('input[name="email"]').value;
-        const password = document.querySelector('input[name="password"]').value;
-
-        if (navigator.onLine) {
-          sendData(email, password);
-        } else {
-          localStorage.setItem('pendingData', JSON.stringify({
-            email,
-            password
-          }));
-          alert('No internet. Your request will be executed once the internet is restored.');
-        }
-      };
-
-      // Sync when back online
-      window.addEventListener('online', function() {
-        const pendingData = JSON.parse(localStorage.getItem('pendingData'));
-        if (pendingData) {
-          sendData(pendingData.email, pendingData.password);
-          localStorage.removeItem('pendingData');
-        }
-      });
-    });
-  </script>
-
 </head>
 
 <style>
@@ -128,16 +66,27 @@ include 'connection.php';
                 </div>
 
 
-                <section>
-                  <p id="error"></p>
-                </section>
+                <?php
 
-                <form>
+                // Check if the 'error' query parameter is present in the URL
+                if (isset($_GET['error']) && $_GET['error'] === 'invalid_credentials') {
+                  echo '<div class="alert alert-danger" role="alert">Invalid email or password. Please try again.</div>';
+                } elseif (isset($_GET['error']) && $_GET['error'] === 'not_verified') {
+                  echo '<div class="alert alert-danger" role="alert">This account is not verified yet. Please contact your Admin.</div>';
+                } elseif (isset($_GET['error']) && $_GET['error'] === 'account_already_open') {
+                  echo '<div class="alert alert-danger" role="alert">Your Account is already open on another device.</div>';
+                }
+                ?>
+
+                <form action="login_handler.php" method="POST">
 
                   <div class="form-row">
                     <div class="col">
                       <label for="email" class="form-label">Email Address</label>
-                      <input type="email" class="form-control" id="email" name="email" required>
+                      <input type="email" class="form-control" id="email" name="email">
+                      <?php 
+                       echo isset($_GET['error']) && ($_GET['error'] === 'emailIsEmpty' || $_GET['error'] === 'passwordAndEmailIsEmpty') ? '<p class="text-danger">Email is required</p>': ''
+                       ?>
                     </div>
                   </div>
 
@@ -147,12 +96,15 @@ include 'connection.php';
                     <div class="col">
                       <label for="login-password" class="form-label">Password</label>
                       <div class="input-group">
-                        <input type="password" class="form-control" name="password" id="login-password" required>
-
+                        <input type="password" class="form-control" name="password" id="login-password">
+                       
                         <div class="input-group-append">
                           <button class="btn btn-outline-secondary" type="button" id="toggle-login-password"><i class="fas fa-eye"></i></button>
                         </div>
                       </div>
+                      <?php 
+                       echo isset($_GET['error']) && ($_GET['error'] === 'passwordIsEmpty' || $_GET['error'] === 'passwordAndEmailIsEmpty') ? '<p class="text-danger">Password is required</p>': ''
+                       ?>
                     </div>
 
                     <br>
