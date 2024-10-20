@@ -7,7 +7,7 @@ include 'connection.php';
 
 $userID = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
-// select all funcion
+// select all function
 function getAllNotificationData($conn, $userID, $extraCondition = "")
 {
     $query = "SELECT * FROM complaints 

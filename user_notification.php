@@ -74,13 +74,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         type="submit"
         value="All"
         name="submit_all"
-        class="p-1 border border-gray-400">
+        class="p-1 rounded-sm bg-blue-500 hover-blue-400">
 
       <input
         type="submit"
         value="Unread"
         name="submit_unread"
-        class="p-1 border border-gray-400">
+        class="p-1 rounded-sm bg-blue-500 hover-blue-400">
     </form>
 
     <form action="" method="POST" class="m-0 p-0">
@@ -88,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         type="submit"
         value="Mark all as read"
         name="submit_readAll"
-        class="p-1 border border-gray-400">
+        class="p-1 rounded-sm bg-blue-500 hover-blue-400">
     </form>
 
   </section>
