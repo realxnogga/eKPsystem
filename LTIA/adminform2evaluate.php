@@ -131,48 +131,133 @@ $(document).ready(function () {
                 data: { barangay_name: selectedBarangayName },
                 dataType: 'json',
                 success: function (data) {
-                    console.log('Returned data:', data);
+                console.log('Returned data:', data);
 
-                    // Check if there is an error in the response
-                    if (data.error) {
-                        alert(data.error); // Display the error message
-                        return;
+                // Check if there is an error in the response
+                if (data.error) {
+                    alert(data.error); // Display the error message
+                    return;
+                }
+
+                // Extract barangay_id and mov_id from the response
+                var barangayId = data.barangay_id;
+                var movId = data.mov_id;
+
+                // Log the IDs for debugging
+                console.log('Barangay ID:', barangayId);
+                console.log('MOV ID:', movId);
+
+                // Populate the input fields
+                $('#barangay_id').val(barangayId); // Set barangay_id input
+                $('#mov_id').val(movId); // Set mov_id input
+
+                // Handle each PDF file from the returned data
+                var fileTypes = [
+                'IA_1a', 'IA_1b', 'IA_2a', 'IA_2b', 'IA_2c', 'IA_2d', 'IA_2e', 'IB_1forcities', 'IB_1aformuni', 'IB_1bformuni', 'IB_2', 'IB_3', 'IB_4', 'IC_1', 'IC_2', 'ID_1', 'ID_2', 'IIA', 'IIB_1', 'IIB_2', 'IIC', 'IIIA', 'IIIB', 'IIIC_1forcities', 'IIIC_1forcities2', 'IIIC_1forcities3', 'IIIC_2formuni1', 'IIIC_2formuni2', 'IIIC_2formuni3', 'IIID', 'IV_forcities', 'IV_muni', 'V_1', 'threepeoplesorg'
+                ];
+
+                // Clear previous file columns
+                $('.file-column').html('');
+
+                fileTypes.forEach(function (type) {
+                    var fileColumn = $('.file-column[data-type="' + type + '"]');
+
+                    // Check for the specific PDF file types
+                    var fileKey = type + '_pdf_File';
+                    if (data[fileKey]) {
+                        var filePath = 'movfolder/' + data[fileKey];
+                        $('.view-pdf[data-type="' + type + '"]').attr('data-file', filePath).show();
+                        fileColumn.html('<button type="button" class="btn btn-primary view-pdf" data-type="' + type + '" data-file="' + filePath + '">View</button>'); // Add view button to the file column
+                    } else {
+                        fileColumn.html('<div class="alert alert-warning mb-0">No uploaded file</div>');
                     }
+                });
 
-                    // Extract barangay_id and mov_id from the response
-                    var barangayId = data.barangay_id;
-                    var movId = data.mov_id;
+                // Handle rates
+                if (data.rates) {
+                    console.log('Rates:', data.rates);
+                    // Set rates in input fields, adjust names to match your input field names
+                    $('input[name="IA_1a_pdf_rate"]').val(data.rates.IA_1a_pdf_rate);
+                    $('input[name="IA_1b_pdf_rate"]').val(data.rates.IA_1b_pdf_rate);
+                    $('input[name="IA_2a_pdf_rate"]').val(data.rates.IA_2a_pdf_rate);
+                    $('input[name="IA_2b_pdf_rate"]').val(data.rates.IA_2b_pdf_rate);
+                    $('input[name="IA_2c_pdf_rate"]').val(data.rates.IA_2c_pdf_rate);
+                    $('input[name="IA_2d_pdf_rate"]').val(data.rates.IA_2d_pdf_rate);
+                    $('input[name="IA_2e_pdf_rate"]').val(data.rates.IA_2e_pdf_rate);
+                    $('input[name="IB_1forcities_pdf_rate"]').val(data.rates.IB_1forcities_pdf_rate);
+                    $('input[name="IB_1aformuni_pdf_rate"]').val(data.rates.IB_1aformuni_pdf_rate);
+                    $('input[name="IB_1bformuni_pdf_rate"]').val(data.rates.IB_1bformuni_pdf_rate);
+                    $('input[name="IB_2_pdf_rate"]').val(data.rates.IB_2_pdf_rate);
+                    $('input[name="IB_3_pdf_rate"]').val(data.rates.IB_3_pdf_rate);
+                    $('input[name="IB_4_pdf_rate"]').val(data.rates.IB_4_pdf_rate);
+                    $('input[name="IC_1_pdf_rate"]').val(data.rates.IC_1_pdf_rate);
+                    $('input[name="IC_2_pdf_rate"]').val(data.rates.IC_2_pdf_rate);
+                    $('input[name="ID_1_pdf_rate"]').val(data.rates.ID_1_pdf_rate);
+                    $('input[name="ID_2_pdf_rate"]').val(data.rates.ID_2_pdf_rate);
+                    $('input[name="IIA_pdf_rate"]').val(data.rates.IIA_pdf_rate);
+                    $('input[name="IIB_1_pdf_rate"]').val(data.rates.IIB_1_pdf_rate);
+                    $('input[name="IIB_2_pdf_rate"]').val(data.rates.IIB_2_pdf_rate);
+                    $('input[name="IIC_pdf_rate"]').val(data.rates.IIC_pdf_rate);
+                    $('input[name="IIIA_pdf_rate"]').val(data.rates.IIIA_pdf_rate);
+                    $('input[name="IIIB_pdf_rate"]').val(data.rates.IIIB_pdf_rate);
+                    $('input[name="IIIC_1forcities_pdf_rate"]').val(data.rates.IIIC_1forcities_pdf_rate);
+                    $('input[name="IIIC_1forcities2_pdf_rate"]').val(data.rates.IIIC_1forcities2_pdf_rate);
+                    $('input[name="IIIC_1forcities3_pdf_rate"]').val(data.rates.IIIC_1forcities3_pdf_rate);
+                    $('input[name="IIIC_2formuni1_pdf_rate"]').val(data.rates.IIIC_2formuni1_pdf_rate);
+                    $('input[name="IIIC_2formuni2_pdf_rate"]').val(data.rates.IIIC_2formuni2_pdf_rate);
+                    $('input[name="IIIC_2formuni3_pdf_rate"]').val(data.rates.IIIC_2formuni3_pdf_rate);
+                    $('input[name="IIID_pdf_rate"]').val(data.rates.IIID_pdf_rate);
+                    $('input[name="IV_forcities_pdf_rate"]').val(data.rates.IV_forcities_pdf_rate);
+                    $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate);
+                    $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate);
+                    $('input[name="threepeoplesorg_pdf_rate"]').val(data.rates.threepeoplesorg_pdf_rate);
 
-                    // Log the IDs for debugging
-                    console.log('Barangay ID:', barangayId);
-                    console.log('MOV ID:', movId);
+                    // Add similar lines for other rates as necessary
+                }
 
-                    // Populate the input fields
-                    $('#barangay_id').val(barangayId); // Set barangay_id input
-                    $('#mov_id').val(movId); // Set mov_id input
+                // Handle remarks
+                if (data.remarks) {
+                    console.log('Remarks:', data.remarks);
+                    // Set remarks in input fields, adjust names to match your input field names
+                    $('textarea[name="IA_1a_pdf_remark"]').val(data.remarks.IA_1a_pdf_remark);
+                    $('textarea[name="IA_1b_pdf_remark"]').val(data.remarks.IA_1b_pdf_remark);
+                    $('textarea[name="IA_2a_pdf_remark"]').val(data.remarks.IA_2a_pdf_remark);
+                    $('textarea[name="IA_2b_pdf_remark"]').val(data.remarks.IA_2b_pdf_remark);
+                    $('textarea[name="IA_2c_pdf_remark"]').val(data.remarks.IA_2c_pdf_remark);
+                    $('textarea[name="IA_2d_pdf_remark"]').val(data.remarks.IA_2d_pdf_remark);
+                    $('textarea[name="IA_2e_pdf_remark"]').val(data.remarks.IA_2e_pdf_remark);
+                    $('textarea[name="IB_1forcities_pdf_remark"]').val(data.remarks.IB_1forcities_pdf_remark);
+                    $('textarea[name="IB_1aformuni_pdf_remark"]').val(data.remarks.IB_1aformuni_pdf_remark);
+                    $('textarea[name="IB_1bformuni_pdf_remark"]').val(data.remarks.IB_1bformuni_pdf_remark);
+                    $('textarea[name="IB_2_pdf_remark"]').val(data.remarks.IB_2_pdf_remark);
+                    $('textarea[name="IB_3_pdf_remark"]').val(data.remarks.IB_3_pdf_remark);
+                    $('textarea[name="IB_4_pdf_remark"]').val(data.remarks.IB_4_pdf_remark);
+                    $('textarea[name="IC_1_pdf_remark"]').val(data.remarks.IC_1_pdf_remark);
+                    $('textarea[name="IC_2_pdf_remark"]').val(data.remarks.IC_2_pdf_remark);
+                    $('textarea[name="ID_1_pdf_remark"]').val(data.remarks.ID_1_pdf_remark);
+                    $('textarea[name="ID_2_pdf_remark"]').val(data.remarks.ID_2_pdf_remark);
+                    $('textarea[name="IIA_pdf_remark"]').val(data.remarks.IIA_pdf_remark);
+                    $('textarea[name="IIB_1_pdf_remark"]').val(data.remarks.IIB_1_pdf_remark);
+                    $('textarea[name="IIB_2_pdf_remark"]').val(data.remarks.IIB_2_pdf_remark);
+                    $('textarea[name="IIC_pdf_remark"]').val(data.remarks.IIC_pdf_remark);
+                    $('textarea[name="IIIA_pdf_remark"]').val(data.remarks.IIIA_pdf_remark);
+                    $('textarea[name="IIIB_pdf_remark"]').val(data.remarks.IIIB_pdf_remark);
+                    $('textarea[name="IIIC_1forcities_pdf_remark"]').val(data.remarks.IIIC_1forcities_pdf_remark);
+                    $('textarea[name="IIIC_1forcities2_pdf_remark"]').val(data.remarks.IIIC_1forcities2_pdf_remark);
+                    $('textarea[name="IIIC_1forcities3_pdf_remark"]').val(data.remarks.IIIC_1forcities3_pdf_remark);
+                    $('textarea[name="IIIC_2formuni1_pdf_remark"]').val(data.remarks.IIIC_2formuni1_pdf_remark);
+                    $('textarea[name="IIIC_2formuni2_pdf_remark"]').val(data.remarks.IIIC_2formuni2_pdf_remark);
+                    $('textarea[name="IIIC_2formuni3_pdf_remark"]').val(data.remarks.IIIC_2formuni3_pdf_remark);
+                    $('textarea[name="IIID_pdf_remark"]').val(data.remarks.IIID_pdf_remark);
+                    $('textarea[name="IV_forcities_pdf_remark"]').val(data.remarks.IV_forcities_pdf_remark);
+                    $('textarea[name="IV_muni_pdf_remark"]').val(data.remarks.IV_muni_pdf_remark);
+                    $('textarea[name="V_1_pdf_remark"]').val(data.remarks.V_1_pdf_remark);
+                    $('textarea[name="threepeoplesorg_pdf_remark"]').val(data.remarks.threepeoplesorg_pdf_remark);
 
-                    // Handle each PDF file from the returned data
-                    var fileTypes = [
-                        'IA_1a', 'IA_1b', 'IA_2a', 'IA_2b', 'IA_2c', 'IA_2d', 'IA_2e', 'IB_1forcities', 'IB_1aformuni', 'IB_1bformuni', 'IB_2', 'IB_3', 'IB_4', 'IC_1', 'IC_2', 'ID_1', 'ID_2', 'IIA', 'IIB_1', 'IIB_2', 'IIC', 'IIIA', 'IIIB', 'IIIC_1forcities', 'IIIC_1forcities2', 'IIIC_1forcities3', 'IIIC_2formuni1', 'IIIC_2formuni2', 'IIIC_2formuni3', 'IIID', 'IV_forcities', 'IV_muni', 'V_1', 'threepeoplesorg'
-                    ];
+                    // Add similar lines for other remarks as necessary
+                }
+            },
 
-                    // Clear previous file columns
-                    $('.file-column').html(''); 
-
-                    fileTypes.forEach(function (type) {
-                        var fileColumn = $('.file-column[data-type="' + type + '"]'); 
-
-                        // Check for the specific PDF file types
-                        var fileKey = type + '_pdf_File';
-                        if (data[fileKey]) {
-                            var filePath = 'movfolder/' + data[fileKey];
-                            $('.view-pdf[data-type="' + type + '"]').attr('data-file', filePath).show();
-                            fileColumn.html('<button type="button" class="btn btn-primary view-pdf" data-type="' + type + '" data-file="' + filePath + '">View</button>'); // Add view button to the file column
-                        } else {
-                            fileColumn.html('<div class="alert alert-warning mb-0">No uploaded file</div>');
-                        }
-                    });
-                },
                 error: function (xhr, status, error) {
                     console.log('Error fetching files:', xhr.responseText);
                 }
@@ -182,6 +267,10 @@ $(document).ready(function () {
             $('.file-column').html('<div class="alert alert-info mb-0">Select barangay</div>');
             $('#barangay_id').val(''); // Clear barangay_id input
             $('#mov_id').val(''); // Clear mov_id input
+            $('textarea[name="IA_1a_pdf_remark"]').val('');
+            $('textarea[name="IA_1b_pdf_remark"]').val('');
+            $('input[name="IA_1a_pdf_rate"]').val('');
+            $('input[name="IA_1b_pdf_rate"]').val('');
         }
     });
 
@@ -266,11 +355,13 @@ $(document).ready(function () {
                         </select>
                     </div>
     <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
+
+    <!-- hide this inputs -->
     <input type="hidden" id="selected_barangay" name="selected_barangay" value="" />
     <!-- Example form input for mov_id -->
     <input type="hidden" id="mov_id" name="mov_id"> <!-- Display fetched mov_id -->
     <input type="hidden" id="barangay_id" name="barangay_id"> <!-- I want the barangay_id fetch here -->
-    <!-- mov_id is fetched here -->
+    <!-- mov_id is fetched here --> 
 
     <table class="table table-bordered">
             <thead>
@@ -326,16 +417,11 @@ $(document).ready(function () {
               <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                </td>
             <td>  
-            <div class="btn-group" role="group" aria-label="Action buttons">
-              <button type="button" class="btn btn-warning">Request Change</button>
-              <button type="button" class="btn btn-success">Passed</button>
-              <button type="button" class="btn btn-danger">Reject</button>
-            </div>
             <hr class="my-1">
-              <input type="number" value="" name="IA_1a_pdf_rate">
+              <input type="number" value="" name="IA_1a_pdf_rate" placeholder="Ratings" required>
             <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
           </td>
-            <td><textarea name="IA_1a_pdf_remark" placeholder="Remarks"></textarea></td>
+            <td><textarea name="IA_1a_pdf_remark" placeholder="Remarks" required></textarea></td>
           </tr>
           <tr>
             <td><details>
@@ -357,10 +443,10 @@ $(document).ready(function () {
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
             <td>
-            <input type="number" value="" name="IA_1b_pdf_rate">
+            <input type="number" value="" name="IA_1b_pdf_rate" placeholder="Ratings"required>
           <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
             </td>
-            <td><textarea name="IA_1b_pdf_remark" placeholder="Remarks"></textarea></td>
+            <td><textarea name="IA_1b_pdf_remark" placeholder="Remarks" required></textarea></td>
                     </tr>
           <tr>
   <td>
@@ -389,7 +475,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IA_2a">
               <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
           </td>
-            <td><input type="number" value="" name="IA_2a_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><input type="number" value="" name="IA_2a_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2a_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -398,7 +484,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IA_2b">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
-            <td><input type="number" value="" name="IA_2b_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><input type="number" value="" name="IA_2b_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2b_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -407,7 +493,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IA_2c">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IA_2c_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><input type="number" value="" name="IA_2c_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2c_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -416,7 +502,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IA_2d">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IA_2d_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><input type="number" value="" name="IA_2d_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2d_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -425,7 +511,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IA_2e">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IA_2e_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><input type="number" value="" name="IA_2e_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2e_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -448,7 +534,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IB_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                 </td>
-            <td><input type="number" value="" name="IB_1forcities_pdf_rate" min="0" max="2" class="score-input"></td>
+            <td><input type="number" value="" name="IB_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -464,7 +550,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IB_1aformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IB_1aformuni_pdf_rate"></td>
+            <td><input type="number" value="" name="IB_1aformuni_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IB_1aformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -473,7 +559,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IB_1bformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IB_1bformuni_pdf_rate"></td>
+            <td><input type="number" value="" name="IB_1bformuni_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IB_1bformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -482,7 +568,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IB_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IB_2_pdf_rate"></td>
+            <td><input type="number" value="" name="IB_2_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -491,7 +577,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IB_3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IB_3_pdf_rate"></td>
+            <td><input type="number" value="" name="IB_3_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IB_3_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -500,7 +586,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IB_4">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IB_4_pdf_rate"></td>
+            <td><input type="number" value="" name="IB_4_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IB_4_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -539,7 +625,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IC_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IC_1_pdf_rate"></td>
+            <td><input type="number" value="" name="IC_1_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IC_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -556,7 +642,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IC_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
-            <td><input type="number" value="" name="IC_2_pdf_rate"></td>
+            <td><input type="number" value="" name="IC_2_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IC_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -581,7 +667,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="ID_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="ID_1_pdf_rate"></td>
+            <td><input type="number" value="" name="ID_1_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="ID_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -604,7 +690,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="ID_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="ID_2_pdf_rate"></td>
+            <td><input type="number" value="" name="ID_2_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="ID_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -633,7 +719,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIA">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIA_pdf_rate"></td>
+            <td><input type="number" value="" name="IIA_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -657,7 +743,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIB_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIB_1_pdf_rate"></td>
+            <td><input type="number" value="" name="IIB_1_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIB_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -666,7 +752,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIB_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIB_2_pdf_rate"></td>
+            <td><input type="number" value="" name="IIB_2_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -686,7 +772,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIC">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIC_pdf_rate"></td>
+            <td><input type="number" value="" name="IIC_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIC_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -715,7 +801,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIIA">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIIA_pdf_rate"></td>
+            <td><input type="number" value="" name="IIIA_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -732,7 +818,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIIB">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIIB_pdf_rate"></td>
+            <td><input type="number" value="" name="IIIB_pdf_rate" placeholder="Ratings" ></td>
             <td><textarea name="IIIB_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -756,7 +842,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIIC_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIIC_1forcities_pdf_rate"></td>
+            <td><input type="number" value="" name="IIIC_1forcities_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
@@ -769,7 +855,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIIC_1forcities2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIIC_1forcities2_pdf_rate"></td>
+            <td><input type="number" value="" name="IIIC_1forcities2_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
@@ -782,7 +868,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIIC_1forcities3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIIC_1forcities3_pdf_rate"></td>
+            <td><input type="number" value="" name="IIIC_1forcities3_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
@@ -802,7 +888,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIIC_2formuni1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIIC_2formuni1_pdf_rate"></td>
+            <td><input type="number" value="" name="IIIC_2formuni1_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni1_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
@@ -815,7 +901,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIIC_2formuni2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIIC_2formuni2_pdf_rate"></td>
+            <td><input type="number" value="" name="IIIC_2formuni2_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
@@ -828,7 +914,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIIC_2formuni3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIIC_2formuni3_pdf_rate"></td>
+            <td><input type="number" value="" name="IIIC_2formuni3_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
@@ -854,7 +940,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IIID">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IIID_pdf_rate"></td>
+            <td><input type="number" value="" name="IIID_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IIID_pdf_rate_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -877,7 +963,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IV_forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IV_forcities_pdf_rate"></td>
+            <td><input type="number" value="" name="IV_forcities_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IV_forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
@@ -886,7 +972,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IV_muni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IV_muni_pdf_rate"></td>
+            <td><input type="number" value="" name="IV_muni_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="IV_muni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -902,7 +988,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="V_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="V_1_pdf_rate"></td>
+            <td><input type="number" value="" name="V_1_pdf_rate" placeholder="Ratings"></td>
             <td><textarea name="V_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -911,12 +997,11 @@ $(document).ready(function () {
                 <td class="file-column" data-type="threepeoplesorg">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="threepeoplesorg_rate"></td>
+            <td><input type="number" value="" name="threepeoplesorg_rate" placeholder="Ratings"></td>
             <td><textarea name="threepeoplesorg_remark" placeholder="Remarks"></textarea></td>
               </tr>
             </tbody>
           </table>
-
       <input type="submit" value="Okay" class="btn btn-dark mt-3" />
     </form>
         </div>

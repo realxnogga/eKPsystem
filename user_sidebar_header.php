@@ -186,7 +186,7 @@ function traverseDirectory()
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_signed_documents.php" class="<?php echo isActive('/eKPsystem/user_signed_documents.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-writing-sign text-2xl"></i>
-          <span>Signed Documents</span>
+          <span>Confideration Corner</span>
         </a>
       </li>
 
