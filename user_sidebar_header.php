@@ -6,8 +6,6 @@ require "include/custom-scrollbar.php";
 
 $userId = $_SESSION['user_id'];
 
-include 'user_notification_handler.php';
-
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
 $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 $stmt->execute();
