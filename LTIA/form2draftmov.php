@@ -108,8 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="dilglogo">
                             <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" />
                         </div>
-                        <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA)</h1>
-                    </div>
+                        <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA) <?php echo date('Y'); ?></h1>
+                     </div>
                     <div class="menu">
                         <ul class="flex space-x-4">
                             <li>
@@ -132,8 +132,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <th>CRITERIA</th>
                                     <th>Means Of Verification</th>
                                     <th>File</th>
-                                    <th>Rate</th>
-                                    <th>Remarks</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -150,8 +148,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
           </tr>
           <tr>
             <td>b) Sending of Notices and Summons</td>
@@ -165,15 +161,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
           </tr>
           <tr>
                 <td>2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
                 <td> </td>
                 <td> </td>
-            <td></td>
-            <td></td>
               </tr>
                <tr>
                 <td>a) Mediation (within 15 days from initial confrontation with the Lupon Chairman)</td>
@@ -187,8 +179,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>b) Conciliation (15 days from initial confrontation with the Pangkat)</td>
@@ -202,8 +192,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>c) Conciliation (15 days from initial confrontation with the Pangkat)</td>
@@ -217,8 +205,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>d) Arbitration (within 10 days from the date of the agreement to arbitrate)</td>
@@ -232,8 +218,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>e) Conciliation beyond 46 days but not more than 60 days on a clearly meritorious case</td>
@@ -247,20 +231,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <th>B. Systematic Maintenance of Records</th>
                 <th></th>
                 <th></th>
-                <th></th>
-                <th></th>
               </tr>
               <tr>
                 <td><b>1. Record of Cases </b></td>
-                <td></td>
-                <td></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -276,13 +254,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>For Municipalities:</td>
-                <td></td>
-                <td></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -298,8 +272,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>b. Digital Record Filing</td>
@@ -313,8 +285,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>2. Copies of Minutes of Lupon meetings with attendance sheets and notices</td>
@@ -328,8 +298,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>3. Copies of reports submitted to the Court and to the DILG on file</td>
@@ -343,8 +311,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>4. All records are kept on file in a secured filing cabinet(s)</td>
@@ -358,13 +324,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <th>C. Timely Submissions to the Court and the DILG</th>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
               </tr>
@@ -380,8 +342,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>2. To the DILG (Quarterly)</td>
@@ -395,13 +355,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <th>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
               </tr>
@@ -417,8 +373,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>2. Minutes of the Meeting</td>
@@ -432,13 +386,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <th>II. EFFECTIVENESS IN SECURING THE SETTLEMENT OF INTERPERSONAL DISPUTE OBJECTIVE OF THE KATARUNGANG PAMBARANGAY</th>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
               </tr>
@@ -454,13 +404,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>B. Quality of Settlement of Cases</td>
-                <td></td>
-                <td></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -476,8 +422,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>2. Non-recurrence of cases settled</td>
@@ -491,8 +435,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>C. At least 80% compliance with the terms of settlement or award after the cases have been settled</td>
@@ -506,13 +448,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <th>III. CREATIVITY AND RESOURCEFULNESS OF THE LUPONG TAGAPAMAYAPA</th>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
               </tr>
@@ -528,8 +466,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>B. Coordination with Concerned Agencies relating to disputes filed (PNP, DSWD, DILG, DAR, DENR, Office of the Prosecutor, Court, DOJ, CHR, etc.)</td>
@@ -543,13 +479,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>C. Sustained information drive to promote Katarungang Pambarangay</td>
-                <td></td>
-                <td></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -573,8 +505,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
             </tr>
               <tr>
                 <td>
@@ -592,8 +522,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
             </tr>
               <tr>
                 <td>
@@ -611,13 +539,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
             </tr>
               <tr>
                 <td>2. For Municipalities</td>
-                <td></td>
-                <td></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -637,8 +561,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
             </tr>
               <tr>
                 <td>
@@ -656,8 +578,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
             </tr>
               <tr>
                 <td>
@@ -675,8 +595,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
             </tr>
               <tr>
                 <td>D. KP Training or seminar within the assessment period<br />
@@ -691,20 +609,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <th>IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
                 <th></th>
                 <th></th>
-                <th></th>
-                <th></th>
               </tr>
               <tr>
                 <td><b>Building structure or space:</b></td>
-                <td></td>
-                <td></td>
                 <td></td>
                 <td></td>
               </tr>
@@ -720,8 +632,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
             </tr>
               <tr>
                 <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
@@ -735,13 +645,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <th>V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
-                <th></th>
-                <th></th>
                 <th></th>
                 <th></th>
               </tr>
@@ -757,8 +663,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
               </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
@@ -772,21 +676,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td>rate here</td>
-            <td>this is remark</td>
-              </tr>
-
-              <tr>
-              <th>Total here</th>
-                <td></td>
-                <td>
-                
-            </td>
-            <td>Total here</td>
-            <td></td>
               </tr>
             </tbody>
           </table>
+      <input type="submit" value="Update" class="btn btn-dark mt-3" />
     </form>
     
 <!-- Main modal -->

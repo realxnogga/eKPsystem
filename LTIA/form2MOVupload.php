@@ -35,14 +35,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
                             <div class="dilglogo">
                                 <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" /> <!-- Adjusted height here -->
                             </div>
-                            <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA)</h1>
-                        </div>
+                           <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA) <?php echo date('Y'); ?></h1>
+              </div>
                         <div class="menu">
                             <ul class="flex space-x-4">
                             <li>
-                            <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='form2movview.php';" style="margin-left: 0;">
+                            <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='form2draftmov.php';" style="margin-left: 0;">
                     <i class="ti ti-file-upload mr-2"></i> <!-- Icon -->
-                    Uploaded File
+                    Draft
                   </button>
                         </li>             
                         <li>
