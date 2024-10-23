@@ -6,8 +6,6 @@ require "include/custom-scrollbar.php";
 
 $userId = $_SESSION['user_id'];
 
-include 'user_notification_handler.php';
-
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
 $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 $stmt->execute();
@@ -59,7 +57,7 @@ function traverseDirectory()
 <link href="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.css"  rel="stylesheet" />
 
 <!-- tabler icon -->
-<link rel="stylesheet" href="<?php echo traverseDirectory(); ?>node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+
 
 <nav class="fixed top-0 z-40 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">
