@@ -209,7 +209,20 @@ $summaryData = [
   <body class="bg-[#E8E8E7]">
 
     <?php include "user_sidebar_header.php"; ?>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js') // Adjust the path if necessary
+            .then((registration) => {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch((error) => {
+                console.log('Service Worker registration failed:', error);
+            });
+    });
+}
 
+</script>
     <div class="p-4 sm:ml-44 ">
       <div class="rounded-lg mt-16">
 

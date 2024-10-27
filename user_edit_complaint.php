@@ -79,8 +79,6 @@ if (isset($_POST['submit'])) {
     $cMethod = null; // Or $cMethod = ''; depending on how you handle null values in the database
   }
 
-  $_SESSION['test'] = $madeDate;
-
 
   // only update seen column condition inside if is met
   $seen = "";
@@ -151,6 +149,7 @@ if (isset($_POST['submit'])) {
               </div>';
   }
 }
+
 ?>
 
 <!doctype html>
@@ -173,7 +172,7 @@ if (isset($_POST['submit'])) {
 
 <body class="bg-[#E8E8E7]">
 
-  <?php include "user_sidebar_header.php"; ?>
+<?php include "user_sidebar_header.php"; ?>
 
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
@@ -193,6 +192,9 @@ if (isset($_POST['submit'])) {
 
           <h5 class="card-title mb-9 fw-semibold">Edit Information</h5>
           <b>
+            
+
+
 
 
             <?php echo $successMessage; // Display success message here 

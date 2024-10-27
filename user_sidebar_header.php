@@ -37,6 +37,50 @@ function traverseDirectory()
   return containsWord(getFullUrl(), 'LTIA') ? '../' : '';
 }
 
+$upcomingComplaints = []; // Array to store complaint details
+
+try {
+    // Update SQL query to select the new columns
+    $sql = "SELECT CNames, Cnum, Mdate, CMethod FROM complaints"; // Use 'Mdate' here
+    $stmt = $conn->prepare($sql);
+
+    if ($stmt->execute()) {
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($results as $row) {
+            // Ensure 'Mdate' exists before proceeding
+            if (!isset($row['Mdate'])) {
+                echo "The 'Mdate' field is missing in the result.";
+                continue;
+            }
+
+            $isSettled = in_array($row['CMethod'], ['Mediation', 'Conciliation', 'Arbitration']);
+            $isUnsettled = in_array($row['CMethod'], [
+                'Pending', 'Repudiated', 'Dismissed', 
+                'Certified to file action in court', 'Dropped/Withdrawn'
+            ]);
+
+            $dateAdded = strtotime($row['Mdate']); // Use 'Mdate' here
+            $currentDate = strtotime(date('Y-m-d'));
+            $elapsedDays = ($currentDate - $dateAdded) / (60 * 60 * 24);
+            $daysUntil14 = 14 - $elapsedDays; // Calculate days left until 14 days
+
+            if ($elapsedDays >= 0 && $elapsedDays < 14 && !$isSettled && $isUnsettled) {
+                $upcomingComplaints[] = [
+                    'CNames' => $row['CNames'],
+                    'Cnum' => $row['Cnum'],
+                    'Mdate' => $row['Mdate'],
+                    'daysUntil14' => $daysUntil14 // Add days until 14 to the complaint data
+                ]; // Store row data
+            }
+        }
+    } else {
+        echo "Query execution failed.";
+    }
+
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
 
 ?>
 
@@ -57,6 +101,7 @@ function traverseDirectory()
 <link href="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.css"  rel="stylesheet" />
 
 <!-- tabler icon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 
 <nav class="fixed top-0 z-40 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -72,25 +117,62 @@ function traverseDirectory()
         </button>
 
         <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="flex ms-2 md:me-24">
-          <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+          <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white ">
             EKPsys
           </p>
         </a>
+        <div style="display: flex; justify-content: flex-start; width: 100%;">
+        
+       </div>
 
       </div>
       <div class="flex items-center">
+         <!-- HTML for Notification Dropdown -->
+<div style="position: relative; display: inline-block;">
+    <div style="position: relative; cursor: pointer;">
+        <i class="fas fa-bell" style="font-size: 24px;"></i>
+        <?php if (count($upcomingComplaints) > 0): ?>
+            <span style="position: absolute; top: -5px; right: -15px; background-color: red; color: white; border-radius: 50%; padding: 3px 7px; font-size: 12px;">
+                <?php echo count($upcomingComplaints); ?>
+            </span>
+        <?php endif; ?>
+    </div>
+
+    <!-- Dropdown Content -->
+    <div style="display: none; position: absolute; left: 10px; margin-left: -200px; background-color: white; min-width: 200px; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); z-index: 1; padding: 10px;" id="notificationDropdown">
+        <?php if (count($upcomingComplaints) > 0): ?>
+            <ul style="list-style-type: none; padding: 0; margin: 0;">
+                <?php foreach ($upcomingComplaints as $Complaint): ?>
+                    <li style="padding: 8px; border-bottom: 1px solid #ddd;">
+                        <strong>Name:</strong> <?php echo htmlspecialchars($Complaint['CNames']); ?><br>
+                        <strong>Complaint Number:</strong> <?php echo htmlspecialchars($Complaint['Cnum']); ?><br>
+                        <small>Date: <?php echo htmlspecialchars($Complaint['Mdate']); ?></small><br>
+                        <small>Days left until lapse: <?php echo htmlspecialchars($Complaint['daysUntil14']); ?></small> <!-- Display days left -->
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p>No upcoming complaints.</p>
+        <?php endif; ?>
+    </div>
+</div>
+<script>
+    // Toggle dropdown visibility
+    document.querySelector('.fa-bell').addEventListener('click', function() {
+        var dropdown = document.getElementById('notificationDropdown');
+        dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
+    });
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+        var dropdown = document.getElementById('notificationDropdown');
+        if (!e.target.matches('.fa-bell') && dropdown.style.display === 'block') {
+            dropdown.style.display = 'none';
+        }
+    });
+</script>
         <div class="flex items-center ms-3">
 
-          <!-- --------------------- -->
-          <a href="<?php echo traverseDirectory(); ?>user_notification.php">
-            <section class="relative mr-5 cursor-pointer flex items-center justify-center">
-              <i class="ti ti-bell text-3xl"></i>
-              <div class="<?php echo $notifCount == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-1 -right-1 rounded-[25px] flex items-center justify-center">
-                <p class="text-white text-xs px-[.3rem]"><?php echo $notifCount; ?></p>
-              </div>
-            </section>
-          </a>
-          <!-- --------------------- -->
 
 
           <div>
@@ -142,6 +224,29 @@ function traverseDirectory()
       <img class="w-20 h-20 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
 
       <p><?php echo $user['first_name']; ?> </p>
+      <div id="offline-sign" style="display: none;">
+        <p>You are in offline mode.</p>
+        <script>
+        function updateOnlineStatus() {
+            const offlineSign = document.getElementById('offline-sign');
+            
+            if (!navigator.onLine) {
+                // Show the offline sign when offline
+                offlineSign.style.display = 'block';
+            } else {
+                // Hide the offline sign when online
+                offlineSign.style.display = 'none';
+            }
+        }
+
+        // Check online status on load
+        window.addEventListener('load', updateOnlineStatus);
+
+        // Listen for online and offline events
+        window.addEventListener('online', updateOnlineStatus);  // When going online
+        window.addEventListener('offline', updateOnlineStatus); // When going offline
+    </script>
+    </div>
     </div>
 
 

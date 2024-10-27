@@ -11,9 +11,11 @@
     "tailwindcss": "^3.4.13"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.2.3",
+    "chart.js": "^4.4.5",
     "flowbite": "^2.5.2",
-    "jquery": "^3.6.3",
+    "jquery": "^3.7.1",
     "select2": "^4.1.0-rc.0"
   },
   "main": "edit_script.js",
