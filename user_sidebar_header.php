@@ -10,7 +10,13 @@ $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
 $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
+if (isset($_SESSION['first_name']) && isset($_SESSION['last_name'])) {
+  $firstName = $_SESSION['first_name'];
+  $lastName = $_SESSION['last_name'];
+  
+} else {
+  $user = null; // Initialize $user as null if not set
+}
 
 function isActive($path)
 {
@@ -194,10 +200,13 @@ try {
 
           <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
             <div class="px-4 py-3" role="none">
-              <p class="text-sm text-gray-900 dark:text-white" role="none">
-                <?php echo $user['first_name'];
-                echo $user['last_name']; ?>
+            <p class="text-sm text-gray-900 dark:text-white" role="none">
+                  <?php 
+                      // Capitalize the first letter of the first name
+                      echo ucfirst(str_replace('fname', '', $_SESSION['first_name'])); 
+                  ?>!
               </p>
+
               <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
                 <?php echo $user['email']; ?>
               </p>
@@ -255,8 +264,14 @@ try {
     <div class="w-full flex flex-col gap-y-1 items-center mb-3">
       <img class="w-20 h-20 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
 
-      <p><?php echo $user['first_name']; ?> </p>
-      <div id="offline-sign" style="display: none;">
+      <p class="text-sm text-gray-900 dark:text-white" role="none">
+            <?php 
+                // Capitalize the first letter of the first name
+                echo ucfirst(str_replace('fname', '', $_SESSION['first_name'])); 
+            ?>
+        </p>
+
+      <div id="offline-sign" style="display: none; margin-left: 20px;">
         <p>You are in offline mode.</p>
         <script>
         function updateOnlineStatus() {

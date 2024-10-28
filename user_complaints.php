@@ -229,6 +229,7 @@ $totalCount = $totalCountRow['total'];
 
 <?php include "user_sidebar_header.php"; ?>
 
+
 <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
 
@@ -263,7 +264,24 @@ $totalCount = $totalCountRow['total'];
               <!-- search complaint -->
               <input type="text" class="form-control" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" class="searchInput" style="flex: 1; margin-right: 5px;" onkeyup="liveSearch()">
               <!-- add complaint button -->
-              <input type="button" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" value="Add complaint" onclick="location.href='user_add_complaint.php';" class="complaint-button" style="margin-left: 0;">
+              <input type="button" 
+              class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" 
+              value="Add complaint" 
+              onclick="checkOnlineStatus()" 
+              class="complaint-button" 
+              style="margin-left: 0;">
+              <script>
+              function checkOnlineStatus() {
+                  if (navigator.onLine) {
+                      // If online, redirect to the regular add complaint page
+                      location.href = 'user_add_complaint.php';
+                  } else {
+                      // If offline, redirect to the offline add complaint page
+                      location.href = 'user_offline_add_complaint.php';
+                  }
+              }
+              </script>
+
 
             </div>
           </form>
