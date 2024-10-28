@@ -127,8 +127,8 @@ try {
 
       </div>
       <div class="flex items-center">
-         <!-- HTML for Notification Dropdown -->
-<div style="position: relative; display: inline-block;">
+       <!-- HTML for Notification Dropdown -->
+<div class="flex items-center justify-start rtl:justify-end" style="position: relative; display: inline-block; width: 30%;">
     <div style="position: relative; cursor: pointer;">
         <i class="fas fa-bell" style="font-size: 24px;"></i>
         <?php if (count($upcomingComplaints) > 0): ?>
@@ -139,15 +139,15 @@ try {
     </div>
 
     <!-- Dropdown Content -->
-    <div style="display: none; position: absolute; left: 10px; margin-left: -200px; background-color: white; min-width: 200px; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); z-index: 1; padding: 10px;" id="notificationDropdown">
+    <div style="display: none; position: absolute; left: -200px; background-color: white; min-width: 200px; max-height: 500px; overflow-y: auto; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); z-index: 1; padding: 10px;" id="notificationDropdown">
         <?php if (count($upcomingComplaints) > 0): ?>
             <ul style="list-style-type: none; padding: 0; margin: 0;">
                 <?php foreach ($upcomingComplaints as $Complaint): ?>
                     <li style="padding: 8px; border-bottom: 1px solid #ddd;">
                         <strong>Name:</strong> <?php echo htmlspecialchars($Complaint['CNames']); ?><br>
                         <strong>Complaint Number:</strong> <?php echo htmlspecialchars($Complaint['Cnum']); ?><br>
-                        <small>Date: <?php echo htmlspecialchars($Complaint['Mdate']); ?></small><br>
-                        <small>Days left until lapse: <?php echo htmlspecialchars($Complaint['daysUntil14']); ?></small> <!-- Display days left -->
+                        <small>Mdate: <?php echo htmlspecialchars($Complaint['Mdate']); ?></small><br>
+                        <small>Days left until lapse: <?php echo round($Complaint['daysUntil14'], 0); ?></small>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -156,6 +156,7 @@ try {
         <?php endif; ?>
     </div>
 </div>
+
 <script>
     // Toggle dropdown visibility
     document.querySelector('.fa-bell').addEventListener('click', function() {
@@ -171,6 +172,8 @@ try {
         }
     });
 </script>
+
+
         <div class="flex items-center ms-3">
 
 
@@ -179,7 +182,11 @@ try {
             <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
               <span class="sr-only">Open user menu</span>
 
-              <img class="w-8 h-8 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+              <img class="w-8 h-8 rounded-full" 
+     src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" 
+     alt="user photo" 
+     style="object-fit: cover; object-position: center;">
+
 
 
             </button>
@@ -206,7 +213,32 @@ try {
               </li>
 
               <li>
-                <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                <a onclick="logout()" href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                <script>
+                function logout() {
+                      // Call your backend logout API or redirect to logout route
+                      // For example: window.location.href = 'logout.php';
+                      
+                      // Unregister the service worker
+                      if ('serviceWorker' in navigator) {
+                      navigator.serviceWorker.getRegistration('sw.js').then((registration) => {
+                          if (registration) {
+                              registration.unregister().then((boolean) => {
+                                  if (boolean) {
+                                      console.log('Service Worker unregistered successfully');
+                                  } else {
+                                      console.log('Service Worker unregistration failed');
+                                  }
+                              });
+                          } else {
+                              console.log('No Service Worker found with this scope');
+                          }
+                      }).catch((error) => {
+                          console.log('Error while unregistering service worker:', error);
+                      });
+                  }
+                  }
+                </script>
               </li>
             </ul>
           </div>
