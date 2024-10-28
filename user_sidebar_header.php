@@ -107,7 +107,7 @@ try {
 <link href="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.css"  rel="stylesheet" />
 
 <!-- tabler icon -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
 <nav class="fixed top-0 z-40 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -300,13 +300,13 @@ try {
     <ul class="font-medium">
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="<?php echo isActive('/eKPsystem/user_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-dashboard text-2xl"></i>
+        <i class="fa-solid fa-chart-line"></i>
           <span>Dashboard</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_lupon.php" class="<?php echo isActive('/eKPsystem/user_lupon.php') . ' ' . isActive('/eKPsystem/user_used_forms.php') . ' ' . isActive('/eKPsystem/user_uploadfile_lupon.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-users text-2xl"></i>
+        <i class="fa-solid fa-people-group"></i>
           <span>Lupon</span>
         </a>
       </li>
@@ -316,19 +316,19 @@ try {
         echo isActive('/eKPsystem/user_complaints.php') . ' ' . isActive('/eKPsystem/user_add_complaint.php') . ' ' . isActive('/eKPsystem/user_edit_complaint.php') . ' ' . isActive('/eKPsystem/user_manage_case.php') . ' ' . isActive('/eKPsystem/user_uploadfile_complaint.php');
         ?> 
         flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-files text-2xl"></i>
+        <i class="fa-regular fa-file-lines"></i>
           <span>Complaints</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_archives.php" class="<?php echo isActive('/eKPsystem/user_archives.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-archive text-2xl"></i>
+        <i class="fa-regular fa-eye-slash"></i>
           <span>Archives</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_report.php" class="<?php echo isActive('/eKPsystem/user_report.php') . ' ' . isActive('/eKPsystem/user_add_report.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-report text-2xl"></i>
+        <i class="fa-regular fa-rectangle-list"></i>
           <span>Reports</span>
         </a>
       </li>
@@ -351,14 +351,14 @@ try {
 
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_logs.php" class="<?php echo isActive('/eKPsystem/user_logs.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-user-check text-2xl"></i>
+        <i class="fa-solid fa-arrow-right-to-bracket"></i>
           <span>User Logs</span>
         </a>
       </li>
       
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('/eKPsystem/user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-settings text-2xl"></i>
+        <i class="fa-solid fa-gear"></i>
           <span>Settings</span>
         </a>
       </li>
