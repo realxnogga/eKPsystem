@@ -13,7 +13,8 @@ const urlsToCache = [
     'user_offline_add_complaint.php',
     'user_report.php',
     'user_signed_documents.php',
-    'user_logs.php'
+    'user_logs.php',
+    'archive_complaint.php'
 
 ];
 
