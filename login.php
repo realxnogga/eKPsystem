@@ -1,7 +1,12 @@
 <?php
 session_start();
 include 'connection.php';
-
+// Check if the user is already logged in
+if (isset($_SESSION['user_id'])) {
+  // Redirect to the dashboard page
+  header("Location: user_dashboard.php");
+  exit();
+}
 ?>
 
 
