@@ -14,7 +14,8 @@ const urlsToCache = [
     'user_report.php',
     'user_signed_documents.php',
     'user_logs.php',
-    'archive_complaint.php'
+    'archive_complaint.php',
+    'security_handler.php'
 
 ];
 
