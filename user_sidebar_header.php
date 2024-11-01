@@ -156,10 +156,10 @@ try {
             <ul style="list-style-type: none; padding: 0; margin: 0;">
                 <?php foreach ($upcomingComplaints as $Complaint): ?>
                     <li style="padding: 8px; border-bottom: 1px solid #ddd;">
-                        <strong>Name:</strong> <?php echo htmlspecialchars($Complaint['CNames']); ?><br>
                         <strong>Complaint Number:</strong> <?php echo htmlspecialchars($Complaint['Cnum']); ?><br>
-                        <small>Mdate: <?php echo htmlspecialchars($Complaint['Mdate']); ?></small><br>
-                        <small>Days left until lapse: <?php echo round($Complaint['daysUntil14'], 0); ?></small>
+                        <strong>Name:</strong> <?php echo htmlspecialchars($Complaint['CNames']); ?><br>
+                        <small>Date: <?php echo htmlspecialchars($Complaint['Mdate']); ?></small><br>
+                        <small>Days left until lapse:<strong> <?php echo round($Complaint['daysUntil14'], 0); ?></strong></small>
                     </li>
                 <?php endforeach; ?>
             </ul>
