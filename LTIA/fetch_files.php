@@ -57,17 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 // Fetch movremark data
                 $remark_query = "
-                    SELECT `id`, `barangay`, `mov_id`, `IA_1a_pdf_remark`, `IA_1b_pdf_remark`, `IA_2a_pdf_remark`, 
-                           `IA_2b_pdf_remark`, `IA_2c_pdf_remark`, `IA_2d_pdf_remark`, `IA_2e_pdf_remark`, 
-                           `IB_1forcities_pdf_remark`, `IB_1aformuni_pdf_remark`, `IB_1bformuni_pdf_remark`, 
-                           `IB_2_pdf_remark`, `IB_3_pdf_remark`, `IB_4_pdf_remark`, `IC_1_pdf_remark`, 
-                           `IC_2_pdf_remark`, `ID_1_pdf_remark`, `ID_2_pdf_remark`, `IIA_pdf_remark`, 
-                           `IIB_1_pdf_remark`, `IIB_2_pdf_remark`, `IIC_pdf_remark`, `IIIA_pdf_remark`, 
-                           `IIIB_pdf_remark`, `IIIC_1forcities_pdf_remark`, `IIIC_1forcities2_pdf_remark`, 
-                           `IIIC_1forcities3_pdf_remark`, `IIIC_2formuni1_pdf_remark`, `IIIC_2formuni2_pdf_remark`, 
-                           `IIIC_2formuni3_pdf_remark`, `IIID_pdf_rate_remark`, `IV_forcities_pdf_remark`, 
-                           `IV_muni_pdf_remark`, `V_1_pdf_remark`, `threepeoplesorg_remark`
-                    FROM movremark
+                    SELECT `id`, `barangay`, `mov_id`, `IA_1a_pdf_remark`, `IA_1b_pdf_remark`, `IA_2a_pdf_remark`, `IA_2b_pdf_remark`, `IA_2c_pdf_remark`, `IA_2d_pdf_remark`, `IA_2e_pdf_remark`, `IB_1forcities_pdf_remark`, `IB_1aformuni_pdf_remark`, `IB_1bformuni_pdf_remark`, `IB_2_pdf_remark`, `IB_3_pdf_remark`, `IB_4_pdf_remark`, `IC_1_pdf_remark`, `IC_2_pdf_remark`, `ID_1_pdf_remark`, `ID_2_pdf_remark`, `IIA_pdf_remark`, `IIB_1_pdf_remark`, `IIB_2_pdf_remark`, `IIC_pdf_remark`, `IIIA_pdf_remark`, `IIIB_pdf_remark`, `IIIC_1forcities_pdf_remark`, `IIIC_1forcities2_pdf_remark`, `IIIC_1forcities3_pdf_remark`, `IIIC_2formuni1_pdf_remark`, `IIIC_2formuni2_pdf_remark`, `IIIC_2formuni3_pdf_remark`, `IIID_pdf_remark`, `IV_forcities_pdf_remark`, `IV_muni_pdf_remark`, `V_1_pdf_remark`, `threepeoplesorg_remark` FROM `movremark`
                     WHERE mov_id = :mov_id AND barangay = :barangay_id
                 ";
                 $stmt = $conn->prepare($remark_query);
@@ -118,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'remarks' => $movremark_row
                 ]);
             } else {
-                echo json_encode(['error' => 'No MOV found for this barangay']);
+                echo json_encode(['error' => 'No MOV found for this barangay']); 
             }
         } else {
             echo json_encode(['error' => 'Barangay not found']);

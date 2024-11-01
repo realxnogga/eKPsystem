@@ -425,8 +425,6 @@ $(document).ready(function () {
     <input type="hidden" id="barangay_id" name="barangay_id" readonly> <!-- I want the barangay_id fetch here -->
     <!-- mov_id is fetched here -->
 
-
-
     <table class="table table-bordered">
             <thead>
               <tr>
@@ -1005,7 +1003,7 @@ $(document).ready(function () {
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
             <td><input type="number" value="" name="IIID_pdf_rate" placeholder="Ratings"></td>
-            <td><textarea name="IIID_pdf_rate_remark" placeholder="Remarks"></textarea></td>
+            <td><textarea name="IIID_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
@@ -1072,6 +1070,40 @@ $(document).ready(function () {
       </div>
     </div>
   </div>
+
+  <!-- Modal structure -->
+<div id="responseModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Notification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    const message = urlParams.get('message');
+    
+    if (status && message) {
+        document.getElementById('modalMessage').innerText = decodeURIComponent(message);
+        $('#responseModal').modal('show');
+    }
+});
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- Main modal for PDF viewing -->
 <div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed inset-0 z-50 justify-center items-center w-full h-full">
     <div class="relative p-4 w-full max-w-6xl h-[85%]">
