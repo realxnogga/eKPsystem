@@ -2,14 +2,26 @@
 session_start();
 include '../connection.php';
 
-
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
 }
 
+// Define user and barangay ID from session
+$userID = $_SESSION['user_id'];
+$barangayID = $_SESSION['barangay_id'] ?? '';
 
+// Query to check if the user's barangay has a submission
+$submissionExists = false;
+$checkQuery = "SELECT COUNT(*) FROM movdraft_file WHERE barangay_id = :barangay_id";
+$checkStmt = $conn->prepare($checkQuery);
+$checkStmt->bindParam(':barangay_id', $barangayID, PDO::PARAM_INT);
+$checkStmt->execute();
+if ($checkStmt->fetchColumn() > 0) {
+    $submissionExists = true;
+}
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -38,13 +50,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
                            <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA) <?php echo date('Y'); ?></h1>
               </div>
                         <div class="menu">
-                            <ul class="flex space-x-4">
-                            <li>
-                            <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='form2draftmov.php';" style="margin-left: 0;">
-                    <i class="ti ti-file-upload mr-2"></i> <!-- Icon -->
-                    Draft
-                  </button>
-                        </li>             
+                            <ul class="flex space-x-4">      
                         <li>
                         <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='LTIAdashboard.php';" style="margin-left: 0;">
                     <i class="ti ti-arrow-left-dashed mr-2"></i>
@@ -54,9 +60,17 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
                         </div>
                     </div>
       <h2 class="text-left text-2xl font-semibold">FORM 1</h2>
+                            <?php if ($submissionExists) : ?>
+                              <h1><i>You have already saved a </i></h1>
+                                <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='form2draftmov.php';" style="margin-left: 0;">
+                                <!-- <i class="ti ti-file-upload mr-2"></i> Icon -->
+                                Draft
+                            </button>
+                        <?php endif; ?>
+                         
       <h2 class="custom-h2"> </h2>
 
-      <form method="post" action="form2MOVupload_handler.php" enctype="multipart/form-data">
+      <form method="post" action="movdraft_handler.php" enctype="multipart/form-data">
         <div class="container mt-4">
         <table class="table table-bordered">
             <thead>
@@ -293,13 +307,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
               </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
-                <td><input type="file" id="3peoplesorg" name="threepeoplesorg" accept=".pdf" onchange="validateFileType(this)" /></td>
+                <td><input type="file" id="3peoplesorg" name="threepeoplesorg_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
             </tbody>
           </table>
         
-          <input type="submit" value="Submit" class="btn btn-dark btn-block mt-5" style="height: 50px; width: 50%; background-color: #000000; color: #ffffff;" />
-          </form>
+          <input type="submit" value="Save" class="btn btn-dark btn-block mt-5" style="height: 50px; width: 50%; background-color: #000000; color: #ffffff;" />
+          
+        </form>
       <footer class="relative">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="w-full">
                 <path fill="#0099ff" fill-opacity="1" d="M0,224L30,224C60,224,120,224,180,208C240,192,300,160,360,149.3C420,139,480,149,540,160C600,171,660,181,720,154.7C780,128,840,64,900,58.7C960,53,1020,107,1080,117.3C1140,128,1200,96,1260,69.3C1320,43,1380,21,1410,10.7L1440,0L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"></path>

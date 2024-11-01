@@ -119,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Commit the transaction
         $conn->commit();
-        echo "Data inserted or updated successfully haha kupal.";
+        echo "Data inserted or updated successfully";
 
     } catch (Exception $e) {
         // Rollback the transaction in case of an error

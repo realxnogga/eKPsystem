@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                        IIIB_pdf_File, IIIC_1forcities_pdf_File, IIIC_1forcities2_pdf_File, 
                        IIIC_1forcities3_pdf_File, IIIC_2formuni1_pdf_File, IIIC_2formuni2_pdf_File, 
                        IIIC_2formuni3_pdf_File, IIID_pdf_File, IV_forcities_pdf_File, IV_muni_pdf_File, 
-                       V_1_pdf_File, threepeoplesorg, id AS mov_id 
+                       V_1_pdf_File, threepeoplesorg_File, id AS mov_id 
                 FROM mov 
                 WHERE barangay_id = :barangay_id
             ";
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'IV_forcities_pdf_File' => $mov_row['IV_forcities_pdf_File'],
                     'IV_muni_pdf_File' => $mov_row['IV_muni_pdf_File'],
                     'V_1_pdf_File' => $mov_row['V_1_pdf_File'],
-                    'threepeoplesorg' => $mov_row['threepeoplesorg'],
+                    'threepeoplesorg_File' => $mov_row['threepeoplesorg_File'],
                     'rates' => $movrate_row,
                     'remarks' => $movremark_row
                 ]);
