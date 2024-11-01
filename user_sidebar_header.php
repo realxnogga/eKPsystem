@@ -46,9 +46,16 @@ function traverseDirectory()
 $upcomingComplaints = []; // Array to store complaint details
 
 try {
-    // Update SQL query to select the new columns
-    $sql = "SELECT CNames, Cnum, Mdate, CMethod FROM complaints"; // Use 'Mdate' here
+    // Get logged-in user ID from the session
+    $userId = $_SESSION['user_id'];
+
+    // Update SQL query to select the new columns and filter by UserID
+    $sql = "SELECT CNames, Cnum, Mdate, CMethod 
+            FROM complaints 
+            WHERE UserID = :user_id"; // Use 'UserID' condition here
+
     $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 
     if ($stmt->execute()) {
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -66,7 +73,7 @@ try {
                 'Certified to file action in court', 'Dropped/Withdrawn'
             ]);
 
-            $dateAdded = strtotime($row['Mdate']); // Use 'Mdate' here
+            $dateAdded = strtotime($row['Mdate']);
             $currentDate = strtotime(date('Y-m-d'));
             $elapsedDays = ($currentDate - $dateAdded) / (60 * 60 * 24);
             $daysUntil14 = 14 - $elapsedDays; // Calculate days left until 14 days
@@ -87,7 +94,6 @@ try {
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
-
 ?>
 
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>assets/css/styles.min.css" />
