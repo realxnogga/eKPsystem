@@ -13,15 +13,17 @@ $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 $lastCaseNumber = $row ? $row['lastCaseNumber'] : null;
 
+// Check if there is a last case number
 if (!$lastCaseNumber) {
-    $caseNum = '01-000-' . date('my');
+    // No previous cases for this user, create a new base case number
+    $caseNum = sprintf('%03d', 1) . '-' . sprintf('%02d', $barangayID) . '-' . date('my');
 } else {
     // Extract the parts of the last case number
     $parts = explode('-', $lastCaseNumber);
-    
+
     if (count($parts) === 3) {
         $currentMonthYear = date('my');
-        
+
         // If current month/year is the same as last case, increment blotter number
         if ($parts[2] === $currentMonthYear) {
             $blotterNumber = intval($parts[0]) + 1;
@@ -30,13 +32,14 @@ if (!$lastCaseNumber) {
             $blotterNumber = 1;
         }
 
-        // Format the case number
-$caseNum = sprintf('%02d', $blotterNumber) . '-' . $parts[1] . '-' . $currentMonthYear;
+        // Format the case number with the BarangayID and the new blotter number
+        $caseNum = sprintf('%03d', $blotterNumber) . '-' . sprintf('%02d', $barangayID) . '-' . $currentMonthYear;
     } else {
         // Handle unexpected format of $lastCaseNumber
-        $caseNum = '01-000-' . date('my');
+        $caseNum = sprintf('%03d', 1) . '-' . sprintf('%02d', $barangayID) . '-' . date('my');
     }
 }
+
 
 if (isset($_POST['submit'])) {
     // Sanitize and validate user input
