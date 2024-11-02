@@ -289,10 +289,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script>
         
-        const formData = {
-            Mdate: '2024-10-11T14:30', // This should be dynamically set as per your requirement
-            RDate: '2024-10-11'         // This too
-        };
+         // Retrieve the values from the input fields
+        const Mdate = document.getElementById('Mdate').value;
+        const RDate = document.getElementById('RDate').value;
         document.getElementById('submitBtn').addEventListener('click', function() {
             // Set values from formData if needed
             document.getElementById('Mdate').value = formData.Mdate;
@@ -461,6 +460,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Clear localStorage after all complaints are sent
         localStorage.removeItem('offlineComplaintData');
+    }
+    // Check for a new service worker
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            registrations.forEach(registration => {
+                registration.update();
+            });
+        });
     }
 });
 

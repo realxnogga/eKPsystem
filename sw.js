@@ -7,15 +7,13 @@ const urlsToCache = [
     'user_dashboard.php',
     'user_add_complaint.php',
     'user_edit_complaint.php',
-    'user_archives.php',
     'user_lupon.php',
-    'user_complaints.php',
     'user_offline_add_complaint.php',
     'user_report.php',
     'user_signed_documents.php',
     'user_logs.php',
-    'archive_complaint.php',
-    'security_handler.php'
+    'security_handler.php',
+    'sanitize_database.php'
 
 ];
 

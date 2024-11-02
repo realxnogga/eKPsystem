@@ -317,7 +317,7 @@ try {
         </a>
       </li>
       <li>
-        <a href="<?php echo traverseDirectory(); ?>user_complaints.php" class="
+        <a onclick="runInBackground()" href="<?php echo traverseDirectory(); ?>user_complaints.php" class="
         <?php
         echo isActive('/eKPsystem/user_complaints.php') . ' ' . isActive('/eKPsystem/user_add_complaint.php') . ' ' . isActive('/eKPsystem/user_edit_complaint.php') . ' ' . isActive('/eKPsystem/user_manage_case.php') . ' ' . isActive('/eKPsystem/user_uploadfile_complaint.php');
         ?> 
@@ -325,6 +325,18 @@ try {
         <i class="fa-regular fa-file-lines"></i>
           <span>Complaints</span>
         </a>
+        <script>
+        function runInBackground() {
+            fetch('sanitize_database.php', { method: 'POST' })
+                .then(response => response.text())
+                .then(data => {
+                    console.log('Script executed:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_archives.php" class="<?php echo isActive('/eKPsystem/user_archives.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
@@ -332,6 +344,7 @@ try {
           <span>Archives</span>
         </a>
       </li>
+      
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_report.php" class="<?php echo isActive('/eKPsystem/user_report.php') . ' ' . isActive('/eKPsystem/user_add_report.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
         <i class="fa-regular fa-rectangle-list"></i>
