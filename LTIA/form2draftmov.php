@@ -815,7 +815,7 @@ document.getElementById('confirmSubmit').addEventListener('click', function () {
             <div class="modal-header">
                 <h5 class="modal-title" id="messageModalLabel">
                     <?php echo $_SESSION['message_type'] === 'success' ? 'Update' : 'Submission Failed'; ?>
-                </h5>3.
+                </h5>
                 <button type="button" class="btn-close" style="background-color: #2eb8b8;"  data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
