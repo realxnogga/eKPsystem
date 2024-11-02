@@ -14,7 +14,31 @@ try {
     $checkStmt->execute();
     $draftData = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
+    // Check last submission date from mov table
+    $lastSubmissionQuery = "SELECT submission_date FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id ORDER BY submission_date DESC LIMIT 1";
+    $lastSubmissionStmt = $conn->prepare($lastSubmissionQuery);
+    $lastSubmissionStmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
+    $lastSubmissionStmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
+    $lastSubmissionStmt->execute();
+    $lastSubmission = $lastSubmissionStmt->fetch(PDO::FETCH_ASSOC);
+
+    // Check if one day has passed since the last submission
+    if ($lastSubmission) {
+        $lastSubmissionDate = new DateTime($lastSubmission['submission_date']);
+        $currentDate = new DateTime();
+        $interval = $currentDate->diff($lastSubmissionDate);
+
+        if ($interval->d < 1 && $lastSubmissionDate->format('Y-m-d') === $currentDate->format('Y-m-d')) {
+            $_SESSION['modal_message'] = 'You can only submit once per day.';
+            header('Location: LTIAdashboard.php');
+            exit();
+        }
+    }
+
     if ($draftData) {
+        // Add the current date for submission_date
+        $draftData['submission_date'] = date('Y-m-d H:i:s');
+
         // Build the INSERT query for `mov`
         $columns = array_keys($draftData);
         $columnList = implode(', ', $columns);

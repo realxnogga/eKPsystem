@@ -15,8 +15,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Secretaries Corner</title>
-
+  <title>LTIA</title>
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   

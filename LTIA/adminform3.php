@@ -1,0 +1,149 @@
+<?php
+session_start();
+include '../connection.php';
+
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+  header("Location: login.php");
+  exit;
+}
+
+$user_id = $_SESSION['user_id'];
+
+try {
+    // Step 1: Get the municipality ID for the logged-in user
+    $query = "SELECT municipality_id FROM users WHERE id = :user_id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+    
+    $user_row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($user_row && isset($user_row['municipality_id'])) {
+        $municipality_id = $user_row['municipality_id'];
+        
+        // Step 2: Fetch municipality name
+        $query = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $municipality_row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $municipality_name = $municipality_row ? strtoupper($municipality_row['municipality_name']) : 'No municipality found';
+
+        // Step 3: Fetch barangays and their total ratings from movrate, sorted by total in descending order
+        $query = "
+            SELECT b.barangay_name AS barangay, m.total 
+            FROM barangays b
+            JOIN movrate m ON b.id = m.barangay
+            WHERE b.municipality_id = :municipality_id
+            ORDER BY m.total DESC";
+        
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+    } else {
+        $municipality_name = 'No municipality ID found for this user';
+        $barangay_ratings = []; // Empty if no data found
+    }
+    
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
+?>
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LTIA Form 3</title>
+  <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+  <link rel="stylesheet" href="../assets/css/styles.min.css" />
+  <!-- * Bootstrap v5.3.0-alpha1 (https://getbootstrap.com/) -->
+</head>
+<body class="bg-[#E8E8E7]">
+  <?php include "../admin_sidebar_header.php"; ?>
+  <div class="p-4 sm:ml-44 ">
+    <div class="rounded-lg mt-16">
+      <!-- First Card -->
+      <div class="card">
+        <div class="card-body">
+          <div class="menu">
+            <ul class="flex space-x-4">
+              <li>
+                <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform2evaluate.php';" style="margin-left: 0;">
+                  <i class="ti ti-building-community mr-2"> </i> 
+                  Back
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Second Card -->
+      <div class="card mt-4">
+        <div class="card-body">
+          <!-- Logo, Title, and Subtitle Section -->
+          <div class="flex justify-center items-center mb-4 space-x-4">
+            <!-- DILG Logo -->
+            <div class="dilglogo">
+              <img src="../img/dilg.png" alt="DILG Logo" style="max-width: 120px; max-height: 120px;" class="mx-auto">
+            </div>
+
+            <!-- Title in Bordered Box -->
+            <div class="border border-gray-800 rounded-md p-4 text-center">
+              <h1 class="text-xl font-bold">
+                CY Lupong Tagapamayapa Incentives Award (LTIA) <br>
+                LTIA FORM 3 (C/M) - COMPARATIVE EVALUATION FORM
+              </h1>
+            </div>
+
+            <!-- LTIA Logo -->
+            <div class="dilglogo">
+              <img src="images/ltialogo.png" alt="LTIA Logo" style="max-width: 120px; max-height: 120px;" class="mx-auto">
+            </div>
+          </div>
+
+          <!-- Identifying Information Section -->
+          <div class="border border-gray-800 rounded-md p-4 mt-4">
+            <b>A. IDENTIFYING INFORMATION</b>
+            <p>City/Municipality : CITY OF <?php echo htmlspecialchars($municipality_name); ?></p>
+            <p>Region           : IVA</p>
+            <p>Province         : LAGUNA</p>
+            <p>Category         : CITY</p>
+
+            <br>
+            <b> B. COMPARATIVE EVALUATION RESULTS </b><br>
+
+            <table class="table table-bordered w-full border border-gray-800 mt-4">
+                <thead>
+                    <tr>
+                        <th>LUPONG TAGAPAMAYAPA (LT)</th>
+                        <th>OVERALL PERFORMANCE RATING</th>
+                        <th>ADJECTIVAL RATING</th>
+                        <th>RANK</th>
+                    </tr>
+                </thead>
+                <tbody>
+            <?php 
+            $rank = 1;
+            foreach ($barangay_ratings as $row): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($row['barangay']); ?></td>
+                    <td><?php echo htmlspecialchars($row['total']); ?></td>
+                    <td></td> <!-- Leave empty for now as instructed -->
+                    <td><?php echo $rank++; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

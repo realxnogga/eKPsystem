@@ -90,7 +90,8 @@ try {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Secretaries Corner</title>
+  <title>LTIA</title>
+  <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
 <style>
 /* CSS to ensure alerts fit well within the table cells */
 .alert {
@@ -111,10 +112,8 @@ try {
 
 </style>
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
-  <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
  <script>
@@ -391,7 +390,7 @@ $(document).ready(function () {
             <div class="menu">
               <ul class="flex space-x-4">
               <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='#';" style="margin-left: 0;">
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform3.php';" style="margin-left: 0;">
                   <i class="ti ti-file-analytics mr-2">  </i>
                       Summary
                   </button>
@@ -1064,10 +1063,10 @@ $(document).ready(function () {
               </tr>
             </tbody>
           </table>
-      <input type="submit" value="Okay" class="btn btn-dark mt-3" />
+      <input type="submit" value="Submit" style="background-color: #000033;"  class="btn btn-dark mt-3" />
     </form>
         </div>
-      </div>
+      </div> 
     </div>
   </div>
 
