@@ -7,7 +7,31 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: login.php");
     exit;
 }
+
+function getPerformanceRating($total) {
+    if ($total >= 100) {
+        return "Outstanding";
+    } elseif ($total >= 90) {
+        return "Very Satisfactory";
+    } elseif ($total >= 80) {
+        return "Fair";
+    } elseif ($total >= 70) {
+        return "Poor";
+    } else {
+        return "Very Poor";
+    }
+}
+
+// Fetch data from the database using PDO
+$query = "SELECT `total` FROM `movrate` WHERE 1";
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$total = $row['total'];
+$performance = getPerformanceRating($total);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,7 +41,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
     <title>LTIA</title>
-
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/styles.min.css" />
@@ -47,23 +70,25 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
                             </ul>
                         </div>
                     </div>
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+    <!-- Circle Button with Margin Start (ms-5) -->
+    <button type="button" class="btn btn-circle bg-primary text-white d-flex flex-column justify-content-center align-items-center shadow-lg ms-5" onclick="location.href='form2movview.php';" style="width: 150px; height: 150px; font-size: 1.5rem;">
+        <span class="fw-bold fs-2"><?php echo $total; ?></span>
+        <span class="fs-6"><?php echo $performance; ?></span>
+    </button>
 
-                    <!-- Circle Button and Modal Trigger -->
-                    <div class="flex items-center justify-center mb-4 space-x-8">
-                        <button type="button" class="w-56 h-56 bg-blue-500 rounded-full flex items-center justify-center text-white text-4xl font-semibold hover:bg-blue-600 transition-transform transform hover:scale-105" onclick="location.href='form2movview.php';">
-                            A+
-                        </button>
+    <!-- Text Section with Margin End (me-5) -->
+    <div class="flex flex-col text-justify w-75 me-5">
+        <p class="h4 fw-bold text-secondary">The Lupong Tagapamayapa Incentives Award (LTIA)</p>   
+        <p class="text-muted">
+            The Lupong Tagapamayapa Incentives Award (LTIA) was conceptualized and implemented in 1982 and has been elevated to a Presidential Award pursuant to Executive Order No. 394 s. 1997 entitled “Establishing the Lupong Tagapamayapa Incentives Award.”
+        </p>
+        <p class="text-muted">
+            This award is an avenue for granting economic and other incentives to the Lupong Tagapamayapa (LT) for their outstanding contributions to attaining the objectives of the Katarungang Pambarangay (KP).
+        </p>
+    </div>
+</div>
 
-                        <div class="flex flex-col text-justify w-2/3">
-                            <p class="text-2xl font-bold">The Lupong Tagapamayapa Incentives Award (LTIA)</p>   
-                            <p class="text-lg">
-                                The Lupong Tagapamayapa Incentives Award (LTIA) was conceptualized and implemented in 1982 and has been elevated to a Presidential Award pursuant to Executive Order No. 394 s. 1997 entitled “Establishing the Lupong Tagapamayapa Incentives Award.”
-                            </p>
-                            <p class="text-lg">
-                                This award is an avenue for granting economic and other incentives to the Lupong Tagapamayapa (LT) for their outstanding contributions to attaining the objectives of the Katarungang Pambarangay (KP).
-                            </p>
-                        </div>
-                    </div>
 
                     <!-- Modal Structure -->
                     <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">

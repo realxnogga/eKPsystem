@@ -51,6 +51,20 @@ try {
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
+
+function getAdjectivalRating($total) {
+  if ($total === 100) {
+      return "Outstanding";
+  } elseif ($total >= 90 && $total <= 99) {
+      return "Very Satisfactory";
+  } elseif ($total >= 80 && $total <= 89) {
+      return "Fair";
+  } elseif ($total >= 70 && $total <= 79) {
+      return "Poor";
+  } else {
+      return "Very Poor";
+  }
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -71,14 +85,13 @@ try {
       <div class="card">
         <div class="card-body">
           <div class="menu">
-            <ul class="flex space-x-4">
-              <li>
                 <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform2evaluate.php';" style="margin-left: 0;">
                   <i class="ti ti-building-community mr-2"> </i> 
                   Back
-                </button>
-              </li>
-            </ul>
+            <div class="text-right">
+            <button onclick="printSecondCard()" class="btn btn-primary">Print</button>
+      <button onclick="downloadSecondCard()" class="btn btn-secondary">Download</button>
+            </div>
           </div>
         </div>
       </div>
@@ -109,13 +122,14 @@ try {
 
           <!-- Identifying Information Section -->
           <div class="border border-gray-800 rounded-md p-4 mt-4">
-            <b>A. IDENTIFYING INFORMATION</b>
-            <p>City/Municipality : CITY OF <?php echo htmlspecialchars($municipality_name); ?></p>
-            <p>Region           : IVA</p>
-            <p>Province         : LAGUNA</p>
-            <p>Category         : CITY</p>
+          <b>A. IDENTIFYING INFORMATION</b>
+          <p style="padding-left: 5em;">City/Municipality <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY OF <?php echo htmlspecialchars($municipality_name); ?></p>
+          <p style="padding-left: 5em;">Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA</p>
+          <p style="padding-left: 5em;">Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA</p>
+          <p style="padding-left: 5em;">Category <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY</p>
+      </div>
 
-            <br>
+                  <br>
             <b> B. COMPARATIVE EVALUATION RESULTS </b><br>
 
             <table class="table table-bordered w-full border border-gray-800 mt-4">
@@ -129,21 +143,98 @@ try {
                 </thead>
                 <tbody>
             <?php 
+            $num = 1;
             $rank = 1;
             foreach ($barangay_ratings as $row): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($row['barangay']); ?></td>
+                    <td><?php echo $num++; ?>. 
+                        <span class="spacingtabs"><?php echo htmlspecialchars($row['barangay']); ?></span></td>
                     <td><?php echo htmlspecialchars($row['total']); ?></td>
-                    <td></td> <!-- Leave empty for now as instructed -->
+                    <td><?php echo getAdjectivalRating($row['total']); ?></td>
                     <td><?php echo $rank++; ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
             </table>
+            <br>
+                    <b> C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION </b><br><br>
+                    <div class="certification-section text-center">
+                    <form method="post" action="" enctype="multipart/form-data">
+                        <input type="text" name="" placeholder="Enter Name"><br>
+                        Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+
+                        <input type="text" name="" placeholder="Enter Name"><br>
+                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+
+                        <input type="text" name="" placeholder="Enter Name"><br>
+                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+
+                        <input type="text" name="" placeholder="Enter Name"><br>
+                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br>
+                </div>
+                <br><br>
+                <b>D. DATE ACCOMPLISHED<b><br>
+                <span class="spacingtabs"> <?php echo date("F j, Y"); ?>
+
+                <br>
+                <br>
+                <div class="text-right mt-4">
+                <input type="submit" value="Save" class="btn-save">
+              </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </body>
+<style>
+.spacingtabs {
+    padding-left: 2em; /* Adjust as needed for spacing */
+}.spacingtabs2 {
+    padding-left: 2em; /* Adjust as needed for spacing */
+}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script>
+  // Function to Print the Second Card
+  function printSecondCard() {
+    const secondCardContent = document.querySelector('.card:nth-of-type(2)').innerHTML;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Second Card</title>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+        </head>
+        <body onload="window.print(); window.close();">
+          ${secondCardContent}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+  }
+
+  // Function to Download the Second Card as PDF
+  function downloadSecondCard() {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+
+    // Clone and format the content of the second card
+    const secondCardContent = document.querySelector('.card:nth-of-type(2)').innerHTML;
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = secondCardContent;
+
+    // Add content to PDF
+    pdf.html(tempDiv, {
+      callback: function (doc) {
+        doc.save('LTIA_Comparative_Evaluation_Form.pdf');
+      },
+      x: 10,
+      y: 10,
+      margin: 1
+    });
+  }
+</script>
+
+
 </html>
