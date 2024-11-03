@@ -18,7 +18,7 @@ $allowed_columns = [
     'IIIB_pdf_File', 'IIIC_1forcities_pdf_File', 'IIIC_1forcities2_pdf_File',
     'IIIC_1forcities3_pdf_File', 'IIIC_2formuni1_pdf_File', 'IIIC_2formuni2_pdf_File',
     'IIIC_2formuni3_pdf_File', 'IIID_pdf_File', 'IV_forcities_pdf_File', 'IV_muni_pdf_File',
-    'V_1_pdf_File', 'threepeoplesorg_File'
+    'V_1_pdf_File', 'threepeoplesorg_pdf_File'
 ];
 
 // Fetch uploaded files from the database
@@ -667,8 +667,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
                 <td>
-                <?php if (!empty($row['threepeoplesorg_File'])) : ?>
-                <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['threepeoplesorg_File']; ?>">View</button>
+                <?php if (!empty($row['threepeoplesorg_pdf_File'])) : ?>
+                <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['threepeoplesorg_pdf_File']; ?>">View</button>
               <?php else : ?>
                 <span>No MOV Submitted</span>
               <?php endif; ?>

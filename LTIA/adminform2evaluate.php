@@ -152,7 +152,7 @@ $(document).ready(function () {
 
                 // Handle each PDF file from the returned data
                 var fileTypes = [
-                'IA_1a', 'IA_1b', 'IA_2a', 'IA_2b', 'IA_2c', 'IA_2d', 'IA_2e', 'IB_1forcities', 'IB_1aformuni', 'IB_1bformuni', 'IB_2', 'IB_3', 'IB_4', 'IC_1', 'IC_2', 'ID_1', 'ID_2', 'IIA', 'IIB_1', 'IIB_2', 'IIC', 'IIIA', 'IIIB', 'IIIC_1forcities', 'IIIC_1forcities2', 'IIIC_1forcities3', 'IIIC_2formuni1', 'IIIC_2formuni2', 'IIIC_2formuni3', 'IIID', 'IV_forcities', 'IV_muni', 'V_1', 'threpplesorg'
+                'IA_1a', 'IA_1b', 'IA_2a', 'IA_2b', 'IA_2c', 'IA_2d', 'IA_2e', 'IB_1forcities', 'IB_1aformuni', 'IB_1bformuni', 'IB_2', 'IB_3', 'IB_4', 'IC_1', 'IC_2', 'ID_1', 'ID_2', 'IIA', 'IIB_1', 'IIB_2', 'IIC', 'IIIA', 'IIIB', 'IIIC_1forcities', 'IIIC_1forcities2', 'IIIC_1forcities3', 'IIIC_2formuni1', 'IIIC_2formuni2', 'IIIC_2formuni3', 'IIID', 'IV_forcities', 'IV_muni', 'V_1', 'threepeoplesorg'
                 ];
 
                 // Clear previous file columns
@@ -209,7 +209,7 @@ $(document).ready(function () {
                     $('input[name="IV_forcities_pdf_rate"]').val(data.rates.IV_forcities_pdf_rate);
                     $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate);
                     $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate);
-                    $('input[name="threepeoplesorg_pdf_rate"]').val(data.rates.threepeoplesorg_pdf_rate);
+                    $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate);
 
                     // Add similar lines for other rates as necessary
                 }
@@ -251,7 +251,7 @@ $(document).ready(function () {
                     $('textarea[name="IV_forcities_pdf_remark"]').val(data.remarks.IV_forcities_pdf_remark);
                     $('textarea[name="IV_muni_pdf_remark"]').val(data.remarks.IV_muni_pdf_remark);
                     $('textarea[name="V_1_pdf_remark"]').val(data.remarks.V_1_pdf_remark);
-                    $('textarea[name="threepeoplesorg_pdf_remark"]').val(data.remarks.threepeoplesorg_pdf_remark);
+                    $('textarea[name="threepeoplesorg_remark"]').val(data.remarks.threepeoplesorg_remark);
 
                     // Add similar lines for other remarks as necessary
                 }
@@ -299,7 +299,7 @@ $(document).ready(function () {
             $('textarea[name="IV_forcities_pdf_remark"]').val('');
             $('textarea[name="IV_muni_pdf_remark"]').val('');
             $('textarea[name="V_1_pdf_remark"]').val('');
-            $('textarea[name="threepeoplesorg_pdf_remark"]').val('');
+            $('textarea[name="threepeoplesorg_remark"]').val('');
 
             $('input[name="IA_1a_pdf_rate"]').val('');
             $('input[name="IA_1b_pdf_rate"]').val('');
@@ -417,12 +417,15 @@ $(document).ready(function () {
                             <?php endforeach; ?>
                         </select>
                     </div>
+
     <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
     <input type="hidden" id="selected_barangay" name="selected_barangay" value="" />
     <!-- Example form input for mov_id -->
     <input type="hidden" id="mov_id" name="mov_id"b readonly> <!-- Display fetched mov_id -->
     <input type="hidden" id="barangay_id" name="barangay_id" readonly> <!-- I want the barangay_id fetch here -->
     <!-- mov_id is fetched here -->
+    
+
 
     <table class="table table-bordered">
             <thead>
@@ -1055,7 +1058,7 @@ $(document).ready(function () {
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
               <td>2</td>
-                <td class="file-column" data-type="threpplesorg">
+              <td class="file-column" data-type="threepeoplesorg">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
             <td><input type="number" value="" name="threepeoplesorg_rate" placeholder="Ratings"></td>
