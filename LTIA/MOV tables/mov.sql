@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2024 at 11:08 AM
+-- Generation Time: Nov 04, 2024 at 04:15 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,8 +64,8 @@ CREATE TABLE `mov` (
   `IV_forcities_pdf_File` varchar(255) DEFAULT NULL,
   `IV_muni_pdf_File` varchar(255) DEFAULT NULL,
   `V_1_pdf_File` varchar(255) DEFAULT NULL,
-  `threepeoplesorg_File` varchar(255) DEFAULT NULL,
-  `date` datetime NOT NULL DEFAULT current_timestamp()
+  `threepeoplesorg_pdf_File` varchar(255) DEFAULT NULL,
+  `year` year(4) NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

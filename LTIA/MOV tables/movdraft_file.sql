@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2024 at 11:08 AM
+-- Generation Time: Nov 04, 2024 at 04:16 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,7 +64,7 @@ CREATE TABLE `movdraft_file` (
   `IV_forcities_pdf_File` varchar(255) DEFAULT NULL,
   `IV_muni_pdf_File` varchar(255) DEFAULT NULL,
   `V_1_pdf_File` varchar(255) DEFAULT NULL,
-  `threepeoplesorg_File` varchar(255) DEFAULT NULL,
+  `threepeoplesorg_pdf_File` varchar(255) DEFAULT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -87,7 +87,7 @@ ALTER TABLE `movdraft_file`
 -- AUTO_INCREMENT for table `movdraft_file`
 --
 ALTER TABLE `movdraft_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Constraints for dumped tables
