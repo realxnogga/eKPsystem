@@ -15,6 +15,12 @@ try {
     $draftData = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
     if ($draftData) {
+        // Add 'year' column value, using the year from 'date' column or current year
+        $draftData['year'] = date('Y', strtotime($draftData['date'] ?? date('Y-m-d')));
+
+        // Remove the 'date' key if not present in 'mov'
+        unset($draftData['date']);
+
         // Build the INSERT query for mov
         $columns = array_keys($draftData);
         $columnList = implode(', ', $columns);

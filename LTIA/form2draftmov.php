@@ -716,7 +716,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return false; // If both file and hidden input are empty, return false
         }
     }
-
     return true; // All inputs are valid
 }
     function submitForm(button) {
