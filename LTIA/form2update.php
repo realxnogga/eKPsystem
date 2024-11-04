@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     'IV_forcities_pdf_File',
     'IV_muni_pdf_File',
     'V_1_pdf_File',
-    'threepeoplesorg_File'
+    'threepeoplesorg_pdf_File'
   ];
 
   $fileNames = [];
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     IV_forcities_pdf_File = :IV_forcities_pdf_File,
     IV_muni_pdf_File = :IV_muni_pdf_File,
     V_1_pdf_File = :V_1_pdf_File,
-    threepeoplesorg_File = :threepeoplesorg_File
+    threepeoplesorg_pdf_File = :threepeoplesorg_pdf_File
     WHERE barangay_id = :barangay_id";
 
   $stmt = $conn->prepare($update_query);

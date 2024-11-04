@@ -17,7 +17,7 @@ $allowed_columns = [
     'IIIB_pdf_File', 'IIIC_1forcities_pdf_File', 'IIIC_1forcities2_pdf_File',
     'IIIC_1forcities3_pdf_File', 'IIIC_2formuni1_pdf_File', 'IIIC_2formuni2_pdf_File',
     'IIIC_2formuni3_pdf_File', 'IIID_pdf_File', 'IV_forcities_pdf_File', 'IV_muni_pdf_File',
-    'V_1_pdf_File', 'threepeoplesorg_File'
+    'V_1_pdf_File', 'threepeoplesorg_pdf_File'
 ];
 
 // Fetch existing file data
@@ -56,15 +56,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $update_stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
     $update_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
 
-    if ($update_stmt->execute()) {
-        $_SESSION['message'] = $file_changed ? 'Saved!' : 'No file changes detected.';
+   if ($update_stmt->execute()) {
+    if ($file_changed) {
+        $_SESSION['message'] = 'Saved!';
         $_SESSION['message_type'] = 'success';
     } else {
-        $_SESSION['message'] = 'Error updating files. Please try again.';
-        $_SESSION['message_type'] = 'error';
+        $_SESSION['message'] = 'No file changes detected.';
+        $_SESSION['message_type'] = 'info';
     }
-
-    header("Location: form2draftmov.php");
-    exit;
+} else {
+    $_SESSION['message'] = 'Error updating files. Please try again.';
+    $_SESSION['message_type'] = 'error';
 }
-?>         
+
+header("Location: form2draftmov.php");
+exit;
+}
+?>

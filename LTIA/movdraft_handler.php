@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
     'IV_forcities_pdf_File',
     'IV_muni_pdf_File',
     'V_1_pdf_File',
-    'threepeoplesorg_File'
+    'threepeoplesorg'
   ];
 
   $fileNames = [];
@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
     IV_forcities_pdf_File, 
     IV_muni_pdf_File,
     V_1_pdf_File, 
-    threepeoplesorg_File
+    threepeoplesorg
   ) VALUES (
     :user_id, 
     :barangay_id, 
@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
     :IV_forcities_pdf_File, 
     :IV_muni_pdf_File,
     :V_1_pdf_File, 
-    :threepeoplesorg_File
+    :threepeoplesorg
   )";
 
   $stmt = $conn->prepare($insert_query);

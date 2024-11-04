@@ -307,7 +307,7 @@ if ($checkStmt->fetchColumn() > 0) {
               </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
-                <td><input type="file" id="3peoplesorg" name="threepeoplesorg_File" accept=".pdf" onchange="validateFileType(this)" /></td>
+                <td><input type="file" id="3peoplesorg" name="threepeoplesorg_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
             </tbody>
           </table>

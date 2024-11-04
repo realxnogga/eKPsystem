@@ -17,7 +17,7 @@ $allowed_columns = [
     'IIIB_pdf_File', 'IIIC_1forcities_pdf_File', 'IIIC_1forcities2_pdf_File',
     'IIIC_1forcities3_pdf_File', 'IIIC_2formuni1_pdf_File', 'IIIC_2formuni2_pdf_File',
     'IIIC_2formuni3_pdf_File', 'IIID_pdf_File', 'IV_forcities_pdf_File', 'IV_muni_pdf_File',
-    'V_1_pdf_File', 'threepeoplesorg_File'
+    'V_1_pdf_File', 'threepeoplesorg_pdf_File'
 ];
 
 // Fetch uploaded files from the database
@@ -684,12 +684,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
-                <td><input type="file" id="3peoplesorg" name="threepeoplesorg_File" accept=".pdf" onchange="validateFileType(this)" />
-                <input type="hidden" name="threepeoplesorg_File" id="threepeoplesorg_File" value="<?php echo $row['threepeoplesorg_File']; ?>">
+                <td><input type="file" id="3peoplesorg" name="threepeoplesorg_pdf_File" accept=".pdf" onchange="validateFileType(this)" />
+                <input type="hidden" name="threepeoplesorg_pdf_File" id="threepeoplesorg_pdf_File" value="<?php echo $row['threepeoplesorg_pdf_File']; ?>">
             </td>
                 <td>
-                <?php if (!empty($row['threepeoplesorg_File'])) : ?>
-            <button type="button" class="btn btn-primary view-pdf" style="background-color: #00008B;" data-file="movfolder/<?php echo htmlspecialchars($row['threepeoplesorg_File'], ENT_QUOTES, 'UTF-8'); ?>">(<?php echo htmlspecialchars($row['threepeoplesorg_File'], ENT_QUOTES, 'UTF-8'); ?>)</button>
+                <?php if (!empty($row['threepeoplesorg_pdf_File'])) : ?>
+            <button type="button" class="btn btn-primary view-pdf" style="background-color: #00008B;" data-file="movfolder/<?php echo htmlspecialchars($row['threepeoplesorg_pdf_File'], ENT_QUOTES, 'UTF-8'); ?>">(<?php echo htmlspecialchars($row['threepeoplesorg_pdf_File'], ENT_QUOTES, 'UTF-8'); ?>)</button>
             <?php else : ?>
               <span>No file uploaded</span>
             <?php endif; ?>
@@ -814,7 +814,7 @@ document.getElementById('confirmSubmit').addEventListener('click', function () {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="messageModalLabel">
-                    <?php echo $_SESSION['message_type'] === 'success' ? 'Update' : 'Submission Failed'; ?>
+                    <?php echo $_SESSION['message'] === 'success' ? 'Update' : 'Submission Failed'; ?>
                 </h5>
                 <button type="button" class="btn-close" style="background-color: #2eb8b8;"  data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -827,13 +827,12 @@ document.getElementById('confirmSubmit').addEventListener('click', function () {
         </div>
     </div>
 </div>
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         <?php if (isset($_SESSION['message'])): ?>
             var messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
             messageModal.show();
-            <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
+            <?php unset($_SESSION['message'], $_SESSION['message']); ?>
         <?php endif; ?>
     });
 </script>
