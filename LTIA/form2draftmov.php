@@ -806,7 +806,6 @@ document.getElementById('confirmSubmit').addEventListener('click', function () {
     }, 500);
 });
 </script>
-
 <!--modal for update-->
 <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

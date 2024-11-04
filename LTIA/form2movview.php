@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="dilglogo">
                             <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" />
                         </div>
-                        <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA)</h1>
+                        <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA) <?php echo date('Y'); ?></h1>
                     </div>
                     <div class="menu">
                         <ul class="flex space-x-4">
