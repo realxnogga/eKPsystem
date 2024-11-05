@@ -366,7 +366,6 @@ $(document).ready(function () {
 
 <body class="bg-[#E8E8E7]">
   <?php include "../admin_sidebar_header.php"; ?>
-
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
     <div class="card">
