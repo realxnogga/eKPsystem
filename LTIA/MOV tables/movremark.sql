@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 04, 2024 at 04:17 AM
+-- Generation Time: Nov 05, 2024 at 05:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,7 +64,8 @@ CREATE TABLE `movremark` (
   `IV_forcities_pdf_remark` varchar(255) DEFAULT NULL,
   `IV_muni_pdf_remark` varchar(255) DEFAULT NULL,
   `V_1_pdf_remark` varchar(255) DEFAULT NULL,
-  `threepeoplesorg_remark` varchar(255) DEFAULT NULL
+  `threepeoplesorg_remark` varchar(255) DEFAULT NULL,
+  `dateremark` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -87,7 +88,7 @@ ALTER TABLE `movremark`
 -- AUTO_INCREMENT for table `movremark`
 --
 ALTER TABLE `movremark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
