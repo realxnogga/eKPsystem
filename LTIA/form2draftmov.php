@@ -30,26 +30,26 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $row as an empty arra
 
 $file_changed = false; // Flag to track if any files have changed
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $upload_dir = 'movfolder/';
+// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//     $upload_dir = 'movfolder/';
 
-    foreach ($allowed_columns as $column) {
-        if (isset($_FILES[$column]) && $_FILES[$column]['error'] === UPLOAD_ERR_OK) {
-            $file_name = time() . '_' . basename($_FILES[$column]['name']);
-            $file_path = $upload_dir . $file_name;
+//     foreach ($allowed_columns as $column) {
+//         if (isset($_FILES[$column]) && $_FILES[$column]['error'] === UPLOAD_ERR_OK) {
+//             $file_name = time() . '_' . basename($_FILES[$column]['name']);
+//             $file_path = $upload_dir . $file_name;
 
-            if (move_uploaded_file($_FILES[$column]['tmp_name'], $file_path)) {
-                // New file uploaded, use the new file name
-                $row[$column] = $file_name;
-                $file_changed = true; // Mark file as changed
-            }
-        } else {
-            // No new file uploaded, retain the old file
-            if (isset($_POST[$column . '_hidden'])) {
-                $row[$column] = $_POST[$column . '_hidden'];
-            }
-        }
-    }
+//             if (move_uploaded_file($_FILES[$column]['tmp_name'], $file_path)) {
+//                 // New file uploaded, use the new file name
+//                 $row[$column] = $file_name;
+//                 $file_changed = true; // Mark file as changed
+//             }
+//         } else {
+//             // No new file uploaded, retain the old file
+//             if (isset($_POST[$column . '_hidden'])) {
+//                 $row[$column] = $_POST[$column . '_hidden'];
+//             }
+//         }
+//     }
 //  separated ang file nato "movdraftUpadate.php sya
 //     // Prepare SQL for updating the file paths
 //     $update_sql = "UPDATE movdraft_file SET ";
@@ -93,8 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 //       // Redirect to prevent form resubmission
 // header("Location: " . $_SERVER['REQUEST_URI']);
 // exit;
-
-    }
+// }
 ?>  
 
 <!doctype html>
@@ -143,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div id="noChangesMessage" class="text-red-500 font-semibold"></div>
                     <h2 class="text-left text-2xl font-semibold">FORM 1 Draft</h2>
 
-           <form id="uploadForm" method="post" enctype="multipart/form-data" action="">
+           <form id="uploadForm" method="post" enctype="multipart/form-data">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -698,7 +697,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </tbody>
           </table>
           <div class="d-flex justify-content-between">
-
           <button type="button" style="background-color: #000033;"class="btn btn-secondary" data-action="movdraftUpdate.php" onclick="submitForm(this)">Save as Draft</button>
           <button type="button" style="background-color: #000033;"class="btn btn-primary" data-action="form2MOVupload_handler.php" onclick="submitForm(this)">Submit</button>       
           <!-- <input type="Submit" name="update" value="Update" style="background-color: #000033;" class="btn btn-dark mt-3" />
@@ -709,7 +707,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script>
        function checkInputs() {
     const fileInputs = document.querySelectorAll("#uploadForm input[type='file']");
-
     for (let input of fileInputs) {
         const hiddenInput = input.nextElementSibling; // assuming next element is the hidden input
         if (input.value === "" && hiddenInput.value === "") {
@@ -739,22 +736,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         form.submit();
     }
 }
-
     </script>
 <!-- Missing Files Modal -->
 <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered"> <!-- Centered the modal -->
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-danger" id="alertModalLabel">Missing Files!</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> <!-- Updated close button for Bootstrap 5 -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center"> <!-- Centered the content -->
+            <div class="modal-body text-center">
                 <p class="mb-0">Please verify that all required files are uploaded before submitting.</p>
                 <p>Ensure each criteria has the necessary files attached.</p>
             </div>
-            <div class="modal-footer justify-content-center"> <!-- Centered the footer buttons -->
-                <button class="btn btn-dark" data-bs-dismiss="modal">OK</button> <!-- Updated button style -->
+            <div class="modal-footer justify-content-center">
+                <button class="btn btn-dark" data-bs-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
@@ -762,16 +758,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!-- Confirmation Modal -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered"> <!-- Centered the modal -->
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-primary" id="confirmModalLabel">Confirmation</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> <!-- Updated close button for Bootstrap 5 -->
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center"> <!-- Centered the content -->
+            <div class="modal-body text-center">
                 <p class="mb-0">I confirm that all the criteria are correct.</p>
             </div>
-            <div class="modal-footer justify-content-center"> <!-- Centered the footer buttons -->
+            <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-secondary" style="background-color: #00ace6;" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-success" style="background-color: #3366ff;" id="confirmSubmit">Confirm</button>
             </div>
@@ -779,18 +775,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </div>
 
-<!-- Success Message Modal (displayed after successful submission) -->
+<!-- Success Message Modal -->
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered"> <!-- Centered the modal -->
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title text-success" id="successModalLabel">Submission Successful</h5>
                 <button type="button" class="btn-close" style="background-color: #2eb8b8;" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body text-center"> <!-- Centered the content -->
-                <p>Your submission has been successfully recorded.</p>
+            <div class="modal-body text-center">
+                <p>Your submission has been successful.</p>
             </div>
-            <div class="modal-footer justify-content-center"> <!-- Centered the footer buttons -->
+            <div class="modal-footer justify-content-center">
                 <button class="btn btn-primary" style="background-color: #2eb8b8;" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -806,18 +802,19 @@ document.getElementById('confirmSubmit').addEventListener('click', function () {
     }, 500);
 });
 </script>
-<!--modal for update-->
-<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+
+<!-- Modal for Update (modalmov_message) -->
+<div class="modal fade" id="modalmov_message" tabindex="-1" aria-labelledby="modalmovMessageLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="messageModalLabel">
-                    <?php echo $_SESSION['message'] === 'success' ? 'Update' : 'Submission'; ?>
+                <h5 class="modal-title" id="modalmovMessageLabel">
+                    <?php echo $_SESSION['modalmov_message'] === 'Files submitted successfully!' ? 'Success' : 'Notice'; ?>
                 </h5>
-                <button type="button" class="btn-close" style="background-color: #2eb8b8;"  data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" style="background-color: #2eb8b8;" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-                <p><?php echo htmlspecialchars($_SESSION['message'] ?? ''); ?></p>
+                <p><?php echo htmlspecialchars($_SESSION['modalmov_message'] ?? ''); ?></p>
             </div>
             <div class="modal-footer justify-content-center">
                 <button class="btn btn-primary" style="background-color: #2eb8b8;" data-bs-dismiss="modal">Close</button>
@@ -825,12 +822,13 @@ document.getElementById('confirmSubmit').addEventListener('click', function () {
         </div>
     </div>
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        <?php if (isset($_SESSION['message'])): ?>
-            var messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
-            messageModal.show();
-            <?php unset($_SESSION['message'], $_SESSION['message']); ?>
+        <?php if (isset($_SESSION['modalmov_message'])): ?>
+            var modalmovMessage = new bootstrap.Modal(document.getElementById('modalmov_message'));
+            modalmovMessage.show();
+            <?php unset($_SESSION['modalmov_message']); ?>
         <?php endif; ?>
     });
 </script>

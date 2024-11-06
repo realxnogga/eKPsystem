@@ -329,6 +329,34 @@ if ($checkStmt->fetchColumn() > 0) {
         </div>
     </div>
     </div>
+    <!-- Files Already Uploaded Modal -->
+<div class="modal fade" id="alreadyUploadedModal" tabindex="-1" aria-labelledby="alreadyUploadedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"> <!-- Centered the modal -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning" id="alreadyUploadedModalLabel">Notice</h5>
+                <button type="button" class="btn-close" style="background-color: #2eb8b8;" data-bs-dismiss="modal" aria-label="Close"></button> <!-- Updated close button for Bootstrap 5 -->
+            </div>
+            <div class="modal-body text-center"> <!-- Centered the content -->
+                <p>The files have already been uploaded for this barangay. Please check the draft.</p>
+            </div>
+            <div class="modal-footer justify-content-center"> <!-- Centered the footer buttons -->
+                <button class="btn btn-primary" style="background-color: #2eb8b8;" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Show the "Files Already Uploaded" modal if the condition is met
+<?php if ($already_uploaded > 0): ?>
+    document.addEventListener("DOMContentLoaded", function () {
+        var alreadyUploadedModal = new bootstrap.Modal(document.getElementById('alreadyUploadedModal'));
+        alreadyUploadedModal.show();
+    });
+<?php endif; ?>
+</script>
+
     <style>
       .custom-h2 {
         font-size: 2rem;

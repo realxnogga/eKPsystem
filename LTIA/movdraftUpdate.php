@@ -58,15 +58,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
    if ($update_stmt->execute()) {
     if ($file_changed) {
-        $_SESSION['message'] = 'Saved!';
-        $_SESSION['message_type'] = 'success';
+        $_SESSION['modalmov_message'] = 'Saved!';
     } else {
-        $_SESSION['message'] = 'No file changes detected.';
-        $_SESSION['message_type'] = 'info';
+        $_SESSION['modalmov_message'] = 'No file changes detected.';
     }
 } else {
-    $_SESSION['message'] = 'Error updating files. Please try again.';
-    $_SESSION['message_type'] = 'error';
+    $_SESSION['modalmov_message'] = 'Error updating files. Please try again.';
 }
 
 header("Location: form2draftmov.php");

@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 05, 2024 at 05:43 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost:3306
+-- Generation Time: Nov 06, 2024 at 05:21 PM
+-- Server version: 10.6.19-MariaDB-cll-lve
+-- PHP Version: 8.3.13
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `ejusticesys`
+-- Database: `rkthdrin_ejusticesys`
 --
 
 -- --------------------------------------------------------
@@ -65,7 +65,7 @@ CREATE TABLE `movdraft_file` (
   `IV_muni_pdf_File` varchar(255) DEFAULT NULL,
   `V_1_pdf_File` varchar(255) DEFAULT NULL,
   `threepeoplesorg_pdf_File` varchar(255) DEFAULT NULL,
-  `datedraft` timestamp NOT NULL DEFAULT current_timestamp()
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -87,7 +87,7 @@ ALTER TABLE `movdraft_file`
 -- AUTO_INCREMENT for table `movdraft_file`
 --
 ALTER TABLE `movdraft_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Constraints for dumped tables
