@@ -56,6 +56,7 @@ if (isset($_GET['municipality_id'])) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Barangay Ratings</title>
+  <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
 </head>
 <body class="bg-[#E8E8E7]">
@@ -74,13 +75,33 @@ if (isset($_GET['municipality_id'])) {
 
       <div class="card mt-4">
         <div class="card-body">
-          <div class="border border-gray-800 rounded-md p-4 mt-4">
-            <b>A. IDENTIFYING INFORMATION</b>
-            <p>City/Municipality: CITY OF <?php echo htmlspecialchars($municipality_name); ?></p>
-            <p>Region: IVA</p>
-            <p>Province: LAGUNA</p>
-            <p>Category: CITY</p>
+        <div class="flex justify-center items-center mb-4 space-x-4">
+            <!-- DILG Logo -->
+            <div class="dilglogo">
+              <img src="../img/dilg.png" alt="DILG Logo" style="max-width: 120px; max-height: 120px;" class="mx-auto">
+            </div>
+
+            <!-- Title in Bordered Box -->
+            <div class="border border-gray-800 rounded-md p-4 text-center">
+              <h1 class="text-xl font-bold">
+                CY Lupong Tagapamayapa Incentives Award (LTIA) <br>
+                LTIA FORM 3 (C/M) - COMPARATIVE EVALUATION FORM
+              </h1>
+            </div>
+
+            <!-- LTIA Logo -->
+            <div class="dilglogo">
+              <img src="images/ltialogo.png" alt="LTIA Logo" style="max-width: 120px; max-height: 120px;" class="mx-auto">
+            </div>
           </div>
+
+          <div class="border border-gray-800 rounded-md p-4 mt-4">
+          <b>A. IDENTIFYING INFORMATION</b>
+          <p style="padding-left: 5em;">City/Municipality <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY OF <?php echo htmlspecialchars($municipality_name); ?></p>
+          <p style="padding-left: 5em;">Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA</p>
+          <p style="padding-left: 5em;">Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA</p>
+          <p style="padding-left: 5em;">Category <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY</p>
+      </div><br>
 
           <b>B. COMPARATIVE EVALUATION RESULTS</b>
           <table class="table table-bordered w-full border border-gray-800 mt-4">
@@ -106,9 +127,39 @@ if (isset($_GET['municipality_id'])) {
               <?php endforeach; ?>
           </tbody>
           </table>
+          <br>
+                    <b> C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION </b><br><br>
+                    <div class="certification-section text-center">
+                    <form method="post" action="" enctype="multipart/form-data">
+                        <input type="text" name="" placeholder="Enter Name"><br>
+                        Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+
+                        <input type="text" name="" placeholder="Enter Name"><br>
+                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+
+                        <input type="text" name="" placeholder="Enter Name"><br>
+                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+
+                        <input type="text" name="" placeholder="Enter Name"><br>
+                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br>
+                </div>
+                <br><br>
+                <b>D. DATE ACCOMPLISHED<b><br>
+                <span class="spacingtabs"> <?php echo date("F j, Y"); ?>
+
+                <br>
+                <br>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </body>
+<style>
+.spacingtabs {
+    padding-left: 2em; /* Adjust as needed for spacing */
+}.spacingtabs2 {
+    padding-left: 2em; /* Adjust as needed for spacing */
+}
+</style>
 </html>

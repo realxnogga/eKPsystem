@@ -137,11 +137,9 @@ $(document).ready(function () {
                     alert(data.error); // Display the error message
                     return;
                 }
-
                 // Extract barangay_id and mov_id from the response
                 var barangayId = data.barangay_id;
                 var movId = data.mov_id;
-
                 // Log the IDs for debugging
                 console.log('Barangay ID:', barangayId);
                 console.log('MOV ID:', movId);
@@ -1065,7 +1063,7 @@ $(document).ready(function () {
               </tr>
             </tbody>
           </table>
-      <input type="submit" value="Submit" style="background-color: #000033;"  class="btn btn-dark mt-3" />
+      <input type="submit" value="Save" style="background-color: #000033;"  class="btn btn-dark mt-3" />
     </form>
         </div>
       </div> 
