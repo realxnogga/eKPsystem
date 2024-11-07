@@ -98,6 +98,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: " . $_SERVER['REQUEST_URI']);
     exit;
 }
+// Current year
+$currentYear = date('Y');
+
+// Fetch unique years from the database
+$yearQuery = "SELECT DISTINCT year FROM mov
+              UNION SELECT DISTINCT YEAR(date) FROM movdraft_file
+              UNION SELECT DISTINCT YEAR(daterate) FROM movrate
+              UNION SELECT DISTINCT YEAR(dateremark) FROM movremark";
+$yearResult = $conn->query($yearQuery);
+$years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
+
+// Ensure current year is in the list even if there's no data
+if (!in_array($currentYear, $years)) {
+    $years[] = $currentYear;
+}
+
+// Sort years in descending order
+rsort($years);
+
+// Check if a specific year is selected, otherwise default to the current year
+$selectedYear = isset($_GET['year']) ? $_GET['year'] : $currentYear;
+$sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+$stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
 ?>
 
 <!doctype html>
@@ -122,7 +151,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="dilglogo">
                             <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" />
                         </div>
-                        <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA) <?php echo date('Y'); ?></h1>
+                        <h1 class="text-xl font-bold flex items-center ml-4">
+                        <span>Lupong Tagapamayapa Incentives Award (LTIA)</span>
+                        <form method="get" action="">
+                        <select name="year" id="year" onchange="this.form.submit()">
+                            <?php foreach ($years as $year) : ?>
+                                <option value="<?= $year ?>" <?= $year == $selectedYear ? 'selected' : '' ?>>
+                                    <?= $year ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </form>
+
+
+                        <?php
+                        // Update your SQL queries to include the selected year as a filter
+                        $sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+                        $stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+                        $stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+                        $stmt->execute();
+                        $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+                        ?>
+                        </h1>
                     </div>
                     <div class="menu">
                         <ul class="flex space-x-4">

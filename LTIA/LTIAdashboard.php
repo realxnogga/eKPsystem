@@ -2,13 +2,11 @@
 session_start();
 include '../connection.php';
 
-// Redirect if the user is not logged in or is not a regular user
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user' || !isset($_SESSION['barangay_id'])) {
     header("Location: login.php");
     exit;
 }
 
-// Function to get performance rating based on total score
 function getPerformanceRating($total) {
     if ($total >= 100) {
         return "Outstanding";
@@ -23,11 +21,9 @@ function getPerformanceRating($total) {
     }
 }
 
-// Fetch selected year or default to the current year
-$year = isset($_GET['year']) ? (int)$_GET['year'] : date('Y');
+$year = isset($_GET['year']) ? (int)$_GET['year'] : date('Y'); // Default to the current year
 
 try {
-    // Prepare and execute the query to get total and rates for the selected year
     $query = "
         SELECT 
             `total`, `daterate`
@@ -39,7 +35,7 @@ try {
     ";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':year', $year, PDO::PARAM_INT);
-    $stmt->bindParam(':barangay', $_SESSION['barangay_id'], PDO::PARAM_INT); // Assuming barangay ID is stored in session
+    $stmt->bindParam(':barangay', $_SESSION['barangay_id'], PDO::PARAM_INT);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -47,21 +43,39 @@ try {
         $total = $row['total'];
         $performance = getPerformanceRating($total);
     } else {
-        $total = "";
+        $total = "N/A";
         $performance = "Not rated yet";
     }
 
-    // Fetch distinct years for dropdown
+    // Fetch distinct years for dropdown, including the current year if not in data
     $yearQuery = "SELECT DISTINCT EXTRACT(YEAR FROM `daterate`) AS year FROM `movrate` ORDER BY year DESC";
     $yearResult = $conn->query($yearQuery);
     $years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
+
+    // Add the current year to the list if it’s not already there
+    if (!in_array(date('Y'), $years)) {
+        array_unshift($years, date('Y'));
+    }
 } catch (PDOException $e) {
     error_log("Database error: " . $e->getMessage());
-    $total = ""; // Set total to empty if there's an error
-    $performance = "Error fetching data"; // Set error message for performance
+    $total = "Error";
+    $performance = "Error fetching data";
 }
-?>
+$query = "
+    SELECT 
+        `total`, `daterate`
+    FROM 
+        `movrate`
+    WHERE 
+        EXTRACT(YEAR FROM `daterate`) = :year 
+        AND `barangay` = :barangay
+";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':year', $year, PDO::PARAM_INT);
+$stmt->bindParam(':barangay', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$stmt->execute();
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,21 +102,18 @@ try {
                             </div>
 
                             <h1 class="text-xl font-bold flex items-center ml-4">
-                            <span>Lupong Tagapamayapa Incentives Award (LTIA)</span>
-                            <form method="GET" action="" class="ml-4">
-                        <select name="year" onchange="this.form.submit()">
-                            <?php if ($years): ?>
-                                <?php foreach ($years as $availableYear): ?>
-                                    <option value="<?php echo $availableYear; ?>" <?php if ($availableYear == $year) echo 'selected'; ?>>
-                                        <?php echo htmlspecialchars($availableYear); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <option value=""><?php echo htmlspecialchars("No available years"); ?></option>
-                            <?php endif; ?>
-                        </select>
-                    </form>
-                        </h1>
+                                <span>Lupong Tagapamayapa Incentives Award (LTIA)</span>
+                                <form method="GET" action="" class="ml-4">
+                                    <select name="year" onchange="this.form.submit()">
+                                        <?php foreach ($years as $availableYear): ?>
+                                            <option value="<?php echo $availableYear; ?>" <?php if ($availableYear == $year) echo 'selected'; ?>>
+                                                <?php echo htmlspecialchars($availableYear); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </form>
+
+                            </h1>
              
                         </div>
                         <div class="menu">
