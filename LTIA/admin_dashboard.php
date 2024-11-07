@@ -7,30 +7,57 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
   exit;
 }
 
-// Assuming you have the municipality ID stored in a session or fetch it based on the user.
 $municipality_id = $_SESSION['municipality_id']; 
+$currentYear = date('Y');
+$selectedYear = isset($_GET['year']) ? $_GET['year'] : $currentYear;
 
-// Fetch barangays and total scores (use LEFT JOIN to include all barangays, even if they don't have entries in movrate)
+function getPerformanceRating($total) {
+    if ($total >= 100) {
+        return "Outstanding";
+    } elseif ($total >= 90) {
+        return "Very Satisfactory";
+    } elseif ($total >= 80) {
+        return "Fair";
+    } elseif ($total >= 70) {
+        return "Poor";
+    } else {
+        return "Very Poor";
+    }
+}
+
+// Fetch available years for the dropdown
+$yearQuery = "SELECT DISTINCT EXTRACT(YEAR FROM daterate) AS year FROM movrate WHERE barangay IN (SELECT id FROM barangays WHERE municipality_id = :municipality_id) ORDER BY year DESC";
+$yearStmt = $conn->prepare($yearQuery);
+$yearStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$yearStmt->execute();
+$years = $yearStmt->fetchAll(PDO::FETCH_COLUMN);
+
+// Add current year if it’s missing
+if (!in_array($currentYear, $years)) {
+    array_unshift($years, $currentYear);
+}
+
+// Fetch barangays and total scores for the selected year
 $query = "
 SELECT b.barangay_name, COALESCE(m.total, 0) AS total 
 FROM barangays b 
-LEFT JOIN movrate m ON b.id = m.barangay 
+LEFT JOIN movrate m ON b.id = m.barangay AND EXTRACT(YEAR FROM m.daterate) = :year
 WHERE b.municipality_id = :municipality_id
 ";
 
 $stmt = $conn->prepare($query);
 $stmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$stmt->bindValue(':year', $selectedYear, PDO::PARAM_INT);
 $stmt->execute();
 
 $barangays = [];
 $totals = [];
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-  $barangays[] = $row['barangay_name'];
-  $totals[] = $row['total'];
+    $barangays[] = $row['barangay_name'];
+    $totals[] = $row['total'];
 }
 ?>
-
 <!doctype html>
 <html lang="en">
 
@@ -57,7 +84,18 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
               <div class="dilglogo">
               <img src="../img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
               </div>
-              <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA) <?php echo date('Y'); ?></h1>
+              <h1 class="text-xl font-bold flex items-center ml-4">
+                <span>Lupong Tagapamayapa Incentives Award (LTIA)</span>
+              <form method="get" action="">
+                <select name="year" onchange="this.form.submit()">
+                  <?php foreach ($years as $year): ?>
+                    <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
+                      <?php echo htmlspecialchars($year); ?>
+                    </option>
+                  <?php endforeach; ?>
+                </select>
+              </form>
+              </h1>
             </div>
             <div class="menu">
               <ul class="flex space-x-4">
@@ -76,11 +114,17 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           </div>
 
           <script>
-            // PHP data passed to JavaScript
             const barangays = <?php echo json_encode($barangays); ?>;
             const totals = <?php echo json_encode($totals); ?>;
+            
+            const performanceLabels = totals.map(total => {
+              if (total >= 100) return 'Outstanding';
+              else if (total >= 90) return 'Very Satisfactory';
+              else if (total >= 80) return 'Fair';
+              else if (total >= 70) return 'Poor';
+              else return 'Very Poor';
+            });
 
-            // Chart.js setup
             const ctx = document.getElementById('barangayChart').getContext('2d');
             const barangayChart = new Chart(ctx, {
               type: 'bar',
@@ -89,15 +133,29 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 datasets: [{
                   label: 'Total Score',
                   data: totals,
-                  backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                  borderColor: 'rgba(54, 162, 235, 1)',
+                  backgroundColor: totals.map(total => total >= 100 ? 'rgba(0, 153, 51, 0.6)' : 'rgba(54, 162, 235, 0.6)'),
+                  borderColor: totals.map(total => total >= 100 ? 'rgba(0, 153, 51, 1)' : 'rgba(54, 162, 235, 1)'),
                   borderWidth: 1
                 }]
               },
               options: {
                 scales: {
                   y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    max: 120,
+                    title: {
+                      display: true,
+                      text: 'Total Score'
+                    }
+                  }
+                },
+                plugins: {
+                  tooltip: {
+                    callbacks: {
+                      afterLabel: function(context) {
+                        return 'Performance: ' + performanceLabels[context.dataIndex];
+                      }
+                    }
                   }
                 }
               }
