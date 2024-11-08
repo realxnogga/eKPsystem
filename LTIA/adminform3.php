@@ -73,44 +73,43 @@ $stmt->execute();
 $certification_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Process form submission
+// Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $chairperson = $_POST['chairperson'];
-    $member1 = $_POST['member1'];
-    $member2 = $_POST['member2'];
-    $member3 = $_POST['member3'];
-    $date = date("Y-m-d");
+  $chairperson = $_POST['chairperson'];
+  $member1 = $_POST['member1'];
+  $member2 = $_POST['member2'];
+  $member3 = $_POST['member3'];
+  $date = date("Y-m-d");
 
-    if ($certification_data) {
-        // Update existing record
-        $query = "UPDATE movassessmentmembers SET chairperson = :chairperson, member1 = :member1, member2 = :member2, member3 = :member3, date = :date WHERE municipality_id = :municipality_id";
-    } else {
-        // Insert new record
-        $query = "INSERT INTO movassessmentmembers (municipality_id, chairperson, member1, member2, member3, date) VALUES (:municipality_id, :chairperson, :member1, :member2, :member3, :date)";
-    }
+  if ($certification_data) {
+      // Update existing record
+      $query = "UPDATE movassessmentmembers SET chairperson = :chairperson, member1 = :member1, member2 = :member2, member3 = :member3, date = :date WHERE municipality_id = :municipality_id";
+  } else {
+      // Insert new record
+      $query = "INSERT INTO movassessmentmembers (municipality_id, chairperson, member1, member2, member3, date) VALUES (:municipality_id, :chairperson, :member1, :member2, :member3, :date)";
+  }
 
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
-    $stmt->bindParam(':chairperson', $chairperson, PDO::PARAM_STR);
-    $stmt->bindParam(':member1', $member1, PDO::PARAM_STR);
-    $stmt->bindParam(':member2', $member2, PDO::PARAM_STR);
-    $stmt->bindParam(':member3', $member3, PDO::PARAM_STR);
-    $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+  $stmt = $conn->prepare($query);
+  $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+  $stmt->bindParam(':chairperson', $chairperson, PDO::PARAM_STR);
+  $stmt->bindParam(':member1', $member1, PDO::PARAM_STR);
+  $stmt->bindParam(':member2', $member2, PDO::PARAM_STR);
+  $stmt->bindParam(':member3', $member3, PDO::PARAM_STR);
+  $stmt->bindParam(':date', $date, PDO::PARAM_STR);
 
-    if ($stmt->execute()) {
-        echo "Certification details saved successfully!";
-        // Reload certification data after save
-        $certification_data = [
-            'chairperson' => $chairperson,
-            'member1' => $member1,
-            'member2' => $member2,
-            'member3' => $member3,
-            'date' => $date
-        ];
-    } else {
-        echo "Error saving certification details.";
-    }
+  if ($stmt->execute()) {
+      $message = "Members Saved";
+      $certification_data = [
+          'chairperson' => $chairperson,
+          'member1' => $member1,
+          'member2' => $member2,
+          'member3' => $member3,
+          'date' => $date
+      ];
+  } else {
+      $message = "Error saving certification details.";
+  }
 }
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -234,6 +233,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </div>
   </div>
+  <!-- Bootstrap Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmationModalLabel">Lupong Tagapamayapa Incentives Award</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <?php echo isset($message) ? htmlspecialchars($message) : ''; ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    <?php if (isset($message)): ?>
+      var confirmationModal = new bootstrap.Modal(document.getElementById('confirmationModal'));
+      confirmationModal.show();
+    <?php endif; ?>
+  });
+</script>
+
 </body>
 <style>
 .spacingtabs {

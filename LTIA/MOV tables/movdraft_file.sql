@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Nov 06, 2024 at 05:21 PM
--- Server version: 10.6.19-MariaDB-cll-lve
--- PHP Version: 8.3.13
+-- Host: 127.0.0.1
+-- Generation Time: Nov 08, 2024 at 04:31 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `rkthdrin_ejusticesys`
+-- Database: `ejusticesys`
 --
 
 -- --------------------------------------------------------
@@ -87,7 +87,7 @@ ALTER TABLE `movdraft_file`
 -- AUTO_INCREMENT for table `movdraft_file`
 --
 ALTER TABLE `movdraft_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- Constraints for dumped tables
