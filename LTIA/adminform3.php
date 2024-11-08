@@ -129,30 +129,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <!-- First Card -->
       <div class="card">
         <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-    <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white d-flex align-items-center" 
-            onclick="location.href='adminform2evaluate.php';" style="margin-left: 0;">
-        <i class="ti ti-building-community mr-2"></i> 
-        Back
+        <div class="menu flex items-center justify-between">
+    <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform2evaluate.php';">
+      <i class="ti ti-building-community mr-2"></i> Back
     </button>
-    <div>
-        <button onclick="printSecondCard()" class="btn btn-primary me-2">Print</button>
-        <button onclick="downloadSecondCard()" class="btn btn-secondary">Download</button>
+    <div class="text-right">
+      <button onclick="printSecondCard()" class="btn btn-primary">Print</button>
+      <button onclick="downloadSecondCard()" class="btn btn-secondary">Download</button>
     </div>
-</div>  
+  </div>
+          </div>
         </div>
       </div>
-      <div class="d-flex justify-content-end my-3">
-        <form method="get" action="">
-          <select name="year" class="form-select" onchange="this.form.submit()">
-            <?php foreach ($years as $year): ?>
-              <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
-                <?php echo htmlspecialchars($year); ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
-        </form>
-      </div>
+
       <!-- Second Card -->
       <div class="card mt-4">
         <div class="card-body">
@@ -241,17 +230,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="submit" value="Save" class="btn-save">
               </div>
           </div>
-        </div>
-
-
-        <!--third card for printing or donload-->
-        <div class="card mt-4">
-        <div class="card-body">
-              
-
-
-
-        </div>
         </div>
       </div>
     </div>
