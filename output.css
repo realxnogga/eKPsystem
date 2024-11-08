@@ -1095,6 +1095,14 @@ input:checked + .toggle-bg {
   inset: 0px;
 }
 
+.-right-1 {
+  right: -0.25rem;
+}
+
+.-top-1 {
+  top: -0.25rem;
+}
+
 .bottom-0 {
   bottom: 0px;
 }
@@ -1115,48 +1123,12 @@ input:checked + .toggle-bg {
   right: 0px;
 }
 
-.right-\[-5\] {
-  right: -5;
-}
-
 .top-0 {
   top: 0px;
 }
 
 .top-5 {
   top: 1.25rem;
-}
-
-.top-\[-5\] {
-  top: -5;
-}
-
-.-top-\[-5\] {
-  top: 5;
-}
-
-.-top-5 {
-  top: -1.25rem;
-}
-
-.-top-2 {
-  top: -0.5rem;
-}
-
-.-right-\[-5\] {
-  right: 5;
-}
-
-.-right-2 {
-  right: -0.5rem;
-}
-
-.-right-1 {
-  right: -0.25rem;
-}
-
-.-top-1 {
-  top: -0.25rem;
 }
 
 .z-10 {
@@ -1718,6 +1690,10 @@ input:checked + .toggle-bg {
   border-radius: 0.375rem;
 }
 
+.rounded-sm {
+  border-radius: 0.125rem;
+}
+
 .rounded-e-lg {
   border-start-end-radius: 0.5rem;
   border-end-end-radius: 0.5rem;
@@ -1815,6 +1791,11 @@ input:checked + .toggle-bg {
 .border-yellow-500 {
   --tw-border-opacity: 1;
   border-color: rgb(194 120 3 / var(--tw-border-opacity));
+}
+
+.border-gray-700 {
+  --tw-border-opacity: 1;
+  border-color: rgb(55 65 81 / var(--tw-border-opacity));
 }
 
 .\!bg-blue-400 {
