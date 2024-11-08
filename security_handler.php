@@ -18,6 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) 
     $answer2 = isset($_POST['answer2']) ? $_POST['answer2'] : '';
     $question3 = isset($_POST['question3']) ? $_POST['question3'] : '';
     $answer3 = isset($_POST['answer3']) ? $_POST['answer3'] : '';
+    $user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+    $user_type = isset($_SESSION['user_type']) ? $_SESSION['user_type'] : null;
 
     // Check if security answers are provided
     $securityAnswersProvided = !empty($answer1) || !empty($answer2) || !empty($answer3);

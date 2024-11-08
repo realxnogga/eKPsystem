@@ -90,7 +90,8 @@ try {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Secretaries Corner</title>
+  <title>LTIA</title>
+  <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
 <style>
 /* CSS to ensure alerts fit well within the table cells */
 .alert {
@@ -111,10 +112,8 @@ try {
 
 </style>
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
-  <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
  <script>
@@ -138,11 +137,9 @@ $(document).ready(function () {
                     alert(data.error); // Display the error message
                     return;
                 }
-
                 // Extract barangay_id and mov_id from the response
                 var barangayId = data.barangay_id;
                 var movId = data.mov_id;
-
                 // Log the IDs for debugging
                 console.log('Barangay ID:', barangayId);
                 console.log('MOV ID:', movId);
@@ -153,7 +150,7 @@ $(document).ready(function () {
 
                 // Handle each PDF file from the returned data
                 var fileTypes = [
-                'IA_1a', 'IA_1b', 'IA_2a', 'IA_2b', 'IA_2c', 'IA_2d', 'IA_2e', 'IB_1forcities', 'IB_1aformuni', 'IB_1bformuni', 'IB_2', 'IB_3', 'IB_4', 'IC_1', 'IC_2', 'ID_1', 'ID_2', 'IIA', 'IIB_1', 'IIB_2', 'IIC', 'IIIA', 'IIIB', 'IIIC_1forcities', 'IIIC_1forcities2', 'IIIC_1forcities3', 'IIIC_2formuni1', 'IIIC_2formuni2', 'IIIC_2formuni3', 'IIID', 'IV_forcities', 'IV_muni', 'V_1', 'threepeoplesorg'
+                'IA_1a', 'IA_1b', 'IA_2a', 'IA_2b', 'IA_2c', 'IA_2d', 'IA_2e', 'IB_1forcities', 'IB_1aformuni', 'IB_1bformuni', 'IB_2', 'IB_3', 'IB_4', 'IC_1', 'IC_2', 'ID_1', 'ID_2', 'IIA', 'IIB_1', 'IIB_2', 'IIC', 'IIIA', 'IIIB', 'IIIC_1forcities', 'IIIC_1forcities2', 'IIIC_1forcities3', 'IIIC_2formuni1', 'IIIC_2formuni2', 'IIIC_2formuni3', 'IIID', 'IV_forcities', 'IV_muni', 'V_1', 'threepeoplesorg_pdf_File'
                 ];
 
                 // Clear previous file columns
@@ -167,7 +164,7 @@ $(document).ready(function () {
                     if (data[fileKey]) {
                         var filePath = 'movfolder/' + data[fileKey];
                         $('.view-pdf[data-type="' + type + '"]').attr('data-file', filePath).show();
-                        fileColumn.html('<button type="button" class="btn btn-primary view-pdf" data-type="' + type + '" data-file="' + filePath + '">View</button>'); // Add view button to the file column
+                        fileColumn.html('<button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-type="' + type + '" data-file="' + filePath + '">View</button>'); // Add view button to the file column
                     } else {
                         fileColumn.html('<div class="alert alert-warning mb-0">No uploaded file</div>');
                     }
@@ -210,7 +207,7 @@ $(document).ready(function () {
                     $('input[name="IV_forcities_pdf_rate"]').val(data.rates.IV_forcities_pdf_rate);
                     $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate);
                     $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate);
-                    $('input[name="threepeoplesorg_pdf_rate"]').val(data.rates.threepeoplesorg_pdf_rate);
+                    $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate);
 
                     // Add similar lines for other rates as necessary
                 }
@@ -252,7 +249,7 @@ $(document).ready(function () {
                     $('textarea[name="IV_forcities_pdf_remark"]').val(data.remarks.IV_forcities_pdf_remark);
                     $('textarea[name="IV_muni_pdf_remark"]').val(data.remarks.IV_muni_pdf_remark);
                     $('textarea[name="V_1_pdf_remark"]').val(data.remarks.V_1_pdf_remark);
-                    $('textarea[name="threepeoplesorg_pdf_remark"]').val(data.remarks.threepeoplesorg_pdf_remark);
+                    $('textarea[name="threepeoplesorg_remark"]').val(data.remarks.threepeoplesorg_remark);
 
                     // Add similar lines for other remarks as necessary
                 }
@@ -269,8 +266,71 @@ $(document).ready(function () {
             $('#mov_id').val(''); // Clear mov_id input
             $('textarea[name="IA_1a_pdf_remark"]').val('');
             $('textarea[name="IA_1b_pdf_remark"]').val('');
+            $('textarea[name="IA_2a_pdf_remark"]').val('');
+            $('textarea[name="IA_2b_pdf_remark"]').val('');
+            $('textarea[name="IA_2c_pdf_remark"]').val('');
+            $('textarea[name="IA_2d_pdf_remark"]').val('');
+            $('textarea[name="IA_2e_pdf_remark"]').val('');
+            $('textarea[name="IB_1forcities_pdf_remark"]').val('');
+            $('textarea[name="IB_1aformuni_pdf_remark"]').val('');
+            $('textarea[name="IB_1bformuni_pdf_remark"]').val('');
+            $('textarea[name="IB_2_pdf_remark"]').val('');
+            $('textarea[name="IB_3_pdf_remark"]').val('');
+            $('textarea[name="IB_4_pdf_remark"]').val('');
+            $('textarea[name="IC_1_pdf_remark"]').val('');
+            $('textarea[name="IC_2_pdf_remark"]').val('');
+            $('textarea[name="ID_1_pdf_remark"]').val('');
+            $('textarea[name="ID_2_pdf_remark"]').val('');
+            $('textarea[name="IIA_pdf_remark"]').val('');
+            $('textarea[name="IIB_1_pdf_remark"]').val('');
+            $('textarea[name="IIB_2_pdf_remark"]').val('');
+            $('textarea[name="IIC_pdf_remark"]').val('');
+            $('textarea[name="IIIA_pdf_remark"]').val('');
+            $('textarea[name="IIIB_pdf_remark"]').val('');
+            $('textarea[name="IIIC_1forcities_pdf_remark"]').val('');
+            $('textarea[name="IIIC_1forcities2_pdf_remark"]').val('');
+            $('textarea[name="IIIC_1forcities3_pdf_remark"]').val('');
+            $('textarea[name="IIIC_2formuni1_pdf_remark"]').val('');
+            $('textarea[name="IIIC_2formuni2_pdf_remark"]').val('');
+            $('textarea[name="IIIC_2formuni3_pdf_remark"]').val('');
+            $('textarea[name="IIID_pdf_remark"]').val('');
+            $('textarea[name="IV_forcities_pdf_remark"]').val('');
+            $('textarea[name="IV_muni_pdf_remark"]').val('');
+            $('textarea[name="V_1_pdf_remark"]').val('');
+            $('textarea[name="threepeoplesorg_remark"]').val('');
+
             $('input[name="IA_1a_pdf_rate"]').val('');
             $('input[name="IA_1b_pdf_rate"]').val('');
+            $('input[name="IA_2a_pdf_rate"]').val('');
+            $('input[name="IA_2b_pdf_rate"]').val('');
+            $('input[name="IA_2c_pdf_rate"]').val('');
+            $('input[name="IA_2d_pdf_rate"]').val('');
+            $('input[name="IA_2e_pdf_rate"]').val('');
+            $('input[name="IB_1forcities_pdf_rate"]').val('');
+            $('input[name="IB_1aformuni_pdf_rate"]').val('');
+            $('input[name="IB_1bformuni_pdf_rate"]').val('');
+            $('input[name="IB_2_pdf_rate"]').val('');
+            $('input[name="IB_3_pdf_rate"]').val('');
+            $('input[name="IB_4_pdf_rate"]').val('');
+            $('input[name="IC_1_pdf_rate"]').val('');
+            $('input[name="ID_1_pdf_rate"]').val('');
+            $('input[name="ID_2_pdf_rate"]').val('');
+            $('input[name="IIA_pdf_rate"]').val('');
+            $('input[name="IIB_1_pdf_rate"]').val('');
+            $('input[name="IIB_2_pdf_rate"]').val('');
+            $('input[name="IIC_pdf_rate"]').val('');
+            $('input[name="IIIB_pdf_rate"]').val('');
+            $('input[name="IIIC_1forcities_pdf_rate"]').val('');
+            $('input[name="IIIC_1forcities2_pdf_rate"]').val('');
+            $('input[name="IIIC_1forcities3_pdf_rate"]').val('');
+            $('input[name="IIIC_2formuni1_pdf_rate"]').val('');
+            $('input[name="IIIC_2formuni2_pdf_rate"]').val('');
+            $('input[name="IIIC_2formuni3_pdf_rate"]').val('');
+            $('input[name="IIID_pdf_rate"]').val('');
+            $('input[name="IV_forcities_pdf_rate"]').val('');
+            $('input[name="IV_muni_pdf_rate"]').val('');
+            $('input[name="V_1_pdf_rate"]').val('');
+            $('input[name="threepeoplesorg_rate"]').val('');
         }
     });
 
@@ -304,7 +364,6 @@ $(document).ready(function () {
 
 <body class="bg-[#E8E8E7]">
   <?php include "../admin_sidebar_header.php"; ?>
-
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
     <div class="card">
@@ -328,7 +387,7 @@ $(document).ready(function () {
             <div class="menu">
               <ul class="flex space-x-4">
               <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='#';" style="margin-left: 0;">
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform3.php';" style="margin-left: 0;">
                   <i class="ti ti-file-analytics mr-2">  </i>
                       Summary
                   </button>
@@ -342,6 +401,7 @@ $(document).ready(function () {
               </ul>
             </div>
           </div>
+          
           <h2 class="text-left text-2xl font-semibold">FORM 1</h2>
           <div class="form-group mt-4">
                     <label for="barangay_select" class="block text-lg font-medium text-gray-700">Select Barangay</label>
@@ -354,14 +414,15 @@ $(document).ready(function () {
                             <?php endforeach; ?>
                         </select>
                     </div>
-    <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
 
-    <!-- hide this inputs -->
+    <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
     <input type="hidden" id="selected_barangay" name="selected_barangay" value="" />
     <!-- Example form input for mov_id -->
-    <input type="hidden" id="mov_id" name="mov_id"> <!-- Display fetched mov_id -->
-    <input type="hidden" id="barangay_id" name="barangay_id"> <!-- I want the barangay_id fetch here -->
-    <!-- mov_id is fetched here --> 
+    <input type="hidden" id="mov_id" name="mov_id"b readonly> <!-- Display fetched mov_id -->
+    <input type="hidden" id="barangay_id" name="barangay_id" readonly> <!-- I want the barangay_id fetch here -->
+    <!-- mov_id is fetched here -->
+    
+
 
     <table class="table table-bordered">
             <thead>
@@ -418,10 +479,10 @@ $(document).ready(function () {
                </td>
             <td>  
             <hr class="my-1">
-              <input type="number" value="" name="IA_1a_pdf_rate" placeholder="Ratings" required>
+              <input type="number" value="" name="IA_1a_pdf_rate" placeholder="Ratings">
             <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
           </td>
-            <td><textarea name="IA_1a_pdf_remark" placeholder="Remarks" required></textarea></td>
+            <td><textarea name="IA_1a_pdf_remark" placeholder="Remarks"></textarea></td>
           </tr>
           <tr>
             <td><details>
@@ -443,10 +504,10 @@ $(document).ready(function () {
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
             <td>
-            <input type="number" value="" name="IA_1b_pdf_rate" placeholder="Ratings"required>
+            <input type="number" value="" name="IA_1b_pdf_rate" placeholder="Ratings">
           <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
             </td>
-            <td><textarea name="IA_1b_pdf_remark" placeholder="Remarks" required></textarea></td>
+            <td><textarea name="IA_1b_pdf_remark" placeholder="Remarks"></textarea></td>
                     </tr>
           <tr>
   <td>
@@ -493,7 +554,7 @@ $(document).ready(function () {
                 <td class="file-column" data-type="IA_2c">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IA_2c_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td><input type="number" value="" name="IA_2c_pdf_rate" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2c_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -941,7 +1002,7 @@ $(document).ready(function () {
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
             <td><input type="number" value="" name="IIID_pdf_rate" placeholder="Ratings"></td>
-            <td><textarea name="IIID_pdf_rate_remark" placeholder="Remarks"></textarea></td>
+            <td><textarea name="IIID_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
@@ -993,8 +1054,8 @@ $(document).ready(function () {
               </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
-                <td>1</td>
-                <td class="file-column" data-type="threepeoplesorg">
+              <td>2</td>
+              <td class="file-column" data-type="threepeoplesorg_pdf_File">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
             <td><input type="number" value="" name="threepeoplesorg_rate" placeholder="Ratings"></td>
@@ -1002,13 +1063,46 @@ $(document).ready(function () {
               </tr>
             </tbody>
           </table>
-      <input type="submit" value="Okay" class="btn btn-dark mt-3" />
+      <input type="submit" value="Save" style="background-color: #000033;"  class="btn btn-dark mt-3" />
     </form>
         </div>
-      </div>
+      </div> 
     </div>
   </div>
 
+  <!-- Modal structure -->
+<div id="responseModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Notification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const status = urlParams.get('status');
+    const message = urlParams.get('message');
+    
+    if (status && message) {
+        document.getElementById('modalMessage').innerText = decodeURIComponent(message);
+        $('#responseModal').modal('show');
+    }
+});
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- Main modal for PDF viewing -->
 <div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed inset-0 z-50 justify-center items-center w-full h-full">
     <div class="relative p-4 w-full max-w-6xl h-[85%]">

@@ -15,7 +15,7 @@
     "bootstrap": "^5.2.3",
     "chart.js": "^4.4.6",
     "flowbite": "^2.5.2",
-    "jquery": "^3.6.3",
+    "jquery": "^3.7.1",
     "select2": "^4.1.0-rc.0"
   },
   "main": "edit_script.js",

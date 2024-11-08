@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                        IIIB_pdf_File, IIIC_1forcities_pdf_File, IIIC_1forcities2_pdf_File, 
                        IIIC_1forcities3_pdf_File, IIIC_2formuni1_pdf_File, IIIC_2formuni2_pdf_File, 
                        IIIC_2formuni3_pdf_File, IIID_pdf_File, IV_forcities_pdf_File, IV_muni_pdf_File, 
-                       V_1_pdf_File, threepeoplesorg, id AS mov_id 
+                       V_1_pdf_File, threepeoplesorg_pdf_File, id AS mov_id 
                 FROM mov 
                 WHERE barangay_id = :barangay_id
             ";
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                            `IIB_1_pdf_remark`, `IIB_2_pdf_remark`, `IIC_pdf_remark`, `IIIA_pdf_remark`, 
                            `IIIB_pdf_remark`, `IIIC_1forcities_pdf_remark`, `IIIC_1forcities2_pdf_remark`, 
                            `IIIC_1forcities3_pdf_remark`, `IIIC_2formuni1_pdf_remark`, `IIIC_2formuni2_pdf_remark`, 
-                           `IIIC_2formuni3_pdf_remark`, `IIID_pdf_rate_remark`, `IV_forcities_pdf_remark`, 
+                           `IIIC_2formuni3_pdf_remark`, `IIID_pdf_remark`, `IV_forcities_pdf_remark`, 
                            `IV_muni_pdf_remark`, `V_1_pdf_remark`, `threepeoplesorg_remark`
                     FROM movremark
                     WHERE mov_id = :mov_id AND barangay = :barangay_id
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'IV_forcities_pdf_File' => $mov_row['IV_forcities_pdf_File'],
                     'IV_muni_pdf_File' => $mov_row['IV_muni_pdf_File'],
                     'V_1_pdf_File' => $mov_row['V_1_pdf_File'],
-                    'threepeoplesorg' => $mov_row['threepeoplesorg'],
+                    'threepeoplesorg_pdf_File' => $mov_row['threepeoplesorg_pdf_File'],
                     'rates' => $movrate_row,
                     'remarks' => $movremark_row
                 ]);

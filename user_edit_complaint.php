@@ -154,6 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 }
+
 ?>
 
 <!doctype html>
@@ -297,7 +298,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="bg-[#E8E8E7]">
 
-  <?php include "user_sidebar_header.php"; ?>
+<?php include "user_sidebar_header.php"; ?>
 
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
@@ -317,6 +318,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           <h5 class="card-title mb-9 fw-semibold">Edit Information</h5>
           <b>
+            
+
+
 
           <p id="message" class="hidden p-3 rounded-md text-white"></p>
 

@@ -273,6 +273,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <?php include "user_sidebar_header.php"; ?>
 
+  <script>
+        // Function to check network status
+        function checkNetworkStatus() {
+            if (!navigator.onLine) {
+                alert('You are currently offline. Redirecting to offline mode.');
+                // Redirect to the offline page
+                window.location.href = 'user_offline_add_complaint.php'; // Change to your offline page
+            }
+        }
+
+        // Event listeners for online and offline events
+        window.addEventListener('load', () => {
+            checkNetworkStatus(); // Check status on page load
+            
+            window.addEventListener('online', () => {
+                console.log('You are back online!');
+            });
+            
+            window.addEventListener('offline', () => {
+                alert('You are now offline. Redirecting to offline mode.');
+                // Redirect to the offline page
+                window.location.href = 'user_offline_add_complaint.php'; // Change to your offline page
+            });
+        });
+    </script>
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
 

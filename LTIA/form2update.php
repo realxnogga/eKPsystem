@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     'IV_forcities_pdf_File',
     'IV_muni_pdf_File',
     'V_1_pdf_File',
-    'threepeoplesorg'
+    'threepeoplesorg_pdf_File'
   ];
 
   $fileNames = [];
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   // Prepare the SQL update query
-  $update_query = "UPDATE mov SET 
+  $update_query = "UPDATE movdraft_file SET 
     IA_1a_pdf_File = :IA_1a_pdf_File,
     IA_1b_pdf_File = :IA_1b_pdf_File,
     IA_2a_pdf_File = :IA_2a_pdf_File,
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     IV_forcities_pdf_File = :IV_forcities_pdf_File,
     IV_muni_pdf_File = :IV_muni_pdf_File,
     V_1_pdf_File = :V_1_pdf_File,
-    threepeoplesorg = :threepeoplesorg
+    threepeoplesorg_pdf_File = :threepeoplesorg_pdf_File
     WHERE barangay_id = :barangay_id";
 
   $stmt = $conn->prepare($update_query);
