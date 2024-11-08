@@ -49,6 +49,13 @@ if (isset($_GET['municipality_id'])) {
     echo "No municipality selected.";
     exit;
 }
+// Fetch movassessmentmembers data for the given municipality
+$query = "SELECT chairperson, member1, member2, member3, date FROM movassessmentmembers WHERE municipality_id = :municipality_id LIMIT 1";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$stmt->execute();
+$assessment_members = $stmt->fetch(PDO::FETCH_ASSOC);
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -130,18 +137,18 @@ if (isset($_GET['municipality_id'])) {
           <br>
                     <b> C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION </b><br><br>
                     <div class="certification-section text-center">
-                    <form method="post" action="" enctype="multipart/form-data">
-                        <input type="text" name="" placeholder="Enter Name"><br>
-                        Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+                    <input type="text" name="chairperson" placeholder="Enter Name" value="<?php echo htmlspecialchars($assessment_members['chairperson'] ?? ''); ?>"><br>
+                    Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-                        <input type="text" name="" placeholder="Enter Name"><br>
-                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+                    <input type="text" name="member1" placeholder="Enter Name" value="<?php echo htmlspecialchars($assessment_members['member1'] ?? ''); ?>"><br>
+                    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-                        <input type="text" name="" placeholder="Enter Name"><br>
-                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+                    <input type="text" name="member2" placeholder="Enter Name" value="<?php echo htmlspecialchars($assessment_members['member2'] ?? ''); ?>"><br>
+                    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-                        <input type="text" name="" placeholder="Enter Name"><br>
-                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br>
+                    <input type="text" name="member3" placeholder="Enter Name" value="<?php echo htmlspecialchars($assessment_members['member3'] ?? ''); ?>"><br>
+                    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+                
                 </div>
                 <br><br>
                 <b>D. DATE ACCOMPLISHED<b><br>

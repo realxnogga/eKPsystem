@@ -65,6 +65,52 @@ function getAdjectivalRating($total) {
       return "Very Poor";
   }
 }
+// Fetch existing certification data if it exists
+$query = "SELECT * FROM movassessmentmembers WHERE municipality_id = :municipality_id LIMIT 1";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$stmt->execute();
+$certification_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Process form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $chairperson = $_POST['chairperson'];
+    $member1 = $_POST['member1'];
+    $member2 = $_POST['member2'];
+    $member3 = $_POST['member3'];
+    $date = date("Y-m-d");
+
+    if ($certification_data) {
+        // Update existing record
+        $query = "UPDATE movassessmentmembers SET chairperson = :chairperson, member1 = :member1, member2 = :member2, member3 = :member3, date = :date WHERE municipality_id = :municipality_id";
+    } else {
+        // Insert new record
+        $query = "INSERT INTO movassessmentmembers (municipality_id, chairperson, member1, member2, member3, date) VALUES (:municipality_id, :chairperson, :member1, :member2, :member3, :date)";
+    }
+
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+    $stmt->bindParam(':chairperson', $chairperson, PDO::PARAM_STR);
+    $stmt->bindParam(':member1', $member1, PDO::PARAM_STR);
+    $stmt->bindParam(':member2', $member2, PDO::PARAM_STR);
+    $stmt->bindParam(':member3', $member3, PDO::PARAM_STR);
+    $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+
+    if ($stmt->execute()) {
+        echo "Certification details saved successfully!";
+        // Reload certification data after save
+        $certification_data = [
+            'chairperson' => $chairperson,
+            'member1' => $member1,
+            'member2' => $member2,
+            'member3' => $member3,
+            'date' => $date
+        ];
+    } else {
+        echo "Error saving certification details.";
+    }
+}
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -159,18 +205,20 @@ function getAdjectivalRating($total) {
             <br>
                     <b> C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION </b><br><br>
                     <div class="certification-section text-center">
+
                     <form method="post" action="" enctype="multipart/form-data">
-                        <input type="text" name="" placeholder="Enter Name"><br>
-                        Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+                    <input type="text" name="chairperson" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['chairperson'] ?? ''); ?>"><br>
+    Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-                        <input type="text" name="" placeholder="Enter Name"><br>
-                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+    <input type="text" name="member1" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member1'] ?? ''); ?>"><br>
+    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-                        <input type="text" name="" placeholder="Enter Name"><br>
-                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+    <input type="text" name="member2" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member2'] ?? ''); ?>"><br>
+    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-                        <input type="text" name="" placeholder="Enter Name"><br>
-                        Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br>
+    <input type="text" name="member3" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member3'] ?? ''); ?>"><br>
+    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+
                 </div>
                 <br><br>
                 <b>D. DATE ACCOMPLISHED<b><br>

@@ -44,7 +44,7 @@ try {
         $performance = getPerformanceRating($total);
     } else {
         $total = "N/A";
-        $performance = "Pending";
+        $performance = "No Rating yet";
     }
 
     // Fetch distinct years for dropdown, including the current year if not in data
