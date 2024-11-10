@@ -117,14 +117,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'rates' => $movrate_row,
                     'remarks' => $movremark_row
                 ]);
-            } else {
-                echo json_encode(['error' => 'No MOV found for this barangay']);
             }
-        } else {
-            echo json_encode(['error' => 'Barangay not found']);
         }
-    } else {
-        echo json_encode(['error' => 'Invalid input']);
     }
 }
 ?>
