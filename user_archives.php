@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Archives</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-
+  
   <script>
     async function sendData(selectedIds) {
 
@@ -72,13 +72,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       // Populate table with new data
       result.forEach(row => {
         const newRow = `
-              <tr>                 
-                <td>${row.CNum}</td>
-                <td>${row.ForTitle}</td>
-                <td>${row.CNames}</td>
-                <td>${row.RspndtNames}</td>
-                <td>${row.Mdate}</td>
-                <td><input type="checkbox" class="case-checkbox" value="${row.id}"></td>
+              <tr class="flex w-full text-sm border">                 
+                <td class="flex-1 px-2">${row.CNum}</td>
+                <td class="flex-1 px-2">${row.ForTitle}</td>
+                <td class="flex-1 px-2">${row.CNames}</td>
+                <td class="flex-1 px-2">${row.RspndtNames}</td>
+                <td class="flex-1 px-2">${row.Mdate}</td>
+                <td class="flex-1 px-2"><input type="checkbox" class="case-checkbox mx-4" value="${row.id}"></td>
               </tr>`;
         tableBody.innerHTML += newRow;
       });
@@ -149,27 +149,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
           <br>
-          <table id="UnarchiveTable" class="table table-striped">
+          <table id="UnarchiveTable" class="table table-striped w-full">
             <thead class="thead-dark">
-              <tr>
-                <th>No.</th>
-                <th>Title</th>
-                <th>Complainants</th>
-                <th>Respondents</th>
-                <th>Date</th>
-                <th>Unarchive</th>
+              <tr class="flex w-full text-sm">
+                <th class="flex-1 px-2">No.</th>
+                <th class="flex-1 px-2">Title</th>
+                <th class="flex-1 px-2">Complainants</th>
+                <th class="flex-1 px-2">Respondents</th>
+                <th class="flex-1 px-2">Date</th>
+                <th class="flex-1 px-2">Unarchive</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="flex flex-col max-h-[28rem] overflow-y-scroll">
 
               <?php foreach ($result as $row) { ?>
-                <tr>
-                  <td><?php echo $row['CNum']; ?></td>
-                  <td><?php echo $row['ForTitle']; ?></td>
-                  <td><?php echo $row['CNames']; ?></td>
-                  <td><?php echo $row['RspndtNames']; ?></td>
-                  <td><?php echo $row['Mdate']; ?></td>
-                  <td><input type="checkbox" class="case-checkbox" value="<?php echo $row['id']; ?>"></td>
+                <tr class="flex w-full text-sm border">
+                  <td class="flex-1 px-2"><?php echo $row['CNum']; ?></td>
+                  <td class="flex-1 px-2"><?php echo $row['ForTitle']; ?></td>
+                  <td class="flex-1 px-2"><?php echo $row['CNames']; ?></td>
+                  <td class="flex-1 px-2"><?php echo $row['RspndtNames']; ?></td>
+                  <td class="flex-1 px-2"><?php echo $row['Mdate']; ?></td>
+                  <td class="flex-1 px-2"><input type="checkbox" class="case-checkbox mx-4" value="<?php echo $row['id']; ?>"></td>
                 </tr>
               <?php } ?>
 
