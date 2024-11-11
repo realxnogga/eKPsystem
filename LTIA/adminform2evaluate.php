@@ -1091,10 +1091,14 @@ $(document).ready(function () {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Notification</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="large-modal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+            <span class="sr-only">Close modal</span>
+        </button>
+
+                    </div>
             <div class="modal-body">
                 <p id="modalMessage"></p>
             </div>
@@ -1105,6 +1109,20 @@ $(document).ready(function () {
     </div>
 </div>
 <script>
+  // Close the modal when the close button is clicked
+//   $(document).mouseup(function (e) {
+//     var modalContent = $(".relative.bg-white.shadow.rounded-lg.h-full"); // Adjust selector as necessary
+//     if (!modalContent.is(e.target) && modalContent.has(e.target).length === 0) {
+//         closeModal(); // Close modal when clicking outside of content
+//     }
+// });
+
+  // Close the modal when the close button is clicked
+$(document).on('click', '[data-modal-hide="large-modal"]', function () {
+    $('#large-modal').addClass('hidden'); // Hide the modal
+    $('#pdfViewer').attr('src', ''); // Clear the iframe src when modal is closed
+});
+
 document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get('status');
