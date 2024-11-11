@@ -188,9 +188,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           if (result.status === 'success') {
             document.getElementById('message').classList.add('bg-green-300');
+
+             // scroll to top to see shit
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+
+            setTimeout(function() {
+              window.location.href = "user_complaints.php";
+            }, 1000);
+            
           }
           if (result.status === 'failed') {
             document.getElementById('message').classList.add('bg-red-300');
+
+             // scroll to top to see shit
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+
+            setTimeout(function() {
+              window.location.href = "user_complaints.php";
+            }, 1000);
+            
           }
 
           // empty input value
