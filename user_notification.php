@@ -116,13 +116,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 class="px-1 underline text-blue-500">
             </form>
 
-            <p>
-              has lapse
-              <?php echo $row['CMethod'] == 'Mediation' ? '15 days for mediation' : ($row['CMethod'] == 'Conciliation' ? '30 days for conciliation' : ''); ?>
-            </p>
+            <p>has lapse 14 days</p>
 
           </div>
-
 
           <section class="flex gap-x-4 items-center">
 
@@ -135,10 +131,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php } else { ?>
       <section class="h-full w-full flex flex-col items-center justify-center gap-y-2">
         <img
-          src="https://lollypop.design/wp-content/uploads/2022/01/emotional-design_mascots.png"
+          src="https://cdni.iconscout.com/illustration/premium/thumb/no-notification-illustration-download-in-svg-png-gif-file-formats--notifications-mail-e-commerce-pack-shopping-illustrations-6743718.png?f=webp"
           alt="empty image"
           class="h-[14rem]">
-        <p class="text-3xl text-gray-500 font-bold">No Notification yet!</p>
+        <p class="text-3xl text-gray-500 font-bold">No notification yet!</p>
       </section>
     <?php } ?>
   </section>

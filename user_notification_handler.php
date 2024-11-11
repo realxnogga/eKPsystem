@@ -13,11 +13,7 @@ function getAllNotificationData($conn, $userID, $extraCondition = "")
     $query = "SELECT * FROM complaints 
           WHERE UserID = :user_id 
           AND CStatus = 'Settled' 
-          AND (          /* true if current date is greater than mdate + 15 days */       
-              (CMethod = 'Mediation' AND NOW() > DATE_ADD(Mdate, INTERVAL 15 DAY))
-              OR 
-              (CMethod = 'Conciliation' AND NOW() > DATE_ADD(Mdate, INTERVAL 30 DAY))
-          )
+          AND ((CMethod = 'Mediation' AND NOW() > DATE_ADD(Mdate, INTERVAL 14 DAY)))
           AND isArchived = 0
           AND YEAR(Mdate) = YEAR(NOW())";
 
@@ -50,11 +46,7 @@ function updateSeenStatus($conn, $userID, $setFields = "", $extraCondition = "")
 
     $query .= "WHERE UserID = :user_id 
                 AND CStatus = 'Settled' 
-                AND (       
-                    (CMethod = 'Mediation' AND NOW() > DATE_ADD(Mdate, INTERVAL 15 DAY))
-                    OR 
-                    (CMethod = 'Conciliation' AND NOW() > DATE_ADD(Mdate, INTERVAL 30 DAY))
-                )
+                AND ((CMethod = 'Mediation' AND NOW() > DATE_ADD(Mdate, INTERVAL 14 DAY)))
                 AND isArchived = 0
                 AND YEAR(Mdate) = YEAR(NOW())";
 
