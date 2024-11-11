@@ -1,8 +1,9 @@
-
 <?php
 
 require 'connection.php';
 require "include/custom-scrollbar.php";
+
+require "user_notification_handler.php";
 
 $userId = $_SESSION['user_id'];
 
@@ -10,13 +11,7 @@ $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
 $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
-if (isset($_SESSION['first_name']) && isset($_SESSION['last_name'])) {
-  $firstName = $_SESSION['first_name'];
-  $lastName = $_SESSION['last_name'];
-  
-} else {
-  $user = null; // Initialize $user as null if not set
-}
+
 
 function isActive($path)
 {
@@ -43,57 +38,7 @@ function traverseDirectory()
   return containsWord(getFullUrl(), 'LTIA') ? '../' : '';
 }
 
-$upcomingComplaints = []; // Array to store complaint details
 
-try {
-    // Get logged-in user ID from the session
-    $userId = $_SESSION['user_id'];
-
-    // Update SQL query to select the new columns and filter by UserID
-    $sql = "SELECT CNames, Cnum, Mdate, CMethod 
-            FROM complaints 
-            WHERE UserID = :user_id"; // Use 'UserID' condition here
-
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
-
-    if ($stmt->execute()) {
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($results as $row) {
-            // Ensure 'Mdate' exists before proceeding
-            if (!isset($row['Mdate'])) {
-                echo "The 'Mdate' field is missing in the result.";
-                continue;
-            }
-
-            $isSettled = in_array($row['CMethod'], ['Mediation', 'Conciliation', 'Arbitration']);
-            $isUnsettled = in_array($row['CMethod'], [
-                'Pending', 'Repudiated', 'Dismissed', 
-                'Certified to file action in court', 'Dropped/Withdrawn'
-            ]);
-
-            $dateAdded = strtotime($row['Mdate']);
-            $currentDate = strtotime(date('Y-m-d'));
-            $elapsedDays = ($currentDate - $dateAdded) / (60 * 60 * 24);
-            $daysUntil14 = 14 - $elapsedDays; // Calculate days left until 14 days
-
-            if ($elapsedDays >= 0 && $elapsedDays < 14 && !$isSettled && $isUnsettled) {
-                $upcomingComplaints[] = [
-                    'CNames' => $row['CNames'],
-                    'Cnum' => $row['Cnum'],
-                    'Mdate' => $row['Mdate'],
-                    'daysUntil14' => $daysUntil14 // Add days until 14 to the complaint data
-                ]; // Store row data
-            }
-        }
-    } else {
-        echo "Query execution failed.";
-    }
-
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-}
 ?>
 
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>assets/css/styles.min.css" />
@@ -110,11 +55,10 @@ try {
 
 <!-- flowbite component -->
 <script src="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.js"></script>
-<link href="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.css"  rel="stylesheet" />
+<link href="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
 
 <!-- tabler icon -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+<link rel="stylesheet" href="<?php echo traverseDirectory(); ?>node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
 <nav class="fixed top-0 z-40 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">
@@ -129,90 +73,41 @@ try {
         </button>
 
         <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="flex ms-2 md:me-24">
-          <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white ">
+          <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
             EKPsys
           </p>
         </a>
-        <div style="display: flex; justify-content: flex-start; width: 100%;">
-        
-       </div>
 
       </div>
       <div class="flex items-center">
-       <!-- HTML for Notification Dropdown -->
-<div class="flex items-center justify-start rtl:justify-end" style="position: relative; display: inline-block; width: 30%;">
-    <div style="position: relative; cursor: pointer;">
-        <i class="fas fa-bell" style="font-size: 24px;"></i>
-        <?php if (count($upcomingComplaints) > 0): ?>
-            <span style="position: absolute; top: -5px; right: -15px; background-color: red; color: white; border-radius: 50%; padding: 3px 7px; font-size: 12px;">
-                <?php echo count($upcomingComplaints); ?>
-            </span>
-        <?php endif; ?>
-    </div>
-
-    <!-- Dropdown Content -->
-    <div style="display: none; position: absolute; left: -200px; background-color: white; min-width: 200px; max-height: 500px; overflow-y: auto; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); z-index: 1; padding: 10px;" id="notificationDropdown">
-        <?php if (count($upcomingComplaints) > 0): ?>
-            <ul style="list-style-type: none; padding: 0; margin: 0;">
-                <?php foreach ($upcomingComplaints as $Complaint): ?>
-                    <li style="padding: 8px; border-bottom: 1px solid #ddd;">
-                        <strong>Complaint Number:</strong> <?php echo htmlspecialchars($Complaint['Cnum']); ?><br>
-                        <strong>Name:</strong> <?php echo htmlspecialchars($Complaint['CNames']); ?><br>
-                        <small>Date: <?php echo htmlspecialchars($Complaint['Mdate']); ?></small><br>
-                        <small>Days left until lapse:<strong> <?php echo round($Complaint['daysUntil14'], 0); ?></strong></small>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>No upcoming complaints.</p>
-        <?php endif; ?>
-    </div>
-</div>
-
-<script>
-    // Toggle dropdown visibility
-    document.querySelector('.fa-bell').addEventListener('click', function() {
-        var dropdown = document.getElementById('notificationDropdown');
-        dropdown.style.display = (dropdown.style.display === 'none' || dropdown.style.display === '') ? 'block' : 'none';
-    });
-
-    // Close dropdown when clicking outside
-    window.addEventListener('click', function(e) {
-        var dropdown = document.getElementById('notificationDropdown');
-        if (!e.target.matches('.fa-bell') && dropdown.style.display === 'block') {
-            dropdown.style.display = 'none';
-        }
-    });
-</script>
-
-
         <div class="flex items-center ms-3">
 
+          <!-- --------------------- -->
+          <a href="<?php echo traverseDirectory(); ?>user_notification.php">
+            <section class="relative mr-5 cursor-pointer flex items-center justify-center">
+              <i class="ti ti-bell text-3xl"></i>
+              <div class="<?php echo $notifCount == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-1 -right-1 rounded-[25px] flex items-center justify-center">
+                <p class="text-white text-xs px-[.3rem]"><?php echo $notifCount; ?></p>
+              </div>
+            </section>
+          </a>
+          <!-- --------------------- -->
 
 
           <div>
             <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
               <span class="sr-only">Open user menu</span>
 
-              <img class="w-8 h-8 rounded-full" 
-     src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" 
-     alt="user photo" 
-     style="object-fit: cover; object-position: center;">
-
-
-
+              <img class="w-8 h-8 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
             </button>
           </div>
 
           <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
             <div class="px-4 py-3" role="none">
-            <p class="text-sm text-gray-900 dark:text-white" role="none">
-                  <?php 
-                      // Capitalize the first letter of the first name
-                      echo ucfirst(str_replace('fname', '', $_SESSION['first_name'])); 
-                  ?>!
+              <p class="text-sm text-gray-900 dark:text-white" role="none">
+                <?php echo $user['first_name'];
+                echo $user['last_name']; ?>
               </p>
-
               <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
                 <?php echo $user['email']; ?>
               </p>
@@ -228,32 +123,7 @@ try {
               </li>
 
               <li>
-                <a onclick="logout()" href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
-                <script>
-                function logout() {
-                      // Call your backend logout API or redirect to logout route
-                      // For example: window.location.href = 'logout.php';
-                      
-                      // Unregister the service worker
-                      if ('serviceWorker' in navigator) {
-                      navigator.serviceWorker.getRegistration('sw.js').then((registration) => {
-                          if (registration) {
-                              registration.unregister().then((boolean) => {
-                                  if (boolean) {
-                                      console.log('Service Worker unregistered successfully');
-                                  } else {
-                                      console.log('Service Worker unregistration failed');
-                                  }
-                              });
-                          } else {
-                              console.log('No Service Worker found with this scope');
-                          }
-                      }).catch((error) => {
-                          console.log('Error while unregistering service worker:', error);
-                      });
-                  }
-                  }
-                </script>
+                <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
               </li>
             </ul>
           </div>
@@ -270,84 +140,42 @@ try {
     <div class="w-full flex flex-col gap-y-1 items-center mb-3">
       <img class="w-20 h-20 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
 
-      <p class="text-sm text-gray-900 dark:text-white" role="none">
-            <?php 
-                // Capitalize the first letter of the first name
-                echo ucfirst(str_replace('fname', '', $_SESSION['first_name'])); 
-            ?>
-        </p>
-
-      <div id="offline-sign" style="display: none; margin-left: 20px;">
-        <p>You are in offline mode.</p>
-        <script>
-        function updateOnlineStatus() {
-            const offlineSign = document.getElementById('offline-sign');
-            
-            if (!navigator.onLine) {
-                // Show the offline sign when offline
-                offlineSign.style.display = 'block';
-            } else {
-                // Hide the offline sign when online
-                offlineSign.style.display = 'none';
-            }
-        }
-
-        // Check online status on load
-        window.addEventListener('load', updateOnlineStatus);
-
-        // Listen for online and offline events
-        window.addEventListener('online', updateOnlineStatus);  // When going online
-        window.addEventListener('offline', updateOnlineStatus); // When going offline
-    </script>
-    </div>
+      <p><?php echo $user['first_name']; ?> </p>
     </div>
 
 
     <ul class="font-medium">
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="<?php echo isActive('/eKPsystem/user_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="fa-solid fa-chart-line"></i>
+          <i class="ti ti-dashboard text-2xl"></i>
           <span>Dashboard</span>
         </a>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_lupon.php" class="<?php echo isActive('/eKPsystem/user_lupon.php') . ' ' . isActive('/eKPsystem/user_used_forms.php') . ' ' . isActive('/eKPsystem/user_uploadfile_lupon.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="fa-solid fa-people-group"></i>
+          <i class="ti ti-users text-2xl"></i>
           <span>Lupon</span>
         </a>
       </li>
       <li>
-        <a onclick="runInBackground()" href="<?php echo traverseDirectory(); ?>user_complaints.php" class="
+        <a href="<?php echo traverseDirectory(); ?>user_complaints.php" class="
         <?php
         echo isActive('/eKPsystem/user_complaints.php') . ' ' . isActive('/eKPsystem/user_add_complaint.php') . ' ' . isActive('/eKPsystem/user_edit_complaint.php') . ' ' . isActive('/eKPsystem/user_manage_case.php') . ' ' . isActive('/eKPsystem/user_uploadfile_complaint.php');
         ?> 
         flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="fa-regular fa-file-lines"></i>
+          <i class="ti ti-files text-2xl"></i>
           <span>Complaints</span>
         </a>
-        <script>
-        function runInBackground() {
-            fetch('sanitize_database.php', { method: 'POST' })
-                .then(response => response.text())
-                .then(data => {
-                    console.log('Script executed:', data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-    </script>
       </li>
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_archives.php" class="<?php echo isActive('/eKPsystem/user_archives.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="fa-regular fa-eye-slash"></i>
+          <i class="ti ti-archive text-2xl"></i>
           <span>Archives</span>
         </a>
       </li>
-      
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_report.php" class="<?php echo isActive('/eKPsystem/user_report.php') . ' ' . isActive('/eKPsystem/user_add_report.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="fa-regular fa-rectangle-list"></i>
+          <i class="ti ti-report text-2xl"></i>
           <span>Reports</span>
         </a>
       </li>
@@ -370,14 +198,14 @@ try {
 
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_logs.php" class="<?php echo isActive('/eKPsystem/user_logs.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          <i class="ti ti-user-check text-2xl"></i>
           <span>User Logs</span>
         </a>
       </li>
-      
+
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('/eKPsystem/user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="fa-solid fa-gear"></i>
+          <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
         </a>
       </li>

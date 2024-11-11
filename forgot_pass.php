@@ -16,12 +16,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (!$user_row) {
     echo "This email is not yet registered into the system. Please check your spelling.";
   } else {
-    $userID = $user_row['id'];
+    $user_id = $user_row['id'];
 
     // Check if security questions exist for the user
     $check_security_query = "SELECT * FROM security WHERE user_id = :user_id";
     $stmt = $conn->prepare($check_security_query);
-    $stmt->bindParam(':user_id', $userID);
+    $stmt->bindParam(':user_id', $user_id);
     $stmt->execute();
     $security_row = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       echo "This user has not yet set their Security Questions, therefore unable to reset the password. Please request an admin to reset your password.";
     } else {
       // Storing user_id in session
-      $_SESSION['user_id'] = $userID;
+      $_SESSION['user_id'] = $user_id;
 
       // Redirecting without user_id in URL
       header("Location: verify_account.php");
@@ -46,12 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Forgot Password</title>
-
   <link rel="stylesheet" href="assets/css/styles.min.css" />
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  
-  <script src="service-worker-registration.js"></script>
-  
+
 </head>
 
 <body>
@@ -65,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <div class="col-md-8 col-lg-6 col-xxl-3">
             <div class="card mb-0">
               <div class="card-body">
-                
+                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
                 </a>
                 <div class="text-center">
                   <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle"><br><br>
@@ -79,8 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <input type="email" class="form-control" placeholder="Email" name="email" required><br>
                   <input type="submit" class="btn btn-primary w-100" value="Search">
                 </form>
+
               </div>
-              <a href="login.php" style="padding: 2rem;">Back to Login</a>
             </div>
           </div>
         </div>
@@ -88,7 +85,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
   </div>
-
+  <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

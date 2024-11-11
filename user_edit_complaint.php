@@ -2,8 +2,6 @@
 session_start();
 include_once("connection.php");
 
-
-
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
@@ -29,7 +27,7 @@ for ($i = 1; $i <= 20; $i++) {
     $luponsArray[] = $luponsData[$fieldName];
   }
 }
-$successMessage = "";
+
 $complaint = array(); // Initialize an empty array to store complaint data
 $complaintId = isset($_GET['id']) ? $_GET['id'] : null;
 
@@ -46,22 +44,26 @@ if ($complaintId) {
   }
 }
 
-if (isset($_POST['submit'])) {
-  // Retrieve the logged-in user's UserID and BarangayID
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
   $userID = $_SESSION['user_id'];
   $barangayID = $_SESSION['barangay_id'];
 
-  // Sanitize and validate user input
-  $caseNum = $_POST['CNum'];
-  $forTitle = $_POST['ForTitle'];
-  $complainants = $_POST['CNames'];
-  $respondents = $_POST['RspndtNames'];
-  $complaintDesc = $_POST['CDesc'];
-  $petition = $_POST['Petition'];
-  $madeDate = $_POST['Mdate'];
-  $receivedDate = $_POST['RDate'];
-  $complainantAddress = $_POST['CAddress'];
-  $respondentAddress = $_POST['RAddress'];
+
+  $inputData = json_decode(file_get_contents('php://input'), true);
+
+
+  $caseNum = $inputData['CNum'];
+  $forTitle = $inputData['ForTitle'];
+  $complainants = $inputData['CNames'];
+  $respondents = $inputData['RspndtNames'];
+  $complaintDesc = $inputData['CDesc'];
+  $petition = $inputData['Petition'];
+  $madeDate = $inputData['Mdate'];
+  $receivedDate = $inputData['RDate'];
+  $complainantAddress = $inputData['CAddress'];
+  $respondentAddress = $inputData['RAddress'];
+
   if (!empty($receivedDate)) {
     $formattedReceivedDate = date('Y-m-d', strtotime($receivedDate));
   } else {
@@ -69,10 +71,10 @@ if (isset($_POST['submit'])) {
     // For example:
     $formattedReceivedDate = null; // or set to a default date: 'YYYY-MM-DD'
   }
-  $pangkat = $_POST['Pangkat'];
-  $caseType = $_POST['CType'];
-  $cStatus = $_POST['CStatus'];
-  $cMethod = $_POST['CMethod'];
+  $pangkat = $inputData['Pangkat'];
+  $caseType = $inputData['CType'];
+  $cStatus = $inputData['CStatus'];
+  $cMethod = $inputData['CMethod'];
 
   if ($cStatus === 'Others') {
     // If 'Outside the Jurisdiction' is selected, set the Case Method value to null or an empty string
@@ -82,20 +84,16 @@ if (isset($_POST['submit'])) {
 
   // only update seen column condition inside if is met
   $seen = "";
-  if ($cStatus != 'Settled' && ($cMethod != 'Mediation' && $cMethod != 'Conciliation')) {
-
+  if ($cStatus != 'Settled' && $cMethod != 'Mediation') {
     $seen = " seen = 0,";
   }
 
-  if ($cStatus == 'Settled' && ($cMethod == 'Mediation' || $cMethod == 'Conciliation')) {
-
-    if ($cMethod == 'Mediation' && date('Y-m-d', strtotime($madeDate . ' + 15 days')) < date('Y-m-d')) {
-      $seen = " seen = 0,";
-    }
-    if ($cMethod == 'Conciliation' && date('Y-m-d', strtotime($madeDate . ' + 30 days')) < date('Y-m-d')) {
+  if ($cStatus == 'Settled' && $cMethod == 'Mediation') {
+    if (date('Y-m-d', strtotime($madeDate . ' + 14 days')) < date('Y-m-d')) {
       $seen = " seen = 0,";
     }
   }
+
 
 
 
@@ -111,6 +109,9 @@ if (isset($_POST['submit'])) {
   $query .= " WHERE id = :complaintId";
 
   $stmt = $conn->prepare($query);
+
+  $inputData = json_decode(file_get_contents('php://input'), true);
+
 
   $stmt->bindParam(':caseNum', $caseNum, PDO::PARAM_STR);
   $stmt->bindParam(':forTitle', $forTitle, PDO::PARAM_STR);
@@ -131,10 +132,9 @@ if (isset($_POST['submit'])) {
   $updateSuccessful = $stmt->execute();
 
   if ($updateSuccessful) {
-    // Update was successful
-    $successMessage = '<div class="alert alert-success" role="alert">
-                Complaint Updated Successfully!
-              </div>';
+
+    echo json_encode(['status' => 'success', 'message' => 'Complaint Updated Successfully!']);
+
 
     // Fetch the updated complaint data from the database
     $query = "SELECT * FROM complaints WHERE id = :complaintId";
@@ -142,11 +142,11 @@ if (isset($_POST['submit'])) {
     $stmt->bindParam(':complaintId', $complaintId);
     $stmt->execute();
     $complaint = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    exit;
   } else {
-    // Update failed
-    $successMessage = '<div class="alert alert-danger" role="alert">
-                Failed to Update Complaint. Check Code.
-              </div>';
+    echo json_encode(['status' => 'failed', 'message' => 'Failed to Update Complaint. Check Code.']);
+    exit;
   }
 }
 
@@ -168,11 +168,134 @@ if (isset($_POST['submit'])) {
     }
   </style>
 
+  <!-- ############################################################################### -->
+
+  <script>
+    async function sendData(CNum, ForTitle, CNames, RspndtNames, CDesc, Petition, Mdate, RDate, CAddress, RAddress, Pangkat, CType, CStatus, CMethod) {
+      try {
+        const response = await fetch("", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            CNum: CNum,
+            ForTitle: ForTitle,
+            CNames: CNames,
+            RspndtNames: RspndtNames,
+            CDesc: CDesc,
+            Petition: Petition,
+            Mdate: Mdate,
+            RDate: RDate,
+            CAddress: CAddress,
+            RAddress: RAddress,
+            Pangkat: Pangkat,
+            CType: CType,
+            CStatus: CStatus,
+            CMethod: CMethod
+          })
+        });
+
+        const result = await response.json();
+
+        if (result.message && result.message != '') {
+
+          document.getElementById('message').textContent = result.message;
+          document.getElementById('message').classList.remove('hidden');
+          document.getElementById('message').classList.add('flex');
+
+          if (result.status === 'success') {
+            document.getElementById('message').classList.add('bg-green-300');
+              // scroll to top to see shit
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+          if (result.status === 'failed') {
+            document.getElementById('message').classList.add('bg-red-300');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+
+
+        }
+
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    }
+
+    // Handle form submission
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('formEditComplaint');
+      form.onsubmit = function(event) {
+        event.preventDefault();
+
+        const CNum = document.querySelector('input[name="CNum"]').value;
+        const ForTitle = document.querySelector('select[name="ForTitle"]').value;
+        const CNames = document.querySelector('input[name="CNames"]').value;
+        const RspndtNames = document.querySelector('input[name="RspndtNames"]').value;
+        const CDesc = document.querySelector('input[name="CDesc"]').value;
+        const Petition = document.querySelector('input[name="Petition"]').value;
+        const Mdate = document.querySelector('input[name="Mdate"]').value;
+        const RDate = document.querySelector('input[name="RDate"]').value;
+        const CAddress = document.querySelector('input[name="CAddress"]').value;
+        const RAddress = document.querySelector('input[name="RAddress"]').value;
+        const Pangkat = document.querySelector('input[name="Pangkat"]').value;
+        const CType = document.querySelector('select[name="CType"]').value;
+        const CStatus = document.querySelector('select[name="CStatus"]').value;
+        const CMethod = document.querySelector('select[name="CMethod"]').value;
+
+        if (navigator.onLine) {
+
+          sendData(CNum, ForTitle, CNames, RspndtNames, CDesc, Petition, Mdate, RDate, CAddress, RAddress, Pangkat, CType, CStatus, CMethod);
+
+        } else {
+          localStorage.setItem('addComplaint', JSON.stringify({
+            CNum,
+            ForTitle,
+            CNames,
+            RspndtNames,
+            CDesc,
+            Petition,
+            Mdate,
+            RDate,
+            CAddress,
+            RAddress,
+            Pangkat,
+            CType,
+            CStatus,
+            CMethod
+          }));
+          alert('No internet. Your request will be executed once the internet is restored.');
+        }
+      };
+
+      function syncWhenOnline() {
+        const addComplaint = JSON.parse(localStorage.getItem('addComplaint'));
+        if (addComplaint) {
+
+          sendData(addComplaint.CNum, addComplaint.ForTitle, addComplaint.CNames, addComplaint.RspndtNames,
+            addComplaint.CDesc, addComplaint.Petition, addComplaint.Mdate, addComplaint.RDate, addComplaint.CAddress, addComplaint.RAddress, addComplaint.Pangkat, addComplaint.CType, addComplaint.CStatus, addComplaint.CMethod);
+
+          localStorage.removeItem('addComplaint');
+        }
+      }
+
+      if (navigator.onLine) {
+        syncWhenOnline();
+      }
+
+      window.addEventListener('online', syncWhenOnline);
+
+    });
+  </script>
+
+  <!-- ############################################################################### -->
+
 </head>
 
 <body class="bg-[#E8E8E7]">
 
-<?php include "user_sidebar_header.php"; ?>
+  <?php include "user_sidebar_header.php"; ?>
 
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
@@ -192,17 +315,16 @@ if (isset($_POST['submit'])) {
 
           <h5 class="card-title mb-9 fw-semibold">Edit Information</h5>
           <b>
-            
 
 
 
 
-            <?php echo $successMessage; // Display success message here 
-            ?>
-            <form action="" method="post">
+            <p id="message" class="hidden p-3 rounded-md text-white"></p>
+
+            <form id="formEditComplaint">
               <div>
                 <label class="form-control-label px-3">Case No.<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control" id="CNum" name="CNum" placeholder="Case No. - Blotter No. - MMYY" onblur="validate(1)" required value="<?php echo $complaint['CNum']; ?>">
+                <input type="text" class="form-control" id="CNum" name="CNum" placeholder="Case No. - Blotter No. - MMYY" onblur="validate(1)" value="<?php echo $complaint['CNum']; ?> " required>
               </div>
 
               <div>
