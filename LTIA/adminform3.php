@@ -110,6 +110,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $message = "Error saving certification details.";
   }
 }
+// Fetch available years from `movrate` table for dropdown
+$query = "SELECT DISTINCT YEAR(daterate) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$years = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+// Get selected year from request or default to the latest year
+$selectedYear = $_GET['year'] ?? $years[0];
+
+// Filter dataset by selected year
+$query = "
+    SELECT b.barangay_name AS barangay, m.total 
+    FROM barangays b
+    JOIN movrate m ON b.id = m.barangay
+    WHERE b.municipality_id = :municipality_id
+      AND YEAR(m.daterate) = :selectedYear  -- use 'daterate' instead of 'date'
+    ORDER BY m.total DESC";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
+$stmt->execute();
+$barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -141,6 +164,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </div>
         </div>
       </div>
+      <form method="get" action="">
+  <select name="year" onchange="this.form.submit()">
+    <?php foreach ($years as $year): ?>
+      <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
+        <?php echo htmlspecialchars($year); ?>
+      </option>
+    <?php endforeach; ?>
+  </select>
+</form>
 
       <!-- Second Card -->
       <div class="card mt-4">
@@ -227,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <br>
                 <br>
                 <div class="text-right mt-4">
-                <input type="submit" value="Save" class="btn-save">
+                <input type="submit" value="Save"  style="background-color: #000035;" class="btn-save">
               </div>
           </div>
         </div>
