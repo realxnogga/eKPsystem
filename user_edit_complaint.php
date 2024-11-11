@@ -84,20 +84,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // only update seen column condition inside if is met
   $seen = "";
-  if ($cStatus != 'Settled' && ($cMethod != 'Mediation' && $cMethod != 'Conciliation')) {
-
+  if ($cStatus != 'Settled' && $cMethod != 'Mediation') {
     $seen = " seen = 0,";
   }
 
-  if ($cStatus == 'Settled' && ($cMethod == 'Mediation' || $cMethod == 'Conciliation')) {
-
-    if ($cMethod == 'Mediation' && date('Y-m-d', strtotime($madeDate . ' + 15 days')) < date('Y-m-d')) {
-      $seen = " seen = 0,";
-    }
-    if ($cMethod == 'Conciliation' && date('Y-m-d', strtotime($madeDate . ' + 30 days')) < date('Y-m-d')) {
+  if ($cStatus == 'Settled' && $cMethod == 'Mediation') {
+    if (date('Y-m-d', strtotime($madeDate . ' + 14 days')) < date('Y-m-d')) {
       $seen = " seen = 0,";
     }
   }
+
 
 
 
@@ -136,9 +132,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $updateSuccessful = $stmt->execute();
 
   if ($updateSuccessful) {
-  
+
     echo json_encode(['status' => 'success', 'message' => 'Complaint Updated Successfully!']);
-    
+
 
     // Fetch the updated complaint data from the database
     $query = "SELECT * FROM complaints WHERE id = :complaintId";
@@ -148,7 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $complaint = $stmt->fetch(PDO::FETCH_ASSOC);
 
     exit;
-
   } else {
     echo json_encode(['status' => 'failed', 'message' => 'Failed to Update Complaint. Check Code.']);
     exit;
@@ -175,9 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <!-- ############################################################################### -->
 
-<script>
-    
-
+  <script>
     async function sendData(CNum, ForTitle, CNames, RspndtNames, CDesc, Petition, Mdate, RDate, CAddress, RAddress, Pangkat, CType, CStatus, CMethod) {
       try {
         const response = await fetch("", {
@@ -188,8 +181,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           body: JSON.stringify({
             CNum: CNum,
             ForTitle: ForTitle,
-            CNames: CNames, 
-            RspndtNames: RspndtNames, 
+            CNames: CNames,
+            RspndtNames: RspndtNames,
             CDesc: CDesc,
             Petition: Petition,
             Mdate: Mdate,
@@ -213,9 +206,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           if (result.status === 'success') {
             document.getElementById('message').classList.add('bg-green-300');
+              // scroll to top to see shit
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }
           if (result.status === 'failed') {
             document.getElementById('message').classList.add('bg-red-300');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }
 
 
@@ -253,19 +250,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         } else {
           localStorage.setItem('addComplaint', JSON.stringify({
-            CNum, 
-            ForTitle, 
-            CNames, 
-            RspndtNames, 
-            CDesc, 
-            Petition, 
-            Mdate, 
-            RDate, 
-            CAddress, 
-            RAddress, 
-            Pangkat, 
-            CType, 
-            CStatus, 
+            CNum,
+            ForTitle,
+            CNames,
+            RspndtNames,
+            CDesc,
+            Petition,
+            Mdate,
+            RDate,
+            CAddress,
+            RAddress,
+            Pangkat,
+            CType,
+            CStatus,
             CMethod
           }));
           alert('No internet. Your request will be executed once the internet is restored.');
@@ -276,7 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const addComplaint = JSON.parse(localStorage.getItem('addComplaint'));
         if (addComplaint) {
 
-          sendData(addComplaint.CNum, addComplaint.ForTitle, addComplaint.CNames, addComplaint.RspndtNames, 
+          sendData(addComplaint.CNum, addComplaint.ForTitle, addComplaint.CNames, addComplaint.RspndtNames,
             addComplaint.CDesc, addComplaint.Petition, addComplaint.Mdate, addComplaint.RDate, addComplaint.CAddress, addComplaint.RAddress, addComplaint.Pangkat, addComplaint.CType, addComplaint.CStatus, addComplaint.CMethod);
 
           localStorage.removeItem('addComplaint');
@@ -298,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="bg-[#E8E8E7]">
 
-<?php include "user_sidebar_header.php"; ?>
+  <?php include "user_sidebar_header.php"; ?>
 
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
@@ -318,11 +315,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           <h5 class="card-title mb-9 fw-semibold">Edit Information</h5>
           <b>
-            
 
 
 
-          <p id="message" class="hidden p-3 rounded-md text-white"></p>
+
+            <p id="message" class="hidden p-3 rounded-md text-white"></p>
 
             <form id="formEditComplaint">
               <div>
