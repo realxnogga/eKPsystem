@@ -136,12 +136,21 @@ $(document).ready(function () {
                     if (data.error) {
                         alert(data.error); // Display the error message
                         resetAllFields(); // Clear fields if an error occurs
+                        $('#mov_year').text(' '); // Reset the year display
                         return;
                     }
+
 
                     // Extract and set barangay_id and mov_id
                     $('#barangay_id').val(data.barangay_id || '');
                     $('#mov_id').val(data.mov_id || '');
+
+                    if (data.year) {
+                        $('#mov_year').text(data.year); // Set the year in the h1 element
+                    } else {
+                        $('#mov_year').text(''); // Reset the year display
+                    }
+
 
                     // Handle each PDF file from the returned data
                     var fileTypes = [
@@ -206,7 +215,7 @@ $(document).ready(function () {
                         $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate || 'No rate available');
                         $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || 'No rate available');
                         $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || 'No rate available');
-
+                        $('#status_rate').text(data.rates.status_rate || 'Rate Status: Pending');
                     } else {
                         clearRates();
                     }
@@ -247,7 +256,6 @@ $(document).ready(function () {
                       $('textarea[name="IV_muni_pdf_remark"]').val(data.remarks.IV_muni_pdf_remark || 'No remarks available');
                       $('textarea[name="V_1_pdf_remark"]').val(data.remarks.V_1_pdf_remark || 'No remarks available');
                       $('textarea[name="threepeoplesorg_remark"]').val(data.remarks.threepeoplesorg_remark || 'No remarks available');
-
                     } else {
                         clearRemarks();
                     }
@@ -263,90 +271,92 @@ $(document).ready(function () {
         }
     });
 
-    // Function to reset all fields to default values
     function resetAllFields() {
-        $('.file-column').html('<div class="alert alert-info mb-0">Select barangay</div>');
-        $('#barangay_id').val('');
-        $('#mov_id').val('');
-        clearRates();
-        clearRemarks();
-    }
+    $('.file-column').html('<div class="alert alert-info mb-0">Select barangay</div>');
+    $('#barangay_id').val('');
+    $('#mov_id').val('');
+    $('#mov_year').text(''); // Reset the year display to blank
+    $('#status_rate').text(''); // Reset the rate status to blank
+    clearRates();
+    clearRemarks();
+}
 
     // Function to clear rates
     function clearRates() {
-      $('input[name="IA_1a_pdf_rate"]').val('No rate available');
-      $('input[name="IA_1b_pdf_rate"]').val('No rate available');
-      $('input[name="IA_2a_pdf_rate"]').val('No rate available');
-      $('input[name="IA_2b_pdf_rate"]').val('No rate available');
-      $('input[name="IA_2c_pdf_rate"]').val('No rate available');
-      $('input[name="IA_2d_pdf_rate"]').val('No rate available');
-      $('input[name="IA_2e_pdf_rate"]').val('No rate available');
-      $('input[name="IB_1forcities_pdf_rate"]').val('No rate available');
-      $('input[name="IB_1aformuni_pdf_rate"]').val('No rate available');
-      $('input[name="IB_1bformuni_pdf_rate"]').val('No rate available');
-      $('input[name="IB_2_pdf_rate"]').val('No rate available');
-      $('input[name="IB_3_pdf_rate"]').val('No rate available');
-      $('input[name="IB_4_pdf_rate"]').val('No rate available');
-      $('input[name="IC_1_pdf_rate"]').val('No rate available');
-      $('input[name="IC_2_pdf_rate"]').val('No rate available');
-      $('input[name="ID_1_pdf_rate"]').val('No rate available');
-      $('input[name="ID_2_pdf_rate"]').val('No rate available');
-      $('input[name="IIA_pdf_rate"]').val('No rate available');
-      $('input[name="IIB_1_pdf_rate"]').val('No rate available');
-      $('input[name="IIB_2_pdf_rate"]').val('No rate available');
-      $('input[name="IIC_pdf_rate"]').val('No rate available');
-      $('input[name="IIIA_pdf_rate"]').val('No rate available');
-      $('input[name="IIIB_pdf_rate"]').val('No rate available');
-      $('input[name="IIIC_1forcities_pdf_rate"]').val('No rate available');
-      $('input[name="IIIC_1forcities2_pdf_rate"]').val('No rate available');
-      $('input[name="IIIC_1forcities3_pdf_rate"]').val('No rate available');
-      $('input[name="IIIC_2formuni1_pdf_rate"]').val('No rate available');
-      $('input[name="IIIC_2formuni2_pdf_rate"]').val('No rate available');
-      $('input[name="IIIC_2formuni3_pdf_rate"]').val('No rate available');
-      $('input[name="IIID_pdf_rate"]').val('No rate available');
-      $('input[name="IV_forcities_pdf_rate"]').val('No rate available');
-      $('input[name="IV_muni_pdf_rate"]').val('No rate available');
-      $('input[name="V_1_pdf_rate"]').val('No rate available');
-      $('input[name="threepeoplesorg_rate"]').val('No rate available');
-
+      $('input[name="IA_1a_pdf_rate"]').val('');
+      $('input[name="IA_1b_pdf_rate"]').val('');
+      $('input[name="IA_2a_pdf_rate"]').val('');
+      $('input[name="IA_2b_pdf_rate"]').val('');
+      $('input[name="IA_2c_pdf_rate"]').val('');
+      $('input[name="IA_2d_pdf_rate"]').val('');
+      $('input[name="IA_2e_pdf_rate"]').val('');
+      $('input[name="IB_1forcities_pdf_rate"]').val('');
+      $('input[name="IB_1aformuni_pdf_rate"]').val('');
+      $('input[name="IB_1bformuni_pdf_rate"]').val('');
+      $('input[name="IB_2_pdf_rate"]').val('');
+      $('input[name="IB_3_pdf_rate"]').val('');
+      $('input[name="IB_4_pdf_rate"]').val('');
+      $('input[name="IC_1_pdf_rate"]').val('');
+      $('input[name="IC_2_pdf_rate"]').val('');
+      $('input[name="ID_1_pdf_rate"]').val('');
+      $('input[name="ID_2_pdf_rate"]').val('');
+      $('input[name="IIA_pdf_rate"]').val('');
+      $('input[name="IIB_1_pdf_rate"]').val('');
+      $('input[name="IIB_2_pdf_rate"]').val('');
+      $('input[name="IIC_pdf_rate"]').val('');
+      $('input[name="IIIA_pdf_rate"]').val('');
+      $('input[name="IIIB_pdf_rate"]').val('');
+      $('input[name="IIIC_1forcities_pdf_rate"]').val('');
+      $('input[name="IIIC_1forcities2_pdf_rate"]').val('');
+      $('input[name="IIIC_1forcities3_pdf_rate"]').val('');
+      $('input[name="IIIC_2formuni1_pdf_rate"]').val('');
+      $('input[name="IIIC_2formuni2_pdf_rate"]').val('');
+      $('input[name="IIIC_2formuni3_pdf_rate"]').val('');
+      $('input[name="IIID_pdf_rate"]').val('');
+      $('input[name="IV_forcities_pdf_rate"]').val('');
+      $('input[name="IV_muni_pdf_rate"]').val('');
+      $('input[name="V_1_pdf_rate"]').val('');
+      $('input[name="threepeoplesorg_rate"]').val('');
+      $('#status_rate').text('');
     }
 
     // Function to clear remarks
     function clearRemarks() {
-      $('textarea[name="IA_1a_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IA_1b_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IA_2a_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IA_2b_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IA_2c_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IA_2d_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IA_2e_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IB_1forcities_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IB_1aformuni_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IB_1bformuni_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IB_2_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IB_3_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IB_4_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IC_1_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IC_2_pdf_remark"]').val('No remarks available');
-      $('textarea[name="ID_1_pdf_remark"]').val('No remarks available');
-      $('textarea[name="ID_2_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIA_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIB_1_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIB_2_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIC_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIIA_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIIB_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIIC_1forcities_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIIC_1forcities2_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIIC_1forcities3_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIIC_2formuni1_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIIC_2formuni2_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIIC_2formuni3_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IIID_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IV_forcities_pdf_remark"]').val('No remarks available');
-      $('textarea[name="IV_muni_pdf_remark"]').val('No remarks available');
-      $('textarea[name="V_1_pdf_remark"]').val('No remarks available');
-      $('textarea[name="threepeoplesorg_remark"]').val('No remarks available');
+      $('textarea[name="IA_1a_pdf_remark"]').val('');
+      $('textarea[name="IA_1b_pdf_remark"]').val('');
+      $('textarea[name="IA_2a_pdf_remark"]').val('');
+      $('textarea[name="IA_2b_pdf_remark"]').val('');
+      $('textarea[name="IA_2c_pdf_remark"]').val('');
+      $('textarea[name="IA_2d_pdf_remark"]').val('');
+      $('textarea[name="IA_2e_pdf_remark"]').val('');
+      $('textarea[name="IB_1forcities_pdf_remark"]').val('');
+      $('textarea[name="IB_1aformuni_pdf_remark"]').val('');
+      $('textarea[name="IB_1bformuni_pdf_remark"]').val('');
+      $('textarea[name="IB_2_pdf_remark"]').val('');
+      $('textarea[name="IB_3_pdf_remark"]').val('');
+      $('textarea[name="IB_4_pdf_remark"]').val('');
+      $('textarea[name="IC_1_pdf_remark"]').val('');
+      $('textarea[name="IC_2_pdf_remark"]').val('');
+      $('textarea[name="ID_1_pdf_remark"]').val('');
+      $('textarea[name="ID_2_pdf_remark"]').val('');
+      $('textarea[name="IIA_pdf_remark"]').val('');
+      $('textarea[name="IIB_1_pdf_remark"]').val('');
+      $('textarea[name="IIB_2_pdf_remark"]').val('');
+      $('textarea[name="IIC_pdf_remark"]').val('');
+      $('textarea[name="IIIA_pdf_remark"]').val('');
+      $('textarea[name="IIIB_pdf_remark"]').val('');
+      $('textarea[name="IIIC_1forcities_pdf_remark"]').val('');
+      $('textarea[name="IIIC_1forcities2_pdf_remark"]').val('');
+      $('textarea[name="IIIC_1forcities3_pdf_remark"]').val('');
+      $('textarea[name="IIIC_2formuni1_pdf_remark"]').val('');
+      $('textarea[name="IIIC_2formuni2_pdf_remark"]').val('');
+      $('textarea[name="IIIC_2formuni3_pdf_remark"]').val('');
+      $('textarea[name="IIID_pdf_remark"]').val('');
+      $('textarea[name="IV_forcities_pdf_remark"]').val('');
+      $('textarea[name="IV_muni_pdf_remark"]').val('');
+      $('textarea[name="V_1_pdf_remark"]').val('');
+      $('textarea[name="threepeoplesorg_remark"]').val('');
+
     }
 });
 
@@ -418,6 +428,7 @@ $(document).ready(function () {
           </div>
           
           <h2 class="text-left text-2xl font-semibold">FORM 1</h2>
+          <h2 class="text-left text-2xl font-semibold" id="mov_year"></h2>
           <div class="form-group mt-4">
                     <label for="barangay_select" class="block text-lg font-medium text-gray-700">Select Barangay</label>
                         <select id="barangay_select" name="barangay" class="form-control">
@@ -436,6 +447,7 @@ $(document).ready(function () {
     <input type="hidden" id="mov_id" name="mov_id" readonly> <!-- Display fetched mov_id -->
     <input type="hidden" id="barangay_id" name="barangay_id" readonly> <!-- I want the barangay_id fetch here -->
     <!-- mov_id is fetched here -->
+    <h2 class="text-left text-2xl font-semibold" id="status_rate"></h2>
     
 
 
@@ -1091,10 +1103,14 @@ $(document).ready(function () {
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Notification</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="large-modal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+            <span class="sr-only">Close modal</span>
+        </button>
+
+                    </div>
             <div class="modal-body">
                 <p id="modalMessage"></p>
             </div>
@@ -1105,6 +1121,20 @@ $(document).ready(function () {
     </div>
 </div>
 <script>
+  // Close the modal when the close button is clicked
+//   $(document).mouseup(function (e) {
+//     var modalContent = $(".relative.bg-white.shadow.rounded-lg.h-full"); // Adjust selector as necessary
+//     if (!modalContent.is(e.target) && modalContent.has(e.target).length === 0) {
+//         closeModal(); // Close modal when clicking outside of content
+//     }
+// });
+
+  // Close the modal when the close button is clicked
+$(document).on('click', '[data-modal-hide="large-modal"]', function () {
+    $('#large-modal').addClass('hidden'); // Hide the modal
+    $('#pdfViewer').attr('src', ''); // Clear the iframe src when modal is closed
+});
+
 document.addEventListener("DOMContentLoaded", function() {
     const urlParams = new URLSearchParams(window.location.search);
     const status = urlParams.get('status');

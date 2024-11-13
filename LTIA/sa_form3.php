@@ -2,6 +2,11 @@
 session_start();
 include '../connection.php';
 
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
+  header("Location: login.php");
+  exit;
+}
+
 if (isset($_GET['municipality_id'])) {
     $municipality_id = intval($_GET['municipality_id']); // Sanitize the input
 
@@ -56,26 +61,59 @@ $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $stmt->execute();
 $assessment_members = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Fetch available years from `movrate` table for dropdown
+$query = "SELECT DISTINCT YEAR(daterate) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
+$stmt = $conn->prepare($query);
+$stmt->execute();
+$years = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+// Get selected year from request or default to the latest year
+$selectedYear = $_GET['year'] ?? $years[0];
+
+// Filter dataset by selected year
+$query = "
+    SELECT b.barangay_name AS barangay, m.total 
+    FROM barangays b
+    JOIN movrate m ON b.id = m.barangay
+    WHERE b.municipality_id = :municipality_id
+      AND YEAR(m.daterate) = :selectedYear  -- use 'daterate' instead of 'date'
+    ORDER BY m.total DESC";
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
+$stmt->execute();
+$barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Barangay Ratings</title>
+  <title>LTIA Form 3</title>
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
+
 </head>
 <body class="bg-[#E8E8E7]">
-  <?php include "../admin_sidebar_header.php"; ?>
-  <div class="p-4 sm:ml-44 ">
+<?php include "../sa_sidebar_header.php"; ?>
+<div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
       <div class="card">
         <div class="card-body">
-          <div class="menu">
+          <div class="menu d-flex justify-content-between align-items-center">
             <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='sa_dashboard.php';">
               <i class="ti ti-building-community mr-2"> </i> Back
             </button>
+                    <form method="get" action="">
+          <select name="year" onchange="this.form.submit()">
+            <?php foreach ($years as $year): ?>
+              <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
+                <?php echo htmlspecialchars($year); ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+        </form>
           </div>
         </div>
       </div>

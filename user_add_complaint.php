@@ -197,7 +197,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setTimeout(function() {
               window.location.href = "user_complaints.php";
             }, 1000);
-
           }
           if (result.status === 'failed') {
             document.getElementById('message').classList.add('bg-red-300');
@@ -211,7 +210,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setTimeout(function() {
               window.location.href = "user_complaints.php";
             }, 1000);
-
           }
 
           // empty input value
@@ -454,7 +452,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "Violation of P.D. No. 1612 or the Anti-Fencing Law",
         "Violation of Republic Act No. 11313 or 'The Safe Spaces Act' Gender-based sexual harassment in streets and public spaces.",
         "Others",
-        "dasdsad",
         "Sample tagalog1",
         "Sample tagalog2",
         "Sample tagalog3",

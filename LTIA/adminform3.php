@@ -163,17 +163,17 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
           </div>
         </div>
-      </div>
-      <form method="get" action="">
+        <div class="text-right">
+<form method="get" action="">
   <select name="year" onchange="this.form.submit()">
     <?php foreach ($years as $year): ?>
       <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
         <?php echo htmlspecialchars($year); ?>
-      </option>
+      </opt      ion>
     <?php endforeach; ?>
   </select>
 </form>
-
+</div>
       <!-- Second Card -->
       <div class="card mt-4">
         <div class="card-body">
