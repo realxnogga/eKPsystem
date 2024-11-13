@@ -54,6 +54,6 @@ try {
     $_SESSION['modal_message'] = 'An error occurred during submission.';
 }
 
-header('Location: LTIAdashboard.php');
+header('Location: ltia_dashboard.php');
 exit();
 ?>
