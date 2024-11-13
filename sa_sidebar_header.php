@@ -10,8 +10,9 @@ $superadmin = $stmt->fetch(PDO::FETCH_ASSOC);
 
 function isActive($path)
 {
-  $currentPage = $_SERVER['SCRIPT_NAME'];
-  return $currentPage == $path ? '!bg-blue-400 text-white' : '';
+    $currentPage = basename($_SERVER['SCRIPT_NAME']);
+    $targetPage = basename($path);
+    return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
 }
 
 function getFullUrl()
@@ -115,7 +116,7 @@ function traverseDirectory()
 
     <ul class="font-medium">
       <li>
-        <a href="<?php echo traverseDirectory(); ?>sa_dashboard.php" class="<?php echo isActive('/eKPsystem/sa_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>sa__dashboard.php" class="<?php echo isActive('sa__dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-dashboard text-2xl"></i>
 
           <span>Dashboard</span>
@@ -123,14 +124,14 @@ function traverseDirectory()
       </li>
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>sa_registeredmuni.php" class="<?php echo isActive('/eKPsystem/sa_registeredmuni.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>sa_registeredmuni.php" class="<?php echo isActive('sa_registeredmuni.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-archive text-2xl"></i>
           <span>Registered Municipalities</span>
         </a>
       </li>
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>sa_reports.php" class="<?php echo isActive('/eKPsystem/sa_reports.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>sa_reports.php" class="<?php echo isActive('sa_reports.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-report text-2xl"></i>
           <span>Reports</span>
         </a>
@@ -138,7 +139,7 @@ function traverseDirectory()
 
       <hr class="my-1">
       <li>
-        <a href="<?php echo traverseDirectory(); ?>LTIA/sa_dashboard.php" class="<?php echo isActive('/eKPsystem/LTIA/sa_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>LTIA/sa_dashboard.php" class="<?php echo isActive('LTIA/sa_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-certificate-2 text-2xl"></i>
           <span>LTIA</span>
         </a>
@@ -146,7 +147,7 @@ function traverseDirectory()
       <hr class="my-1">
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>sa_setting.php" class="<?php echo isActive('/eKPsystem/sa_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>sa_setting.php" class="<?php echo isActive('sa_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
         </a>
