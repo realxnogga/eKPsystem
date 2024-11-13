@@ -243,8 +243,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle form submission
     document.addEventListener('DOMContentLoaded', function() {
       const form = document.getElementById('formEditComplaint');
+      const submitButton = form.querySelector('[type="submit"]');
+
       form.onsubmit = function(event) {
         event.preventDefault();
+
+        submitButton.disabled = true;
+        submitButton.style.backgroundColor = "gray";
+        submitButton.style.cursor = "not-allowed";
 
         const CNum = document.querySelector('input[name="CNum"]').value;
         const ForTitle = document.querySelector('select[name="ForTitle"]').value;

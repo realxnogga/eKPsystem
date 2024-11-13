@@ -97,18 +97,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmtCaseProgress->execute()) {
 
-      $caseNum = caseNumGenerator($conn, $userID);
-
-      echo json_encode(['casenum' => $caseNum, 'status' => 'success', 'message' => 'Complaint Submitted Successfully!']);
+      echo json_encode(['status' => 'success', 'message' => 'Complaint Submitted Successfully!']);
       exit;
     } else {
-      $caseNum = caseNumGenerator($conn, $userID);
-      echo json_encode(['casenum' => $caseNum, 'status' => 'failed', 'message' => 'Failed to Insert to case_progress table. Contact Devs.']);
+     
+      echo json_encode(['status' => 'failed', 'message' => 'Failed to Insert to case_progress table. Contact Devs.']);
       exit;
     }
   } else {
-    $caseNum = caseNumGenerator($conn, $userID);
-    echo json_encode(['casenum' => $caseNum, 'status' => 'failed', 'message' => 'Failed to Submit Complaint. Contact Devs.']);
+  
+    echo json_encode(['status' => 'failed', 'message' => 'Failed to Submit Complaint. Contact Devs.']);
     exit;
   }
 }
@@ -188,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           if (result.status === 'success') {
             document.getElementById('message').classList.add('bg-green-300');
 
-            // scroll to top to see shit
+           // scroll to top to see shit
             window.scrollTo({
               top: 0,
               behavior: 'smooth'
@@ -214,16 +212,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           // empty input value
           // document.querySelector('select[name="ForTitle"]').value = '';
-          document.querySelector('input[name="CNames"]').value = '';
-          document.querySelector('input[name="RspndtNames"]').value = '';
-          document.querySelector('input[name="CDesc"]').value = '';
-          document.querySelector('input[name="Petition"]').value = '';
+          // document.querySelector('input[name="CNames"]').value = '';
+          // document.querySelector('input[name="RspndtNames"]').value = '';
+          // document.querySelector('input[name="CDesc"]').value = '';
+          // document.querySelector('input[name="Petition"]').value = '';
           // document.querySelector('input[name="Mdate"]').value = '';
-          document.querySelector('input[name="RDate"]').value = '';
+          // document.querySelector('input[name="RDate"]').value = '';
           // document.querySelector('select[name="CType"]').value = '';
-          document.querySelector('input[name="CNum"]').value = result.casenum;
-          document.querySelector('input[name="CAddress"]').value = '';
-          document.querySelector('input[name="RAddress"]').value = '';
+          //    document.querySelector('input[name="CNum"]').value = result.casenum;
+          // document.querySelector('input[name="CAddress"]').value = '';
+          // document.querySelector('input[name="RAddress"]').value = '';
 
         }
 
@@ -234,9 +232,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Handle form submission
     document.addEventListener('DOMContentLoaded', function() {
+
       const form = document.getElementById('formAddComplaint');
+      const submitButton = form.querySelector('[type="submit"]');
+
+
       form.onsubmit = function(event) {
         event.preventDefault();
+
+        submitButton.disabled = true;
+        submitButton.style.backgroundColor = "gray";
+        submitButton.style.cursor = "not-allowed";
 
         const ForTitle = document.querySelector('select[name="ForTitle"]').value;
         const CNames = document.querySelector('input[name="CNames"]').value;
@@ -252,6 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (navigator.onLine) {
           sendData(ForTitle, CNames, RspndtNames, CDesc, Petition, Mdate, RDate, CType, CNum, CAddress, RAddress);
+
         } else {
           localStorage.setItem('complaintData', JSON.stringify({
             ForTitle,
@@ -267,6 +274,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             RAddress
           }));
           alert('No internet. Your request will be executed once the internet is restored.');
+          
         }
       };
 
