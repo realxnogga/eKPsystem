@@ -1172,6 +1172,11 @@ input:checked + .toggle-bg {
   margin-right: 0.5rem;
 }
 
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -1377,12 +1382,12 @@ input:checked + .toggle-bg {
   height: 28rem;
 }
 
-.h-\[30rem\] {
-  height: 30rem;
+.h-\[34rem\] {
+  height: 34rem;
 }
 
-.h-\[5rem\] {
-  height: 5rem;
+.h-\[4rem\] {
+  height: 4rem;
 }
 
 .h-\[85\%\] {
@@ -1406,32 +1411,24 @@ input:checked + .toggle-bg {
   height: 100vh;
 }
 
-.h-\[26rem\] {
-  height: 26rem;
+.h-\[32rem\] {
+  height: 32rem;
 }
 
-.h-\[25rem\] {
-  height: 25rem;
+.h-\[30rem\] {
+  height: 30rem;
 }
 
-.max-h-\[26rem\] {
-  max-height: 26rem;
-}
-
-.max-h-full {
-  max-height: 100%;
+.h-\[31rem\] {
+  height: 31rem;
 }
 
 .max-h-\[28rem\] {
   max-height: 28rem;
 }
 
-.max-h-\[25rem\] {
-  max-height: 25rem;
-}
-
-.min-h-\[26rem\] {
-  min-height: 26rem;
+.max-h-full {
+  max-height: 100%;
 }
 
 .w-1\/2 {
@@ -1709,16 +1706,16 @@ input:checked + .toggle-bg {
   overflow: hidden;
 }
 
-.overflow-scroll {
-  overflow: scroll;
-}
-
 .overflow-y-auto {
   overflow-y: auto;
 }
 
 .overflow-x-hidden {
   overflow-x: hidden;
+}
+
+.overflow-y-scroll {
+  overflow-y: scroll;
 }
 
 .truncate {
@@ -1849,11 +1846,6 @@ input:checked + .toggle-bg {
 .border-gray-400 {
   --tw-border-opacity: 1;
   border-color: rgb(156 163 175 / var(--tw-border-opacity));
-}
-
-.border-gray-700 {
-  --tw-border-opacity: 1;
-  border-color: rgb(55 65 81 / var(--tw-border-opacity));
 }
 
 .border-gray-800 {

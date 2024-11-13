@@ -24,6 +24,8 @@ if (isset($_SESSION['user_id'])) {
   <!-- jquery link -->
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
 
+  <script src="service-worker-registration.js"></script>
+  
 </head>
 
 <style>

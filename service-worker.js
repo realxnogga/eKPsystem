@@ -1,5 +1,6 @@
 const CACHE_NAME = "app-cache-v1";
 const STATIC_CACHE_URLS = [
+  "login.php",
   "registration.php",
   "offline.html",
   "output.css",

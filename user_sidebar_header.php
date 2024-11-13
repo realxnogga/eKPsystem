@@ -15,9 +15,11 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 function isActive($path)
 {
-  $currentPage = $_SERVER['SCRIPT_NAME'];
-  return $currentPage == $path ? '!bg-blue-400 text-white' : '';
+    $currentPage = basename($_SERVER['SCRIPT_NAME']);
+    $targetPage = basename($path);
+    return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
 }
+
 
 function getFullUrl()
 {
@@ -83,14 +85,25 @@ function traverseDirectory()
         <div class="flex items-center ms-3">
 
           <!-- --------------------- -->
+
           <a href="<?php echo traverseDirectory(); ?>user_notification.php">
             <section class="relative mr-5 cursor-pointer flex items-center justify-center">
               <i class="ti ti-bell text-3xl"></i>
-              <div class="<?php echo $notifCount == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-1 -right-1 rounded-[25px] flex items-center justify-center">
+              <div id="notifUi" class="<?php echo $notifCount == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-1 -right-1 rounded-[25px] flex items-center justify-center">
                 <p class="text-white text-xs px-[.3rem]"><?php echo $notifCount; ?></p>
               </div>
             </section>
           </a>
+
+          <script src="user_notifjs.js"></script>
+          <script>
+            document.getElementById('pid').textContent = displayText();
+
+            console.log(displayText());
+          </script>
+
+          <p id="pid"></p>
+
           <!-- --------------------- -->
 
 
@@ -189,7 +202,7 @@ function traverseDirectory()
 
       <hr class="my-1">
       <li>
-        <a href="<?php echo traverseDirectory(); ?>LTIA/LTIAdashboard.php" class="<?php echo isActive('/eKPsystem/LTIA/LTIAdashboard.php') . ' ' . isActive('/eKPsystem/LTIA/form2MOVupload.php') . ' ' . isActive('/eKPsystem/LTIA/form2movview.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>LTIA/LTIAdashboard.php" class="<?php echo isActive('LTIA/LTIAdashboard.php') . ' ' . isActive('LTIA/form2MOVupload.php') . ' ' . isActive('LTIA/form2movview.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-certificate-2 text-2xl"></i>
           <span>LTIA</span>
         </a>
@@ -204,7 +217,7 @@ function traverseDirectory()
       </li>
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('/eKPsystem/user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
         </a>

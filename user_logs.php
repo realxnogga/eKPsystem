@@ -47,6 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
+  <script src="user_notifjs.js"></script>
+  
   <script>
     // Send data via POST using fetch API
     async function sendData(selectedDate) {

@@ -62,25 +62,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body class="bg-[#E8E8E7] h-screen w-screen flex flex-col gap-y-2 items-center justify-start">
 
-  <section class="w-[60rem] max-w-[90%] flex justify-between mt-2">
+  <section class="w-[60rem] max-w-[90%] flex justify-between mt-3">
     <h3 class="text-4xl font-bold text-gray-700">Notifications</h3>
     <a href="user_dashboard.php" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">back to dashboard</a>
   </section>
 
-  <section class="bg-white shadow rounded-lg h-[5rem] w-[60rem] max-w-[90%] flex items-center justify-between p-5">
+  <section class="bg-white shadow rounded-lg h-[4rem] w-[60rem] max-w-[90%] flex items-center justify-between p-3">
 
     <form action="" method="POST" class="m-0 p-0 flex gap-x-3">
       <input
         type="submit"
         value="All"
         name="submit_all"
-        class="p-1 rounded-sm border border-gray-700 hover-blue-400">
+        class="p-1 rounded-sm hover-bg-blue-400">
 
       <input
         type="submit"
         value="Unread"
         name="submit_unread"
-        class="p-1 rounded-sm border border-gray-700 hover-blue-400">
+        class="p-1 rounded-sm hover-bg-blue-400">
     </form>
 
     <form action="" method="POST" class="m-0 p-0">
@@ -88,12 +88,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         type="submit"
         value="Mark all as read"
         name="submit_readAll"
-        class="p-1 rounded-sm border border-gray-700 hover-blue-400">
+        class="p-1 rounded-sm hover-bg-blue-400">
     </form>
 
   </section>
 
-  <section class="bg-white shadow h-[30rem] w-[60rem] max-w-[90%] overflow-y-auto">
+  <section class="bg-white shadow h-[31rem] w-[60rem] max-w-[90%] overflow-y-auto">
     <?php if (!empty($notifData)) { ?>
       <?php foreach ($notifData as $row) { ?>
 
@@ -116,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 class="px-1 underline text-blue-500">
             </form>
 
-            <p>has lapse 14 days</p>
+            <p>has lapsed 14 days</p>
 
           </div>
 

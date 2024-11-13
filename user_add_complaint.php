@@ -53,7 +53,6 @@ function caseNumGenerator($conn, $userID)
 // run always
 $caseNum = caseNumGenerator($conn, $userID);
 
-$_SESSION['test'] = $caseNum;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -188,9 +187,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           if (result.status === 'success') {
             document.getElementById('message').classList.add('bg-green-300');
+
+            // scroll to top to see shit
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+
+            setTimeout(function() {
+              window.location.href = "user_complaints.php";
+            }, 1000);
+
           }
           if (result.status === 'failed') {
             document.getElementById('message').classList.add('bg-red-300');
+
+            // scroll to top to see shit
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+
+            setTimeout(function() {
+              window.location.href = "user_complaints.php";
+            }, 1000);
+
           }
 
           // empty input value
@@ -336,7 +357,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="row justify-content-between text-left">
                   <div class="form-group col-12 flex-column d-flex">
-                    <label class="form-control-label px-3">complaintData:<span class="text-danger">*</span></label>
+                    <label class="form-control-label px-3">Complaint:<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="CDesc" name="CDesc" placeholder="" onblur="validate(5)" required>
                   </div>
                 </div>

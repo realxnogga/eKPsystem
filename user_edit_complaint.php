@@ -2,6 +2,7 @@
 session_start();
 include_once("connection.php");
 
+
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
@@ -135,14 +136,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     echo json_encode(['status' => 'success', 'message' => 'Complaint Updated Successfully!']);
 
-
     // Fetch the updated complaint data from the database
     $query = "SELECT * FROM complaints WHERE id = :complaintId";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':complaintId', $complaintId);
     $stmt->execute();
     $complaint = $stmt->fetch(PDO::FETCH_ASSOC);
-
     exit;
   } else {
     echo json_encode(['status' => 'failed', 'message' => 'Failed to Update Complaint. Check Code.']);
@@ -169,6 +168,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </style>
 
   <!-- ############################################################################### -->
+
+  <script src="user_notifjs.js"></script>
 
   <script>
     async function sendData(CNum, ForTitle, CNames, RspndtNames, CDesc, Petition, Mdate, RDate, CAddress, RAddress, Pangkat, CType, CStatus, CMethod) {
@@ -206,11 +207,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
           if (result.status === 'success') {
             document.getElementById('message').classList.add('bg-green-300');
+
+            // scroll to top to see shit
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+
+            setTimeout(function() {
+              window.location.href = "user_complaints.php";
+            }, 1000);
+
           }
           if (result.status === 'failed') {
             document.getElementById('message').classList.add('bg-red-300');
-          }
 
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+
+            setTimeout(function() {
+              window.location.href = "user_complaints.php";
+            }, 1000);
+
+          }
 
         }
 
@@ -313,14 +334,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <b>
 
 
-
-
             <p id="message" class="hidden p-3 rounded-md text-white"></p>
 
             <form id="formEditComplaint">
               <div>
                 <label class="form-control-label px-3">Case No.<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control" id="CNum" name="CNum" placeholder="Case No. - Blotter No. - MMYY" onblur="validate(1)" value="<?php echo $complaint['CNum']; ?> " required>
+                <input type="text" class="form-control" id="CNum" name="CNum" placeholder="Case No. - Blotter No. - MMYY" onblur="validate(1)" value="<?php echo $complaint['CNum']; ?>" required>
               </div>
 
               <div>
@@ -342,7 +361,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </div>
 
               <div>
-                <label class="form-control-label px-3">Complain:<span class="text-danger"> *</span></label>
+                <label class="form-control-label px-3">Complaint:<span class="text-danger"> *</span></label>
                 <input type="text" class="form-control" id="CDesc" name="CDesc" placeholder="" onblur="validate(5)" required value="<?php echo $complaint['CDesc']; ?>">
               </div>
 
