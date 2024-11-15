@@ -109,6 +109,9 @@ try {
     text-overflow: ellipsis; /* Add ellipsis if text is too long */
     white-space: nowrap;    /* Prevent wrapping */
 }
+#mov_year {
+    display: none;
+}
 
 </style>
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
