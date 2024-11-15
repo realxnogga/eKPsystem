@@ -18,14 +18,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if (isset($_POST['submit_read'])) {
     $notif_id = $_POST['notif_id'];
-    updateSeenStatus($conn, $userID, "seen = 1", "id = $notif_id");
+    updateNotifStatus($conn, $userID, "seen = 1", "id = $notif_id");
     $notifData = getAllNotificationData($conn, $userID);
 
     header("location: user_edit_complaint.php?id=$notif_id&page=1");
   }
 
   if (isset($_POST['submit_readAll'])) {
-    updateSeenStatus($conn, $userID, "seen = 1");
+    updateNotifStatus($conn, $userID, "seen = 1");
     $notifData = getAllNotificationData($conn, $userID);
   }
 
@@ -35,6 +35,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if (isset($_POST['submit_all'])) {
     $notifData = getAllNotificationData($conn, $userID);
+  }
+
+  if (isset($_POST['submit_remove_notif'])) {
+
+    $notif_id = $_POST['notif_id'];
+    updateNotifStatus($conn, $userID, "removenotif = 1", "id = $notif_id");
+    $notifData = getAllNotificationData($conn, $userID);
+  }
+
+
+  if (isset($_POST['submit_filter'])) {
+    $filter = $_POST['filter_period'];
+    $extraCondition = "";
+
+    switch ($filter) {
+        case 'today':
+            // Notifications where Mdate + 14 days is today
+            $extraCondition = "DATE(DATE_ADD(Mdate, INTERVAL 14 DAY)) = CURDATE()";
+            break;
+        case 'week':
+            // Notifications where Mdate + 14 days is within the current week
+            $extraCondition = "
+                YEAR(DATE_ADD(Mdate, INTERVAL 14 DAY)) = YEAR(CURDATE()) 
+                AND WEEK(DATE_ADD(Mdate, INTERVAL 14 DAY)) = WEEK(CURDATE())";
+            break;
+        case 'month':
+            // Notifications where Mdate + 14 days is within the current month
+            $extraCondition = "
+                YEAR(DATE_ADD(Mdate, INTERVAL 14 DAY)) = YEAR(CURDATE()) 
+                AND MONTH(DATE_ADD(Mdate, INTERVAL 14 DAY)) = MONTH(CURDATE())";
+            break;
+    }
+
+    $notifData = getAllNotificationData($conn, $userID, $extraCondition);
+  }
+
+}
+
+// -------------------------------------
+
+function get_time_ago($time)
+{
+  $time_difference = time() - $time;
+
+  if ($time_difference < 1) {
+    return 'less than 1 second ago';
+  }
+  $condition = array(
+    12 * 30 * 24 * 60 * 60 =>  'year',
+    30 * 24 * 60 * 60       =>  'month',
+    24 * 60 * 60            =>  'day',
+    60 * 60                 =>  'hour',
+    60                      =>  'minute',
+    1                       =>  'second'
+  );
+
+  foreach ($condition as $secs => $str) {
+    $d = $time_difference / $secs;
+
+    if ($d >= 1) {
+      $t = round($d);
+      return $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
+    }
   }
 }
 
@@ -69,27 +132,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <section class="bg-white shadow rounded-lg h-[4rem] w-[60rem] max-w-[90%] flex items-center justify-between p-3">
 
-    <form action="" method="POST" class="m-0 p-0 flex gap-x-3">
-      <input
-        type="submit"
-        value="All"
-        name="submit_all"
-        class="p-1 rounded-sm hover-bg-blue-400">
+    <section class="flex gap-x-2">
+      <form action="" method="POST" class="m-0 p-0">
+        <input
+          type="submit"
+          value="All"
+          name="submit_all"
+          class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+      </form>
 
-      <input
-        type="submit"
-        value="Unread"
-        name="submit_unread"
-        class="p-1 rounded-sm hover-bg-blue-400">
-    </form>
+      <form action="" method="POST" class="m-0 p-0">
+        <input
+          type="submit"
+          value="Unread"
+          name="submit_unread"
+          class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+      </form>
 
+      <form action="" method="POST" class="m-0 p-0">
+        <input
+          type="submit"
+          value="Mark all as read"
+          name="submit_readAll"
+          class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+      </form>
+    </section>
+
+
+    <!-- ----------------------------- -->
     <form action="" method="POST" class="m-0 p-0">
-      <input
-        type="submit"
-        value="Mark all as read"
-        name="submit_readAll"
-        class="p-1 rounded-sm hover-bg-blue-400">
+      <select name="filter_period" class="p-1 rounded-sm bg-gray-100 border border-gray-300">
+        <option value="today">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+      </select>
+      <button type="submit" name="submit_filter" class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">Filter</button>
     </form>
+  </section>
+  <!-- ----------------------------- -->
+
 
   </section>
 
@@ -97,34 +178,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php if (!empty($notifData)) { ?>
       <?php foreach ($notifData as $row) { ?>
 
-        <div class="relative <?php echo $row['seen'] === 1 ? 'bg-white' : 'bg-blue-100' ?> hover:bg-gray-100 h-fit w-full border p-5 flex items-center justify-between">
+        <div class="relative <?php echo $row['seen'] === 1 ? 'bg-white' : 'bg-blue-100' ?> hover:bg-gray-100 h-fit w-full border p-3 pl-4 flex items-center justify-between">
 
 
-          <div class="flex items-center text-wrap">
-            <p>The case </p>
+          <div class="flex flex-col gap-y-1 items-start cursor-default">
+
+            <div class="flex">
+              <p clas>The case </p>
+              <form action="" method="POST" class="m-0 p-0">
+                <input
+                  type="hidden"
+                  name="notif_id"
+                  value="<?php echo $row['id']; ?>">
+                <input
+                  id="textToCopy<?php echo $row['id']; ?>"
+                  type="submit"
+                  value="<?php echo htmlspecialchars($row['CNum']); ?>"
+                  name="submit_read"
+                  class="px-1 underline text-blue-500 cursor-pointer">
+              </form>
+              <p>has lapsed 14 days</p>
+            </div>
+
+            <p class="text-sm text-gray-500">
+              <?php
+              $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
+
+              echo get_time_ago($adjustedDate);
+              ?>
+            </p>
+
+          </div>
+
+          <!-- --------------------------- -->
+          <section class="flex gap-x-4 items-center">
+
+            <i class="ti ti-copy text-2xl cursor-pointer" onclick="copyText(<?php echo $row['id']; ?>)"></i>
 
             <form action="" method="POST" class="m-0 p-0">
               <input
                 type="hidden"
                 name="notif_id"
                 value="<?php echo $row['id']; ?>">
-              <input
-                id="textToCopy<?php echo $row['id']; ?>"
-                type="submit"
-                value="<?php echo htmlspecialchars($row['CNum']); ?>"
-                name="submit_read"
-                class="px-1 underline text-blue-500">
+
+              <button type="submit" id="notiftoremove<?php echo $row['id']; ?>" name="submit_remove_notif">
+                <i class="ti ti-trash-x text-2xl text-red-500 cursor-pointer"></i>
+              </button>
+
             </form>
 
-            <p>has lapsed 14 days</p>
-
-          </div>
-
-          <section class="flex gap-x-4 items-center">
-
-            <i class="ti ti-copy text-2xl" onclick="copyText(<?php echo $row['id']; ?>)"></i>
-
           </section>
+          <!-- ----------------------------- -->
+
+
         </div>
 
       <?php } ?>

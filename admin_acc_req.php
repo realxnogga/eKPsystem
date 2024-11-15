@@ -39,6 +39,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
   
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
+
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -113,7 +114,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
               echo '</tbody>';
               echo '</table>';
             } else {
-              echo '<p>There are no account requests as of the moment.</p>';
+              echo '<p class="text-center text-3xl text-gray-500 font-bold pt-[3rem] text-wrap">There are no account requests as of the moment.</p>';
             }
 
             echo '</div>';

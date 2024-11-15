@@ -15,6 +15,7 @@ function getAllNotificationData($conn, $userID, $extraCondition = "")
           AND CStatus = 'Settled' 
           AND ((CMethod = 'Mediation' AND NOW() > DATE_ADD(Mdate, INTERVAL 14 DAY)))
           AND isArchived = 0
+          AND removenotif = 0
           AND YEAR(Mdate) = YEAR(NOW())";
 
     $query .= !empty($extraCondition) ? " AND $extraCondition" : "";
@@ -38,7 +39,7 @@ $notifData = getAllNotificationData($conn, $userID);
 
 
 // update function
-function updateSeenStatus($conn, $userID, $setFields = "", $extraCondition = "")
+function updateNotifStatus($conn, $userID, $setFields = "", $extraCondition = "")
 {
     $query = "UPDATE complaints ";
 

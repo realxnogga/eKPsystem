@@ -85,24 +85,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // only update seen column condition inside if is met
   $seen = "";
-  if ($cStatus != 'Settled' && $cMethod != 'Mediation') {
-    $seen = " seen = 0,";
-  }
+  $removenotif = "";
+  // if ($cStatus != 'Settled' && $cMethod != 'Mediation') {
+  //   $seen = " seen = 0,";
+  // }
 
   if ($cStatus == 'Settled' && $cMethod == 'Mediation') {
     if (date('Y-m-d', strtotime($madeDate . ' + 14 days')) < date('Y-m-d')) {
       $seen = " seen = 0,";
+      $removenotif = " removenotif = 0,";
     }
   }
-
-
-
 
   // Update the complaint in the 'complaints' table using an UPDATE query
   $query = "UPDATE complaints SET CNum = :caseNum, ForTitle = :forTitle, CNames = :complainants, RspndtNames = :respondents, CDesc = :complaintDesc, Petition = :petition, Mdate = :madeDate, RDate = :receivedDate, Pangkat = :pangkat, CType = :caseType, CStatus = :cStatus, CMethod = :cMethod, CAddress = :complainantAddress, RAddress = :respondentAddress,";
 
   // Only add the `seen` column update if needed
   $query .= !empty($seen) ? $seen : "";
+  $query .= !empty($removenotif) ? $removenotif : "";
 
   // Remove trailing comma if there is no `seen` update
   $query = rtrim($query, ",");
