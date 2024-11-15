@@ -721,7 +721,7 @@ $(document).ready(function () {
               </tr>
               <tr>
                 <td><details>
-                <summary><b>2. To the DILG (Monthly): Submission of required report to the DILG</b></summary>
+                <summary><b>2. To the DILG (Quarterly)                </b></summary>
                 <p><br>
                   2 points - Submitted/presented the required report to the DILG within the prescribed period<br>
                   1 point - Submitted/presented a partial report to the DILG within the prescribed period<br>
@@ -849,7 +849,7 @@ $(document).ready(function () {
               <tr>
                 <td>
                 <details>
-              <summary><b>At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
+              <summary><b>C. At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
               <p><br>
                 <b>8 points</b> - 80%-100% compliance with the terms of settlement or award.<br>
                 <b>6 points</b> - 70%-79% compliance with the terms of settlement or award.<br>
@@ -1084,11 +1084,11 @@ $(document).ready(function () {
               </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
-              <td>2</td>
+              <td>1</td>
               <td class="file-column" data-type="threepeoplesorg">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="threepeoplesorg_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td><input type="number" value="" name="threepeoplesorg_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="threepeoplesorg_remark" placeholder="Remarks"></textarea></td>
               </tr>
             </tbody>

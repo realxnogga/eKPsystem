@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ];
 
     if (!$mov_id || !$barangay_id) {
-        header("Location: adminform2evaluate.php?status=error&message=Please Select Barangay.");
+        header("Location: adminform2evaluate.php?status=error&message=Please Select Barangay with MOV's.");
         exit;
     }
 
