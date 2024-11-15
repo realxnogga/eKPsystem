@@ -28,9 +28,9 @@ function getAllNotificationData($conn, $userID, $extraCondition = "")
     $temp = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // to make unread notifications in the start
-    usort($temp, function($a, $b){
-        return $a['seen'] <=> $b['seen'];
-    });
+    // usort($temp, function($a, $b){
+    //     return $a['seen'] <=> $b['seen'];
+    // });
 
     return $temp;
 

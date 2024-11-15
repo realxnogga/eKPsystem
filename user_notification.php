@@ -5,6 +5,7 @@ include 'connection.php';
 include 'include/custom-scrollbar.php';
 
 
+
 $userID = $_SESSION['user_id'];
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
@@ -50,56 +51,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $extraCondition = "";
 
     switch ($filter) {
-        case 'today':
-            // Notifications where Mdate + 14 days is today
-            $extraCondition = "DATE(DATE_ADD(Mdate, INTERVAL 14 DAY)) = CURDATE()";
-            break;
-        case 'week':
-            // Notifications where Mdate + 14 days is within the current week
-            $extraCondition = "
+      case 'today':
+        // Notifications where Mdate + 14 days is today
+        $extraCondition = "DATE(DATE_ADD(Mdate, INTERVAL 14 DAY)) = CURDATE()";
+        break;
+      case 'week':
+        // Notifications where Mdate + 14 days is within the current week
+        $extraCondition = "
                 YEAR(DATE_ADD(Mdate, INTERVAL 14 DAY)) = YEAR(CURDATE()) 
                 AND WEEK(DATE_ADD(Mdate, INTERVAL 14 DAY)) = WEEK(CURDATE())";
-            break;
-        case 'month':
-            // Notifications where Mdate + 14 days is within the current month
-            $extraCondition = "
+        break;
+      case 'month':
+        // Notifications where Mdate + 14 days is within the current month
+        $extraCondition = "
                 YEAR(DATE_ADD(Mdate, INTERVAL 14 DAY)) = YEAR(CURDATE()) 
                 AND MONTH(DATE_ADD(Mdate, INTERVAL 14 DAY)) = MONTH(CURDATE())";
-            break;
+        break;
     }
 
     $notifData = getAllNotificationData($conn, $userID, $extraCondition);
   }
-
 }
 
 // -------------------------------------
 
-function get_time_ago($time)
-{
-  $time_difference = time() - $time;
 
-  if ($time_difference < 1) {
-    return 'less than 1 second ago';
-  }
-  $condition = array(
-    12 * 30 * 24 * 60 * 60 =>  'year',
-    30 * 24 * 60 * 60       =>  'month',
-    24 * 60 * 60            =>  'day',
-    60 * 60                 =>  'hour',
-    60                      =>  'minute',
-    1                       =>  'second'
-  );
+// function get_time_ago( $time )
+// {
+//     $time_difference = time() - $time;
 
-  foreach ($condition as $secs => $str) {
-    $d = $time_difference / $secs;
+//     if( $time_difference < 1 ) { return 'less than 1 second ago'; }
+//     $condition = array( 12 * 30 * 24 * 60 * 60 =>  'year',
+//                 30 * 24 * 60 * 60       =>  'month',
+//                 24 * 60 * 60            =>  'day',
+//                 60 * 60                 =>  'hour',
+//                 60                      =>  'minute',
+//                 1                       =>  'second'
+//     );
 
-    if ($d >= 1) {
-      $t = round($d);
-      return $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
-    }
-  }
-}
+//     foreach( $condition as $secs => $str )
+//     {
+//         $d = $time_difference / $secs;
+
+//         if( $d >= 1 )
+//         {
+//             $t = round( $d );
+//             return 'about ' . $t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago';
+//         }
+//     }
+// }
 
 ?>
 
@@ -203,8 +203,14 @@ function get_time_ago($time)
             <p class="text-sm text-gray-500">
               <?php
               $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
+              echo date('M d, h:i A', $adjustedDate);
+              ?>
+            </p>
 
-              echo get_time_ago($adjustedDate);
+            <p>
+              <?php
+              //  $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
+              //  echo get_time_ago($adjustedDate);         
               ?>
             </p>
 

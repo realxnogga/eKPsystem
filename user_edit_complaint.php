@@ -86,16 +86,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // only update seen column condition inside if is met
   $seen = "";
   $removenotif = "";
-  // if ($cStatus != 'Settled' && $cMethod != 'Mediation') {
-  //   $seen = " seen = 0,";
-  // }
+
 
   if ($cStatus == 'Settled' && $cMethod == 'Mediation') {
-    if (date('Y-m-d', strtotime($madeDate . ' + 14 days')) < date('Y-m-d')) {
-      $seen = " seen = 0,";
-      $removenotif = " removenotif = 0,";
+    
+    $currentDateTime = date('Y-m-d H:i:s');
+
+    $madeDatePlus14 = date('Y-m-d H:i:s', strtotime($madeDate . ' + 14 days'));
+
+    // Compare both date and time
+    if ($currentDateTime > $madeDatePlus14) {
+        $seen = " seen = 0,";
+        $removenotif = " removenotif = 0,";
     }
-  }
+}
+
 
   // Update the complaint in the 'complaints' table using an UPDATE query
   $query = "UPDATE complaints SET CNum = :caseNum, ForTitle = :forTitle, CNames = :complainants, RspndtNames = :respondents, CDesc = :complaintDesc, Petition = :petition, Mdate = :madeDate, RDate = :receivedDate, Pangkat = :pangkat, CType = :caseType, CStatus = :cStatus, CMethod = :cMethod, CAddress = :complainantAddress, RAddress = :respondentAddress,";
@@ -387,10 +392,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
               <div class="row justify-content-between text-left">
+
                 <div class="form-group col-sm-6 flex-column d-flex">
                   <label class="form-control-label px-3">Made:<span class="text-danger"> *</span></label>
                   <input type="datetime-local" class="form-control" id="Mdate" name="Mdate" onblur="validate(7)" value="<?php echo date('Y-m-d\TH:i'); ?>">
                 </div>
+
                 <div class="form-group col-sm-6 flex-column d-flex">
                   <label class="form-control-label px-3">Received:</label>
                   <input type="date" class="form-control" id="RDate" name="RDate" onblur="validate(8)" value="<?php echo $complaint['RDate']; ?>">
