@@ -4,6 +4,7 @@ session_start();
 include 'connection.php';
 include 'include/custom-scrollbar.php';
 
+include 'user_set_timezone.php';
 
 
 $userID = $_SESSION['user_id'];
@@ -12,6 +13,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
 }
+
+date_default_timezone_set('Asia/Manila');
 
 include 'user_notification_handler.php';
 
@@ -205,7 +208,7 @@ function get_time_ago($time)
             <button data-tooltip-placement="right" data-tooltip-target="tooltip-light_<?php echo $row['id']; ?>" data-tooltip-style="light" type="button" class="cursor-default">
               <p class="text-sm text-gray-500">
                 <?php
-                $adjustedDate = strtotime($row['Mdate'] . ' +14 days -7 hours');
+                $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
                 echo get_time_ago($adjustedDate);
                 ?>
               </p>

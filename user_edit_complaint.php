@@ -2,6 +2,7 @@
 session_start();
 include_once("connection.php");
 
+include 'user_set_timezone.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
@@ -90,15 +91,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if ($cStatus == 'Settled' && $cMethod == 'Mediation') {
     
-    $currentDateTime = date('Y-m-d H:i:s');
+    $seen = " seen = 0,";
+    $removenotif = " removenotif = 0,";
 
-    $madeDatePlus14 = date('Y-m-d H:i:s', strtotime($madeDate . ' + 14 days -7 hours'));
+    // $currentDateTime = date('Y-m-d H:i:s');
 
-    // Compare both date and time
-    if ($currentDateTime > $madeDatePlus14) {
-        $seen = " seen = 0,";
-        $removenotif = " removenotif = 0,";
-    }
+    // $madeDatePlus14 = date('Y-m-d H:i:s', strtotime($madeDate . ' + 14 days'));
+
+    // if ($currentDateTime > $madeDatePlus14) {
+    //     $seen = " seen = 0,";
+    //     $removenotif = " removenotif = 0,";
+    // }
 }
 
 

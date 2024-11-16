@@ -33,7 +33,6 @@ function getAllNotificationData($conn, $userID, $extraCondition = "")
     // });
 
     return $temp;
-
 }
 $notifData = getAllNotificationData($conn, $userID);
 
@@ -59,12 +58,31 @@ function updateNotifStatus($conn, $userID, $setFields = "", $extraCondition = ""
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // count notification function
 function countNotification($arg)
 {
     $flag = 0;
     foreach ($arg as $val) {
-       $flag = $val['seen'] == 0 ? ++$flag : $flag;
+        $flag = $val['seen'] == 0 ? ++$flag : $flag;
     }
     return $flag;
 }
