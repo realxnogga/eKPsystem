@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     $currentDateTime = date('Y-m-d H:i:s');
 
-    $madeDatePlus14 = date('Y-m-d H:i:s', strtotime($madeDate . ' + 14 days'));
+    $madeDatePlus14 = date('Y-m-d H:i:s', strtotime($madeDate . ' + 14 days -7 hours'));
 
     // Compare both date and time
     if ($currentDateTime > $madeDatePlus14) {

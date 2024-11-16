@@ -76,30 +76,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // -------------------------------------
 
 
-// function get_time_ago( $time )
-// {
-//     $time_difference = time() - $time;
+function get_time_ago($time)
+{
+  $time_difference = time() - $time;
 
-//     if( $time_difference < 1 ) { return 'less than 1 second ago'; }
-//     $condition = array( 12 * 30 * 24 * 60 * 60 =>  'year',
-//                 30 * 24 * 60 * 60       =>  'month',
-//                 24 * 60 * 60            =>  'day',
-//                 60 * 60                 =>  'hour',
-//                 60                      =>  'minute',
-//                 1                       =>  'second'
-//     );
+  if ($time_difference < 1) {
+    return 'less than 1 second ago';
+  }
+  $condition = array(
+    12 * 30 * 24 * 60 * 60 =>  'year',
+    30 * 24 * 60 * 60       =>  'month',
+    24 * 60 * 60            =>  'day',
+    60 * 60                 =>  'hour',
+    60                      =>  'minute',
+    1                       =>  'second'
+  );
 
-//     foreach( $condition as $secs => $str )
-//     {
-//         $d = $time_difference / $secs;
+  foreach ($condition as $secs => $str) {
+    $d = $time_difference / $secs;
 
-//         if( $d >= 1 )
-//         {
-//             $t = round( $d );
-//             return 'about ' . $t . ' ' . $str . ( $t > 1 ? 's' : '' ) . ' ago';
-//         }
-//     }
-// }
+    if ($d >= 1) {
+      $t = round($d);
+      return $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
+    }
+  }
+}
 
 ?>
 
@@ -113,7 +114,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <script src="node_modules/flowbite/dist/flowbite.min.css"></script>
 
   <!-- tailwind link -->
   <link href="output.css" rel="stylesheet">
@@ -200,19 +202,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <p>has lapsed 14 days</p>
             </div>
 
-            <p class="text-sm text-gray-500">
-              <?php
-              $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
-              echo date('M d, h:i A', $adjustedDate);
-              ?>
-            </p>
+            <button data-tooltip-placement="right" data-tooltip-target="tooltip-light_<?php echo $row['id']; ?>" data-tooltip-style="light" type="button" class="cursor-default">
+              <p class="text-sm text-gray-500">
+                <?php
+                $adjustedDate = strtotime($row['Mdate'] . ' +14 days -7 hours');
+                echo get_time_ago($adjustedDate);
+                ?>
+              </p>
+            </button>
 
-            <p>
-              <?php
-              //  $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
-              //  echo get_time_ago($adjustedDate);         
-              ?>
-            </p>
+            <div id="tooltip-light_<?php echo $row['id']; ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-1 bg-white border border-gray-200 rounded-lg shadow-xl opacity-0 tooltip">
+              <p class="text-sm text-gray-500">
+                <?php
+                $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
+                echo date('M d, h:i A', $adjustedDate);
+                ?>
+              </p>
+              <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+
 
           </div>
 
