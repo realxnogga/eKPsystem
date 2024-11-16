@@ -321,11 +321,11 @@ $totalCount = $totalCountRow['total'];
 
                 // Check if the complaint is settled, pending, or unsettled
                 if ($isSettled) {
-                  $borderColor = 'border-2 border-green-500'; // Light green for settled cases
+                  $borderColor = 'border-2 border-green-400'; // Light green for settled cases
                 } elseif ($elapsedDays >= 10 && $elapsedDays <= 13) {
                   $borderColor = 'border-2 border-yellow-300'; // Light yellow for cases between 10 and 13 days
                 } elseif ($elapsedDays >= 14 && $elapsedDays <= 30 && !$isSettled) {
-                  $borderColor = 'border-2 border-red-500'; // Light red for cases between 14 and 30 days that are not settled
+                  $borderColor = 'border-2 border-red-400'; // Light red for cases between 14 and 30 days that are not settled
                 } else {
                   // Default case for 1-9 days or cases over 30 days, no color
                   $borderColor = 'border-1';

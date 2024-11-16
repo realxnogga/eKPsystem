@@ -53,7 +53,7 @@ try {
 }
 
 function getAdjectivalRating($total) {
-  if ($total === 100) {
+  if ($total >= 100) {
       return "Outstanding";
   } elseif ($total >= 90 && $total <= 99) {
       return "Very Satisfactory";

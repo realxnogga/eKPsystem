@@ -109,6 +109,9 @@ try {
     text-overflow: ellipsis; /* Add ellipsis if text is too long */
     white-space: nowrap;    /* Prevent wrapping */
 }
+#mov_year {
+    display: none;
+}
 
 </style>
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
@@ -718,7 +721,7 @@ $(document).ready(function () {
               </tr>
               <tr>
                 <td><details>
-                <summary><b>2. To the DILG (Monthly): Submission of required report to the DILG</b></summary>
+                <summary><b>2. To the DILG (Quarterly)                </b></summary>
                 <p><br>
                   2 points - Submitted/presented the required report to the DILG within the prescribed period<br>
                   1 point - Submitted/presented a partial report to the DILG within the prescribed period<br>
@@ -846,7 +849,7 @@ $(document).ready(function () {
               <tr>
                 <td>
                 <details>
-              <summary><b>At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
+              <summary><b>C. At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
               <p><br>
                 <b>8 points</b> - 80%-100% compliance with the terms of settlement or award.<br>
                 <b>6 points</b> - 70%-79% compliance with the terms of settlement or award.<br>
@@ -1081,11 +1084,11 @@ $(document).ready(function () {
               </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
-              <td>2</td>
+              <td>1</td>
               <td class="file-column" data-type="threepeoplesorg">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="threepeoplesorg_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td><input type="number" value="" name="threepeoplesorg_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="threepeoplesorg_remark" placeholder="Remarks"></textarea></td>
               </tr>
             </tbody>
@@ -1102,7 +1105,7 @@ $(document).ready(function () {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Notification</h5>
+                <h5 class="modal-title">    </h5>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="large-modal">
             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
