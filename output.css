@@ -1841,19 +1841,19 @@ input:checked + .toggle-bg {
   border-color: rgb(31 41 55 / var(--tw-border-opacity));
 }
 
-.border-green-500 {
+.border-green-400 {
   --tw-border-opacity: 1;
-  border-color: rgb(14 159 110 / var(--tw-border-opacity));
+  border-color: rgb(49 196 141 / var(--tw-border-opacity));
 }
 
-.border-red-500 {
+.border-red-400 {
   --tw-border-opacity: 1;
-  border-color: rgb(240 82 82 / var(--tw-border-opacity));
+  border-color: rgb(249 128 128 / var(--tw-border-opacity));
 }
 
-.border-yellow-500 {
+.border-yellow-300 {
   --tw-border-opacity: 1;
-  border-color: rgb(194 120 3 / var(--tw-border-opacity));
+  border-color: rgb(250 202 21 / var(--tw-border-opacity));
 }
 
 .\!bg-blue-400 {

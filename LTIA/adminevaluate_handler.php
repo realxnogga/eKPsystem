@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ];
 
     if (!$mov_id || !$barangay_id) {
-        header("Location: adminform2evaluate.php?status=error&message=Please Select Barangay with MOV's.");
+        header("Location: adminform2evaluate.php?status=error&message=Missing required values.");
         exit;
     }
 
@@ -90,10 +90,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
 
         $conn->commit();
-        header("Location: adminform2evaluate.php?status=success&message=Saved");
+        header("Location: adminform2evaluate.php?status=success&message=Data inserted or updated successfully");
     } catch (Exception $e) {
         $conn->rollBack();
-        $error_message = urlencode("Failed to saved: " . $e->getMessage());
+        $error_message = urlencode("Failed to insert or update data: " . $e->getMessage());
         header("Location: adminform2evaluate.php?status=error&message=$error_message");
     }
     exit;

@@ -17,20 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Fetch MOV files, including the relevant PDF fields
             $query = "
-            SELECT id, user_id, barangay_id, IA_1a_pdf_File, IA_1b_pdf_File, IA_2a_pdf_File, IA_2b_pdf_File, 
-                IA_2c_pdf_File, IA_2d_pdf_File, IA_2e_pdf_File, IB_1forcities_pdf_File, IB_1aformuni_pdf_File, 
-                IB_1bformuni_pdf_File, IB_2_pdf_File, IB_3_pdf_File, IB_4_pdf_File, IC_1_pdf_File, 
-                IC_2_pdf_File, ID_1_pdf_File, ID_2_pdf_File, IIA_pdf_File, IIB_1_pdf_File, 
-                IIB_2_pdf_File, IIC_pdf_File, IIIA_pdf_File, IIIB_pdf_File, IIIC_1forcities_pdf_File, 
-                IIIC_1forcities2_pdf_File, IIIC_1forcities3_pdf_File, IIIC_2formuni1_pdf_File, 
-                IIIC_2formuni2_pdf_File, IIIC_2formuni3_pdf_File, IIID_pdf_File, IV_forcities_pdf_File, 
-                IV_muni_pdf_File, V_1_pdf_File, threepeoplesorg_pdf_File, year, id AS mov_id
-            FROM mov
-            WHERE barangay_id = :barangay_id AND year = YEAR(CURDATE())
-            ORDER BY year DESC
-        ";
-
-
+                SELECT IA_1a_pdf_File, IA_1b_pdf_File, IA_2a_pdf_File, IA_2b_pdf_File, 
+                       IA_2c_pdf_File, IA_2d_pdf_File, IA_2e_pdf_File, IB_1forcities_pdf_File, 
+                       IB_1aformuni_pdf_File, IB_1bformuni_pdf_File, IB_2_pdf_File, IB_3_pdf_File, 
+                       IB_4_pdf_File, IC_1_pdf_File, IC_2_pdf_File, ID_1_pdf_File, ID_2_pdf_File, 
+                       IIA_pdf_File, IIB_1_pdf_File, IIB_2_pdf_File, IIC_pdf_File, IIIA_pdf_File, 
+                       IIIB_pdf_File, IIIC_1forcities_pdf_File, IIIC_1forcities2_pdf_File, 
+                       IIIC_1forcities3_pdf_File, IIIC_2formuni1_pdf_File, IIIC_2formuni2_pdf_File, 
+                       IIIC_2formuni3_pdf_File, IIID_pdf_File, IV_forcities_pdf_File, IV_muni_pdf_File, 
+                       V_1_pdf_File, threepeoplesorg_pdf_File, id AS mov_id 
+                FROM mov 
+                WHERE barangay_id = :barangay_id
+            ";
             $stmt = $conn->prepare($query);
             $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
             $stmt->execute();
@@ -39,19 +37,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($mov_row) {
                 // Fetch movrate data
                 $rate_query = "
-                SELECT `id`, `barangay`, `mov_id`, `IA_1a_pdf_rate`, `IA_1b_pdf_rate`, `IA_2a_pdf_rate`, 
-                    `IA_2b_pdf_rate`, `IA_2c_pdf_rate`, `IA_2d_pdf_rate`, `IA_2e_pdf_rate`, 
-                    `IB_1forcities_pdf_rate`, `IB_1aformuni_pdf_rate`, `IB_1bformuni_pdf_rate`, 
-                    `IB_2_pdf_rate`, `IB_3_pdf_rate`, `IB_4_pdf_rate`, `IC_1_pdf_rate`, `IC_2_pdf_rate`, 
-                    `ID_1_pdf_rate`, `ID_2_pdf_rate`, `IIA_pdf_rate`, `IIB_1_pdf_rate`, `IIB_2_pdf_rate`, 
-                    `IIC_pdf_rate`, `IIIA_pdf_rate`, `IIIB_pdf_rate`, `IIIC_1forcities_pdf_rate`, 
-                    `IIIC_1forcities2_pdf_rate`, `IIIC_1forcities3_pdf_rate`, `IIIC_2formuni1_pdf_rate`, 
-                    `IIIC_2formuni2_pdf_rate`, `IIIC_2formuni3_pdf_rate`, `IIID_pdf_rate`, 
-                    `IV_forcities_pdf_rate`, `IV_muni_pdf_rate`, `V_1_pdf_rate`, `threepeoplesorg_rate`, `status_rate`
-                FROM movrate
-                WHERE mov_id = :mov_id AND barangay = :barangay_id
-            ";
-
+                    SELECT `id`, `barangay`, `mov_id`, `IA_1a_pdf_rate`, `IA_1b_pdf_rate`, `IA_2a_pdf_rate`, 
+                           `IA_2b_pdf_rate`, `IA_2c_pdf_rate`, `IA_2d_pdf_rate`, `IA_2e_pdf_rate`, 
+                           `IB_1forcities_pdf_rate`, `IB_1aformuni_pdf_rate`, `IB_1bformuni_pdf_rate`, 
+                           `IB_2_pdf_rate`, `IB_3_pdf_rate`, `IB_4_pdf_rate`, `IC_1_pdf_rate`, `IC_2_pdf_rate`, 
+                           `ID_1_pdf_rate`, `ID_2_pdf_rate`, `IIA_pdf_rate`, `IIB_1_pdf_rate`, `IIB_2_pdf_rate`, 
+                           `IIC_pdf_rate`, `IIIA_pdf_rate`, `IIIB_pdf_rate`, `IIIC_1forcities_pdf_rate`, 
+                           `IIIC_1forcities2_pdf_rate`, `IIIC_1forcities3_pdf_rate`, `IIIC_2formuni1_pdf_rate`, 
+                           `IIIC_2formuni2_pdf_rate`, `IIIC_2formuni3_pdf_rate`, `IIID_pdf_rate`, 
+                           `IV_forcities_pdf_rate`, `IV_muni_pdf_rate`, `V_1_pdf_rate`, `threepeoplesorg_rate`
+                    FROM movrate
+                    WHERE mov_id = :mov_id AND barangay = :barangay_id
+                ";
                 $stmt = $conn->prepare($rate_query);
                 $stmt->bindParam(':mov_id', $mov_row['mov_id'], PDO::PARAM_INT);
                 $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
@@ -83,7 +80,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo json_encode([
                     'mov_id' => $mov_row['mov_id'],
                     'barangay_id' => $barangay_id,
-                    'year' => $mov_row['year'],
                     'IA_1a_pdf_File' => $mov_row['IA_1a_pdf_File'],
                     'IA_1b_pdf_File' => $mov_row['IA_1b_pdf_File'],
                     'IA_2a_pdf_File' => $mov_row['IA_2a_pdf_File'],

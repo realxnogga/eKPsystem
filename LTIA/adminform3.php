@@ -109,15 +109,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } else {
       $message = "Error saving certification details.";
   }
-}
-// Fetch available years from `movrate` table for dropdown
+}// Fetch available years from `movrate` table
 $query = "SELECT DISTINCT YEAR(daterate) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $years = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
+// Add the current year if not present in the years array
+$currentYear = (int)date('Y');
+if (!in_array($currentYear, $years)) {
+    $years[] = $currentYear;
+    rsort($years); // Sort years in descending order
+}
+
 // Get selected year from request or default to the latest year
-$selectedYear = $_GET['year'] ?? $years[0];
+$selectedYear = $_GET['year'] ?? $currentYear;
 
 // Filter dataset by selected year
 $query = "
@@ -132,7 +138,6 @@ $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
 $stmt->execute();
 $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -164,16 +169,17 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
           </div>
         </div>
         <div class="text-right">
-<form method="get" action="">
-  <select name="year" onchange="this.form.submit()">
-    <?php foreach ($years as $year): ?>
-      <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
-        <?php echo htmlspecialchars($year); ?>
-      </opt      ion>
-    <?php endforeach; ?>
-  </select>
-</form>
+  <form method="get" action="">
+    <select name="year" onchange="this.form.submit()">
+      <?php foreach ($years as $year): ?>
+        <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
+          <?php echo htmlspecialchars($year); ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </form>
 </div>
+
       <!-- Second Card -->
       <div class="card mt-4">
         <div class="card-body">

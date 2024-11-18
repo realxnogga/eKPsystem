@@ -1,7 +1,6 @@
 <?php
 session_start();
 include '../connection.php';
-// include '../functions.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: ../login.php");
@@ -21,82 +20,78 @@ $allowed_columns = [
     'V_1_pdf_File', 'threepeoplesorg_pdf_File'
 ];
 
+// Current year
+$currentYear = date('Y');
+
+// Fetch unique years from the database
+$yearQuery = "SELECT DISTINCT year FROM mov
+              UNION SELECT DISTINCT YEAR(date) FROM movdraft_file
+              UNION SELECT DISTINCT YEAR(daterate) FROM movrate
+              UNION SELECT DISTINCT YEAR(dateremark) FROM movremark";
+$yearResult = $conn->query($yearQuery);
+$years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
+
+// Ensure current year is in the list even if there's no data
+if (!in_array($currentYear, $years)) {
+    $years[] = $currentYear;
+}
+
+// Sort years in descending order
+rsort($years);
+
+// Check if a specific year is selected, otherwise default to the current year
+$selectedYear = isset($_GET['year']) ? $_GET['year'] : $currentYear;
+
 // Fetch uploaded files from the database
-$sql = "SELECT " . implode(', ', $allowed_columns) . " FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id";
+$sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
 $stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $row as an empty array if no records found
 
-// Fetch rates from the movrate table
-$rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id";
-$rate_stmt = $conn->prepare($rate_sql);
-$rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-$rate_stmt->execute();
-$rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $rate_row as an empty array if no records found
+// Update file functionality
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
+    $columnToUpdate = $_POST['update']; // Column to update
+    $filePath = null;
 
-// Fetch remarks from the movremark table
-$remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id";
-$remark_stmt = $conn->prepare($remark_sql);
-$remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-$remark_stmt->execute();
-$remark_row = $remark_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $remark_row as an empty array if no records found
+    // Validate the column
+    if (in_array($columnToUpdate, $allowed_columns)) {
+        // Check if file is uploaded
+        if (isset($_FILES[$columnToUpdate]) && $_FILES[$columnToUpdate]['error'] === UPLOAD_ERR_OK) {
+            $upload_dir = '../movfolder/'; // Directory to store uploaded files
+            $file_name = time() . '_' . basename($_FILES[$columnToUpdate]['name']);
+            $filePath = $upload_dir . $file_name;
 
-$file_changed = false; // Flag to track if any files have changed
+            // Move the uploaded file
+            if (move_uploaded_file($_FILES[$columnToUpdate]['tmp_name'], $filePath)) {
+                // Update the database
+                $update_sql = "UPDATE mov 
+                               SET $columnToUpdate = :file_path 
+                               WHERE user_id = :user_id 
+                               AND barangay_id = :barangay_id 
+                               AND year = :year";
+                $update_stmt = $conn->prepare($update_sql);
+                $update_stmt->bindParam(':file_path', $filePath, PDO::PARAM_STR);
+                $update_stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+                $update_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+                $update_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $upload_dir = 'movfolder/';
-
-    foreach ($allowed_columns as $column) {
-        if (isset($_FILES[$column]) && $_FILES[$column]['error'] === UPLOAD_ERR_OK) {
-            $file_name = time() . '_' . basename($_FILES[$column]['name']);
-            $file_path = $upload_dir . $file_name;
-
-            if (move_uploaded_file($_FILES[$column]['tmp_name'], $file_path)) {
-                // New file uploaded, use the new file name
-                $row[$column] = $file_name;
-                $file_changed = true; // Mark file as changed
+                if ($update_stmt->execute()) {
+                    echo "<script>alert('File updated successfully!');</script>";
+                } else {
+                    echo "<script>alert('Failed to update the database.');</script>";
+                }
+            } else {
+                echo "<script>alert('Failed to move the uploaded file.');</script>";
             }
         } else {
-            // No new file uploaded, retain the old file
-            if (isset($_POST[$column . '_hidden'])) {
-                $row[$column] = $_POST[$column . '_hidden'];
-            }
-        }
-    }
-
-    // Prepare SQL for updating the file paths
-    $update_sql = "UPDATE mov SET ";
-    foreach ($allowed_columns as $column) {
-        $update_sql .= "$column = :$column, ";
-    }
-    $update_sql = rtrim($update_sql, ', ') . " WHERE user_id = :user_id AND barangay_id = :barangay_id";
-
-    $update_stmt = $conn->prepare($update_sql);
-
-    // Bind the updated or retained file paths
-    foreach ($allowed_columns as $column) {
-        $update_stmt->bindParam(":$column", $row[$column], PDO::PARAM_STR);
-    }
-    $update_stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $update_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-
-    // Execute the statement and provide feedback
-    if ($update_stmt->execute()) {
-        if ($file_changed) {
-            echo "<script>alert('Files updated successfully!');</script>";
-        } else {
-            echo "<script>document.getElementById('noChangesMessage').innerHTML = 'No file changes detected.';</script>";
+            echo "<script>alert('No valid file uploaded.');</script>";
         }
     } else {
-        echo "<script>alert('Error updating files. Please try again.');</script>";
-        error_log(print_r($update_stmt->errorInfo(), true)); // Log errors for debugging
+        echo "<script>alert('Invalid column for update.');</script>";
     }
-
-    // Redirect to prevent form resubmission
-    header("Location: " . $_SERVER['REQUEST_URI']);
-    exit;
 }
 // Current year
 $currentYear = date('Y');
@@ -199,6 +194,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
                                     <th>Means Of Verification</th>
                                     <th>Rate</th>
                                     <th>Remarks</th>
+                                    <th>Choose Files to Replace MOV</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -214,6 +210,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_1a_pdf_rate']) ? $rate_row['IA_1a_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_1a_pdf_remark']) ? $remark_row['IA_1a_pdf_remark'] : 'No remarks'; ?></td>
+            <td class="text-center align-middle"><input type="file" id="IA_1a_pdf_File" name="IA_1a_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit_IA_1a')" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IA_1a_pdf_File" id="IA_1a_pdf_File" 
+                                value="<?php echo !empty($row['IA_1a_pdf_File']) ? htmlspecialchars($row['IA_1a_pdf_File']) : ''; ?>">
+            <button type="submit" name="update" value="IA_1a_pdf_File" id="submit_IA_1a" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+            </td>
           </tr>
           <tr>
             <td>b) Sending of Notices and Summons</td>
@@ -226,6 +227,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_1b_pdf_rate']) ? $rate_row['IA_1b_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_1b_pdf_remark']) ? $remark_row['IA_1b_pdf_remark'] : 'No remarks'; ?></td>
+            <td><input type="file" id="IA_1b_pdf_File" name="IA_1b_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IA_1b_pdf_File" id="IA_1b_pdf_File" 
+                                value="<?php echo !empty($row['IA_1b_pdf_File']) ? htmlspecialchars($row['IA_1b_pdf_File']) : ''; ?>">
+            </td>
+
           </tr>
           <tr>
                 <td>2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
@@ -245,6 +251,10 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_2a_pdf_rate']) ? $rate_row['IA_2a_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_2a_pdf_remark']) ? $remark_row['IA_2a_pdf_remark'] : 'No remarks'; ?></td>
+            <td><input type="file" id="IA_2a_pdf_File" name="IA_2a_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IA_2a_pdf_File" id="IA_2a_pdf_File" 
+                                value="<?php echo !empty($row['IA_2a_pdf_File']) ? htmlspecialchars($row['IA_2a_pdf_File']) : ''; ?>">
+            </td>
               </tr>
               <tr>
                 <td>b) Conciliation (15 days from initial confrontation with the Pangkat)</td>
@@ -257,6 +267,10 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_2b_pdf_rate']) ? $rate_row['IA_2b_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_2b_pdf_remark']) ? $remark_row['IA_2b_pdf_remark'] : 'No remarks'; ?></td>
+            <td><input type="file" id="IA_2b_pdf_File" name="IA_2b_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IA_2b_pdf_File" id="IA_2b_pdf_File" 
+                                value="<?php echo !empty($row['IA_2b_pdf_File']) ? htmlspecialchars($row['IA_2b_pdf_File']) : ''; ?>">
+            </td>
               </tr>
               <tr>
                 <td>c) Conciliation (15 days from initial confrontation with the Pangkat)</td>
@@ -269,6 +283,10 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_2c_pdf_rate']) ? $rate_row['IA_2c_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_2c_pdf_remark']) ? $remark_row['IA_2c_pdf_remark'] : 'No remarks'; ?></td>
+            <td><input type="file" id="IA_2c_pdf_File" name="IA_2c_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IA_2c_pdf_File" id="IA_2c_pdf_File" 
+                                value="<?php echo !empty($row['IA_2c_pdf_File']) ? htmlspecialchars($row['IA_2c_pdf_File']) : ''; ?>">
+            </td>
               </tr>
               <tr>
                 <td>d) Arbitration (within 10 days from the date of the agreement to arbitrate)</td>
@@ -281,6 +299,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_2d_pdf_rate']) ? $rate_row['IA_2d_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_2d_pdf_remark']) ? $remark_row['IA_2d_pdf_remark'] : 'No remarks'; ?></td>
+            <td><input type="file" id="IA_2d_pdf_File" name="IA_2d_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IA_2d_pdf_File" id="IA_2d_pdf_File" 
+                                value="<?php echo !empty($row['IA_2d_pdf_File']) ? htmlspecialchars($row['IA_2d_pdf_File']) : ''; ?>">
+            </td>
+
               </tr>
               <tr>
                 <td>e) Conciliation beyond 46 days but not more than 60 days on a clearly meritorious case</td>
@@ -293,15 +316,21 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_2e_pdf_rate']) ? $rate_row['IA_2e_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_2e_pdf_remark']) ? $remark_row['IA_2e_pdf_remark'] : 'No remarks'; ?></td>
+            <td><input type="file" id="IA_2e_pdf_File" name="IA_2e_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IA_2e_pdf_File" id="IA_2e_pdf_File" 
+                                value="<?php echo !empty($row['IA_2e_pdf_File']) ? htmlspecialchars($row['IA_2e_pdf_File']) : ''; ?>">
+            </td>
               </tr>
               <tr>
                 <th>B. Systematic Maintenance of Records</th>
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
               </tr>
               <tr>
                 <td><b>1. Record of Cases </b></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -317,9 +346,14 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_1forcities_pdf_rate']) ? $rate_row['IB_1forcities_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_1forcities_pdf_remark']) ? $remark_row['IB_1forcities_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IB_1forcities_pdf_File" name="IB_1forcities_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IB_1forcities_pdf_File" id="IB_1forcities_pdf_File" 
+                                value="<?php echo !empty($row['IB_1forcities_pdf_File']) ? htmlspecialchars($row['IB_1forcities_pdf_File']) : ''; ?>">
+            </td>
+          </tr>
               <tr>
                 <td>For Municipalities:</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -335,7 +369,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_1aformuni_pdf_rate']) ? $rate_row['IB_1aformuni_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_1aformuni_pdf_remark']) ? $remark_row['IB_1aformuni_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IB_1aformuni_pdf_File" name="IB_1aformuni_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IB_1aformuni_pdf_File" id="IB_1aformuni_pdf_File" 
+                                value="<?php echo !empty($row['IB_1aformuni_pdf_File']) ? htmlspecialchars($row['IB_1aformuni_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>b. Digital Record Filing</td>
                 <td>
@@ -347,7 +385,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_1bformuni_pdf_rate']) ? $rate_row['IB_1bformuni_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_1bformuni_pdf_remark']) ? $remark_row['IB_1bformuni_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IB_1bformuni_pdf_File" name="IB_1bformuni_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IB_1bformuni_pdf_File" id="IB_1bformuni_pdf_File" 
+                                value="<?php echo !empty($row['IB_1bformuni_pdf_File']) ? htmlspecialchars($row['IB_1bformuni_pdf_File']) : ''; ?>">
+            </td>   
+          </tr>
               <tr>
                 <td>2. Copies of Minutes of Lupon meetings with attendance sheets and notices</td>
                 <td>
@@ -359,7 +401,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_2_pdf_rate']) ? $rate_row['IB_2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_2_pdf_remark']) ? $remark_row['IB_2_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IB_2_pdf_File" name="IB_2_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IB_2_pdf_File" id="IB_2_pdf_File" 
+                                value="<?php echo !empty($row['IB_2_pdf_File']) ? htmlspecialchars($row['IB_2_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>3. Copies of reports submitted to the Court and to the DILG on file</td>
                 <td>
@@ -371,7 +417,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_3_pdf_rate']) ? $rate_row['IB_3_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_3_pdf_remark']) ? $remark_row['IB_3_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IB_3_pdf_File" name="IB_3_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IB_3_pdf_File" id="IB_3_pdf_File" 
+                                value="<?php echo !empty($row['IB_3_pdf_File']) ? htmlspecialchars($row['IB_3_pdf_File']) : ''; ?>">
+            </td>
+          </tr>
               <tr>
                 <td>4. All records are kept on file in a secured filing cabinet(s)</td>
                 <td>
@@ -383,9 +433,14 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_4_pdf_rate']) ? $rate_row['IB_4_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_4_pdf_remark']) ? $remark_row['IB_4_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IB_4_pdf_File" name="IB_4_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IB_4_pdf_File" id="IB_4_pdf_File" 
+                                value="<?php echo !empty($row['IB_4_pdf_File']) ? htmlspecialchars($row['IB_4_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <th>C. Timely Submissions to the Court and the DILG</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -401,7 +456,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IC_1_pdf_rate']) ? $rate_row['IC_1_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IC_1_pdf_remark']) ? $remark_row['IC_1_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IC_1_pdf_File" name="IC_1_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IC_1_pdf_File" id="IC_1_pdf_File" 
+                                value="<?php echo !empty($row['IC_1_pdf_File']) ? htmlspecialchars($row['IC_1_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>2. To the DILG (Quarterly)</td>
                 <td>
@@ -413,10 +472,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IC_2_pdf_rate']) ? $rate_row['IC_2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IC_2_pdf_remark']) ? $remark_row['IC_2_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IC_2_pdf_File" name="IC_2_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IC_2_pdf_File" id="IC_2_pdf_File" 
+                                value="<?php echo !empty($row['IC_2_pdf_File']) ? htmlspecialchars($row['IC_2_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <th>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
-                  <th></th>
+                <th></th>
+                <th></th>
                 <th></th>
                 <th></th>
               </tr>
@@ -431,7 +495,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['ID_1_pdf_rate']) ? $rate_row['ID_1_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['ID_1_pdf_remark']) ? $remark_row['ID_1_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="ID_1_pdf_File" name="ID_1_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="ID_1_pdf_File" id="ID_1_pdf_File" 
+                                value="<?php echo !empty($row['ID_1_pdf_File']) ? htmlspecialchars($row['ID_1_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>2. Minutes of the Meeting</td>
                 <td>
@@ -443,9 +511,14 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['ID_2_pdf_rate']) ? $rate_row['ID_2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['ID_2_pdf_remark']) ? $remark_row['ID_2_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="ID_2_pdf_File" name="ID_2_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="ID_2_pdf_File" id="ID_2_pdf_File" 
+                                value="<?php echo !empty($row['ID_2_pdf_File']) ? htmlspecialchars($row['ID_2_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <th>II. EFFECTIVENESS IN SECURING THE SETTLEMENT OF INTERPERSONAL DISPUTE OBJECTIVE OF THE KATARUNGANG PAMBARANGAY</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -461,9 +534,14 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIA_pdf_rate']) ? $rate_row['IIA_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIA_pdf_remark']) ? $remark_row['IIA_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IIA_pdf_File" name="IIA_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIA_pdf_File" id="IIA_pdf_File" 
+                                value="<?php echo !empty($row['IIA_pdf_File']) ? htmlspecialchars($row['IIA_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>B. Quality of Settlement of Cases</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -479,7 +557,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIB_1_pdf_rate']) ? $rate_row['IIB_1_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIB_1_pdf_remark']) ? $remark_row['IIB_1_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IIB_1_pdf_File" name="IIB_1_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIB_1_pdf_File" id="IIB_1_pdf_File" 
+                                value="<?php echo !empty($row['IIB_1_pdf_File']) ? htmlspecialchars($row['IIB_1_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>2. Non-recurrence of cases settled</td>
 
@@ -492,7 +574,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIB_2_pdf_rate']) ? $rate_row['IIB_2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIB_2_pdf_remark']) ? $remark_row['IIB_2_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IIB_2_pdf_File" name="IIB_2_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIB_2_pdf_File" id="IIB_2_pdf_File" 
+                                value="<?php echo !empty($row['IIB_2_pdf_File']) ? htmlspecialchars($row['IIB_2_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>C. At least 80% compliance with the terms of settlement or award after the cases have been settled</td>
                 <td>
@@ -504,9 +590,14 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIC_pdf_rate']) ? $rate_row['IIC_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIC_pdf_remark']) ? $remark_row['IIC_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IIC_pdf_File" name="IIC_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIC_pdf_File" id="IIC_pdf_File" 
+                                value="<?php echo !empty($row['IIC_pdf_File']) ? htmlspecialchars($row['IIC_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <th>III. CREATIVITY AND RESOURCEFULNESS OF THE LUPONG TAGAPAMAYAPA</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -523,7 +614,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIA_pdf_rate']) ? $rate_row['IIIA_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIA_pdf_remark']) ? $remark_row['IIIA_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IIIA_pdf_File" name="IIIA_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIIA_pdf_File" id="IIIA_pdf_File" 
+                                value="<?php echo !empty($row['IIIA_pdf_File']) ? htmlspecialchars($row['IIIA_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>B. Coordination with Concerned Agencies relating to disputes filed (PNP, DSWD, DILG, DAR, DENR, Office of the Prosecutor, Court, DOJ, CHR, etc.)</td>
 
@@ -536,9 +631,14 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIB_pdf_rate']) ? $rate_row['IIIB_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIB_pdf_remark']) ? $remark_row['IIIB_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IIIB_pdf_File" name="IIIB_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIIB_pdf_File" id="IIIB_pdf_File" 
+                                value="<?php echo !empty($row['IIIB_pdf_File']) ? htmlspecialchars($row['IIIB_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>C. Sustained information drive to promote Katarungang Pambarangay</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -562,7 +662,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_1forcities_pdf_rate']) ? $rate_row['IIIC_1forcities_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_1forcities_pdf_remark']) ? $remark_row['IIIC_1forcities_pdf_remark'] : 'No remarks'; ?></td>
-            </tr>
+            <td><input type="file" id="IIIC_1forcities_pdf_File" name="IIIC_1forcities_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIIC_1forcities_pdf_File" id="IIIC_1forcities_pdf_File" 
+                                value="<?php echo !empty($row['IIIC_1forcities_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities_pdf_File']) : ''; ?>">
+            </td>  
+          </tr>
               <tr>
                 <td>
                   <ul>
@@ -578,7 +682,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_1forcities2_pdf_rate']) ? $rate_row['IIIC_1forcities2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_1forcities2_remark']) ? $remark_row['IIIC_1forcities2_remark'] : 'No remarks'; ?></td>
-            </tr>
+            <td><input type="file" id="IIIC_1forcities2_pdf_File" name="IIIC_1forcities2_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIIC_1forcities2_pdf_File" id="IIIC_1forcities2_pdf_File" 
+                                value="<?php echo !empty($row['IIIC_1forcities2_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities2_pdf_File']) : ''; ?>">
+            </td>  
+          </tr>
               <tr>
                 <td>
                   <ul>
@@ -594,9 +702,14 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_1forcities3_pdf_rate']) ? $rate_row['IIIC_1forcities3_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_1forcities3_pdf_remark']) ? $remark_row['IIIC_1forcities3_pdf_remark'] : 'No remarks'; ?></td>
-            </tr>
+            <td><input type="file" id="IIIC_1forcities3_pdf_File" name="IIIC_1forcities3_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIIC_1forcities3_pdf_File" id="IIIC_1forcities3_pdf_File" 
+                                value="<?php echo !empty($row['IIIC_1forcities3_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities3_pdf_File']) : ''; ?>">
+            </td>  
+          </tr>
               <tr>
                 <td>2. For Municipalities</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -616,7 +729,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_2formuni1_pdf_rate']) ? $rate_row['IIIC_2formuni1_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_2formuni1_pdf_remark']) ? $remark_row['IIIC_2formuni1_pdf_remark'] : 'No remarks'; ?></td>
-            </tr>
+            <td><input type="file" id="IA_1a_pdf_File" name="IA_1a_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IA_1a_pdf_File" id="IA_1a_pdf_File" 
+                                value="<?php echo !empty($row['IA_1a_pdf_File']) ? htmlspecialchars($row['IA_1a_pdf_File']) : ''; ?>">
+            </td>   
+          </tr>
               <tr>
                 <td>
                   <ul>
@@ -632,7 +749,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_2formuni2_pdf_rate']) ? $rate_row['IIIC_2formuni2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_2formuni2_pdf_remark']) ? $remark_row['IIIC_2formuni2_pdf_remark'] : 'No remarks'; ?></td>
-            </tr>
+            <td><input type="file" id="IIIC_2formuni2_pdf_File" name="IIIC_2formuni2_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIIC_2formuni2_pdf_File" id="IIIC_2formuni2_pdf_File" 
+                                value="<?php echo !empty($row['IIIC_2formuni2_pdf_File']) ? htmlspecialchars($row['IIIC_2formuni2_pdf_File']) : ''; ?>">
+            </td>  
+          </tr>
               <tr>
                 <td>
                   <ul>
@@ -648,7 +769,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_2formuni3_pdf_rate']) ? $rate_row['IIIC_2formuni3_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_2formuni3_pdf_remark']) ? $remark_row['IIIC_2formuni3_pdf_remark'] : 'No remarks'; ?></td>
-            </tr>
+            <td><input type="file" id="IIIC_2formuni3_pdf_File" name="IIIC_2formuni3_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIIC_2formuni3_pdf_File" id="IIIC_2formuni3_pdf_File" 
+                                value="<?php echo !empty($row['IIIC_2formuni3_pdf_File']) ? htmlspecialchars($row['IIIC_2formuni3_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>D. KP Training or seminar within the assessment period<br />
                   Organized skills training participated by the Lupong Tagapamayapa</td>
@@ -661,15 +786,21 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIID_pdf_rate']) ? $rate_row['IIID_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIID_pdf_remark']) ? $remark_row['IIID_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IIID_pdf_File" name="IIID_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IIID_pdf_File" id="IIID_pdf_File" 
+                                value="<?php echo !empty($row['IIID_pdf_File']) ? htmlspecialchars($row['IIID_pdf_File']) : ''; ?>">
+            </td>      
+          </tr>
               <tr>
                 <th>IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
               </tr>
               <tr>
                 <td><b>Building structure or space:</b></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -685,7 +816,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IV_forcities_pdf_rate']) ? $rate_row['IV_forcities_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IV_forcities_pdf_remark']) ? $remark_row['IV_forcities_pdf_remark'] : 'No remarks'; ?></td>
-            </tr>
+            <td><input type="file" id="IV_forcities_pdf_File" name="IV_forcities_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IV_forcities_pdf_File" id="IV_forcities_pdf_File" 
+                                value="<?php echo !empty($row['IV_forcities_pdf_File']) ? htmlspecialchars($row['IV_forcities_pdf_File']) : ''; ?>">
+            </td>    
+          </tr>
               <tr>
                 <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
                 <td>
@@ -697,9 +832,14 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IV_muni_pdf_rate']) ? $rate_row['IV_muni_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IV_muni_pdf_remark']) ? $remark_row['IV_muni_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="IV_muni_pdf_File" name="IV_muni_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="IV_muni_pdf_File" id="IV_muni_pdf_File" 
+                                value="<?php echo !empty($row['IV_muni_pdf_File']) ? htmlspecialchars($row['IV_muni_pdf_File']) : ''; ?>">
+            </td>      
+          </tr>
               <tr>
                 <th>V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -715,7 +855,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['V_1_pdf_rate']) ? $rate_row['V_1_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['V_1_pdf_remark']) ? $remark_row['V_1_pdf_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="V_1_pdf_File" name="V_1_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="V_1_pdf_File" id="V_1_pdf_File" 
+                                value="<?php echo !empty($row['V_1_pdf_File']) ? htmlspecialchars($row['V_1_pdf_File']) : ''; ?>">
+            </td>      
+          </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
                 <td>
@@ -727,7 +871,11 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['threepeoplesorg_rate']) ? $rate_row['threepeoplesorg_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['threepeoplesorg_remark']) ? $remark_row['threepeoplesorg_remark'] : 'No remarks'; ?></td>
-              </tr>
+            <td><input type="file" id="threepeoplesorg_pdf_File" name="threepeoplesorg_pdf_File" accept=".pdf" onchange="validateFileType(this)"/>
+            <input type="hidden" name="threepeoplesorg_pdf_File" id="threepeoplesorg_pdf_File" 
+                                value="<?php echo !empty($row['threepeoplesorg_pdf_File']) ? htmlspecialchars($row['threepeoplesorg_pdf_File']) : ''; ?>">
+            </td>      
+          </tr>
               <tr>
               <th>Total</th>
                 <td></td>
@@ -736,10 +884,31 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             <th><?php echo isset($rate_row['total']) ? $rate_row['total'] : ' '; ?></th>
             <td></td>
               </tr>
+
+              <tr><th>
+              <input type="submit" value="Update">
+              </tr></th>
             </tbody>
           </table>
     </form>
-    
+    <!-- Modal -->
+<div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="responseModalLabel">Notification</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <?php if (!empty($message)) echo htmlspecialchars($message); ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Main modal -->
 <div id="large-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative w-full max-w-4xl max-h-full">
@@ -766,6 +935,12 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 </div>
 
   <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    <?php if (!empty($message)) : ?>
+        var responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
+        responseModal.show();
+    <?php endif; ?>
+});
     $(document).ready(function() {
         $('.view-pdf').attr('data-modal-target', 'large-modal');
         $('.view-pdf').attr('data-modal-toggle', 'large-modal');
@@ -776,6 +951,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
         });
     });
+    function toggleSubmitButton(fileInput, buttonId) {
+    const button = document.getElementById(buttonId);
+    if (fileInput.files.length > 0) {
+        button.style.display = 'inline-block';
+    } else {
+        button.style.display = 'none';
+    }
+}
+
   </script>
 </body>
 </html>
