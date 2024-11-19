@@ -245,16 +245,16 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="certification-section text-center">
 
                     <form method="post" action="" enctype="multipart/form-data">
-                    <input type="text" name="chairperson" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['chairperson'] ?? ''); ?>"><br>
+                    <input type="text" name="chairperson" class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['chairperson'] ?? ''); ?>"><br>
     Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-    <input type="text" name="member1" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member1'] ?? ''); ?>"><br>
+    <input type="text" name="member1" class="underline-input"  placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member1'] ?? ''); ?>"><br>
     Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-    <input type="text" name="member2" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member2'] ?? ''); ?>"><br>
+    <input type="text" name="member2" class="underline-input"  placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member2'] ?? ''); ?>"><br>
     Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-    <input type="text" name="member3" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member3'] ?? ''); ?>"><br>
+    <input type="text" name="member3"class="underline-input"  placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member3'] ?? ''); ?>"><br>
     Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
                 </div>
@@ -307,6 +307,21 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }.spacingtabs2 {
     padding-left: 2em; /* Adjust as needed for spacing */
 }
+.underline-input {
+  text-align: center;
+  border: none;
+  border-bottom: 1px solid #5A5A5A; /* Black underline */
+  outline: none;
+  background-color: transparent;
+  width: 25%;
+  font-size: 16px;
+  padding: 5px 0;
+}
+
+.underline-input:focus {
+  border-bottom-color: #007bff; /* Highlight underline on focus */
+}
+
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script>

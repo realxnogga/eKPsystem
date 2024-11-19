@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
 
         $conn->commit();
-        header("Location: adminform2evaluate.php?status=success&message=Data inserted or updated successfully");
+        header("Location: adminform2evaluate.php?status=success&message=Saved");
     } catch (Exception $e) {
         $conn->rollBack();
         $error_message = urlencode("Failed to insert or update data: " . $e->getMessage());

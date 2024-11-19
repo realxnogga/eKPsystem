@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 16, 2024 at 07:55 AM
+-- Generation Time: Nov 18, 2024 at 08:21 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -61,7 +61,8 @@ INSERT INTO `barangays` (`id`, `municipality_id`, `barangay_name`) VALUES
 (95, 42, 'Bagong Silang'),
 (96, 42, 'Anos'),
 (97, 42, 'Maahas'),
-(98, 42, 'Timugan');
+(98, 42, 'Timugan'),
+(99, 45, 'Bagong Kalsada');
 
 -- --------------------------------------------------------
 
@@ -1050,6 +1051,13 @@ CREATE TABLE `mov` (
   `year` year(4) NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `mov`
+--
+
+INSERT INTO `mov` (`id`, `user_id`, `barangay_id`, `IA_1a_pdf_File`, `IA_1b_pdf_File`, `IA_2a_pdf_File`, `IA_2b_pdf_File`, `IA_2c_pdf_File`, `IA_2d_pdf_File`, `IA_2e_pdf_File`, `IB_1forcities_pdf_File`, `IB_1aformuni_pdf_File`, `IB_1bformuni_pdf_File`, `IB_2_pdf_File`, `IB_3_pdf_File`, `IB_4_pdf_File`, `IC_1_pdf_File`, `IC_2_pdf_File`, `ID_1_pdf_File`, `ID_2_pdf_File`, `IIA_pdf_File`, `IIB_1_pdf_File`, `IIB_2_pdf_File`, `IIC_pdf_File`, `IIIA_pdf_File`, `IIIB_pdf_File`, `IIIC_1forcities_pdf_File`, `IIIC_1forcities2_pdf_File`, `IIIC_1forcities3_pdf_File`, `IIIC_2formuni1_pdf_File`, `IIIC_2formuni2_pdf_File`, `IIIC_2formuni3_pdf_File`, `IIID_pdf_File`, `IV_forcities_pdf_File`, `IV_muni_pdf_File`, `V_1_pdf_File`, `threepeoplesorg_pdf_File`, `year`) VALUES
+(39, 141, 99, '1727962635_student_cor_20241118081901_9e2711cd.pdf', '1728482910_valid-ID_20240921094055_f0c8207e_20241118081901_3e751248.pdf', '1728482910_valid-ID_20240921094055_f0c8207e_20241118081901_596875ba.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_3e353d96.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_acfcfa72.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_45e2cf3d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c03ef2a0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_2a06f779.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_3fa23b6d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_95ee949d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_84264ea0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_dae02be1.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_643b4a5b.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_673df099.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c392bc6f.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_1c725f87.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_fc5f0be1.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_d44786d3.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_15af1eb5.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_abf33a01.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_203b6935.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c5120c11.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_adb61530.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_29beb5d0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_242a9be4.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_898a466a.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_928fcc8b.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_87128878.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_46e8ef37.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_a721390d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_7b08d914.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_44d6c8cf.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c9986972.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_8969be62.pdf', '2024');
+
 -- --------------------------------------------------------
 
 --
@@ -1158,6 +1166,7 @@ CREATE TABLE `movrate` (
   `IV_muni_pdf_rate` decimal(11,0) DEFAULT NULL,
   `V_1_pdf_rate` decimal(11,0) DEFAULT NULL,
   `threepeoplesorg_rate` decimal(11,0) DEFAULT NULL,
+  `status_rate` varchar(100) GENERATED ALWAYS AS (case when `IA_1a_pdf_rate` is not null and `IA_1b_pdf_rate` is not null and `IA_2a_pdf_rate` is not null and `IA_2b_pdf_rate` is not null and `IA_2c_pdf_rate` is not null and `IA_2d_pdf_rate` is not null and `IA_2e_pdf_rate` is not null and `IB_1forcities_pdf_rate` is not null and `IB_1aformuni_pdf_rate` is not null and `IB_1bformuni_pdf_rate` is not null and `IB_2_pdf_rate` is not null and `IB_3_pdf_rate` is not null and `IB_4_pdf_rate` is not null and `IC_1_pdf_rate` is not null and `IC_2_pdf_rate` is not null and `ID_1_pdf_rate` is not null and `ID_2_pdf_rate` is not null and `IIA_pdf_rate` is not null and `IIB_1_pdf_rate` is not null and `IIB_2_pdf_rate` is not null and `IIC_pdf_rate` is not null and `IIIA_pdf_rate` is not null and `IIIB_pdf_rate` is not null and `IIIC_1forcities_pdf_rate` is not null and `IIIC_1forcities2_pdf_rate` is not null and `IIIC_1forcities3_pdf_rate` is not null and `IIIC_2formuni1_pdf_rate` is not null and `IIIC_2formuni2_pdf_rate` is not null and `IIIC_2formuni3_pdf_rate` is not null and `IIID_pdf_rate` is not null and `IV_forcities_pdf_rate` is not null and `IV_muni_pdf_rate` is not null and `V_1_pdf_rate` is not null and `threepeoplesorg_rate` is not null then 'Rate Status: Rated' else 'Rate Status: Pending' end) STORED,
   `total` int(11) GENERATED ALWAYS AS (ifnull(`IA_1a_pdf_rate`,0) + ifnull(`IA_1b_pdf_rate`,0) + ifnull(`IA_2a_pdf_rate`,0) + ifnull(`IA_2b_pdf_rate`,0) + ifnull(`IA_2c_pdf_rate`,0) + ifnull(`IA_2d_pdf_rate`,0) + ifnull(`IA_2e_pdf_rate`,0) + ifnull(`IB_1forcities_pdf_rate`,0) + ifnull(`IB_1aformuni_pdf_rate`,0) + ifnull(`IB_1bformuni_pdf_rate`,0) + ifnull(`IB_2_pdf_rate`,0) + ifnull(`IB_3_pdf_rate`,0) + ifnull(`IB_4_pdf_rate`,0) + ifnull(`IC_1_pdf_rate`,0) + ifnull(`IC_2_pdf_rate`,0) + ifnull(`ID_1_pdf_rate`,0) + ifnull(`ID_2_pdf_rate`,0) + ifnull(`IIA_pdf_rate`,0) + ifnull(`IIB_1_pdf_rate`,0) + ifnull(`IIB_2_pdf_rate`,0) + ifnull(`IIC_pdf_rate`,0) + ifnull(`IIIA_pdf_rate`,0) + ifnull(`IIIB_pdf_rate`,0) + ifnull(`IIIC_1forcities_pdf_rate`,0) + ifnull(`IIIC_1forcities2_pdf_rate`,0) + ifnull(`IIIC_1forcities3_pdf_rate`,0) + ifnull(`IIIC_2formuni1_pdf_rate`,0) + ifnull(`IIIC_2formuni2_pdf_rate`,0) + ifnull(`IIIC_2formuni3_pdf_rate`,0) + ifnull(`IIID_pdf_rate`,0) + ifnull(`IV_forcities_pdf_rate`,0) + ifnull(`IV_muni_pdf_rate`,0) + ifnull(`V_1_pdf_rate`,0) + ifnull(`threepeoplesorg_rate`,0)) STORED,
   `daterate` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1355,7 +1364,8 @@ INSERT INTO `security` (`id`, `user_id`, `question1`, `answer1`, `question2`, `a
 (48, 113, '2', '$2y$10$hC8zWzg4GQb2ot2ddhYXc.KvKCxEdObONi6OYlvIfynBws2B6y21u', '2', '$2y$10$C1fPpnsapRUnR3N4aJ3CQeRrDhHhoo3OeXldKkmtkLdSwtviGxGoO', '3', '$2y$10$NEf2nDj1NKN57aRUf45OfehzBhLi.3QxbyI82bGo.LJLyK4aMvR6O'),
 (49, 138, '1', '$2y$10$FQOo9n9yF8GbCI9LhJTfO.jrPFfXJsZ1yha6IOePppJsGUQvpN06G', '3', '$2y$10$uIRPkQ/7UX9w9nYubyJkRufe.CVUMlCP2ed5hR/pUi0E/Hdl9X8L6', '4', '$2y$10$1N9f8IatncWprQXWvZntguyNZ94hpjTZOoUdhCtGO9RG9xYcSGEHW'),
 (50, 139, '1', '$2y$10$uOFqXh72hDD7Boht0VyZk./r7rNpKdZ9EbTXZMbiIOpx2C3gP/tP6', '2', '$2y$10$jEhNa6FzzR.n2k8alsjakelOtRjfAlEvCr3TLbADZh.nsWU9Mqlpm', '4', '$2y$10$MH0Xqbx.xsUPCMaY4t.bw.Q.6sUcERJTjcG0i7/m7CTjwg/JjF2ay'),
-(51, 140, '2', '$2y$10$YposSkY4AivhNMKj9d9fTeY6QNJxs/NWbnBEKuinwtYKa8r4mz0XC', '1', '$2y$10$L56K02Yo4cH1lb6z9nWBHeNXM1w24fRLmx.IdZp8or95UhzapDaOi', '3', '$2y$10$kO7H8o5cTF32u7aQafaWWe52akl9yvpZL0brsDXQUlYdpa8tLynDu');
+(51, 140, '2', '$2y$10$YposSkY4AivhNMKj9d9fTeY6QNJxs/NWbnBEKuinwtYKa8r4mz0XC', '1', '$2y$10$L56K02Yo4cH1lb6z9nWBHeNXM1w24fRLmx.IdZp8or95UhzapDaOi', '3', '$2y$10$kO7H8o5cTF32u7aQafaWWe52akl9yvpZL0brsDXQUlYdpa8tLynDu'),
+(52, 141, '1', '$2y$10$c3.3Aq47AKPQp6tT623kPeTBFDDx6nsusumGpnx9TOs2vY9n5sUIy', '1', '$2y$10$W5X4ugVqOavKBMw3d72A2eG0SYazpKY6c9tx8axXdnYahKfyR2gFu', '1', '$2y$10$XvS/XgLtfr9v6evZ9m3Px.JcqcMM9z/yX1NHKuNCEUoWM5wJdNOsW');
 
 -- --------------------------------------------------------
 
@@ -1511,7 +1521,8 @@ INSERT INTO `users` (`id`, `username`, `first_name`, `last_name`, `password`, `e
 (137, 'mlgoolosbanos2@gmail.com', 'test', 'sample', '$2y$10$jaQ3w0OhUd6iPDmzPMXl8eXcUq6GmO5bz5k5WwwwuvclOg4SIyGd2', 'bagongsilang@gmail.com', '09576123845', 'user', 42, 95, '2024-10-31 12:33:21', NULL, 1, 0, NULL, NULL, NULL),
 (138, 'anossample', 'asno', 'anosss', '$2y$10$G8LhDnmZp8zSg1pSEpCR8upRq5tmP.DMHgWd5JQfN63bfaqBEAYi.', 'anos@gmail.com', '0951276495', 'user', 42, 96, '2024-11-04 17:59:16', NULL, 1, 0, NULL, NULL, NULL),
 (139, 'tes', 'fk;nsfk;a;', 'lfansflna', '$2y$10$xG3M9zusn62RAGMvf9c6/.wRpJ1uZpwILiaQ9P7g/t/Dr/HWUoW9G', 'maahas@gmail.com', '0957642036', 'user', 42, 97, '2024-11-06 06:48:12', NULL, 1, 0, NULL, NULL, NULL),
-(140, 'gdgsd', 'gsgsfgs', 'timugan', '$2y$10$T353GR/z2Txh4HCmgjOfKu68mkldaVZIxboU/iYnHinb3uFVg/sye', 'timug@gmail.com', '09572168924', 'user', 42, 98, '2024-11-06 09:41:43', NULL, 1, 0, NULL, NULL, NULL);
+(140, 'gdgsd', 'gsgsfgs', 'timugan', '$2y$10$T353GR/z2Txh4HCmgjOfKu68mkldaVZIxboU/iYnHinb3uFVg/sye', 'timug@gmail.com', '09572168924', 'user', 42, 98, '2024-11-06 09:41:43', NULL, 1, 0, NULL, NULL, NULL),
+(141, 'jm01', 'John', 'Monti', '$2y$10$4kz/aNUtfACanZtwPOV6n.n.9q1657D7mY2tvhNiENNENGpvwxXnO', 'monti@gmail.com', '09381949088', 'user', 45, 99, '2024-11-18 07:10:26', NULL, 1, 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1791,7 +1802,10 @@ INSERT INTO `user_logs` (`log_id`, `user_id`, `timestamp`, `activity`) VALUES
 (235, 115, '2024-11-15 05:33:48', 'User logged in'),
 (236, 115, '2024-11-15 11:12:38', 'User logged in'),
 (237, 115, '2024-11-15 11:12:47', 'User logged in'),
-(238, 115, '2024-11-15 22:10:57', 'User logged in');
+(238, 115, '2024-11-15 22:10:57', 'User logged in'),
+(239, 113, '2024-11-18 07:10:37', 'User logged in'),
+(240, 141, '2024-11-18 07:11:27', 'User logged in'),
+(241, 113, '2024-11-18 07:19:25', 'User logged in');
 
 --
 -- Indexes for dumped tables
@@ -1947,7 +1961,7 @@ ALTER TABLE `active_sessions`
 -- AUTO_INCREMENT for table `barangays`
 --
 ALTER TABLE `barangays`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=99;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
 
 --
 -- AUTO_INCREMENT for table `case_progress`
@@ -1983,7 +1997,7 @@ ALTER TABLE `lupons`
 -- AUTO_INCREMENT for table `mov`
 --
 ALTER TABLE `mov`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `movassessmentmembers`
@@ -1995,7 +2009,7 @@ ALTER TABLE `movassessmentmembers`
 -- AUTO_INCREMENT for table `movdraft_file`
 --
 ALTER TABLE `movdraft_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `movrate`
@@ -2025,7 +2039,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `security`
 --
 ALTER TABLE `security`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `upload_files`
@@ -2037,7 +2051,7 @@ ALTER TABLE `upload_files`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
 
 --
 -- AUTO_INCREMENT for table `user_files`
@@ -2049,7 +2063,7 @@ ALTER TABLE `user_files`
 -- AUTO_INCREMENT for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=239;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=242;
 
 --
 -- Constraints for dumped tables

@@ -181,40 +181,40 @@ $(document).ready(function () {
 
                     // Handle rates
                     if (data.rates) {
-                        $('input[name="IA_1a_pdf_rate"]').val(data.rates.IA_1a_pdf_rate || 'No rate available');
-                        $('input[name="IA_1b_pdf_rate"]').val(data.rates.IA_1b_pdf_rate || 'No rate available');
-                        $('input[name="IA_2a_pdf_rate"]').val(data.rates.IA_2a_pdf_rate || 'No rate available');
-                        $('input[name="IA_2b_pdf_rate"]').val(data.rates.IA_2b_pdf_rate || 'No rate available');
-                        $('input[name="IA_2c_pdf_rate"]').val(data.rates.IA_2c_pdf_rate || 'No rate available');
-                        $('input[name="IA_2d_pdf_rate"]').val(data.rates.IA_2d_pdf_rate || 'No rate available');
-                        $('input[name="IA_2e_pdf_rate"]').val(data.rates.IA_2e_pdf_rate || 'No rate available');
-                        $('input[name="IB_1forcities_pdf_rate"]').val(data.rates.IB_1forcities_pdf_rate || 'No rate available');
-                        $('input[name="IB_1aformuni_pdf_rate"]').val(data.rates.IB_1aformuni_pdf_rate || 'No rate available');
-                        $('input[name="IB_1bformuni_pdf_rate"]').val(data.rates.IB_1bformuni_pdf_rate || 'No rate available');
-                        $('input[name="IB_2_pdf_rate"]').val(data.rates.IB_2_pdf_rate || 'No rate available');
-                        $('input[name="IB_3_pdf_rate"]').val(data.rates.IB_3_pdf_rate || 'No rate available');
-                        $('input[name="IB_4_pdf_rate"]').val(data.rates.IB_4_pdf_rate || 'No rate available');
-                        $('input[name="IC_1_pdf_rate"]').val(data.rates.IC_1_pdf_rate || 'No rate available');
-                        $('input[name="IC_2_pdf_rate"]').val(data.rates.IC_2_pdf_rate || 'No rate available');
-                        $('input[name="ID_1_pdf_rate"]').val(data.rates.ID_1_pdf_rate || 'No rate available');
-                        $('input[name="ID_2_pdf_rate"]').val(data.rates.ID_2_pdf_rate || 'No rate available');
-                        $('input[name="IIA_pdf_rate"]').val(data.rates.IIA_pdf_rate || 'No rate available');
-                        $('input[name="IIB_1_pdf_rate"]').val(data.rates.IIB_1_pdf_rate || 'No rate available');
-                        $('input[name="IIB_2_pdf_rate"]').val(data.rates.IIB_2_pdf_rate || 'No rate available');
-                        $('input[name="IIC_pdf_rate"]').val(data.rates.IIC_pdf_rate || 'No rate available');
-                        $('input[name="IIIA_pdf_rate"]').val(data.rates.IIIA_pdf_rate || 'No rate available');
-                        $('input[name="IIIB_pdf_rate"]').val(data.rates.IIIB_pdf_rate || 'No rate available');
-                        $('input[name="IIIC_1forcities_pdf_rate"]').val(data.rates.IIIC_1forcities_pdf_rate || 'No rate available');
-                        $('input[name="IIIC_1forcities2_pdf_rate"]').val(data.rates.IIIC_1forcities2_pdf_rate || 'No rate available');
-                        $('input[name="IIIC_1forcities3_pdf_rate"]').val(data.rates.IIIC_1forcities3_pdf_rate || 'No rate available');
-                        $('input[name="IIIC_2formuni1_pdf_rate"]').val(data.rates.IIIC_2formuni1_pdf_rate || 'No rate available');
-                        $('input[name="IIIC_2formuni2_pdf_rate"]').val(data.rates.IIIC_2formuni2_pdf_rate || 'No rate available');
-                        $('input[name="IIIC_2formuni3_pdf_rate"]').val(data.rates.IIIC_2formuni3_pdf_rate || 'No rate available');
-                        $('input[name="IIID_pdf_rate"]').val(data.rates.IIID_pdf_rate || 'No rate available');
-                        $('input[name="IV_forcities_pdf_rate"]').val(data.rates.IV_forcities_pdf_rate || 'No rate available');
-                        $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate || 'No rate available');
-                        $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || 'No rate available');
-                        $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || 'No rate available');
+                        $('input[name="IA_1a_pdf_rate"]').val(data.rates.IA_1a_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_1b_pdf_rate"]').val(data.rates.IA_1b_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_2a_pdf_rate"]').val(data.rates.IA_2a_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_2b_pdf_rate"]').val(data.rates.IA_2b_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_2c_pdf_rate"]').val(data.rates.IA_2c_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_2d_pdf_rate"]').val(data.rates.IA_2d_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_2e_pdf_rate"]').val(data.rates.IA_2e_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_1forcities_pdf_rate"]').val(data.rates.IB_1forcities_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_1aformuni_pdf_rate"]').val(data.rates.IB_1aformuni_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_1bformuni_pdf_rate"]').val(data.rates.IB_1bformuni_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_2_pdf_rate"]').val(data.rates.IB_2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_3_pdf_rate"]').val(data.rates.IB_3_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_4_pdf_rate"]').val(data.rates.IB_4_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IC_1_pdf_rate"]').val(data.rates.IC_1_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IC_2_pdf_rate"]').val(data.rates.IC_2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="ID_1_pdf_rate"]').val(data.rates.ID_1_pdf_rate || 'No ratings available at this time');
+                        $('input[name="ID_2_pdf_rate"]').val(data.rates.ID_2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIA_pdf_rate"]').val(data.rates.IIA_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIB_1_pdf_rate"]').val(data.rates.IIB_1_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIB_2_pdf_rate"]').val(data.rates.IIB_2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIC_pdf_rate"]').val(data.rates.IIC_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIA_pdf_rate"]').val(data.rates.IIIA_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIB_pdf_rate"]').val(data.rates.IIIB_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_1forcities_pdf_rate"]').val(data.rates.IIIC_1forcities_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_1forcities2_pdf_rate"]').val(data.rates.IIIC_1forcities2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_1forcities3_pdf_rate"]').val(data.rates.IIIC_1forcities3_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_2formuni1_pdf_rate"]').val(data.rates.IIIC_2formuni1_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_2formuni2_pdf_rate"]').val(data.rates.IIIC_2formuni2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_2formuni3_pdf_rate"]').val(data.rates.IIIC_2formuni3_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIID_pdf_rate"]').val(data.rates.IIID_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IV_forcities_pdf_rate"]').val(data.rates.IV_forcities_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate || 'No ratings available at this time');
+                        $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || 'No ratings available at this time');
+                        $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || 'No ratings available at this time');
                         $('#status_rate').text(data.rates.status_rate || 'Rate Status: Pending');
                     } else {
                         clearRates();
@@ -1081,11 +1081,11 @@ $(document).ready(function () {
               </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
-              <td>2</td>
+              <td>1</td>
               <td class="file-column" data-type="threepeoplesorg">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="threepeoplesorg_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td><input type="number" value="" name="threepeoplesorg_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="threepeoplesorg_remark" placeholder="Remarks"></textarea></td>
               </tr>
             </tbody>
