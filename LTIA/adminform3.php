@@ -149,6 +149,76 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
   <!-- * Bootstrap v5.3.0-alpha1 (https://getbootstrap.com/) -->
+  <style>
+    /* General print styling */
+    @media print {
+        /* Make all content hidden except for the print content */
+        body * {
+            visibility: hidden;
+        }
+        .print-content, .print-content * {
+            visibility: visible;
+        }
+
+        /* Define the print area with full paper width and height */
+        .print-content {
+            width: 100%;
+            height: 100%;
+            font-size: 11pt; /* Adjust font size to fit content */
+            margin: 0; /* No margin to use full page space */
+            padding: 0.5in; /* Set padding to give a little breathing room */
+            box-sizing: border-box;
+        }
+
+        /* Adjust the card styling for print */
+        .print-content .card {
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        /* Make sure the table fits within the page */
+        .print-content table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        /* Adjust table cell padding */
+        .print-content th, .print-content td {
+            padding: 8px;
+            font-size: 10pt; /* Adjust font size for table data */
+        }
+
+        /* Hide UI elements that shouldn't be printed */
+        .btn, .btn-save, .text-right {
+            display: none;
+        }
+
+        /* Optional: Adjust headers or sections */
+        .print-content h1 {
+            font-size: 18pt;
+        }
+
+        .print-content p, .print-content b {
+            font-size: 12pt;
+        }
+
+        /* Adjust for a cleaner layout */
+        .print-content .spacingtabs {
+            display: inline-block;
+            width: 6em;
+            text-align: center;
+        }
+
+        /* Allow text to break properly on long lines */
+        .print-content p {
+            word-wrap: break-word;
+        }
+    }
+</style>
+
 </head>
 <body class="bg-[#E8E8E7]">
   <?php include "../admin_sidebar_header.php"; ?>
@@ -161,10 +231,6 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform2evaluate.php';">
       <i class="ti ti-building-community mr-2"></i> Back
     </button>
-    <div class="text-right">
-      <button onclick="printSecondCard()" class="btn btn-primary">Print</button>
-      <button onclick="downloadSecondCard()" class="btn btn-secondary">Download</button>
-    </div>
   </div>
           </div>
         </div>
@@ -180,98 +246,112 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
   </form>
 </div>
 
-      <!-- Second Card -->
-      <div class="card mt-4">
+<div class="text-right">
+    <button onclick="printSecondCard()" class="btn btn-primary">Print</button>
+    <button onclick="downloadSecondCard()" class="btn btn-secondary">Download</button>
+</div>
+
+<!-- Content to be printed -->
+<div class="print-content">
+    <!-- header -->
+    <div class="card mt-4">
         <div class="card-body">
-          <!-- Logo, Title, and Subtitle Section -->
-          <div class="flex justify-center items-center mb-4 space-x-4">
-            <!-- DILG Logo -->
-            <div class="dilglogo">
-              <img src="../img/dilg.png" alt="DILG Logo" style="max-width: 120px; max-height: 120px;" class="mx-auto">
-            </div>
-
-            <!-- Title in Bordered Box -->
-            <div class="border border-gray-800 rounded-md p-4 text-center">
-              <h1 class="text-xl font-bold">
-                CY Lupong Tagapamayapa Incentives Award (LTIA) <br>
-                LTIA FORM 3 (C/M) - COMPARATIVE EVALUATION FORM
-              </h1>
-            </div>
-
-            <!-- LTIA Logo -->
-            <div class="dilglogo">
-              <img src="images/ltialogo.png" alt="LTIA Logo" style="max-width: 120px; max-height: 120px;" class="mx-auto">
-            </div>
-          </div>
-
-          <!-- Identifying Information Section -->
-          <div class="border border-gray-800 rounded-md p-4 mt-4">
-          <b>A. IDENTIFYING INFORMATION</b>
-          <p style="padding-left: 5em;">City/Municipality <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY OF <?php echo htmlspecialchars($municipality_name); ?></p>
-          <p style="padding-left: 5em;">Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA</p>
-          <p style="padding-left: 5em;">Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA</p>
-          <p style="padding-left: 5em;">Category <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY</p>
-      </div>
-
-                  <br>
-            <b> B. COMPARATIVE EVALUATION RESULTS </b><br>
-
-            <table class="table table-bordered w-full border border-gray-800 mt-4">
-                <thead>
-                    <tr>
-                        <th>LUPONG TAGAPAMAYAPA (LT)</th>
-                        <th>OVERALL PERFORMANCE RATING</th>
-                        <th>ADJECTIVAL RATING</th>
-                        <th>RANK</th>
-                    </tr>
-                </thead>
-                <tbody>
-            <?php 
-            $num = 1;
-            $rank = 1;
-            foreach ($barangay_ratings as $row): ?>
-                <tr>
-                    <td><?php echo $num++; ?>. 
-                        <span class="spacingtabs"><?php echo htmlspecialchars($row['barangay']); ?></span></td>
-                    <td><?php echo htmlspecialchars($row['total']); ?></td>
-                    <td><?php echo getAdjectivalRating($row['total']); ?></td>
-                    <td><?php echo $rank++; ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-            </table>
-            <br>
-                    <b> C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION </b><br><br>
-                    <div class="certification-section text-center">
-
-                    <form method="post" action="" enctype="multipart/form-data">
-                    <input type="text" name="chairperson" class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['chairperson'] ?? ''); ?>"><br>
-    Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
-
-    <input type="text" name="member1" class="underline-input"  placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member1'] ?? ''); ?>"><br>
-    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
-
-    <input type="text" name="member2" class="underline-input"  placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member2'] ?? ''); ?>"><br>
-    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
-
-    <input type="text" name="member3"class="underline-input"  placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member3'] ?? ''); ?>"><br>
-    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
-
+            <!-- Logo, Title, and Subtitle Section -->
+            <div class="flex flex-col md:flex-row justify-center items-center mb-4 space-y-4 md:space-y-0 md:space-x-4">
+                <!-- DILG Logo -->
+                <div class="dilglogo flex justify-center">
+                    <img src="../img/dilg.png" alt="DILG Logo" style="max-width: 120px; max-height: 120px;" class="mx-auto">
                 </div>
-                <br><br>
-                <b>D. DATE ACCOMPLISHED<b><br>
-                <span class="spacingtabs"> <?php echo date("F j, Y"); ?>
 
-                <br>
-                <br>
-                <div class="text-right mt-4">
+                <!-- Title in Bordered Box -->
+                <div class="border border-gray-800 rounded-md p-4 text-center">
+                    <h1 class="text-xl font-bold">
+                        CY Lupong Tagapamayapa Incentives Award (LTIA) <br>
+                        LTIA FORM 3 (C/M) - COMPARATIVE EVALUATION FORM
+                    </h1>
+                </div>
+
+                <!-- LTIA Logo -->
+                <div class="ltialogo flex justify-center">
+                    <img src="images/ltialogo.png" alt="LTIA Logo" style="max-width: 120px; max-height: 120px;" class="mx-auto">
+                </div>
+            </div>
+
+            <!-- Identifying Information Section -->
+            <div class="border border-gray-800 rounded-md p-4 mt-4">
+                <b>A. IDENTIFYING INFORMATION</b>
+                <p style="padding-left: 5em;">City/Municipality <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY OF <?php echo htmlspecialchars($municipality_name); ?></p>
+                <p style="padding-left: 5em;">Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA</p>
+                <p style="padding-left: 5em;">Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA</p>
+                <p style="padding-left: 5em;">Category <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY</p>
+            </div>
+
+            <br>
+            <b>B. COMPARATIVE EVALUATION RESULTS</b><br>
+
+            <div class="overflow-x-auto mt-4">
+                <table class="table table-bordered w-full border border-gray-800">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2 text-left">LUPONG TAGAPAMAYAPA (LT)</th>
+                            <th class="px-4 py-2 text-left">OVERALL PERFORMANCE RATING</th>
+                            <th class="px-4 py-2 text-left">ADJECTIVAL RATING</th>
+                            <th class="px-4 py-2 text-left">RANK</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        $num = 1;
+                        $rank = 1;
+                        foreach ($barangay_ratings as $row): ?>
+                            <tr>
+                                <td class="px-4 py-2"><?php echo $num++; ?>. <span class="spacingtabs"><?php echo htmlspecialchars($row['barangay']); ?></span></td>
+                                <td class="px-4 py-2"><?php echo htmlspecialchars($row['total']); ?></td>
+                                <td class="px-4 py-2"><?php echo getAdjectivalRating($row['total']); ?></td>
+                                <td class="px-4 py-2"><?php echo $rank++; ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <br>
+            <b>C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION</b><br><br>
+            <div class="certification-section text-center">
+                <form method="post" action="" enctype="multipart/form-data">
+                    <input type="text" name="chairperson" class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['chairperson'] ?? ''); ?>"><br>
+                    Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+
+                    <input type="text" name="member1" class="underline-input"  placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member1'] ?? ''); ?>"><br>
+                    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+
+                    <input type="text" name="member2" class="underline-input"  placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member2'] ?? ''); ?>"><br>
+                    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+
+                    <input type="text" name="member3"class="underline-input"  placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member3'] ?? ''); ?>"><br>
+                    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+                </form>
+            </div>
+
+            <br><br>
+            <b>D. DATE ACCOMPLISHED</b><br>
+            <span class="spacingtabs"> <?php echo date("F j, Y"); ?></span>
+            <br><br>
+
+            <!-- Do not print this -->
+            <div class="text-right mt-4">
                 <input type="submit" value="Save"  style="background-color: #000035;" class="btn-save">
-              </div>
-          </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
+
+<script>
+    function printSecondCard() {
+        window.print();
+    }
+</script>
+
   <!-- Bootstrap Modal -->
 <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -323,47 +403,5 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-<script>
-  // Function to Print the Second Card
-  function printSecondCard() {
-    const secondCardContent = document.querySelector('.card:nth-of-type(2)').innerHTML;
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Print Second Card</title>
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-        </head>
-        <body onload="window.print(); window.close();">
-          ${secondCardContent}
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
-  }
-
-  // Function to Download the Second Card as PDF
-  function downloadSecondCard() {
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-
-    // Clone and format the content of the second card
-    const secondCardContent = document.querySelector('.card:nth-of-type(2)').innerHTML;
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = secondCardContent;
-
-    // Add content to PDF
-    pdf.html(tempDiv, {
-      callback: function (doc) {
-        doc.save('LTIA_Comparative_Evaluation_Form.pdf');
-      },
-      x: 10,
-      y: 10,
-      margin: 1
-    });
-  }
-</script>
-
 
 </html>

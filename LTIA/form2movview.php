@@ -1,11 +1,10 @@
 <?php
 session_start();
 include '../connection.php';
-// include '../functions.php';
 
 if (!isset($_SESSION['user_id'], $_SESSION['user_type'], $_SESSION['barangay_id']) || $_SESSION['user_type'] !== 'user') {
-  header("Location: ../login.php?error=session_expired");
-  exit;
+    header("Location: ../login.php?error=session_expired");
+    exit;
 }
 
 // Define allowed file columns
@@ -21,104 +20,11 @@ $allowed_columns = [
     'V_1_pdf_File', 'threepeoplesorg_pdf_File'
 ];
 
-// Fetch uploaded files from the database
-$sql = "SELECT " . implode(', ', $allowed_columns) . " FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-$stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-$stmt->execute();
-$row = $stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $row as an empty array if no records found
-
-// Fetch rates from the movrate table
-$rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id";
-$rate_stmt = $conn->prepare($rate_sql);
-$rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-$rate_stmt->execute();
-$rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $rate_row as an empty array if no records found
-
-// Fetch remarks from the movremark table
-$remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id";
-$remark_stmt = $conn->prepare($remark_sql);
-$remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-$remark_stmt->execute();
-$remark_row = $remark_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $remark_row as an empty array if no records found
-
-$file_changed = false; // Flag to track if any files have changed
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $upload_dir = 'movfolder/';
-
-    foreach ($allowed_columns as $column) {
-        if (isset($_FILES[$column]) && $_FILES[$column]['error'] === UPLOAD_ERR_OK) {
-            $file_name = time() . '_' . basename($_FILES[$column]['name']);
-            $file_path = $upload_dir . $file_name;
-
-            if (move_uploaded_file($_FILES[$column]['tmp_name'], $file_path)) {
-                // New file uploaded, use the new file name
-                $row[$column] = $file_name;
-                $file_changed = true; // Mark file as changed
-            }
-        } else {
-            // No new file uploaded, retain the old file
-            if (isset($_POST[$column . '_hidden'])) {
-                $row[$column] = $_POST[$column . '_hidden'];
-            }
-        }
-    }
-
-    // Prepare SQL for updating the file paths
-    $update_sql = "UPDATE mov SET ";
-    foreach ($allowed_columns as $column) {
-        $update_sql .= "$column = :$column, ";
-    }
-    $update_sql = rtrim($update_sql, ', ') . " WHERE user_id = :user_id AND barangay_id = :barangay_id";
-
-    $update_stmt = $conn->prepare($update_sql);
-
-    // Bind the updated or retained file paths
-    foreach ($allowed_columns as $column) {
-        $update_stmt->bindParam(":$column", $row[$column], PDO::PARAM_STR);
-    }
-    $update_stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $update_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-
-    // Execute the statement and provide feedback
-    if ($update_stmt->execute()) {
-        if ($file_changed) {
-            echo "<script>alert('Files updated successfully!');</script>";
-        } else {
-            echo "<script>document.getElementById('noChangesMessage').innerHTML = 'No file changes detected.';</script>";
-        }
-    } else {
-        echo "<script>alert('Error updating files. Please try again.');</script>";
-        error_log(print_r($update_stmt->errorInfo(), true)); // Log errors for debugging
-    }
-
-    // Redirect to prevent form resubmission
-    header("Location: " . $_SERVER['REQUEST_URI']);
-    exit;
-}
-// Current year
+// Get selected year
 $currentYear = date('Y');
-
-// Fetch unique years from the database
-$yearQuery = "SELECT DISTINCT year FROM mov
-              UNION SELECT DISTINCT YEAR(date) FROM movdraft_file
-              UNION SELECT DISTINCT YEAR(daterate) FROM movrate
-              UNION SELECT DISTINCT YEAR(dateremark) FROM movremark";
-$yearResult = $conn->query($yearQuery);
-$years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
-
-// Ensure current year is in the list even if there's no data
-if (!in_array($currentYear, $years)) {
-    $years[] = $currentYear;
-}
-
-// Sort years in descending order
-rsort($years);
-
-// Check if a specific year is selected, otherwise default to the current year
 $selectedYear = isset($_GET['year']) && ctype_digit($_GET['year']) ? $_GET['year'] : $currentYear;
+
+// Fetch uploaded files
 $sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
@@ -127,7 +33,71 @@ $stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
+// Fetch rates and remarks
+$rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id AND year = :year";
+$remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id AND year = :year";
+
+$rate_stmt = $conn->prepare($rate_sql);
+$remark_stmt = $conn->prepare($remark_sql);
+
+$rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$rate_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+$remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$remark_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+
+$rate_stmt->execute();
+$remark_stmt->execute();
+
+$rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+$remark_row = $remark_stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $upload_dir = 'movfolder/';
+    foreach ($allowed_columns as $column) {
+        if (isset($_FILES[$column]) && $_FILES[$column]['error'] === UPLOAD_ERR_OK) {
+            $file_name = time() . '_' . basename($_FILES[$column]['name']);
+            $file_path = $upload_dir . $file_name;
+
+            if (move_uploaded_file($_FILES[$column]['tmp_name'], $file_path)) {
+                $row[$column] = $file_name;
+            }
+        } else {
+            $row[$column] = $_POST[$column . '_hidden'] ?? null;
+        }
+    }
+
+    $update_sql = "UPDATE mov SET ";
+    foreach ($allowed_columns as $column) {
+        $update_sql .= "$column = :$column, ";
+    }
+    $update_sql = rtrim($update_sql, ', ') . " WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
+
+    $update_stmt = $conn->prepare($update_sql);
+    foreach ($allowed_columns as $column) {
+        $update_stmt->bindValue(":$column", $row[$column] ?? null, PDO::PARAM_STR);
+    }
+    $update_stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $update_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+    $update_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+
+    if ($update_stmt->execute()) {
+        header("Location: " . $_SERVER['PHP_SELF'] . "?year=" . $selectedYear);
+        exit;
+    } else {
+        error_log("Update failed: " . print_r($update_stmt->errorInfo(), true));
+    }
+}
+
+// Fetch years
+$yearQuery = "SELECT DISTINCT year FROM mov";
+$yearResult = $conn->query($yearQuery);
+$years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
+if (!in_array($currentYear, $years)) {
+    $years[] = $currentYear;
+}
+rsort($years);
 ?>
+
 
 <!doctype html>
 <html lang="en">
@@ -162,8 +132,6 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
                             <?php endforeach; ?>
                         </select>
                     </form>
-
-
                         <?php
                         // Update your SQL queries to include the selected year as a filter
                         $sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
@@ -173,6 +141,22 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
                         $stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
                         $stmt->execute();
                         $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+                        // Fetch rates from the movrate table for the selected year
+                      $rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id AND year = :year";
+                      $rate_stmt = $conn->prepare($rate_sql);
+                      $rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+                      $rate_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+                      $rate_stmt->execute();
+                      $rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize as an empty array if no records found
+
+                      // Fetch remarks from the movremark table for the selected year
+                      $remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id AND year = :year";
+                      $remark_stmt = $conn->prepare($remark_sql);
+                      $remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+                      $remark_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+                      $remark_stmt->execute();
+                      $remark_row = $remark_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize as an empty array if no records found
+
                         ?>
                         </h1>
                     </div>
@@ -215,11 +199,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_1a_pdf_rate']) ? $rate_row['IA_1a_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_1a_pdf_remark']) ? $remark_row['IA_1a_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IA_1a_pdf_File" name="IA_1a_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit1')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IA_1a_pdf_File" id="IA_1a_pdf_File" 
-                                value="<?php echo !empty($row['IA_1a_pdf_File']) ? htmlspecialchars($row['IA_1a_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IA_1a_pdf_File" id="submit1" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IA_1a_pdf_File" name="IA_1a_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit1', 'cancel1')" />
+              <input type="hidden" name="IA_1a_pdf_File_hidden" id="IA_1a_pdf_File_hidden" 
+               value="<?php echo !empty($row['IA_1a_pdf_File']) ? htmlspecialchars($row['IA_1a_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IA_1a_pdf_File" id="submit1" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel1" onclick="clearInput('IA_1a_pdf_File', 'submit1', 'cancel1')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
           <tr>
             <td>b) Sending of Notices and Summons</td>
@@ -232,11 +220,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_1b_pdf_rate']) ? $rate_row['IA_1b_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_1b_pdf_remark']) ? $remark_row['IA_1b_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IA_1b_pdf_File" name="IA_1b_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit2')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IA_1b_pdf_File" id="IA_1b_pdf_File" 
-                                value="<?php echo !empty($row['IA_1b_pdf_File']) ? htmlspecialchars($row['IA_1b_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IA_1b_pdf_File" id="submit2" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IA_1b_pdf_File" name="IA_1b_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit2', 'cancel2')" />
+              <input type="hidden" name="IA_1b_pdf_File_hidden" id="IA_1b_pdf_File_hidden" 
+               value="<?php echo !empty($row['IA_1b_pdf_File']) ? htmlspecialchars($row['IA_1b_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IA_1b_pdf_File" id="submit2" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel2" onclick="clearInput('IA_1b_pdf_File', 'submit2', 'cancel2')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
           <tr>
                 <td>2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
@@ -256,11 +248,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_2a_pdf_rate']) ? $rate_row['IA_2a_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_2a_pdf_remark']) ? $remark_row['IA_2a_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IA_2a_pdf_File" name="IA_2a_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit3')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IA_2a_pdf_File" id="IA_2a_pdf_File" 
-                                value="<?php echo !empty($row['IA_2a_pdf_File']) ? htmlspecialchars($row['IA_2a_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IA_2a_pdf_File" id="submit3" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IA_2a_pdf_File" name="IA_2a_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit3', 'cancel3')" />
+              <input type="hidden" name="IA_2a_pdf_File_hidden" id="IA_2a_pdf_File_hidden" 
+               value="<?php echo !empty($row['IA_2a_pdf_File']) ? htmlspecialchars($row['IA_2a_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IA_2a_pdf_File" id="submit3" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel3" onclick="clearInput('IA_2a_pdf_File', 'submit3', 'cancel3')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
               </tr>
               <tr>
                 <td>b) Conciliation (15 days from initial confrontation with the Pangkat)</td>
@@ -273,11 +269,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_2b_pdf_rate']) ? $rate_row['IA_2b_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_2b_pdf_remark']) ? $remark_row['IA_2b_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IA_2b_pdf_File" name="IA_2b_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit4')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IA_2b_pdf_File" id="IA_2b_pdf_File" 
-                                value="<?php echo !empty($row['IA_2b_pdf_File']) ? htmlspecialchars($row['IA_2b_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IA_2b_pdf_File" id="submit4" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IA_2b_pdf_File" name="IA_2b_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit4', 'cancel4')" />
+              <input type="hidden" name="IA_2b_pdf_File_hidden" id="IA_2b_pdf_File_hidden" 
+               value="<?php echo !empty($row['IA_2b_pdf_File']) ? htmlspecialchars($row['IA_2b_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IA_2b_pdf_File" id="submit4" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel4" onclick="clearInput('IA_2b_pdf_File', 'submit4', 'cancel4')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
               </tr>
               <tr>
                 <td>c) Conciliation (15 days from initial confrontation with the Pangkat)</td>
@@ -290,11 +290,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_2c_pdf_rate']) ? $rate_row['IA_2c_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_2c_pdf_remark']) ? $remark_row['IA_2c_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IA_2c_pdf_File" name="IA_2c_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit5')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IA_2c_pdf_File" id="IA_2c_pdf_File" 
-                                value="<?php echo !empty($row['IA_2c_pdf_File']) ? htmlspecialchars($row['IA_2c_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IA_2c_pdf_File" id="submit5" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IA_2c_pdf_File" name="IA_2c_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit5', 'cancel5')" />
+              <input type="hidden" name="IA_2c_pdf_File_hidden" id="IA_2c_pdf_File_hidden" 
+               value="<?php echo !empty($row['IA_2c_pdf_File']) ? htmlspecialchars($row['IA_2c_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IA_2c_pdf_File" id="submit5" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel5" onclick="clearInput('IA_2c_pdf_File', 'submit5', 'cancel5')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
               </tr>
               <tr>
                 <td>d) Arbitration (within 10 days from the date of the agreement to arbitrate)</td>
@@ -307,11 +311,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_2d_pdf_rate']) ? $rate_row['IA_2d_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_2d_pdf_remark']) ? $remark_row['IA_2d_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IA_2d_pdf_File" name="IA_1b_IA_2d_pdf_Filepdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit6')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IA_2d_pdf_File" id="IA_2d_pdf_File" 
-                                value="<?php echo !empty($row['IA_2d_pdf_File']) ? htmlspecialchars($row['IA_2d_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IA_2d_pdf_File" id="submit6" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IA_2d_pdf_File" name="IA_2d_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit6', 'cancel6')" />
+              <input type="hidden" name="IA_2d_pdf_File_hidden" id="IA_2d_pdf_File_hidden" 
+               value="<?php echo !empty($row['IA_2d_pdf_File']) ? htmlspecialchars($row['IA_2d_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IA_2d_pdf_File" id="submit6" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel6" onclick="clearInput('IA_2d_pdf_File', 'submit6', 'cancel6')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
               </tr>
               <tr>
                 <td>e) Conciliation beyond 46 days but not more than 60 days on a clearly meritorious case</td>
@@ -324,11 +332,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IA_2e_pdf_rate']) ? $rate_row['IA_2e_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IA_2e_pdf_remark']) ? $remark_row['IA_2e_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IA_2e_pdf_File" name="IA_2e_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit7')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IA_2e_pdf_File" id="IA_2e_pdf_File" 
-                                value="<?php echo !empty($row['IA_2e_pdf_File']) ? htmlspecialchars($row['IA_2e_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IA_2e_pdf_File" id="submit7" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IA_2e_pdf_File" name="IA_2e_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit7', 'cancel7')" />
+              <input type="hidden" name="IA_2e_pdf_File_hidden" id="IA_2e_pdf_File_hidden" 
+               value="<?php echo !empty($row['IA_2e_pdf_File']) ? htmlspecialchars($row['IA_2e_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IA_2e_pdf_File" id="submit7" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel7" onclick="clearInput('IA_2e_pdf_File', 'submit7', 'cancel7')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
               </tr>
               <tr>
                 <th>B. Systematic Maintenance of Records</th>
@@ -355,11 +367,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_1forcities_pdf_rate']) ? $rate_row['IB_1forcities_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_1forcities_pdf_remark']) ? $remark_row['IB_1forcities_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_1forcities_pdf_File" name="IB_1forcities_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit8')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IB_1forcities_pdf_File" id="IB_1forcities_pdf_File" 
-                                value="<?php echo !empty($row['IB_1forcities_pdf_File']) ? htmlspecialchars($row['IB_1forcities_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IB_1forcities_pdf_File" id="submit8" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IB_1forcities_pdf_File" name="IB_1forcities_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit8', 'cancel8')" />
+              <input type="hidden" name="IB_1forcities_pdf_File_hidden" id="IB_1forcities_pdf_File_hidden" 
+               value="<?php echo !empty($row['IB_1forcities_pdf_File']) ? htmlspecialchars($row['IB_1forcities_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IB_1forcities_pdf_File" id="submit2" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel8" onclick="clearInput('IB_1forcities_pdf_File', 'submit8', 'cancel8')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>For Municipalities:</td>
@@ -379,11 +395,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_1aformuni_pdf_rate']) ? $rate_row['IB_1aformuni_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_1aformuni_pdf_remark']) ? $remark_row['IB_1aformuni_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_1aformuni_pdf_File" name="IB_1aformuni_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit9')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IB_1aformuni_pdf_File" id="IB_1aformuni_pdf_File" 
-                                value="<?php echo !empty($row['IB_1aformuni_pdf_File']) ? htmlspecialchars($row['IB_1aformuni_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IB_1aformuni_pdf_File" id="submit9" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>   
+            <td class="text-center align-middle"><input type="file" id="IB_1aformuni_pdf_File" name="IB_1aformuni_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit9', 'cancel9')" />
+              <input type="hidden" name="IB_1aformuni_pdf_File_hidden" id="IB_1aformuni_pdf_File_hidden" 
+               value="<?php echo !empty($row['IB_1aformuni_pdf_File']) ? htmlspecialchars($row['IB_1aformuni_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IB_1aformuni_pdf_File" id="submit9" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel9" onclick="clearInput('IB_1aformuni_pdf_File', 'submit9', 'cancel9')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>b. Digital Record Filing</td>
@@ -396,11 +416,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_1bformuni_pdf_rate']) ? $rate_row['IB_1bformuni_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_1bformuni_pdf_remark']) ? $remark_row['IB_1bformuni_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_1bformuni_pdf_File" name="IB_1bformuni_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit10')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IB_1bformuni_pdf_File" id="IB_1bformuni_pdf_File" 
-                                value="<?php echo !empty($row['IB_1bformuni_pdf_File']) ? htmlspecialchars($row['IB_1bformuni_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IB_1bformuni_pdf_File" id="submit10" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IB_1bformuni_pdf_File" name="IB_1bformuni_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit10', 'cancel10')" />
+              <input type="hidden" name="IB_1bformuni_pdf_File_hidden" id="IB_1bformuni_pdf_File_hidden" 
+               value="<?php echo !empty($row['IB_1bformuni_pdf_File']) ? htmlspecialchars($row['IB_1bformuni_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IB_1bformuni_pdf_File" id="submit10" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel10" onclick="clearInput('IB_1bformuni_pdf_File', 'submit10', 'cancel10')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>2. Copies of Minutes of Lupon meetings with attendance sheets and notices</td>
@@ -413,11 +437,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_2_pdf_rate']) ? $rate_row['IB_2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_2_pdf_remark']) ? $remark_row['IB_2_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_2_pdf_File" name="IB_2_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit11')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IB_2_pdf_File" id="IB_2_pdf_File" 
-                                value="<?php echo !empty($row['IB_2_pdf_File']) ? htmlspecialchars($row['IB_2_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IB_2_pdf_File" id="submit11" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IB_2_pdf_File" name="IB_2_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit11', 'cancel11')" />
+              <input type="hidden" name="IB_2_pdf_File_hidden" id="IB_2_pdf_File_hidden" 
+               value="<?php echo !empty($row['IB_2_pdf_File']) ? htmlspecialchars($row['IB_2_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IB_2_pdf_File" id="submit11" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel11" onclick="clearInput('IB_2_pdf_File', 'submit11', 'cancel11')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>3. Copies of reports submitted to the Court and to the DILG on file</td>
@@ -430,11 +458,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_3_pdf_rate']) ? $rate_row['IB_3_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_3_pdf_remark']) ? $remark_row['IB_3_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_3_pdf_File" name="IB_3_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit12')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IB_3_pdf_File" id="IB_3_pdf_File" 
-                                value="<?php echo !empty($row['IB_3_pdf_File']) ? htmlspecialchars($row['IB_3_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IB_3_pdf_File" id="submit12" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IB_3_pdf_File" name="IB_3_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit12', 'cancel12')" />
+              <input type="hidden" name="IB_3_pdf_File_hidden" id="IB_3_pdf_File_hidden" 
+               value="<?php echo !empty($row['IB_3_pdf_File']) ? htmlspecialchars($row['IB_3_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IB_3_pdf_File" id="submit12" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel12" onclick="clearInput('IB_3_pdf_File', 'submit12', 'cancel12')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>4. All records are kept on file in a secured filing cabinet(s)</td>
@@ -447,11 +479,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IB_4_pdf_rate']) ? $rate_row['IB_4_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IB_4_pdf_remark']) ? $remark_row['IB_4_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_4_pdf_File" name="IB_4_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit13')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IB_4_pdf_File" id="IB_4_pdf_File" 
-                                value="<?php echo !empty($row['IB_4_pdf_File']) ? htmlspecialchars($row['IB_4_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IB_4_pdf_File" id="submit13" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td> 
+            <td class="text-center align-middle"><input type="file" id="IB_4_pdf_File" name="IB_4_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit13', 'cancel13')" />
+              <input type="hidden" name="IB_4_pdf_File_hidden" id="IB_4_pdf_File_hidden" 
+               value="<?php echo !empty($row['IB_4_pdf_File']) ? htmlspecialchars($row['IB_4_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IB_4_pdf_File" id="submit13" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel13" onclick="clearInput('IB_4_pdf_File', 'submit13', 'cancel13')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <th>C. Timely Submissions to the Court and the DILG</th>
@@ -471,11 +507,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IC_1_pdf_rate']) ? $rate_row['IC_1_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IC_1_pdf_remark']) ? $remark_row['IC_1_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IC_1_pdf_File" name="IC_1_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit14')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IC_1_pdf_File" id="IC_1_pdf_File" 
-                                value="<?php echo !empty($row['IC_1_pdf_File']) ? htmlspecialchars($row['IC_1_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IC_1_pdf_File" id="submit14" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td> 
+            <td class="text-center align-middle"><input type="file" id="IC_1_pdf_File" name="IC_1_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit14', 'cancel14')" />
+              <input type="hidden" name="IC_1_pdf_File_hidden" id="IC_1_pdf_File_hidden" 
+               value="<?php echo !empty($row['IC_1_pdf_File']) ? htmlspecialchars($row['IC_1_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IC_1_pdf_File" id="submit14" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel14" onclick="clearInput('IC_1_pdf_File', 'submit14', 'cancel14')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>2. To the DILG (Quarterly)</td>
@@ -488,11 +528,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IC_2_pdf_rate']) ? $rate_row['IC_2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IC_2_pdf_remark']) ? $remark_row['IC_2_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IC_2_pdf_File" name="IC_2_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit15')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IC_2_pdf_File" id="IC_2_pdf_File" 
-                                value="<?php echo !empty($row['IC_2_pdf_File']) ? htmlspecialchars($row['IC_2_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IC_2_pdf_File" id="submit15" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IC_2_pdf_File" name="IC_2_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit15', 'cancel15')" />
+              <input type="hidden" name="IC_2_pdf_File_hidden" id="IC_2_pdf_File_hidden" 
+               value="<?php echo !empty($row['IC_2_pdf_File']) ? htmlspecialchars($row['IC_2_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IC_2_pdf_File" id="submit15" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel15" onclick="clearInput('IC_2_pdf_File', 'submit15', 'cancel15')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <th>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
@@ -512,11 +556,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['ID_1_pdf_rate']) ? $rate_row['ID_1_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['ID_1_pdf_remark']) ? $remark_row['ID_1_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="ID_1_pdf_File" name="ID_1_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit16')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="ID_1_pdf_File" id="ID_1_pdf_File" 
-                                value="<?php echo !empty($row['ID_1_pdf_File']) ? htmlspecialchars($row['ID_1_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="ID_1_pdf_File" id="submit16" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="ID_1_pdf_File" name="ID_1_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit16', 'cancel16')" />
+              <input type="hidden" name="ID_1_pdf_File_hidden" id="ID_1_pdf_File_hidden" 
+               value="<?php echo !empty($row['ID_1_pdf_File']) ? htmlspecialchars($row['ID_1_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="ID_1_pdf_File" id="submit16" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel16" onclick="clearInput('ID_1_pdf_File', 'submit16', 'cancel16')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>2. Minutes of the Meeting</td>
@@ -529,11 +577,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['ID_2_pdf_rate']) ? $rate_row['ID_2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['ID_2_pdf_remark']) ? $remark_row['ID_2_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="ID_2_pdf_File" name="ID_2_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit17')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="ID_2_pdf_File" id="ID_2_pdf_File" 
-                                value="<?php echo !empty($row['ID_2_pdf_File']) ? htmlspecialchars($row['ID_2_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="ID_2_pdf_File" id="submit17" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td> 
+            <td class="text-center align-middle"><input type="file" id="ID_2_pdf_File" name="ID_2_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit17', 'cancel17')" />
+              <input type="hidden" name="ID_2_pdf_File_hidden" id="ID_2_pdf_File_hidden" 
+               value="<?php echo !empty($row['ID_2_pdf_File']) ? htmlspecialchars($row['ID_2_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="ID_2_pdf_File" id="submit17" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel17" onclick="clearInput('ID_2_pdf_File', 'submit17', 'cancel17')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <th>II. EFFECTIVENESS IN SECURING THE SETTLEMENT OF INTERPERSONAL DISPUTE OBJECTIVE OF THE KATARUNGANG PAMBARANGAY</th>
@@ -553,11 +605,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIA_pdf_rate']) ? $rate_row['IIA_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIA_pdf_remark']) ? $remark_row['IIA_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIA_pdf_File" name="IIA_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit18')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIA_pdf_File" id="IIA_pdf_File" 
-                                value="<?php echo !empty($row['IIA_pdf_File']) ? htmlspecialchars($row['IIA_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIA_pdf_File" id="submit18" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td> 
+            <td class="text-center align-middle"><input type="file" id="IIA_pdf_File" name="IIA_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit18', 'cancel18')" />
+              <input type="hidden" name="IIA_pdf_File_hidden" id="IIA_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIA_pdf_File']) ? htmlspecialchars($row['IIA_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIA_pdf_File" id="submit18" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel18" onclick="clearInput('IIA_pdf_File', 'submit18', 'cancel18')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>B. Quality of Settlement of Cases</td>
@@ -577,11 +633,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIB_1_pdf_rate']) ? $rate_row['IIB_1_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIB_1_pdf_remark']) ? $remark_row['IIB_1_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIB_1_pdf_File" name="IIB_1_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit19')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIB_1_pdf_File" id="IIB_1_pdf_File" 
-                                value="<?php echo !empty($row['IIB_1_pdf_File']) ? htmlspecialchars($row['IIB_1_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIB_1_pdf_File" id="submit19" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>  
+            <td class="text-center align-middle"><input type="file" id="IIB_1_pdf_File" name="IIB_1_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit19', 'cancel19')" />
+              <input type="hidden" name="IIB_1_pdf_File_hidden" id="IIB_1_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIB_1_pdf_File']) ? htmlspecialchars($row['IIB_1_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIB_1_pdf_File" id="submit19" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel19" onclick="clearInput('IIB_1_pdf_File', 'submit19', 'cancel19')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>2. Non-recurrence of cases settled</td>
@@ -595,11 +655,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIB_2_pdf_rate']) ? $rate_row['IIB_2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIB_2_pdf_remark']) ? $remark_row['IIB_2_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIB_2_pdf_File" name="IIB_2_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit20')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIB_2_pdf_File" id="IIB_2_pdf_File" 
-                                value="<?php echo !empty($row['IIB_2_pdf_File']) ? htmlspecialchars($row['IIB_2_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIB_2_pdf_File" id="submit20" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IIB_2_pdf_File" name="IIB_2_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit20', 'cancel20')" />
+              <input type="hidden" name="IIB_2_pdf_File_hidden" id="IIB_2_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIB_2_pdf_File']) ? htmlspecialchars($row['IIB_2_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIB_2_pdf_File" id="submit20" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel20" onclick="clearInput('IIB_2_pdf_File', 'submit20', 'cancel20')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>C. At least 80% compliance with the terms of settlement or award after the cases have been settled</td>
@@ -612,11 +676,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIC_pdf_rate']) ? $rate_row['IIC_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIC_pdf_remark']) ? $remark_row['IIC_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIC_pdf_File" name="IIC_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit21')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIC_pdf_File" id="IIC_pdf_File" 
-                                value="<?php echo !empty($row['IIC_pdf_File']) ? htmlspecialchars($row['IIC_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIC_pdf_File" id="submit21" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IIC_pdf_File" name="IIC_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit21', 'cancel21')" />
+              <input type="hidden" name="IIC_pdf_File_hidden" id="IIC_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIC_pdf_File']) ? htmlspecialchars($row['IIC_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIC_pdf_File" id="submit21" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel21" onclick="clearInput('IIC_pdf_File', 'submit21', 'cancel21')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <th>III. CREATIVITY AND RESOURCEFULNESS OF THE LUPONG TAGAPAMAYAPA</th>
@@ -635,13 +703,17 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIIA_pdf_rate']) ? $rate_row['IIIA_pdf_rate'] : 'Not rated'; ?></td>
+            <td><?php echo isset($rate_row['IIIA_pdf_File']) ? $rate_row['IIIA_pdf_File'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIA_pdf_remark']) ? $remark_row['IIIA_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIA_pdf_File" name="IIIA_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit22')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIIA_pdf_File" id="IIIA_pdf_File" 
-                                value="<?php echo !empty($row['IIIA_pdf_File']) ? htmlspecialchars($row['IIIA_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIIA_pdf_File" id="submit22" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td> 
+            <td class="text-center align-middle"><input type="file" id="IIIA_pdf_File" name="IIIA_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit22', 'cancel22')" />
+              <input type="hidden" name="IIIA_pdf_File_hidden" id="IIIA_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIIA_pdf_File']) ? htmlspecialchars($row['IIIA_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIIA_pdf_File" id="submit22" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel22" onclick="clearInput('IIIA_pdf_File', 'submit22', 'cancel22')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>B. Coordination with Concerned Agencies relating to disputes filed (PNP, DSWD, DILG, DAR, DENR, Office of the Prosecutor, Court, DOJ, CHR, etc.)</td>
@@ -655,11 +727,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIB_pdf_rate']) ? $rate_row['IIIB_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIB_pdf_remark']) ? $remark_row['IIIB_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIB_pdf_File" name="IIIB_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit23')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIIB_pdf_File" id="IIIB_pdf_File" 
-                                value="<?php echo !empty($row['IIIB_pdf_File']) ? htmlspecialchars($row['IIIB_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIIB_pdf_File" id="submit23" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IIIB_pdf_File" name="IIIB_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit23', 'cancel23')" />
+              <input type="hidden" name="IIIB_pdf_File_hidden" id="IIIB_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIIB_pdf_File']) ? htmlspecialchars($row['IIIB_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIIB_pdf_File" id="submit23" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel23" onclick="clearInput('IIIB_pdf_File', 'submit23', 'cancel23')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>C. Sustained information drive to promote Katarungang Pambarangay</td>
@@ -687,11 +763,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_1forcities_pdf_rate']) ? $rate_row['IIIC_1forcities_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_1forcities_pdf_remark']) ? $remark_row['IIIC_1forcities_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIC_1forcities_pdf_File" name="IIIC_1forcities_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit24')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIIC_1forcities_pdf_File" id="IIIC_1forcities_pdf_File" 
-                                value="<?php echo !empty($row['IIIC_1forcities_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIIC_1forcities_pdf_File" id="submit24" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IIIC_1forcities_pdf_File" name="IIIC_1forcities_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit24', 'cancel24')" />
+              <input type="hidden" name="IIIC_1forcities_pdf_File_hidden" id="IIIC_1forcities_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIIC_1forcities_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIIC_1forcities_pdf_File" id="submit24" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel24" onclick="clearInput('IIIC_1forcities_pdf_File', 'submit24', 'cancel24')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>
@@ -708,11 +788,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_1forcities2_pdf_rate']) ? $rate_row['IIIC_1forcities2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_1forcities2_remark']) ? $remark_row['IIIC_1forcities2_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIC_1forcities2_pdf_File" name="IIIC_1forcities2_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit25')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIIC_1forcities2_pdf_File" id="IIIC_1forcities2_pdf_File" 
-                                value="<?php echo !empty($row['IIIC_1forcities2_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities2_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIIC_1forcities2_pdf_File" id="submit25" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IIIC_1forcities2_pdf_File" name="IIIC_1forcities2_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit25', 'cancel25')" />
+              <input type="hidden" name="IIIC_1forcities2_pdf_File_hidden" id="IIIC_1forcities2_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIIC_1forcities2_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities2_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIIC_1forcities2_pdf_File" id="submit25" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel25" onclick="clearInput('IIIC_1forcities2_pdf_File', 'submit25', 'cancel25')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>
@@ -729,11 +813,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_1forcities3_pdf_rate']) ? $rate_row['IIIC_1forcities3_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_1forcities3_pdf_remark']) ? $remark_row['IIIC_1forcities3_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIC_1forcities3_pdf_File" name="IIIC_1forcities3_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit26')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIIC_1forcities3_pdf_File" id="IIIC_1forcities3_pdf_File" 
-                                value="<?php echo !empty($row['IIIC_1forcities3_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities3_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIIC_1forcities3_pdf_File" id="submit26" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IIIC_1forcities3_pdf_File" name="IIIC_1forcities3_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit26', 'cancel26')" />
+              <input type="hidden" name="IIIC_1forcities3_pdf_File_hidden" id="IIIC_1forcities3_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIIC_1forcities3_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities3_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIIC_1forcities3_pdf_File" id="submit26" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel26" onclick="clearInput('IIIC_1forcities3_pdf_File', 'submit26', 'cancel26')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>2. For Municipalities</td>
@@ -757,11 +845,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_2formuni1_pdf_rate']) ? $rate_row['IIIC_2formuni1_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_2formuni1_pdf_remark']) ? $remark_row['IIIC_2formuni1_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIC_2formuni1_pdf_File" name="IIIC_2formuni1_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit27')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIIC_2formuni1_pdf_File" id="IIIC_2formuni1_pdf_File" 
-                                value="<?php echo !empty($row['IIIC_2formuni1_pdf_File']) ? htmlspecialchars($row['IIIC_2formuni1_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIIC_2formuni1_pdf_File" id="submit27" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IIIC_2formuni1_pdf_File" name="IIIC_2formuni1_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit27', 'cancel27')" />
+              <input type="hidden" name="IIIC_2formuni1_pdf_File_hidden" id="IIIC_2formuni1_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIIC_2formuni1_pdf_File']) ? htmlspecialchars($row['IIIC_2formuni1_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIIC_2formuni1_pdf_File" id="submit27" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel27" onclick="clearInput('IIIC_2formuni1_pdf_File', 'submit27', 'cancel27')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>
@@ -778,11 +870,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_2formuni2_pdf_rate']) ? $rate_row['IIIC_2formuni2_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_2formuni2_pdf_remark']) ? $remark_row['IIIC_2formuni2_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIC_2formuni2_pdf_File" name="IIIC_2formuni2_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit28')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIIC_2formuni2_pdf_File" id="IIIC_2formuni2_pdf_File" 
-                                value="<?php echo !empty($row['IIIC_2formuni2_pdf_File']) ? htmlspecialchars($row['IIIC_2formuni2_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIIC_2formuni2_pdf_File" id="submit28" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IIIC_2formuni2_pdf_File" name="IIIC_2formuni2_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit28', 'cancel28')" />
+              <input type="hidden" name="IIIC_2formuni2_pdf_File_hidden" id="IIIC_2formuni2_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIIC_2formuni2_pdf_File']) ? htmlspecialchars($row['IIIC_2formuni2_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIIC_2formuni2_pdf_File" id="submit28" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel28" onclick="clearInput('IIIC_2formuni2_pdf_File', 'submit28', 'cancel28')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>
@@ -799,11 +895,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIIC_2formuni3_pdf_rate']) ? $rate_row['IIIC_2formuni3_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIIC_2formuni3_pdf_remark']) ? $remark_row['IIIC_2formuni3_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIC_2formuni3_pdf_File" name="IIIC_2formuni3_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit29')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIIC_2formuni3_pdf_File" id="IIIC_2formuni3_pdf_File" 
-                                value="<?php echo !empty($row['IIIC_2formuni3_pdf_File']) ? htmlspecialchars($row['IIIC_2formuni3_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIIC_2formuni3_pdf_File" id="submit29" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>  
+            <td class="text-center align-middle"><input type="file" id="IIIC_2formuni3_pdf_File" name="IIIC_2formuni3_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit29', 'cancel29')" />
+              <input type="hidden" name="IIIC_2formuni3_pdf_File_hidden" id="IIIC_2formuni3_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIIC_2formuni3_pdf_File']) ? htmlspecialchars($row['IIIC_2formuni3_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIIC_2formuni3_pdf_File" id="submit29" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel29" onclick="clearInput('IIIC_2formuni3_pdf_File', 'submit29', 'cancel29')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>D. KP Training or seminar within the assessment period<br />
@@ -817,11 +917,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IIID_pdf_rate']) ? $rate_row['IIID_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IIID_pdf_remark']) ? $remark_row['IIID_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIID_pdf_File" name="IIID_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit30')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IIID_pdf_File" id="IIID_pdf_File" 
-                                value="<?php echo !empty($row['IIID_pdf_File']) ? htmlspecialchars($row['IIID_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IIID_pdf_File" id="submit30" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>  
+            <td class="text-center align-middle"><input type="file" id="IIID_pdf_File" name="IIID_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit30', 'cancel30')" />
+              <input type="hidden" name="IIID_pdf_File_hidden" id="IIID_pdf_File_hidden" 
+               value="<?php echo !empty($row['IIID_pdf_File']) ? htmlspecialchars($row['IIID_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IIID_pdf_File" id="submit30" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel30" onclick="clearInput('IIID_pdf_File', 'submit30', 'cancel30')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <th>IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
@@ -848,11 +952,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IV_forcities_pdf_rate']) ? $rate_row['IV_forcities_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IV_forcities_pdf_remark']) ? $remark_row['IV_forcities_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IV_forcities_pdf_File" name="IV_forcities_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit31')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IV_forcities_pdf_File" id="IV_forcities_pdf_File" 
-                                value="<?php echo !empty($row['IV_forcities_pdf_File']) ? htmlspecialchars($row['IV_forcities_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IV_forcities_pdf_File" id="submit31" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>
+            <td class="text-center align-middle"><input type="file" id="IV_forcities_pdf_File" name="IV_forcities_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit31', 'cancel31')" />
+              <input type="hidden" name="IV_forcities_pdf_File_hidden" id="IV_forcities_pdf_File_hidden" 
+               value="<?php echo !empty($row['IV_forcities_pdf_File']) ? htmlspecialchars($row['IV_forcities_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IV_forcities_pdf_File" id="submit31" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel31" onclick="clearInput('IV_forcities_pdf_File', 'submit31', 'cancel31')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>
           </tr>
               <tr>
                 <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
@@ -865,11 +973,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['IV_muni_pdf_rate']) ? $rate_row['IV_muni_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['IV_muni_pdf_remark']) ? $remark_row['IV_muni_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IV_muni_pdf_File" name="IV_muni_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit32')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="IV_muni_pdf_File" id="IV_muni_pdf_File" 
-                                value="<?php echo !empty($row['IV_muni_pdf_File']) ? htmlspecialchars($row['IV_muni_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="IV_muni_pdf_File" id="submit32" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>     
+            <td class="text-center align-middle"><input type="file" id="IV_muni_pdf_File" name="IV_muni_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit32', 'cancel32')" />
+              <input type="hidden" name="IV_muni_pdf_File_hidden" id="IV_muni_pdf_File_hidden" 
+               value="<?php echo !empty($row['IV_muni_pdf_File']) ? htmlspecialchars($row['IV_muni_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="IV_muni_pdf_File" id="submit32" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel32" onclick="clearInput('IV_muni_pdf_File', 'submit32', 'cancel32')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>  
           </tr>
               <tr>
                 <th>V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
@@ -889,11 +1001,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>
             <td><?php echo isset($rate_row['V_1_pdf_rate']) ? $rate_row['V_1_pdf_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['V_1_pdf_remark']) ? $remark_row['V_1_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="V_1_pdf_File" name="V_1_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit33')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="V_1_pdf_File" id="V_1_pdf_File" 
-                                value="<?php echo !empty($row['V_1_pdf_File']) ? htmlspecialchars($row['V_1_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="V_1_pdf_File" id="submit33" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>    
+            <td class="text-center align-middle"><input type="file" id="V_1_pdf_File" name="V_1_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit33', 'cancel33')" />
+              <input type="hidden" name="V_1_pdf_File_hidden" id="V_1_pdf_File_hidden" 
+               value="<?php echo !empty($row['V_1_pdf_File']) ? htmlspecialchars($row['V_1_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="V_1_pdf_File" id="submit33" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel33" onclick="clearInput('V_1_pdf_File', 'submit33', 'cancel33')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>  
           </tr>
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
@@ -906,11 +1022,15 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
             </td>   
             <td><?php echo isset($rate_row['threepeoplesorg_rate']) ? $rate_row['threepeoplesorg_rate'] : 'Not rated'; ?></td>
             <td><?php echo isset($remark_row['threepeoplesorg_remark']) ? $remark_row['threepeoplesorg_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="threepeoplesorg_pdf_File" name="threepeoplesorg_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit34')" onchange="validateFileType(this)"/>
-            <input type="hidden" name="threepeoplesorg_pdf_File" id="threepeoplesorg_pdf_File" 
-                                value="<?php echo !empty($row['threepeoplesorg_pdf_File']) ? htmlspecialchars($row['threepeoplesorg_pdf_File']) : ''; ?>">
-            <button type="submit" name="update" value="threepeoplesorg_pdf_File" id="submit34" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-            </td>     
+            <td class="text-center align-middle"><input type="file" id="threepeoplesorg_pdf_File" name="threepeoplesorg_pdf_File" accept=".pdf" 
+               onchange="toggleSubmitButton(this, 'submit34', 'cancel34')" />
+              <input type="hidden" name="threepeoplesorg_pdf_File_hidden" id="threepeoplesorg_pdf_File_hidden" 
+               value="<?php echo !empty($row['threepeoplesorg_pdf_File']) ? htmlspecialchars($row['threepeoplesorg_pdf_File']) : ''; ?>">
+          <button type="submit" name="update" value="threepeoplesorg_pdf_File" id="submit34" 
+                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+          <button type="button" id="cancel34" onclick="clearInput('threepeoplesorg_pdf_File', 'submit34', 'cancel34')" 
+                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+    </td>   
           </tr>
               <tr>
               <th>Total</th>
@@ -983,14 +1103,30 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
         });
     });
-    function toggleSubmitButton(fileInput, buttonId) {
-    const button = document.getElementById(buttonId);
-    if (fileInput.files.length > 0) {
-        button.style.display = 'inline-block';
+    function toggleSubmitButton(input, submitId, cancelId) {
+    const submitButton = document.getElementById(submitId);
+    const cancelButton = document.getElementById(cancelId);
+
+    if (input.files.length > 0) {
+        if (submitButton) submitButton.style.display = 'inline-block'; // Show Update button
+        if (cancelButton) cancelButton.style.display = 'inline-block'; // Show Cancel button
     } else {
-        button.style.display = 'none';
+        if (submitButton) submitButton.style.display = 'none'; // Hide Update button
+        if (cancelButton) cancelButton.style.display = 'none'; // Hide Cancel button
     }
 }
+
+function clearInput(inputId, submitId, cancelId) {
+    const input = document.getElementById(inputId);
+    const submitButton = document.getElementById(submitId);
+    const cancelButton = document.getElementById(cancelId);
+
+    if (input) input.value = ''; // Clear file input
+    if (submitButton) submitButton.style.display = 'none'; // Hide Update button
+    if (cancelButton) cancelButton.style.display = 'none'; // Hide Cancel button
+}
+
+
 function validateFileType(input) {
     const file = input.files[0];
     if (file && !file.name.endsWith('.pdf')) {
