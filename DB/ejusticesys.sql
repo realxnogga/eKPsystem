@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2024 at 08:21 AM
+-- Generation Time: Nov 20, 2024 at 03:34 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1056,7 +1056,9 @@ CREATE TABLE `mov` (
 --
 
 INSERT INTO `mov` (`id`, `user_id`, `barangay_id`, `IA_1a_pdf_File`, `IA_1b_pdf_File`, `IA_2a_pdf_File`, `IA_2b_pdf_File`, `IA_2c_pdf_File`, `IA_2d_pdf_File`, `IA_2e_pdf_File`, `IB_1forcities_pdf_File`, `IB_1aformuni_pdf_File`, `IB_1bformuni_pdf_File`, `IB_2_pdf_File`, `IB_3_pdf_File`, `IB_4_pdf_File`, `IC_1_pdf_File`, `IC_2_pdf_File`, `ID_1_pdf_File`, `ID_2_pdf_File`, `IIA_pdf_File`, `IIB_1_pdf_File`, `IIB_2_pdf_File`, `IIC_pdf_File`, `IIIA_pdf_File`, `IIIB_pdf_File`, `IIIC_1forcities_pdf_File`, `IIIC_1forcities2_pdf_File`, `IIIC_1forcities3_pdf_File`, `IIIC_2formuni1_pdf_File`, `IIIC_2formuni2_pdf_File`, `IIIC_2formuni3_pdf_File`, `IIID_pdf_File`, `IV_forcities_pdf_File`, `IV_muni_pdf_File`, `V_1_pdf_File`, `threepeoplesorg_pdf_File`, `year`) VALUES
-(39, 141, 99, '1727962635_student_cor_20241118081901_9e2711cd.pdf', '1728482910_valid-ID_20240921094055_f0c8207e_20241118081901_3e751248.pdf', '1728482910_valid-ID_20240921094055_f0c8207e_20241118081901_596875ba.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_3e353d96.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_acfcfa72.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_45e2cf3d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c03ef2a0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_2a06f779.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_3fa23b6d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_95ee949d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_84264ea0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_dae02be1.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_643b4a5b.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_673df099.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c392bc6f.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_1c725f87.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_fc5f0be1.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_d44786d3.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_15af1eb5.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_abf33a01.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_203b6935.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c5120c11.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_adb61530.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_29beb5d0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_242a9be4.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_898a466a.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_928fcc8b.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_87128878.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_46e8ef37.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_a721390d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_7b08d914.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_44d6c8cf.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c9986972.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_8969be62.pdf', '2024');
+(39, 141, 99, '1727962635_student_cor_20241118081901_9e2711cd.pdf', '1728482910_valid-ID_20240921094055_f0c8207e_20241118081901_3e751248.pdf', '1728482910_valid-ID_20240921094055_f0c8207e_20241118081901_596875ba.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_3e353d96.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_acfcfa72.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_45e2cf3d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c03ef2a0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_2a06f779.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_3fa23b6d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_95ee949d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_84264ea0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_dae02be1.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_643b4a5b.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_673df099.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c392bc6f.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_1c725f87.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_fc5f0be1.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_d44786d3.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_15af1eb5.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_abf33a01.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_203b6935.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c5120c11.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_adb61530.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_29beb5d0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_242a9be4.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_898a466a.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_928fcc8b.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_87128878.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_46e8ef37.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_a721390d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_7b08d914.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_44d6c8cf.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c9986972.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_8969be62.pdf', '2024'),
+(40, 138, 96, '1732026204_student_cor.pdf', '1732064338_Cordova.pdf', '1732064371_student_cor.pdf', '1732016000_student_cor.pdf', '1731973550_student_cor.pdf', 'SLP1- 21st Century Literature_20240921094055_372afa96_20241118113524_cc8de2c2.pdf', '1731973595_student_cor.pdf', '1731973631_Document-59.pdf', '1731926242_Melrose  Cortes  - CV (3)_20240921094055_203f9d3c.pdf', '1731926242_Performance Task 2 Part 3- Group Activity.pptx.pdf', '1731926242_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731973705_student_cor.pdf', '1731926242_ITEP414-SAM-Assignment-2-and-Task-2.pdf', '1731973816_student_cor.pdf', '1731973844_student_cor.pdf', '1731926242_Document-59.pdf', '1731926242_LTIA MOVs.docx.pdf', '1731926243_CLIENT-SERVER-REVIEWER.pdf', '1731926243_Document-59.pdf', '1731926243_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731926243_CERTIFICATE OF MEMBERSHIP_BRO GAB MUSA.pdf', '1731926243_Engaging-Activity-2-ITEP-311.pdf', '1731973927_LTIA MOVs.docx.pdf', '1731926243_Performance Task 2 Part 3- Group Activity.pptx.pdf', '1731926243_CLIENT-SERVER-REVIEWER.pdf', '1731926243_Cordova.pdf', '1731926243_Dawn Lester Almadovar Performance Task 2 - Part 1_ITEP 413.docx.pdf', '1731926243_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731926243_ITEP414-SAM-Assignment-2-and-Task-2.pdf', '1731926243_mamaBirthcert_20240919035538_8614826a.pdf', '1731926243_Cordova.pdf', '1731926243_valid-ID_20240921094055_f0c8207e.pdf', '1731926243_LTIA MOVs.docx.pdf', '1731938942_student_cor.pdf', '2023'),
+(41, 138, 96, '1732064317_CAPSTONE-PROJECT-FINAL-MANUSCRIPT.pdf', '1732061057_CAPSTONE-PROJECT-FINAL-MANUSCRIPT.pdf', '1732022248_LTIA MOVs.docx.pdf', '1732016000_student_cor.pdf', '1731973550_student_cor.pdf', 'SLP1- 21st Century Literature_20240921094055_372afa96_20241118113524_cc8de2c2.pdf', '1731973595_student_cor.pdf', '1731973631_Document-59.pdf', '1731926242_Melrose  Cortes  - CV (3)_20240921094055_203f9d3c.pdf', '1731926242_Performance Task 2 Part 3- Group Activity.pptx.pdf', '1731926242_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731973705_student_cor.pdf', '1731926242_ITEP414-SAM-Assignment-2-and-Task-2.pdf', '1731973816_student_cor.pdf', '1731973844_student_cor.pdf', '1731926242_Document-59.pdf', '1731926242_LTIA MOVs.docx.pdf', '1731926243_CLIENT-SERVER-REVIEWER.pdf', '1731926243_Document-59.pdf', '1731926243_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731926243_CERTIFICATE OF MEMBERSHIP_BRO GAB MUSA.pdf', '1731926243_Engaging-Activity-2-ITEP-311.pdf', '1731973927_LTIA MOVs.docx.pdf', '1731926243_Performance Task 2 Part 3- Group Activity.pptx.pdf', '1731926243_CLIENT-SERVER-REVIEWER.pdf', '1731926243_Cordova.pdf', '1731926243_Dawn Lester Almadovar Performance Task 2 - Part 1_ITEP 413.docx.pdf', '1731926243_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731926243_ITEP414-SAM-Assignment-2-and-Task-2.pdf', '1731926243_mamaBirthcert_20240919035538_8614826a.pdf', '1731926243_Cordova.pdf', '1731926243_valid-ID_20240921094055_f0c8207e.pdf', '1731926243_LTIA MOVs.docx.pdf', '1731938942_student_cor.pdf', '2024');
 
 -- --------------------------------------------------------
 
@@ -1072,8 +1074,16 @@ CREATE TABLE `movassessmentmembers` (
   `member2` varchar(200) NOT NULL,
   `member3` varchar(200) NOT NULL,
   `member4` varchar(200) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp()
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `year` year(4) NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `movassessmentmembers`
+--
+
+INSERT INTO `movassessmentmembers` (`id`, `municipality_id`, `chairperson`, `member1`, `member2`, `member3`, `member4`, `date`, `year`) VALUES
+(5, 42, 'tes', 'agdaagd', 'gadgd', 'agdag', 'adjfa;k', '2023-11-08 14:56:33', '2024');
 
 -- --------------------------------------------------------
 
@@ -1168,8 +1178,17 @@ CREATE TABLE `movrate` (
   `threepeoplesorg_rate` decimal(11,0) DEFAULT NULL,
   `status_rate` varchar(100) GENERATED ALWAYS AS (case when `IA_1a_pdf_rate` is not null and `IA_1b_pdf_rate` is not null and `IA_2a_pdf_rate` is not null and `IA_2b_pdf_rate` is not null and `IA_2c_pdf_rate` is not null and `IA_2d_pdf_rate` is not null and `IA_2e_pdf_rate` is not null and `IB_1forcities_pdf_rate` is not null and `IB_1aformuni_pdf_rate` is not null and `IB_1bformuni_pdf_rate` is not null and `IB_2_pdf_rate` is not null and `IB_3_pdf_rate` is not null and `IB_4_pdf_rate` is not null and `IC_1_pdf_rate` is not null and `IC_2_pdf_rate` is not null and `ID_1_pdf_rate` is not null and `ID_2_pdf_rate` is not null and `IIA_pdf_rate` is not null and `IIB_1_pdf_rate` is not null and `IIB_2_pdf_rate` is not null and `IIC_pdf_rate` is not null and `IIIA_pdf_rate` is not null and `IIIB_pdf_rate` is not null and `IIIC_1forcities_pdf_rate` is not null and `IIIC_1forcities2_pdf_rate` is not null and `IIIC_1forcities3_pdf_rate` is not null and `IIIC_2formuni1_pdf_rate` is not null and `IIIC_2formuni2_pdf_rate` is not null and `IIIC_2formuni3_pdf_rate` is not null and `IIID_pdf_rate` is not null and `IV_forcities_pdf_rate` is not null and `IV_muni_pdf_rate` is not null and `V_1_pdf_rate` is not null and `threepeoplesorg_rate` is not null then 'Rate Status: Rated' else 'Rate Status: Pending' end) STORED,
   `total` int(11) GENERATED ALWAYS AS (ifnull(`IA_1a_pdf_rate`,0) + ifnull(`IA_1b_pdf_rate`,0) + ifnull(`IA_2a_pdf_rate`,0) + ifnull(`IA_2b_pdf_rate`,0) + ifnull(`IA_2c_pdf_rate`,0) + ifnull(`IA_2d_pdf_rate`,0) + ifnull(`IA_2e_pdf_rate`,0) + ifnull(`IB_1forcities_pdf_rate`,0) + ifnull(`IB_1aformuni_pdf_rate`,0) + ifnull(`IB_1bformuni_pdf_rate`,0) + ifnull(`IB_2_pdf_rate`,0) + ifnull(`IB_3_pdf_rate`,0) + ifnull(`IB_4_pdf_rate`,0) + ifnull(`IC_1_pdf_rate`,0) + ifnull(`IC_2_pdf_rate`,0) + ifnull(`ID_1_pdf_rate`,0) + ifnull(`ID_2_pdf_rate`,0) + ifnull(`IIA_pdf_rate`,0) + ifnull(`IIB_1_pdf_rate`,0) + ifnull(`IIB_2_pdf_rate`,0) + ifnull(`IIC_pdf_rate`,0) + ifnull(`IIIA_pdf_rate`,0) + ifnull(`IIIB_pdf_rate`,0) + ifnull(`IIIC_1forcities_pdf_rate`,0) + ifnull(`IIIC_1forcities2_pdf_rate`,0) + ifnull(`IIIC_1forcities3_pdf_rate`,0) + ifnull(`IIIC_2formuni1_pdf_rate`,0) + ifnull(`IIIC_2formuni2_pdf_rate`,0) + ifnull(`IIIC_2formuni3_pdf_rate`,0) + ifnull(`IIID_pdf_rate`,0) + ifnull(`IV_forcities_pdf_rate`,0) + ifnull(`IV_muni_pdf_rate`,0) + ifnull(`V_1_pdf_rate`,0) + ifnull(`threepeoplesorg_rate`,0)) STORED,
+  `year` year(4) NOT NULL DEFAULT current_timestamp(),
   `daterate` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `movrate`
+--
+
+INSERT INTO `movrate` (`id`, `barangay`, `mov_id`, `IA_1a_pdf_rate`, `IA_1b_pdf_rate`, `IA_2a_pdf_rate`, `IA_2b_pdf_rate`, `IA_2c_pdf_rate`, `IA_2d_pdf_rate`, `IA_2e_pdf_rate`, `IB_1forcities_pdf_rate`, `IB_1aformuni_pdf_rate`, `IB_1bformuni_pdf_rate`, `IB_2_pdf_rate`, `IB_3_pdf_rate`, `IB_4_pdf_rate`, `IC_1_pdf_rate`, `IC_2_pdf_rate`, `ID_1_pdf_rate`, `ID_2_pdf_rate`, `IIA_pdf_rate`, `IIB_1_pdf_rate`, `IIB_2_pdf_rate`, `IIC_pdf_rate`, `IIIA_pdf_rate`, `IIIB_pdf_rate`, `IIIC_1forcities_pdf_rate`, `IIIC_1forcities2_pdf_rate`, `IIIC_1forcities3_pdf_rate`, `IIIC_2formuni1_pdf_rate`, `IIIC_2formuni2_pdf_rate`, `IIIC_2formuni3_pdf_rate`, `IIID_pdf_rate`, `IV_forcities_pdf_rate`, `IV_muni_pdf_rate`, `V_1_pdf_rate`, `threepeoplesorg_rate`, `year`, `daterate`) VALUES
+(36, 96, 40, 5, 5, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 5, 2, 2, 8, 10, 1, 1, 8, 10, 5, 2, 1, 2, 2, 2, 1, 10, 2, 3, 2, 1, '2023', '2023-11-18 10:39:05'),
+(37, 96, 41, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2024', '2024-11-19 14:12:41');
 
 --
 -- Triggers `movrate`
@@ -1231,8 +1250,17 @@ CREATE TABLE `movremark` (
   `IV_muni_pdf_remark` varchar(255) DEFAULT NULL,
   `V_1_pdf_remark` varchar(255) DEFAULT NULL,
   `threepeoplesorg_remark` varchar(255) DEFAULT NULL,
+  `year` year(4) NOT NULL DEFAULT current_timestamp(),
   `dateremark` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `movremark`
+--
+
+INSERT INTO `movremark` (`id`, `barangay`, `mov_id`, `IA_1a_pdf_remark`, `IA_1b_pdf_remark`, `IA_2a_pdf_remark`, `IA_2b_pdf_remark`, `IA_2c_pdf_remark`, `IA_2d_pdf_remark`, `IA_2e_pdf_remark`, `IB_1forcities_pdf_remark`, `IB_1aformuni_pdf_remark`, `IB_1bformuni_pdf_remark`, `IB_2_pdf_remark`, `IB_3_pdf_remark`, `IB_4_pdf_remark`, `IC_1_pdf_remark`, `IC_2_pdf_remark`, `ID_1_pdf_remark`, `ID_2_pdf_remark`, `IIA_pdf_remark`, `IIB_1_pdf_remark`, `IIB_2_pdf_remark`, `IIC_pdf_remark`, `IIIA_pdf_remark`, `IIIB_pdf_remark`, `IIIC_1forcities_pdf_remark`, `IIIC_1forcities2_pdf_remark`, `IIIC_1forcities3_pdf_remark`, `IIIC_2formuni1_pdf_remark`, `IIIC_2formuni2_pdf_remark`, `IIIC_2formuni3_pdf_remark`, `IIID_pdf_remark`, `IV_forcities_pdf_remark`, `IV_muni_pdf_remark`, `V_1_pdf_remark`, `threepeoplesorg_remark`, `year`, `dateremark`) VALUES
+(11, 96, 40, 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'palitan', 'ongoing', '2023', '2023-11-18 10:39:05'),
+(12, 96, 41, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '45', 'dge4', '2024', '2024-11-19 14:12:41');
 
 -- --------------------------------------------------------
 
@@ -1805,7 +1833,16 @@ INSERT INTO `user_logs` (`log_id`, `user_id`, `timestamp`, `activity`) VALUES
 (238, 115, '2024-11-15 22:10:57', 'User logged in'),
 (239, 113, '2024-11-18 07:10:37', 'User logged in'),
 (240, 141, '2024-11-18 07:11:27', 'User logged in'),
-(241, 113, '2024-11-18 07:19:25', 'User logged in');
+(241, 113, '2024-11-18 07:19:25', 'User logged in'),
+(242, 138, '2024-11-18 10:34:37', 'User logged in'),
+(243, 108, '2024-11-18 10:37:47', 'User logged in'),
+(244, 138, '2024-11-18 10:43:17', 'User logged in'),
+(245, 108, '2024-11-18 13:02:02', 'User logged in'),
+(246, 138, '2024-11-18 13:34:04', 'User logged in'),
+(247, 108, '2024-11-19 14:11:35', 'User logged in'),
+(248, 138, '2024-11-19 14:13:00', 'User logged in'),
+(249, 108, '2024-11-19 14:44:04', 'User logged in'),
+(250, 138, '2024-11-19 16:55:38', 'User logged in');
 
 --
 -- Indexes for dumped tables
@@ -1997,31 +2034,31 @@ ALTER TABLE `lupons`
 -- AUTO_INCREMENT for table `mov`
 --
 ALTER TABLE `mov`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `movassessmentmembers`
 --
 ALTER TABLE `movassessmentmembers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `movdraft_file`
 --
 ALTER TABLE `movdraft_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `movrate`
 --
 ALTER TABLE `movrate`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `movremark`
 --
 ALTER TABLE `movremark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `municipalities`
@@ -2063,7 +2100,7 @@ ALTER TABLE `user_files`
 -- AUTO_INCREMENT for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=242;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
 
 --
 -- Constraints for dumped tables
@@ -2121,14 +2158,14 @@ ALTER TABLE `movdraft_file`
 -- Constraints for table `movrate`
 --
 ALTER TABLE `movrate`
-  ADD CONSTRAINT `movrate_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `mov` (`barangay_id`),
+  ADD CONSTRAINT `movrate_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `barangays` (`id`),
   ADD CONSTRAINT `movrate_ibfk_3` FOREIGN KEY (`mov_id`) REFERENCES `mov` (`id`);
 
 --
 -- Constraints for table `movremark`
 --
 ALTER TABLE `movremark`
-  ADD CONSTRAINT `movremark_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `mov` (`barangay_id`),
+  ADD CONSTRAINT `movremark_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `barangays` (`id`),
   ADD CONSTRAINT `movremark_ibfk_3` FOREIGN KEY (`mov_id`) REFERENCES `mov` (`id`);
 
 --
