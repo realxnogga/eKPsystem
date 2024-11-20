@@ -124,12 +124,6 @@ $file_changed = false; // Flag to track if any files have changed
                      </div>
                     <div class="menu">
                         <ul class="flex space-x-4">
-                        <!-- <li>
-                            <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='form2draftmov.php';" style="margin-left: 0;">
-                    <i class="ti ti-file-upload mr-2"></i>
-                    Add MOV File
-                  </button>
-                        </li>              -->
                         <li>
                         <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='form2MOVupload.php';" style="margin-left: 0;">
                     <i class="ti ti-arrow-left-dashed mr-2"></i>

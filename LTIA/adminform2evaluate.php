@@ -418,7 +418,7 @@ $(document).ready(function () {
                   </button>
                 </li>
                 <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='admin_dashboard.php';" style="margin-left: 0;">
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='ltia_admin_dashboard.php';" style="margin-left: 0;">
                   <i class="ti ti-building-community mr-2"> </i> 
                       Back
                   </button>
@@ -426,9 +426,14 @@ $(document).ready(function () {
               </ul>
             </div>
           </div>
-          
-          <h2 class="text-left text-2xl font-semibold">FORM 1</h2>
-          <h2 class="text-left text-2xl font-semibold" id="mov_year"></h2>
+          <div class="border border-gray-800 rounded-md p-4 mt-4">
+							<b>A. IDENTIFYING INFORMATION</b>
+							<p style="padding-left: 5em;">City/Municipality <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY OF <?php echo htmlspecialchars($municipality_name); ?></p>
+							<p style="padding-left: 5em;">Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA</p>
+							<p style="padding-left: 5em;">Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA</p>
+							<p style="padding-left: 5em;">Category <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY</p>
+						</div>
+            <h2 class="text-left text-2xl font-semibold" id="mov_year" hidden></h2>
           <div class="form-group mt-4">
                     <label for="barangay_select" class="block text-lg font-medium text-gray-700">Select Barangay</label>
                         <select id="barangay_select" name="barangay" class="form-control">
@@ -440,7 +445,6 @@ $(document).ready(function () {
                             <?php endforeach; ?>
                         </select>
                     </div>
-
     <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
     <input type="hidden" id="selected_barangay" name="selected_barangay" value="" /><br><br>
     <!-- Example form input for mov_id -->
