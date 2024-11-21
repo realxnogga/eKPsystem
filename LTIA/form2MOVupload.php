@@ -3,22 +3,50 @@ session_start();
 include '../connection.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
-  header("Location: login.php");
-  exit;
+    header("Location: login.php");
+    exit;
 }
 
 // Define user and barangay ID from session
 $userID = $_SESSION['user_id'];
 $barangayID = $_SESSION['barangay_id'] ?? '';
 
-// Query to check if the user's barangay has a submission
+// Initialize variables
 $submissionExists = false;
+$barangayName = '';
+$municipalityName = '';
+$municipalityID = '';
+
+// Query to check if the user's barangay has a submission
 $checkQuery = "SELECT COUNT(*) FROM movdraft_file WHERE barangay_id = :barangay_id";
 $checkStmt = $conn->prepare($checkQuery);
 $checkStmt->bindParam(':barangay_id', $barangayID, PDO::PARAM_INT);
 $checkStmt->execute();
 if ($checkStmt->fetchColumn() > 0) {
     $submissionExists = true;
+}
+
+// Query to fetch the barangay name and municipality ID
+if (!empty($barangayID)) {
+    $barangayQuery = "SELECT barangay_name, municipality_id FROM barangays WHERE id = :barangay_id";
+    $barangayStmt = $conn->prepare($barangayQuery);
+    $barangayStmt->bindParam(':barangay_id', $barangayID, PDO::PARAM_INT);
+    $barangayStmt->execute();
+    $barangayResult = $barangayStmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($barangayResult) {
+        $barangayName = $barangayResult['barangay_name'];
+        $municipalityID = $barangayResult['municipality_id'];
+    }
+}
+
+// Query to fetch the municipality name
+if (!empty($municipalityID)) {
+    $municipalityQuery = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
+    $municipalityStmt = $conn->prepare($municipalityQuery);
+    $municipalityStmt->bindParam(':municipality_id', $municipalityID, PDO::PARAM_INT);
+    $municipalityStmt->execute();
+    $municipalityName = $municipalityStmt->fetchColumn() ?: 'Unknown';
 }
 ?>
 
@@ -68,7 +96,12 @@ if ($checkStmt->fetchColumn() > 0) {
                             </button>
                         <?php endif; ?>
                          
-      <h2 class="custom-h2"> </h2>
+                        <h2 class="custom-h2">
+                          <?php echo htmlspecialchars($barangayName, ENT_QUOTES, 'UTF-8'); ?>
+                        </h2>
+                          <h2 class="custom-h2">
+                          <?php echo htmlspecialchars($municipalityName, ENT_QUOTES, 'UTF-8'); ?>
+                        </h2>
 
       <form method="post" action="movdraft_handler.php" enctype="multipart/form-data">
         <div class="container mt-4">
