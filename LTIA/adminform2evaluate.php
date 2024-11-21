@@ -383,10 +383,7 @@ $(document).ready(function () {
     });
 
 </script>
-
-
 </head>
-
 <body class="bg-[#E8E8E7]">
   <?php include "../admin_sidebar_header.php"; ?>
   <div class="p-4 sm:ml-44 ">
@@ -404,7 +401,9 @@ $(document).ready(function () {
             </h1>
             <hr class="my-2">
             <h2 class="text-lg font-semibold">
-                Municipality of <?php echo htmlspecialchars($municipality_name); ?>
+            <div>
+            <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span> 
+        OF <?php  echo strtoupper(htmlspecialchars($municipality_name)); ?>
             </h2>
         </div>
     </div>
@@ -427,12 +426,85 @@ $(document).ready(function () {
             </div>
           </div>
           <div class="border border-gray-800 rounded-md p-4 mt-4">
-							<b>A. IDENTIFYING INFORMATION</b>
-							<p style="padding-left: 5em;">City/Municipality <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY OF <?php echo htmlspecialchars($municipality_name); ?></p>
-							<p style="padding-left: 5em;">Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA</p>
-							<p style="padding-left: 5em;">Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA</p>
-							<p style="padding-left: 5em;">Category <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY</p>
-						</div>
+    <b>A. IDENTIFYING INFORMATION</b>
+    <p style="padding-left: 5em;">
+        City/Municipality: 
+        <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span> 
+        OF <?php  echo strtoupper(htmlspecialchars($municipality_name)); ?>
+    </p>
+    <p style="padding-left: 5em;">
+        Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA
+    </p>
+    <p style="padding-left: 5em;">
+        Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA
+    </p>
+    <p style="padding-left: 5em;">
+        Category <span style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span>: 
+        <span id="municipality-category" style="text-transform: uppercase;"></span>
+    </p>
+</div>
+<script>
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+    // Lists of cities and municipalities
+    const cities = ["Calamba", "Biñan", "San Pedro", "Sta Rosa", "Cabuyao", "San Pablo"];
+    const municipalities = ["Bay", "Alaminos", "Calauan", "Los Baños"];
+
+    /**
+     * Normalize names for consistent comparison
+     * @param {string} name - Name to normalize
+     * @returns {string} Normalized name
+     */
+    function normalizeName(name) {
+        return name.toLowerCase().replace(/\s+/g, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    /**
+     * Classify a municipality name as "City" or "Municipality"
+     * @param {string} municipalityName - Name to classify
+     * @returns {string} "City", "Municipality", or "Unknown"
+     */
+    function classifyMunicipality(municipalityName) {
+        const normalized = normalizeName(municipalityName);
+        const normalizedCities = cities.map(normalizeName);
+        const normalizedMunicipalities = municipalities.map(normalizeName);
+
+        if (normalizedCities.includes(normalized)) {
+            return "City";
+        } else if (normalizedMunicipalities.includes(normalized)) {
+            return "Municipality";
+        } else {
+            return "Unknown";
+        }
+    }
+
+   // Get municipality name from PHP and classify
+const municipalityName = <?php echo json_encode($municipality_name); ?>;
+const classification = classifyMunicipality(municipalityName);
+
+// Update header and details with the classification
+document.getElementById("details-municipality-type").textContent = classification;
+document.getElementById("municipality-category").textContent = classification.toUpperCase();
+
+// Toggle visibility based on classification
+if (classification === "City") {
+    // Display city rows and hide municipality rows
+    let cityRows = document.querySelectorAll('#city-row');
+    let municipalityRows = document.querySelectorAll('#municipality-row');
+
+    cityRows.forEach(row => row.style.display = '');
+    municipalityRows.forEach(row => row.style.display = 'none');
+} else if (classification === "Municipality") {
+    // Display municipality rows and hide city rows
+    let cityRows = document.querySelectorAll('#city-row');
+    let municipalityRows = document.querySelectorAll('#municipality-row');
+
+    cityRows.forEach(row => row.style.display = 'none');
+    municipalityRows.forEach(row => row.style.display = '');
+}
+});
+</script>
+
             <h2 class="text-left text-2xl font-semibold" id="mov_year" hidden></h2>
           <div class="form-group mt-4">
                     <label for="barangay_select" class="block text-lg font-medium text-gray-700">Select Barangay</label>
@@ -452,9 +524,6 @@ $(document).ready(function () {
     <input type="hidden" id="barangay_id" name="barangay_id" readonly> <!-- I want the barangay_id fetch here -->
     <!-- mov_id is fetched here -->
     <h2 class="text-left text-2xl font-semibold" id="status_rate"></h2>
-    
-
-
     <table class="table table-bordered">
             <thead>
               <tr>
@@ -554,7 +623,6 @@ $(document).ready(function () {
   </p>
 
 </details>
-
   </td>
   <td></td>
   <td></td>
@@ -620,23 +688,23 @@ $(document).ready(function () {
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
-                <td>For Cities - computer database with searchable case information</td>
+              <tr id="city-row" style="display:none;">
+              <td>For Cities - computer database with searchable case information</td>
                 <td>2</td>
                 <td class="file-column" data-type="IB_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                 </td>
             <td><input type="number" value="" name="IB_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
-            <td><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
+            <td ><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
-              <tr>
-                <td>For Municipalities:</td>
+              <tr id="municipality-row" style="display:none;">
+              <td>For Municipalities:</td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>a. Manual Records</td>
                 <td>1</td>
                 <td class="file-column" data-type="IB_1aformuni">
@@ -645,7 +713,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IB_1aformuni_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_1aformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>b. Digital Record Filing</td>
                 <td>1</td>
                 <td class="file-column" data-type="IB_1bformuni">
@@ -920,11 +988,11 @@ $(document).ready(function () {
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row" style="display:none;">
                 <td>1. For Cities</td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row" style="display:none;">
                 <td>
                   <ul>
                     <li>IEC materials developed</li>
@@ -937,7 +1005,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IIIC_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="city-row" style="display:none;">
                 <td>
                   <ul>
                     <li>IEC activities conducted</li>
@@ -950,7 +1018,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IIIC_1forcities2_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="city-row" style="display:none;">
                 <td>
                   <ul>
                     <li>Innovative Campaign Strategy</li>
@@ -963,14 +1031,14 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IIIC_1forcities3_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>2. For Municipalities</td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>
                   <ul>
                     <li>IEC materials developed</li>
@@ -983,7 +1051,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IIIC_2formuni1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni1_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>
                   <ul>
                     <li>IEC activities conducted</li>
@@ -996,7 +1064,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IIIC_2formuni2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>
                   <ul>
                     <li>Innovative Campaign Strategy</li>
@@ -1049,7 +1117,7 @@ $(document).ready(function () {
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row" style="display:none;">
                 <td>For Cities - the office or space should be exclusive for KP matters</td>
                 <td>2</td>
                 <td class="file-column" data-type="IV_forcities">
@@ -1058,7 +1126,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IV_forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IV_forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
                 <td>3</td>
                 <td class="file-column" data-type="IV_muni">
@@ -1074,7 +1142,7 @@ $(document).ready(function () {
                 <th></th>
                 <th></th>
               </tr>
-              <tr>
+              <tr >
                 <td>1. From City, Municipal, Provincial or NGAs</td>
                 <td>2</td>
                 <td class="file-column" data-type="V_1">
