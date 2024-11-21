@@ -94,6 +94,48 @@ $file_changed = false; // Flag to track if any files have changed
 // header("Location: " . $_SERVER['REQUEST_URI']);
 // exit;
 // }
+// Define user and barangay ID from session
+$userID = $_SESSION['user_id'];
+$barangayID = $_SESSION['barangay_id'] ?? '';
+
+// Initialize variables
+$submissionExists = false;
+$barangayName = '';
+$municipalityName = '';
+$municipalityID = '';
+
+// Query to check if the user's barangay has a submission
+$checkQuery = "SELECT COUNT(*) FROM movdraft_file WHERE barangay_id = :barangay_id";
+$checkStmt = $conn->prepare($checkQuery);
+$checkStmt->bindParam(':barangay_id', $barangayID, PDO::PARAM_INT);
+$checkStmt->execute();
+if ($checkStmt->fetchColumn() > 0) {
+    $submissionExists = true;
+}
+
+// Query to fetch the barangay name and municipality ID
+if (!empty($barangayID)) {
+    $barangayQuery = "SELECT barangay_name, municipality_id FROM barangays WHERE id = :barangay_id";
+    $barangayStmt = $conn->prepare($barangayQuery);
+    $barangayStmt->bindParam(':barangay_id', $barangayID, PDO::PARAM_INT);
+    $barangayStmt->execute();
+    $barangayResult = $barangayStmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($barangayResult) {
+        $barangayName = $barangayResult['barangay_name'];
+        $municipalityID = $barangayResult['municipality_id'];
+    }
+}
+
+// Query to fetch the municipality name
+if (!empty($municipalityID)) {
+    $municipalityQuery = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
+    $municipalityStmt = $conn->prepare($municipalityQuery);
+    $municipalityStmt->bindParam(':municipality_id', $municipalityID, PDO::PARAM_INT);
+    $municipalityStmt->execute();
+    $municipalityName = $municipalityStmt->fetchColumn() ?: 'Unknown';
+}
+
 ?>  
 
 <!doctype html>
@@ -106,6 +148,43 @@ $file_changed = false; // Flag to track if any files have changed
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" href="css/td_hover.css">
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const cities = ["Calamba", "Biñan", "San Pedro", "Sta Rosa", "Cabuyao", "San Pablo"];
+      const municipalities = ["Bay", "Alaminos", "Calauan", "Los Baños"];
+
+      function normalizeName(name) {
+        return name.toLowerCase().replace(/\s+/g, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      }
+
+      function classifyMunicipality(municipalityName) {
+        const normalized = normalizeName(municipalityName);
+        const normalizedCities = cities.map(normalizeName);
+        const normalizedMunicipalities = municipalities.map(normalizeName);
+
+        if (normalizedCities.includes(normalized)) {
+          return "City";
+        } else if (normalizedMunicipalities.includes(normalized)) {
+          return "Municipality";
+        } else {
+          return "Unknown";
+        }
+      }
+
+      const municipalityName = <?php echo json_encode($municipalityName); ?>;
+      const classification = classifyMunicipality(municipalityName);
+
+      document.getElementById("details-municipality-type").textContent = classification;
+
+      if (classification === "City") {
+        document.querySelectorAll('#city-row').forEach(row => row.style.display = '');
+        document.querySelectorAll('#municipality-row').forEach(row => row.style.display = 'none');
+      } else if (classification === "Municipality") {
+        document.querySelectorAll('#city-row').forEach(row => row.style.display = 'none');
+        document.querySelectorAll('#municipality-row').forEach(row => row.style.display = '');
+      }
+    });
+  </script>
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -120,7 +199,13 @@ $file_changed = false; // Flag to track if any files have changed
                         <div class="dilglogo">
                             <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" />
                         </div>
-                        <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA) <?php echo date('Y'); ?></h1>
+                        <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA) <?php echo date('Y'); ?>
+                        <hr class="my-2">
+            <span>Barangay </span> 
+                  <span ><?= htmlspecialchars($barangayName, ENT_QUOTES, 'UTF-8') ?></span>, 
+                  <span id="details-municipality-type" class="ml-2"></span>
+                  <span>of <?= htmlspecialchars($municipalityName, ENT_QUOTES, 'UTF-8') ?></span>
+               </h2></h1>
                      </div>
                     <div class="menu">
                         <ul class="flex space-x-4">
@@ -253,7 +338,7 @@ $file_changed = false; // Flag to track if any files have changed
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row">
                 <td>For Cities - computer database with searchable case information</td>
                 <td><input type="file" id="IB_1forcities_pdf_File" name="IB_1forcities_pdf_File" accept=".pdf" onchange="validateFileType(this)" />
                 <input type="hidden" name="IB_1forcities_pdf_File" id="IB_1forcities_pdf_File" value="<?php echo $row['IB_1forcities_pdf_File']; ?>">
@@ -266,12 +351,12 @@ $file_changed = false; // Flag to track if any files have changed
             <?php endif; ?>
             </td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>For Municipalities:</td>
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>a. Manual Records</td>
                 <td><input type="file" id="IB_1aformuni_pdf_File" name="IB_1aformuni_pdf_File" accept=".pdf" onchange="validateFileType(this)" />
                 <input type="hidden" name="IB_1aformuni_pdf_File" id="IB_1aformuni_pdf_File" value="<?php echo $row['IB_1aformuni_pdf_File']; ?>">
@@ -496,11 +581,11 @@ $file_changed = false; // Flag to track if any files have changed
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row">
                 <td>1. For Cities</td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row">
                 <td>
                   <ul>
                     <li>IEC materials developed</li>
@@ -517,7 +602,7 @@ $file_changed = false; // Flag to track if any files have changed
             <?php endif; ?>
             </td>
             </tr>
-              <tr>
+              <tr id="city-row">
                 <td>
                   <ul>
                     <li>IEC activities conducted</li>
@@ -534,7 +619,7 @@ $file_changed = false; // Flag to track if any files have changed
             <?php endif; ?>
             </td>
             </tr>
-              <tr>
+              <tr id="city-row">
                 <td>
                   <ul>
                     <li>Innovative Campaign Strategy</li>
@@ -551,12 +636,12 @@ $file_changed = false; // Flag to track if any files have changed
             <?php endif; ?>
             </td>
             </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>2. For Municipalities</td>
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>
                   <ul>
                     <li>IEC materials developed</li>
@@ -573,7 +658,7 @@ $file_changed = false; // Flag to track if any files have changed
             <?php endif; ?>
             </td>
             </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>
                   <ul>
                     <li>IEC activities conducted</li>
@@ -590,7 +675,7 @@ $file_changed = false; // Flag to track if any files have changed
             <?php endif; ?>
             </td>
             </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>
                   <ul>
                     <li>Innovative Campaign Strategy</li>
@@ -699,38 +784,44 @@ $file_changed = false; // Flag to track if any files have changed
 
     </form>
     <script>
-       function checkInputs() {
-    const fileInputs = document.querySelectorAll("#uploadForm input[type='file']");
-    for (let input of fileInputs) {
-        const hiddenInput = input.nextElementSibling; // assuming next element is the hidden input
-        if (input.value === "" && hiddenInput.value === "") {
-            return false; // If both file and hidden input are empty, return false
-        }
-    }
-    return true; // All inputs are valid
-}
-    function submitForm(button) {
-    const action = button.getAttribute('data-action');
+    function checkInputs() {
+        const fileInputs = document.querySelectorAll("#uploadForm input[type='file']");
+        let hasValidInput = false; // Flag to check if at least one input is valid
 
-    if (action === "form2MOVupload_handler.php") {
-        if (!checkInputs()) {
-            $('#alertModal').modal('show');
-            return; // Stop form submission if not all inputs are filled
+        for (let input of fileInputs) {
+            const hiddenInput = input.nextElementSibling; // assuming the next element is the hidden input
+            if (input.value !== "" || (hiddenInput && hiddenInput.value !== "")) {
+                hasValidInput = true; // If any file or hidden input has a value, set the flag to true
+                break; // No need to check further
+            }
         }
-        
-        $('#confirmModal').modal('show');
-        document.getElementById('confirmSubmit').onclick = function () {
+
+        return hasValidInput; // Return true if at least one input is valid, otherwise false
+    }
+
+    function submitForm(button) {
+        const action = button.getAttribute('data-action');
+
+        if (action === "form2MOVupload_handler.php") {
+            if (!checkInputs()) {
+                $('#alertModal').modal('show');
+                return; // Stop form submission if no valid inputs are provided
+            }
+
+            $('#confirmModal').modal('show');
+            document.getElementById('confirmSubmit').onclick = function () {
+                const form = document.getElementById('uploadForm');
+                form.action = action;
+                form.submit();
+            };
+        } else {
             const form = document.getElementById('uploadForm');
             form.action = action;
             form.submit();
-        };
-    } else {
-        const form = document.getElementById('uploadForm');
-        form.action = action;
-        form.submit();
+        }
     }
-}
-    </script>
+</script>
+
 <!-- Missing Files Modal -->
 <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

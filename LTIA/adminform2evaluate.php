@@ -115,6 +115,8 @@ try {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <link rel="stylesheet" href="css/td_hover.css">
+
 
  <script>
 $(document).ready(function () {
@@ -402,7 +404,7 @@ $(document).ready(function () {
             <hr class="my-2">
             <h2 class="text-lg font-semibold">
             <div>
-            <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span> 
+        <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span> 
         OF <?php  echo strtoupper(htmlspecialchars($municipality_name)); ?>
             </h2>
         </div>
@@ -430,7 +432,7 @@ $(document).ready(function () {
     <p style="padding-left: 5em;">
         City/Municipality: 
         <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span> 
-        OF <?php  echo strtoupper(htmlspecialchars($municipality_name)); ?>
+        <?php  echo strtoupper(htmlspecialchars($municipality_name)); ?>
     </p>
     <p style="padding-left: 5em;">
         Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA
@@ -523,7 +525,7 @@ if (classification === "City") {
     <input type="hidden" id="mov_id" name="mov_id" readonly> <!-- Display fetched mov_id -->
     <input type="hidden" id="barangay_id" name="barangay_id" readonly> <!-- I want the barangay_id fetch here -->
     <!-- mov_id is fetched here -->
-    <h2 class="text-left text-2xl font-semibold" id="status_rate"></h2>
+    <h2 class="text-left text-2xl font-semibold" id="status_rate" hidden></h2>
     <table class="table table-bordered">
             <thead>
               <tr>
@@ -597,7 +599,6 @@ if (classification === "City") {
           <b>Note:</b> Scores will be given only when file copies of the summons issued within the next working day are stamped with the date and time of receipt.
         </p>
       </details>
-
         </td>
             <td>5</td>
             <td class="file-column" data-type="IA_1b">
@@ -918,7 +919,7 @@ if (classification === "City") {
               <tr>
                 <td>
                 <details>
-              <summary><b>At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
+              <summary><b>C. At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
               <p><br>
                 <b>8 points</b> - 80%-100% compliance with the terms of settlement or award.<br>
                 <b>6 points</b> - 70%-79% compliance with the terms of settlement or award.<br>
@@ -1119,7 +1120,7 @@ if (classification === "City") {
               </tr>
               <tr id="city-row" style="display:none;">
                 <td>For Cities - the office or space should be exclusive for KP matters</td>
-                <td>2</td>
+                <td>5</td>
                 <td class="file-column" data-type="IV_forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
@@ -1128,11 +1129,11 @@ if (classification === "City") {
             </tr>
               <tr id="municipality-row" style="display:none;">
                 <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
-                <td>3</td>
+                <td>5</td>
                 <td class="file-column" data-type="IV_muni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IV_muni_pdf_rate" min="0" max="3" class="score-input"placeholder="Ratings"></td>
+            <td><input type="number" value="" name="IV_muni_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IV_muni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>

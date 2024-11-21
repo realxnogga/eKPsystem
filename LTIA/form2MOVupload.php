@@ -39,7 +39,6 @@ if (!empty($barangayID)) {
         $municipalityID = $barangayResult['municipality_id'];
     }
 }
-
 // Query to fetch the municipality name
 if (!empty($municipalityID)) {
     $municipalityQuery = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
@@ -49,8 +48,6 @@ if (!empty($municipalityID)) {
     $municipalityName = $municipalityStmt->fetchColumn() ?: 'Unknown';
 }
 ?>
-
-
 <!doctype html>
 <html lang="en">
 
@@ -63,7 +60,43 @@ if (!empty($municipalityID)) {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="js/tables.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const cities = ["Calamba", "Biñan", "San Pedro", "Sta Rosa", "Cabuyao", "San Pablo"];
+      const municipalities = ["Bay", "Alaminos", "Calauan", "Los Baños"];
 
+      function normalizeName(name) {
+        return name.toLowerCase().replace(/\s+/g, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      }
+
+      function classifyMunicipality(municipalityName) {
+        const normalized = normalizeName(municipalityName);
+        const normalizedCities = cities.map(normalizeName);
+        const normalizedMunicipalities = municipalities.map(normalizeName);
+
+        if (normalizedCities.includes(normalized)) {
+          return "City";
+        } else if (normalizedMunicipalities.includes(normalized)) {
+          return "Municipality";
+        } else {
+          return "Unknown";
+        }
+      }
+
+      const municipalityName = <?php echo json_encode($municipalityName); ?>;
+      const classification = classifyMunicipality(municipalityName);
+
+      document.getElementById("details-municipality-type").textContent = classification;
+
+      if (classification === "City") {
+        document.querySelectorAll('#city-row').forEach(row => row.style.display = '');
+        document.querySelectorAll('#municipality-row').forEach(row => row.style.display = 'none');
+      } else if (classification === "Municipality") {
+        document.querySelectorAll('#city-row').forEach(row => row.style.display = 'none');
+        document.querySelectorAll('#municipality-row').forEach(row => row.style.display = '');
+      }
+    });
+  </script>
 <body class="bg-[#E8E8E7]">
   <?php include "../user_sidebar_header.php"; ?>
   <div class="p-4 sm:ml-44 ">
@@ -75,8 +108,17 @@ if (!empty($municipalityID)) {
                             <div class="dilglogo">
                                 <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" /> <!-- Adjusted height here -->
                             </div>
-                           <h1 class="text-xl font-bold ml-4">Lupong Tagapamayapa Incentives Award (LTIA) <?php echo date('Y'); ?></h1>
-              </div>
+                            <div class="ml-4">
+            <h1 class="text-xl font-bold">
+                Lupong Tagapamayapa Incentives Award (LTIA)  <?php echo date('Y'); ?>
+            </h1>
+            <hr class="my-2">
+            <h2 class="text-lg font-semibold">
+           <span>Barangay </span> <?php echo htmlspecialchars($barangayName, ENT_QUOTES, 'UTF-8'); ?>, 
+           <span id="details-municipality-type" class="ml-2"></span> of  <?php echo htmlspecialchars($municipalityName, ENT_QUOTES, 'UTF-8'); ?>
+            </h2>
+        </div>
+    </div>
                         <div class="menu">
                             <ul class="flex space-x-4">      
                         <li>
@@ -95,13 +137,6 @@ if (!empty($municipalityID)) {
                                 Draft
                             </button>
                         <?php endif; ?>
-                         
-                        <h2 class="custom-h2">
-                          <?php echo htmlspecialchars($barangayName, ENT_QUOTES, 'UTF-8'); ?>
-                        </h2>
-                          <h2 class="custom-h2">
-                          <?php echo htmlspecialchars($municipalityName, ENT_QUOTES, 'UTF-8'); ?>
-                        </h2>
 
       <form method="post" action="movdraft_handler.php" enctype="multipart/form-data">
         <div class="container mt-4">
@@ -161,19 +196,19 @@ if (!empty($municipalityID)) {
                 <td><b>1. Record of Cases </b></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row">
                 <td>For Cities - computer database with searchable case information</td>
                 <td><input type="file" id="IB_1forcities_pdf_File" name="IB_1forcities_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>For Municipalities:</td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>a. Manual Records</td>
                 <td><input type="file" id="IB_1aformuni_pdf_File" name="IB_1aformuni_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>b. Digital Record Filing</td>
                 <td><input type="file" id="IB_1bformuni_pdf_File" name="IB_1bformuni_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
@@ -253,11 +288,11 @@ if (!empty($municipalityID)) {
                 <td>C. Sustained information drive to promote Katarungang Pambarangay</td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row">
                 <td>1. For Cities</td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row">
                 <td>
                   <ul>
                     <li>IEC materials developed</li>
@@ -265,7 +300,7 @@ if (!empty($municipalityID)) {
                 </td>
                 <td><input type="file" id="IIIC_1forcities_pdf_File" name="IIIC_1forcities_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
-              <tr>
+              <tr id="city-row">
                 <td>
                   <ul>
                     <li>IEC activities conducted</li>
@@ -273,7 +308,7 @@ if (!empty($municipalityID)) {
                 </td>
                 <td><input type="file" id="IIIC_1forcities2_pdf_File" name="IIIC_1forcities2_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
-              <tr>
+              <tr id="city-row">
                 <td>
                   <ul>
                     <li>Innovative Campaign Strategy</li>
@@ -281,11 +316,11 @@ if (!empty($municipalityID)) {
                 </td>
                 <td><input type="file" id="IIIC_1forcities3_pdf_File" name="IIIC_1forcities3_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>2. For Municipalities</td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>
                   <ul>
                     <li>IEC materials developed</li>
@@ -293,7 +328,7 @@ if (!empty($municipalityID)) {
                 </td>
                 <td><input type="file" id="IIIC_2formuni1_pdf_File" name="IIIC_2formuni1_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>
                   <ul>
                     <li>IEC activities conducted</li>
@@ -301,7 +336,7 @@ if (!empty($municipalityID)) {
                 </td>
                 <td><input type="file" id="IIIC_2formuni2_pdf_File" name="IIIC_2formuni2_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>
                   <ul>
                     <li>Innovative Campaign Strategy</li>
@@ -322,11 +357,11 @@ if (!empty($municipalityID)) {
                 <td><b>Building structure or space:</b></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row">
                 <td>For Cities - the office or space should be exclusive for KP matters</td>
                 <td><input type="file" id="IV_forcities_pdf_File" name="IV_forcities_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
                 <td><input type="file" id="IV_muni_pdf_File" name="IV_muni_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>

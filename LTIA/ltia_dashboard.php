@@ -56,10 +56,6 @@ try {
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!hash_equals($csrf_token, $_POST['csrf_token'])) {
-        die("Invalid CSRF token.");
-    }
-
     // Sanitize and validate inputs
     $fields = ['Punong_Barangay', 'Barangay_Secretary', 'Barangay_Treasurer'];
     for ($i = 1; $i <= 7; $i++) {

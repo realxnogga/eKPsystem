@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 								<input type="text" name="member3" class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member3'] ?? ''); ?>"><br>
 								Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
-							</form>
+							
 						</div>
 
 						<br><br>
@@ -438,11 +438,12 @@ document.addEventListener('DOMContentLoaded', function () {
 						<!-- Do not print this -->
 						<div class="text-right mt-4">
 							<input type="submit" value="Save" style="background-color: #000035;" class="btn-save">
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
-
+			
 			<script>
 				function printSecondCard() {
 					window.print();
