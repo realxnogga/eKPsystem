@@ -160,7 +160,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .underline-input {
-            width: 100%;
+            width: 40%;
             border: none;
             border-bottom: 2px solid #ccc;
             padding: 5px;
@@ -247,21 +247,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </button>
                     </div>
 
-                    <!-- Text Section -->
-                    <div class="flex flex-col text-justify w-75 me-5">
-                        <p class="h4 fw-bold text-secondary">The Lupong Tagapamayapa Incentives Award (LTIA)</p>   
-                        <p class="text-muted">
-                            The Lupong Tagapamayapa Incentives Award (LTIA) was conceptualized and implemented in 1982 and has been elevated to a Presidential Award pursuant to Executive Order No. 394 s. 1997 entitled “Establishing the Lupong Tagapamayapa Incentives Award.”
-                        </p>
-                        <p class="text-muted">
-                            This award is an avenue for granting economic and other incentives to the Lupong Tagapamayapa (LT) for their outstanding contributions to attaining the objectives of the Katarungang Pambarangay (KP).
-                        </p>
-                    </div>
+                    <!-- Text Section -->          
+<div class="flex flex-col text-justify w-75 me-5">
+    <p class="h3 fw-bold" style="color: #003366;">The Lupong Tagapamayapa Incentives Award (LTIA)</p>
+    <p class="text-muted" style="font-size: 1rem;">
+        The Lupong Tagapamayapa Incentives Award (LTIA) was conceptualized and implemented in 1982 and has been elevated to a Presidential Award pursuant to Executive Order No. 394 s. 1997 entitled “Establishing the Lupong Tagapamayapa Incentives Award.”
+    </p>
+    <p class="text-muted" style="font-size: 1rem;">
+        This award is an avenue for granting economic and other incentives to the Lupong Tagapamayapa (LT) for their outstanding contributions to attaining the objectives of the Katarungang Pambarangay (KP).
+    </p>
+</div>
                 </div>
                 <div class="form-container">
         <form method="post" action="" enctype="multipart/form-data">
             <!-- Punong Barangay -->
-            <label for="LTFO" class="form-label">Lupong Tagapamayapa Federation Officers:</label>
+            <label for="LTFO" class="form-label" style="font-size: 1rem;">Lupong Tagapamayapa Federation Officers:</label>
             <div class="form-group">
                 <label for="Punong_Barangay">Punong Barangay:</label>
                 <input type="text" id="Punong_Barangay" name="Punong_Barangay" class="underline-input" 
@@ -284,7 +284,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Kagawads -->
             <hr class="my-3">
-            <label for="Kagawads" class="form-label">Kagawads:</label>
+            <label for="Kagawads" class="form-label" style="font-size: 1rem;">Kagawads:</label>
             <div class="kagawads-container">
                 <?php for ($i = 1; $i <= 7; $i++): ?>
                     <input type="text" name="Kagawad<?php echo $i; ?>" class="kagawad-input" 
@@ -295,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <br>
             <div class="submit-container">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary" style="color: #003366;">Save</button>
             </div> 
            </form>
     </div>

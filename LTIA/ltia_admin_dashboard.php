@@ -134,7 +134,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         label: 'Total Score',
         data: totals,
         backgroundColor: totals.map(total => 
-          total >= 100 ? 'rgba(0, 153, 51, 0.6)' : 'rgba(54, 162, 235, 0.6)'),
+          total >= 100 ? 'rgba(0, 51, 102, 0.6)' : 'rgba(0, 51, 102, 0.6)'), 
         borderColor: totals.map(total => 
           total >= 100 ? 'rgba(0, 153, 51, 1)' : 'rgba(54, 162, 235, 1)'),
         borderWidth: 1

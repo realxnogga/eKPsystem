@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2024 at 06:42 PM
+-- Generation Time: Nov 21, 2024 at 02:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -57,7 +57,12 @@ INSERT INTO `barangays` (`id`, `municipality_id`, `barangay_name`) VALUES
 (78, 48, 'IV-A'),
 (92, 54, 'Poblacion(Alaminos)'),
 (93, 44, 'Poblacion(San Pedro)'),
-(94, 47, 'Tagumpay');
+(94, 47, 'Tagumpay'),
+(95, 42, 'Bagong Silang'),
+(96, 42, 'Anos'),
+(97, 42, 'Maahas'),
+(98, 42, 'Timugan'),
+(99, 45, 'Bagong Kalsada');
 
 -- --------------------------------------------------------
 
@@ -1060,8 +1065,7 @@ CREATE TABLE `movassessmentmembers` (
   `member2` varchar(200) NOT NULL,
   `member3` varchar(200) NOT NULL,
   `member4` varchar(200) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `year` year(4) NOT NULL DEFAULT current_timestamp()
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1181,7 +1185,7 @@ CREATE TABLE `movrate` (
   `threepeoplesorg_rate` decimal(11,0) DEFAULT NULL,
   `status_rate` varchar(100) GENERATED ALWAYS AS (case when `IA_1a_pdf_rate` is not null and `IA_1b_pdf_rate` is not null and `IA_2a_pdf_rate` is not null and `IA_2b_pdf_rate` is not null and `IA_2c_pdf_rate` is not null and `IA_2d_pdf_rate` is not null and `IA_2e_pdf_rate` is not null and `IB_1forcities_pdf_rate` is not null and `IB_1aformuni_pdf_rate` is not null and `IB_1bformuni_pdf_rate` is not null and `IB_2_pdf_rate` is not null and `IB_3_pdf_rate` is not null and `IB_4_pdf_rate` is not null and `IC_1_pdf_rate` is not null and `IC_2_pdf_rate` is not null and `ID_1_pdf_rate` is not null and `ID_2_pdf_rate` is not null and `IIA_pdf_rate` is not null and `IIB_1_pdf_rate` is not null and `IIB_2_pdf_rate` is not null and `IIC_pdf_rate` is not null and `IIIA_pdf_rate` is not null and `IIIB_pdf_rate` is not null and `IIIC_1forcities_pdf_rate` is not null and `IIIC_1forcities2_pdf_rate` is not null and `IIIC_1forcities3_pdf_rate` is not null and `IIIC_2formuni1_pdf_rate` is not null and `IIIC_2formuni2_pdf_rate` is not null and `IIIC_2formuni3_pdf_rate` is not null and `IIID_pdf_rate` is not null and `IV_forcities_pdf_rate` is not null and `IV_muni_pdf_rate` is not null and `V_1_pdf_rate` is not null and `threepeoplesorg_rate` is not null then 'Rate Status: Rated' else 'Rate Status: Pending' end) STORED,
   `total` int(11) GENERATED ALWAYS AS (ifnull(`IA_1a_pdf_rate`,0) + ifnull(`IA_1b_pdf_rate`,0) + ifnull(`IA_2a_pdf_rate`,0) + ifnull(`IA_2b_pdf_rate`,0) + ifnull(`IA_2c_pdf_rate`,0) + ifnull(`IA_2d_pdf_rate`,0) + ifnull(`IA_2e_pdf_rate`,0) + ifnull(`IB_1forcities_pdf_rate`,0) + ifnull(`IB_1aformuni_pdf_rate`,0) + ifnull(`IB_1bformuni_pdf_rate`,0) + ifnull(`IB_2_pdf_rate`,0) + ifnull(`IB_3_pdf_rate`,0) + ifnull(`IB_4_pdf_rate`,0) + ifnull(`IC_1_pdf_rate`,0) + ifnull(`IC_2_pdf_rate`,0) + ifnull(`ID_1_pdf_rate`,0) + ifnull(`ID_2_pdf_rate`,0) + ifnull(`IIA_pdf_rate`,0) + ifnull(`IIB_1_pdf_rate`,0) + ifnull(`IIB_2_pdf_rate`,0) + ifnull(`IIC_pdf_rate`,0) + ifnull(`IIIA_pdf_rate`,0) + ifnull(`IIIB_pdf_rate`,0) + ifnull(`IIIC_1forcities_pdf_rate`,0) + ifnull(`IIIC_1forcities2_pdf_rate`,0) + ifnull(`IIIC_1forcities3_pdf_rate`,0) + ifnull(`IIIC_2formuni1_pdf_rate`,0) + ifnull(`IIIC_2formuni2_pdf_rate`,0) + ifnull(`IIIC_2formuni3_pdf_rate`,0) + ifnull(`IIID_pdf_rate`,0) + ifnull(`IV_forcities_pdf_rate`,0) + ifnull(`IV_muni_pdf_rate`,0) + ifnull(`V_1_pdf_rate`,0) + ifnull(`threepeoplesorg_rate`,0)) STORED,
-  `year` year(4) NOT NULL DEFAULT current_timestamp(),
+  `year` year(4) DEFAULT current_timestamp(),
   `daterate` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1821,18 +1825,14 @@ INSERT INTO `user_logs` (`log_id`, `user_id`, `timestamp`, `activity`) VALUES
 (239, 113, '2024-11-18 07:10:37', 'User logged in'),
 (240, 141, '2024-11-18 07:11:27', 'User logged in'),
 (241, 113, '2024-11-18 07:19:25', 'User logged in'),
-(242, 138, '2024-11-18 10:34:37', 'User logged in'),
-(243, 108, '2024-11-18 10:37:47', 'User logged in'),
-(244, 138, '2024-11-18 10:43:17', 'User logged in'),
-(245, 108, '2024-11-18 13:02:02', 'User logged in'),
-(246, 138, '2024-11-18 13:34:04', 'User logged in'),
-(247, 108, '2024-11-19 14:11:35', 'User logged in'),
-(248, 138, '2024-11-19 14:13:00', 'User logged in'),
-(249, 108, '2024-11-19 14:44:04', 'User logged in'),
-(250, 138, '2024-11-19 16:55:38', 'User logged in'),
-(251, 137, '2024-11-20 06:29:50', 'User logged in'),
-(252, 108, '2024-11-20 07:53:57', 'User logged in'),
-(253, 137, '2024-11-20 16:00:24', 'User logged in');
+(242, 113, '2024-11-21 07:03:14', 'User logged in'),
+(243, 141, '2024-11-21 07:04:24', 'User logged in'),
+(244, 113, '2024-11-21 11:26:19', 'User logged in'),
+(245, 141, '2024-11-21 11:31:37', 'User logged in'),
+(246, 140, '2024-11-21 13:14:44', 'User logged in'),
+(247, 108, '2024-11-21 13:15:08', 'User logged in'),
+(248, 138, '2024-11-21 13:17:54', 'User logged in'),
+(249, 108, '2024-11-21 13:19:06', 'User logged in');
 
 --
 -- Indexes for dumped tables
@@ -2031,7 +2031,7 @@ ALTER TABLE `lupons`
 -- AUTO_INCREMENT for table `mov`
 --
 ALTER TABLE `mov`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `movassessmentmembers`
@@ -2043,25 +2043,25 @@ ALTER TABLE `movassessmentmembers`
 -- AUTO_INCREMENT for table `movbrgy_officers`
 --
 ALTER TABLE `movbrgy_officers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `movdraft_file`
 --
 ALTER TABLE `movdraft_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `movrate`
 --
 ALTER TABLE `movrate`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `movremark`
 --
 ALTER TABLE `movremark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `municipalities`
@@ -2103,7 +2103,7 @@ ALTER TABLE `user_files`
 -- AUTO_INCREMENT for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=254;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=250;
 
 --
 -- Constraints for dumped tables
@@ -2167,14 +2167,14 @@ ALTER TABLE `movdraft_file`
 -- Constraints for table `movrate`
 --
 ALTER TABLE `movrate`
-  ADD CONSTRAINT `movrate_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `barangays` (`id`),
+  ADD CONSTRAINT `movrate_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `mov` (`barangay_id`),
   ADD CONSTRAINT `movrate_ibfk_3` FOREIGN KEY (`mov_id`) REFERENCES `mov` (`id`);
 
 --
 -- Constraints for table `movremark`
 --
 ALTER TABLE `movremark`
-  ADD CONSTRAINT `movremark_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `barangays` (`id`),
+  ADD CONSTRAINT `movremark_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `mov` (`barangay_id`),
   ADD CONSTRAINT `movremark_ibfk_3` FOREIGN KEY (`mov_id`) REFERENCES `mov` (`id`);
 
 --
