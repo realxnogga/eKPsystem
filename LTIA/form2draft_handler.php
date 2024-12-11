@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindParam(':other_values', $other_values);  // Replace with actual form data
 
         if ($stmt->execute()) {
-            echo "<script>alert('Form submitted successfully!'); window.location.href='your_redirect_page.php';</script>";
+            echo "<script>alert('Form submitted successfully!'); window.location.href='ltia_dashboard.php';</script>";
         } else {
             echo "<script>alert('Error submitting form.');</script>";
         }

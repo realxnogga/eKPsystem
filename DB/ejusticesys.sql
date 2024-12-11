@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 11, 2024 at 04:13 PM
+-- Generation Time: Nov 21, 2024 at 02:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -1069,12 +1069,29 @@ CREATE TABLE `movassessmentmembers` (
   `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `movassessmentmembers`
+-- Table structure for table `movbrgy_officers`
 --
 
-INSERT INTO `movassessmentmembers` (`id`, `municipality_id`, `chairperson`, `member1`, `member2`, `member3`, `member4`, `date`) VALUES
-(5, 42, '', '', '', '', '', '2024-11-18 16:00:00');
+CREATE TABLE `movbrgy_officers` (
+  `id` int(11) NOT NULL,
+  `barangay` int(11) NOT NULL,
+  `Punong_Barangay` varchar(100) NOT NULL,
+  `Barangay_Secretary` varchar(100) NOT NULL,
+  `Barangay_Treasurer` varchar(100) NOT NULL,
+  `Kagawad1` varchar(100) NOT NULL,
+  `Kagawad2` varchar(100) NOT NULL,
+  `Kagawad3` varchar(100) NOT NULL,
+  `Kagawad4` varchar(100) NOT NULL,
+  `Kagawad5` varchar(100) NOT NULL,
+  `Kagawad6` varchar(100) NOT NULL,
+  `Kagawad7` varchar(100) NOT NULL,
+  `Kagawad8` varchar(100) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `year` year(4) NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1168,6 +1185,7 @@ CREATE TABLE `movrate` (
   `V_1_pdf_rate` decimal(11,0) DEFAULT NULL,
   `threepeoplesorg_rate` decimal(11,0) DEFAULT NULL,
   `total` int(11) GENERATED ALWAYS AS (ifnull(`IA_1a_pdf_rate`,0) + ifnull(`IA_1b_pdf_rate`,0) + ifnull(`IA_2a_pdf_rate`,0) + ifnull(`IA_2b_pdf_rate`,0) + ifnull(`IA_2c_pdf_rate`,0) + ifnull(`IA_2d_pdf_rate`,0) + ifnull(`IA_2e_pdf_rate`,0) + ifnull(`IB_1forcities_pdf_rate`,0) + ifnull(`IB_1aformuni_pdf_rate`,0) + ifnull(`IB_1bformuni_pdf_rate`,0) + ifnull(`IB_2_pdf_rate`,0) + ifnull(`IB_3_pdf_rate`,0) + ifnull(`IB_4_pdf_rate`,0) + ifnull(`IC_1_pdf_rate`,0) + ifnull(`IC_2_pdf_rate`,0) + ifnull(`ID_1_pdf_rate`,0) + ifnull(`ID_2_pdf_rate`,0) + ifnull(`IIA_pdf_rate`,0) + ifnull(`IIB_1_pdf_rate`,0) + ifnull(`IIB_2_pdf_rate`,0) + ifnull(`IIC_pdf_rate`,0) + ifnull(`IIIA_pdf_rate`,0) + ifnull(`IIIB_pdf_rate`,0) + ifnull(`IIIC_1forcities_pdf_rate`,0) + ifnull(`IIIC_1forcities2_pdf_rate`,0) + ifnull(`IIIC_1forcities3_pdf_rate`,0) + ifnull(`IIIC_2formuni1_pdf_rate`,0) + ifnull(`IIIC_2formuni2_pdf_rate`,0) + ifnull(`IIIC_2formuni3_pdf_rate`,0) + ifnull(`IIID_pdf_rate`,0) + ifnull(`IV_forcities_pdf_rate`,0) + ifnull(`IV_muni_pdf_rate`,0) + ifnull(`V_1_pdf_rate`,0) + ifnull(`threepeoplesorg_rate`,0)) STORED,
+  `year` year(4) DEFAULT current_timestamp(),
   `daterate` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1808,69 +1826,17 @@ INSERT INTO `user_logs` (`log_id`, `user_id`, `timestamp`, `activity`) VALUES
 (236, 115, '2024-11-15 11:12:38', 'User logged in'),
 (237, 115, '2024-11-15 11:12:47', 'User logged in'),
 (238, 115, '2024-11-15 22:10:57', 'User logged in'),
-(239, 115, '2024-11-19 08:58:30', 'User logged in'),
-(240, 108, '2024-11-19 09:07:35', 'User logged in'),
-(241, 134, '2024-11-19 09:28:43', 'User logged in'),
-(242, 108, '2024-11-19 09:39:29', 'User logged in'),
-(243, 108, '2024-11-19 10:41:09', 'User logged in'),
-(244, 108, '2024-11-20 18:22:18', 'User logged in'),
-(245, 134, '2024-11-20 18:23:38', 'User logged in'),
-(246, 115, '2024-11-20 18:23:46', 'User logged in'),
-(247, 115, '2024-11-21 10:08:04', 'User logged in'),
-(248, 115, '2024-11-21 22:22:58', 'User logged in'),
-(249, 115, '2024-11-21 22:27:07', 'User logged in'),
-(250, 115, '2024-11-21 22:27:37', 'User logged in'),
-(251, 115, '2024-11-21 22:28:50', 'User logged in'),
-(252, 115, '2024-11-22 01:40:46', 'User logged in'),
-(253, 115, '2024-11-22 01:40:55', 'User logged in'),
-(254, 115, '2024-11-22 08:08:07', 'User logged in'),
-(255, 115, '2024-12-08 14:11:04', 'User logged in'),
-(256, 113, '2024-12-09 20:17:53', 'User logged in'),
-(257, 144, '2024-12-09 21:33:24', 'User logged in'),
-(258, 144, '2024-12-09 22:09:52', 'User logged in'),
-(259, 144, '2024-12-09 22:27:29', 'User logged in'),
-(260, 144, '2024-12-09 22:30:01', 'User logged in'),
-(261, 144, '2024-12-09 22:40:16', 'User logged in'),
-(262, 144, '2024-12-09 22:41:51', 'User logged in'),
-(263, 115, '2024-12-09 22:43:11', 'User logged in'),
-(264, 144, '2024-12-09 22:44:40', 'User logged in'),
-(265, 108, '2024-12-09 22:47:40', 'User logged in'),
-(266, 144, '2024-12-09 22:48:31', 'User logged in'),
-(267, 144, '2024-12-09 22:50:36', 'User logged in'),
-(268, 144, '2024-12-09 22:51:49', 'User logged in'),
-(269, 144, '2024-12-09 22:54:45', 'User logged in'),
-(270, 108, '2024-12-09 22:58:28', 'User logged in'),
-(271, 144, '2024-12-09 22:59:23', 'User logged in'),
-(272, 144, '2024-12-09 23:04:01', 'User logged in'),
-(273, 144, '2024-12-09 23:11:06', 'User logged in'),
-(274, 144, '2024-12-09 23:12:14', 'User logged in'),
-(275, 144, '2024-12-09 23:18:37', 'User logged in'),
-(276, 144, '2024-12-09 23:21:03', 'User logged in'),
-(277, 144, '2024-12-09 23:24:08', 'User logged in'),
-(278, 144, '2024-12-09 23:27:08', 'User logged in'),
-(279, 144, '2024-12-09 23:30:07', 'User logged in'),
-(280, 144, '2024-12-09 23:39:08', 'User logged in'),
-(281, 108, '2024-12-09 23:40:08', 'User logged in'),
-(282, 113, '2024-12-09 23:44:11', 'User logged in'),
-(283, 128, '2024-12-09 23:45:16', 'User logged in'),
-(284, 108, '2024-12-09 23:45:33', 'User logged in'),
-(285, 113, '2024-12-09 23:46:20', 'User logged in'),
-(286, 144, '2024-12-09 23:46:40', 'User logged in'),
-(287, 145, '2024-12-09 23:56:51', 'User logged in'),
-(288, 113, '2024-12-10 00:01:09', 'User logged in'),
-(289, 146, '2024-12-10 00:01:36', 'User logged in'),
-(290, 144, '2024-12-10 00:01:47', 'User logged in'),
-(291, 144, '2024-12-10 05:10:56', 'User logged in'),
-(292, 144, '2024-12-10 05:31:19', 'User logged in'),
-(293, 144, '2024-12-10 05:31:37', 'User logged in'),
-(294, 144, '2024-12-10 05:34:09', 'User logged in'),
-(295, 144, '2024-12-10 05:34:18', 'User logged in'),
-(296, 144, '2024-12-10 05:36:28', 'User logged in'),
-(297, 147, '2024-12-10 06:29:41', 'User logged in'),
-(298, 144, '2024-12-10 06:35:27', 'User logged in'),
-(299, 144, '2024-12-10 06:35:59', 'User logged in'),
-(300, 148, '2024-12-10 06:38:19', 'User logged in'),
-(301, 148, '2024-12-11 15:07:55', 'User logged in');
+(239, 113, '2024-11-18 07:10:37', 'User logged in'),
+(240, 141, '2024-11-18 07:11:27', 'User logged in'),
+(241, 113, '2024-11-18 07:19:25', 'User logged in'),
+(242, 113, '2024-11-21 07:03:14', 'User logged in'),
+(243, 141, '2024-11-21 07:04:24', 'User logged in'),
+(244, 113, '2024-11-21 11:26:19', 'User logged in'),
+(245, 141, '2024-11-21 11:31:37', 'User logged in'),
+(246, 140, '2024-11-21 13:14:44', 'User logged in'),
+(247, 108, '2024-11-21 13:15:08', 'User logged in'),
+(248, 138, '2024-11-21 13:17:54', 'User logged in'),
+(249, 108, '2024-11-21 13:19:06', 'User logged in');
 
 --
 -- Indexes for dumped tables
@@ -1939,6 +1905,13 @@ ALTER TABLE `mov`
 ALTER TABLE `movassessmentmembers`
   ADD PRIMARY KEY (`id`),
   ADD KEY `municipality_id` (`municipality_id`);
+
+--
+-- Indexes for table `movbrgy_officers`
+--
+ALTER TABLE `movbrgy_officers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `barangay` (`barangay`);
 
 --
 -- Indexes for table `movdraft_file`
@@ -2062,7 +2035,7 @@ ALTER TABLE `lupons`
 -- AUTO_INCREMENT for table `mov`
 --
 ALTER TABLE `mov`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `movassessmentmembers`
@@ -2071,22 +2044,28 @@ ALTER TABLE `movassessmentmembers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `movbrgy_officers`
+--
+ALTER TABLE `movbrgy_officers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `movdraft_file`
 --
 ALTER TABLE `movdraft_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `movrate`
 --
 ALTER TABLE `movrate`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `movremark`
 --
 ALTER TABLE `movremark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `municipalities`
@@ -2128,7 +2107,7 @@ ALTER TABLE `user_files`
 -- AUTO_INCREMENT for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=250;
 
 --
 -- Constraints for dumped tables
@@ -2175,6 +2154,12 @@ ALTER TABLE `mov`
 --
 ALTER TABLE `movassessmentmembers`
   ADD CONSTRAINT `movassessmentmembers_ibfk_1` FOREIGN KEY (`municipality_id`) REFERENCES `municipalities` (`id`);
+
+--
+-- Constraints for table `movbrgy_officers`
+--
+ALTER TABLE `movbrgy_officers`
+  ADD CONSTRAINT `movbrgy_officers_ibfk_1` FOREIGN KEY (`barangay`) REFERENCES `barangays` (`id`);
 
 --
 -- Constraints for table `movdraft_file`

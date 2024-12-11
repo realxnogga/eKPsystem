@@ -115,6 +115,8 @@ try {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <link rel="stylesheet" href="css/td_hover.css">
+
 
  <script>
 $(document).ready(function () {
@@ -383,10 +385,7 @@ $(document).ready(function () {
     });
 
 </script>
-
-
 </head>
-
 <body class="bg-[#E8E8E7]">
   <?php include "../admin_sidebar_header.php"; ?>
   <div class="p-4 sm:ml-44 ">
@@ -404,7 +403,9 @@ $(document).ready(function () {
             </h1>
             <hr class="my-2">
             <h2 class="text-lg font-semibold">
-                Municipality of <?php echo htmlspecialchars($municipality_name); ?>
+            <div>
+        <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span> 
+        OF <?php  echo strtoupper(htmlspecialchars($municipality_name)); ?>
             </h2>
         </div>
     </div>
@@ -418,7 +419,7 @@ $(document).ready(function () {
                   </button>
                 </li>
                 <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='admin_dashboard.php';" style="margin-left: 0;">
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='ltia_admin_dashboard.php';" style="margin-left: 0;">
                   <i class="ti ti-building-community mr-2"> </i> 
                       Back
                   </button>
@@ -426,9 +427,87 @@ $(document).ready(function () {
               </ul>
             </div>
           </div>
-          
-          <h2 class="text-left text-2xl font-semibold">FORM 1</h2>
-          <h2 class="text-left text-2xl font-semibold" id="mov_year"></h2>
+          <div class="border border-gray-800 rounded-md p-4 mt-4">
+    <b>A. IDENTIFYING INFORMATION</b>
+    <p style="padding-left: 5em;">
+        City/Municipality: 
+        <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span> 
+        <?php  echo strtoupper(htmlspecialchars($municipality_name)); ?>
+    </p>
+    <p style="padding-left: 5em;">
+        Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA
+    </p>
+    <p style="padding-left: 5em;">
+        Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA
+    </p>
+    <p style="padding-left: 5em;">
+        Category <span style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span>: 
+        <span id="municipality-category" style="text-transform: uppercase;"></span>
+    </p>
+</div>
+<script>
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+    // Lists of cities and municipalities
+    const cities = ["Calamba", "Biñan", "San Pedro", "Sta Rosa", "Cabuyao", "San Pablo"];
+    const municipalities = ["Bay", "Alaminos", "Calauan", "Los Baños"];
+
+    /**
+     * Normalize names for consistent comparison
+     * @param {string} name - Name to normalize
+     * @returns {string} Normalized name
+     */
+    function normalizeName(name) {
+        return name.toLowerCase().replace(/\s+/g, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    /**
+     * Classify a municipality name as "City" or "Municipality"
+     * @param {string} municipalityName - Name to classify
+     * @returns {string} "City", "Municipality", or "Unknown"
+     */
+    function classifyMunicipality(municipalityName) {
+        const normalized = normalizeName(municipalityName);
+        const normalizedCities = cities.map(normalizeName);
+        const normalizedMunicipalities = municipalities.map(normalizeName);
+
+        if (normalizedCities.includes(normalized)) {
+            return "City";
+        } else if (normalizedMunicipalities.includes(normalized)) {
+            return "Municipality";
+        } else {
+            return "Unknown";
+        }
+    }
+
+   // Get municipality name from PHP and classify
+const municipalityName = <?php echo json_encode($municipality_name); ?>;
+const classification = classifyMunicipality(municipalityName);
+
+// Update header and details with the classification
+document.getElementById("details-municipality-type").textContent = classification;
+document.getElementById("municipality-category").textContent = classification.toUpperCase();
+
+// Toggle visibility based on classification
+if (classification === "City") {
+    // Display city rows and hide municipality rows
+    let cityRows = document.querySelectorAll('#city-row');
+    let municipalityRows = document.querySelectorAll('#municipality-row');
+
+    cityRows.forEach(row => row.style.display = '');
+    municipalityRows.forEach(row => row.style.display = 'none');
+} else if (classification === "Municipality") {
+    // Display municipality rows and hide city rows
+    let cityRows = document.querySelectorAll('#city-row');
+    let municipalityRows = document.querySelectorAll('#municipality-row');
+
+    cityRows.forEach(row => row.style.display = 'none');
+    municipalityRows.forEach(row => row.style.display = '');
+}
+});
+</script>
+
+            <h2 class="text-left text-2xl font-semibold" id="mov_year" hidden></h2>
           <div class="form-group mt-4">
                     <label for="barangay_select" class="block text-lg font-medium text-gray-700">Select Barangay</label>
                         <select id="barangay_select" name="barangay" class="form-control">
@@ -440,17 +519,13 @@ $(document).ready(function () {
                             <?php endforeach; ?>
                         </select>
                     </div>
-
     <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
     <input type="hidden" id="selected_barangay" name="selected_barangay" value="" /><br><br>
     <!-- Example form input for mov_id -->
     <input type="hidden" id="mov_id" name="mov_id" readonly> <!-- Display fetched mov_id -->
     <input type="hidden" id="barangay_id" name="barangay_id" readonly> <!-- I want the barangay_id fetch here -->
     <!-- mov_id is fetched here -->
-    <h2 class="text-left text-2xl font-semibold" id="status_rate"></h2>
-    
-
-
+    <h2 class="text-left text-2xl font-semibold" id="status_rate" hidden></h2>
     <table class="table table-bordered">
             <thead>
               <tr>
@@ -524,7 +599,6 @@ $(document).ready(function () {
           <b>Note:</b> Scores will be given only when file copies of the summons issued within the next working day are stamped with the date and time of receipt.
         </p>
       </details>
-
         </td>
             <td>5</td>
             <td class="file-column" data-type="IA_1b">
@@ -550,7 +624,6 @@ $(document).ready(function () {
   </p>
 
 </details>
-
   </td>
   <td></td>
   <td></td>
@@ -616,23 +689,23 @@ $(document).ready(function () {
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
-                <td>For Cities - computer database with searchable case information</td>
+              <tr id="city-row" style="display:none;">
+              <td>For Cities - computer database with searchable case information</td>
                 <td>2</td>
                 <td class="file-column" data-type="IB_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                 </td>
             <td><input type="number" value="" name="IB_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
-            <td><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
+            <td ><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
-              <tr>
-                <td>For Municipalities:</td>
+              <tr id="municipality-row" style="display:none;">
+              <td>For Municipalities:</td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>a. Manual Records</td>
                 <td>1</td>
                 <td class="file-column" data-type="IB_1aformuni">
@@ -641,7 +714,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IB_1aformuni_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_1aformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>b. Digital Record Filing</td>
                 <td>1</td>
                 <td class="file-column" data-type="IB_1bformuni">
@@ -846,7 +919,7 @@ $(document).ready(function () {
               <tr>
                 <td>
                 <details>
-              <summary><b>At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
+              <summary><b>C. At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
               <p><br>
                 <b>8 points</b> - 80%-100% compliance with the terms of settlement or award.<br>
                 <b>6 points</b> - 70%-79% compliance with the terms of settlement or award.<br>
@@ -916,11 +989,11 @@ $(document).ready(function () {
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row" style="display:none;">
                 <td>1. For Cities</td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row" style="display:none;">
                 <td>
                   <ul>
                     <li>IEC materials developed</li>
@@ -933,7 +1006,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IIIC_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="city-row" style="display:none;">
                 <td>
                   <ul>
                     <li>IEC activities conducted</li>
@@ -946,7 +1019,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IIIC_1forcities2_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="city-row" style="display:none;">
                 <td>
                   <ul>
                     <li>Innovative Campaign Strategy</li>
@@ -959,14 +1032,14 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IIIC_1forcities3_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>2. For Municipalities</td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>
                   <ul>
                     <li>IEC materials developed</li>
@@ -979,7 +1052,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IIIC_2formuni1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni1_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>
                   <ul>
                     <li>IEC activities conducted</li>
@@ -992,7 +1065,7 @@ $(document).ready(function () {
             <td><input type="number" value="" name="IIIC_2formuni2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>
                   <ul>
                     <li>Innovative Campaign Strategy</li>
@@ -1045,22 +1118,22 @@ $(document).ready(function () {
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id="city-row" style="display:none;">
                 <td>For Cities - the office or space should be exclusive for KP matters</td>
-                <td>2</td>
+                <td>5</td>
                 <td class="file-column" data-type="IV_forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
             <td><input type="number" value="" name="IV_forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IV_forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
-              <tr>
+              <tr id="municipality-row" style="display:none;">
                 <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
-                <td>3</td>
+                <td>5</td>
                 <td class="file-column" data-type="IV_muni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-            <td><input type="number" value="" name="IV_muni_pdf_rate" min="0" max="3" class="score-input"placeholder="Ratings"></td>
+            <td><input type="number" value="" name="IV_muni_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IV_muni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1070,7 +1143,7 @@ $(document).ready(function () {
                 <th></th>
                 <th></th>
               </tr>
-              <tr>
+              <tr >
                 <td>1. From City, Municipal, Provincial or NGAs</td>
                 <td>2</td>
                 <td class="file-column" data-type="V_1">

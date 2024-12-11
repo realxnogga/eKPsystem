@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	} else {
 		$message = "Error saving certification details.";
 	}
-} // Fetch available years from `movrate` table
+} // Fetch available years from movrate table
 $query = "SELECT DISTINCT YEAR(daterate) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
 $stmt = $conn->prepare($query);
 $stmt->execute();
@@ -225,7 +225,7 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			.print-content th,
 			.print-content td {
 				padding: 8px;
-				font-size: 10pt;
+				font-size: 12pt;
 			}
 
 
@@ -237,7 +237,7 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 			.print-content h1 {
-				font-size: 18pt;
+				font-size: 14pt;
 			}
 
 			.print-content p,
@@ -287,10 +287,12 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					</select>
 				</form>
 			</div>
+					</div>
+				</div>
+			</div>
 
 			<div class="text-right">
 				<button onclick="printSecondCard()" class="btn btn-primary">Print</button>
-				<button onclick="downloadSecondCard()" class="btn btn-secondary">Download</button>
 			</div>
 
 			<!-- Content to be printed -->
@@ -321,12 +323,68 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 						<!-- Identifying Information Section -->
 						<div class="border border-gray-800 rounded-md p-4 mt-4">
-							<b>A. IDENTIFYING INFORMATION</b>
-							<p style="padding-left: 5em;">City/Municipality <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY OF <?php echo htmlspecialchars($municipality_name); ?></p>
-							<p style="padding-left: 5em;">Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA</p>
-							<p style="padding-left: 5em;">Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA</p>
-							<p style="padding-left: 5em;">Category <span style="display: inline-block; width: 3em; text-align: center;">:</span> CITY</p>
-						</div>
+						<b>A. IDENTIFYING INFORMATION</b>
+<p style="padding-left: 5em;">
+    City/Municipality: 
+    <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span> 
+    OF <?php echo strtoupper(htmlspecialchars($municipality_name)); ?>
+</p>
+<p style="padding-left: 5em;">
+    Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IVA
+</p>
+<p style="padding-left: 5em;">
+    Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA
+</p>
+<p style="padding-left: 5em;">
+    Category <span style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span>: 
+    <span id="municipality-category" style="text-transform: uppercase;"></span>
+</p>
+	</div>
+<script>
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+    // Lists of cities and municipalities
+    const cities = ["Calamba", "Biñan", "San Pedro", "Sta Rosa", "Cabuyao", "San Pablo"];
+    const municipalities = ["Bay", "Alaminos", "Calauan", "Los Baños"];
+
+    /**
+     * Normalize names for consistent comparison
+     * @param {string} name - Name to normalize
+     * @returns {string} Normalized name
+     */
+    function normalizeName(name) {
+        return name.toLowerCase().replace(/\s+/g, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    /**
+     * Classify a municipality name as "City" or "Municipality"
+     * @param {string} municipalityName - Name to classify
+     * @returns {string} "City", "Municipality", or "Unknown"
+     */
+    function classifyMunicipality(municipalityName) {
+        const normalized = normalizeName(municipalityName);
+        const normalizedCities = cities.map(normalizeName);
+        const normalizedMunicipalities = municipalities.map(normalizeName);
+
+        if (normalizedCities.includes(normalized)) {
+            return "City";
+        } else if (normalizedMunicipalities.includes(normalized)) {
+            return "Municipality";
+        } else {
+            return "Unknown";
+        }
+    }
+
+    // Get municipality name from PHP and classify
+    const municipalityName = <?php echo json_encode($municipality_name); ?>;
+    const classification = classifyMunicipality(municipalityName);
+
+    // Update header and details with the classification
+    document.getElementById("details-municipality-type").textContent = classification;
+    document.getElementById("municipality-category").textContent = classification.toUpperCase();
+});
+</script>
+
 
 						<br>
 						<b>B. COMPARATIVE EVALUATION RESULTS</b><br>
@@ -372,7 +430,7 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 								<input type="text" name="member3" class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member3'] ?? ''); ?>"><br>
 								Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
-							</form>
+							
 						</div>
 
 						<br><br>
@@ -383,11 +441,12 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 						<!-- Do not print this -->
 						<div class="text-right mt-4">
 							<input type="submit" value="Save" style="background-color: #000035;" class="btn-save">
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
-
+			
 			<script>
 				function printSecondCard() {
 					window.print();
