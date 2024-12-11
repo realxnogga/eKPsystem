@@ -411,7 +411,7 @@ $totalCount = $totalCountRow['total'];
           </table>
 
         </b>
-        <div class="flex items-start flex-row-reverse justify-between">
+        <div class="flex items-start flex-row-reverse justify-between mt-3">
 
           <!-- for paginaion button -->
           <div>

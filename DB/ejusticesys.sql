@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 20, 2024 at 03:34 AM
+-- Generation Time: Dec 11, 2024 at 04:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -62,7 +62,8 @@ INSERT INTO `barangays` (`id`, `municipality_id`, `barangay_name`) VALUES
 (96, 42, 'Anos'),
 (97, 42, 'Maahas'),
 (98, 42, 'Timugan'),
-(99, 45, 'Bagong Kalsada');
+(99, 45, 'Paciano Rizal'),
+(100, 45, 'Bubuyan');
 
 -- --------------------------------------------------------
 
@@ -1051,15 +1052,6 @@ CREATE TABLE `mov` (
   `year` year(4) NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `mov`
---
-
-INSERT INTO `mov` (`id`, `user_id`, `barangay_id`, `IA_1a_pdf_File`, `IA_1b_pdf_File`, `IA_2a_pdf_File`, `IA_2b_pdf_File`, `IA_2c_pdf_File`, `IA_2d_pdf_File`, `IA_2e_pdf_File`, `IB_1forcities_pdf_File`, `IB_1aformuni_pdf_File`, `IB_1bformuni_pdf_File`, `IB_2_pdf_File`, `IB_3_pdf_File`, `IB_4_pdf_File`, `IC_1_pdf_File`, `IC_2_pdf_File`, `ID_1_pdf_File`, `ID_2_pdf_File`, `IIA_pdf_File`, `IIB_1_pdf_File`, `IIB_2_pdf_File`, `IIC_pdf_File`, `IIIA_pdf_File`, `IIIB_pdf_File`, `IIIC_1forcities_pdf_File`, `IIIC_1forcities2_pdf_File`, `IIIC_1forcities3_pdf_File`, `IIIC_2formuni1_pdf_File`, `IIIC_2formuni2_pdf_File`, `IIIC_2formuni3_pdf_File`, `IIID_pdf_File`, `IV_forcities_pdf_File`, `IV_muni_pdf_File`, `V_1_pdf_File`, `threepeoplesorg_pdf_File`, `year`) VALUES
-(39, 141, 99, '1727962635_student_cor_20241118081901_9e2711cd.pdf', '1728482910_valid-ID_20240921094055_f0c8207e_20241118081901_3e751248.pdf', '1728482910_valid-ID_20240921094055_f0c8207e_20241118081901_596875ba.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_3e353d96.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_acfcfa72.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_45e2cf3d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c03ef2a0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_2a06f779.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_3fa23b6d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_95ee949d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_84264ea0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_dae02be1.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_643b4a5b.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_673df099.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c392bc6f.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_1c725f87.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_fc5f0be1.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_d44786d3.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_15af1eb5.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_abf33a01.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_203b6935.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c5120c11.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_adb61530.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_29beb5d0.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_242a9be4.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_898a466a.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_928fcc8b.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_87128878.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_46e8ef37.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_a721390d.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_7b08d914.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_44d6c8cf.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_c9986972.pdf', '1728644263_mamaBirthcert_20240919035538_8614826a_20241118081901_8969be62.pdf', '2024'),
-(40, 138, 96, '1732026204_student_cor.pdf', '1732064338_Cordova.pdf', '1732064371_student_cor.pdf', '1732016000_student_cor.pdf', '1731973550_student_cor.pdf', 'SLP1- 21st Century Literature_20240921094055_372afa96_20241118113524_cc8de2c2.pdf', '1731973595_student_cor.pdf', '1731973631_Document-59.pdf', '1731926242_Melrose  Cortes  - CV (3)_20240921094055_203f9d3c.pdf', '1731926242_Performance Task 2 Part 3- Group Activity.pptx.pdf', '1731926242_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731973705_student_cor.pdf', '1731926242_ITEP414-SAM-Assignment-2-and-Task-2.pdf', '1731973816_student_cor.pdf', '1731973844_student_cor.pdf', '1731926242_Document-59.pdf', '1731926242_LTIA MOVs.docx.pdf', '1731926243_CLIENT-SERVER-REVIEWER.pdf', '1731926243_Document-59.pdf', '1731926243_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731926243_CERTIFICATE OF MEMBERSHIP_BRO GAB MUSA.pdf', '1731926243_Engaging-Activity-2-ITEP-311.pdf', '1731973927_LTIA MOVs.docx.pdf', '1731926243_Performance Task 2 Part 3- Group Activity.pptx.pdf', '1731926243_CLIENT-SERVER-REVIEWER.pdf', '1731926243_Cordova.pdf', '1731926243_Dawn Lester Almadovar Performance Task 2 - Part 1_ITEP 413.docx.pdf', '1731926243_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731926243_ITEP414-SAM-Assignment-2-and-Task-2.pdf', '1731926243_mamaBirthcert_20240919035538_8614826a.pdf', '1731926243_Cordova.pdf', '1731926243_valid-ID_20240921094055_f0c8207e.pdf', '1731926243_LTIA MOVs.docx.pdf', '1731938942_student_cor.pdf', '2023'),
-(41, 138, 96, '1732064317_CAPSTONE-PROJECT-FINAL-MANUSCRIPT.pdf', '1732061057_CAPSTONE-PROJECT-FINAL-MANUSCRIPT.pdf', '1732022248_LTIA MOVs.docx.pdf', '1732016000_student_cor.pdf', '1731973550_student_cor.pdf', 'SLP1- 21st Century Literature_20240921094055_372afa96_20241118113524_cc8de2c2.pdf', '1731973595_student_cor.pdf', '1731973631_Document-59.pdf', '1731926242_Melrose  Cortes  - CV (3)_20240921094055_203f9d3c.pdf', '1731926242_Performance Task 2 Part 3- Group Activity.pptx.pdf', '1731926242_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731973705_student_cor.pdf', '1731926242_ITEP414-SAM-Assignment-2-and-Task-2.pdf', '1731973816_student_cor.pdf', '1731973844_student_cor.pdf', '1731926242_Document-59.pdf', '1731926242_LTIA MOVs.docx.pdf', '1731926243_CLIENT-SERVER-REVIEWER.pdf', '1731926243_Document-59.pdf', '1731926243_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731926243_CERTIFICATE OF MEMBERSHIP_BRO GAB MUSA.pdf', '1731926243_Engaging-Activity-2-ITEP-311.pdf', '1731973927_LTIA MOVs.docx.pdf', '1731926243_Performance Task 2 Part 3- Group Activity.pptx.pdf', '1731926243_CLIENT-SERVER-REVIEWER.pdf', '1731926243_Cordova.pdf', '1731926243_Dawn Lester Almadovar Performance Task 2 - Part 1_ITEP 413.docx.pdf', '1731926243_Dawn-Lester-Almadovar Performance Task 2 Part 2 - Part 2_ITEP 413.docx.pdf', '1731926243_ITEP414-SAM-Assignment-2-and-Task-2.pdf', '1731926243_mamaBirthcert_20240919035538_8614826a.pdf', '1731926243_Cordova.pdf', '1731926243_valid-ID_20240921094055_f0c8207e.pdf', '1731926243_LTIA MOVs.docx.pdf', '1731938942_student_cor.pdf', '2024');
-
 -- --------------------------------------------------------
 
 --
@@ -1074,16 +1066,15 @@ CREATE TABLE `movassessmentmembers` (
   `member2` varchar(200) NOT NULL,
   `member3` varchar(200) NOT NULL,
   `member4` varchar(200) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp(),
-  `year` year(4) NOT NULL DEFAULT current_timestamp()
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `movassessmentmembers`
 --
 
-INSERT INTO `movassessmentmembers` (`id`, `municipality_id`, `chairperson`, `member1`, `member2`, `member3`, `member4`, `date`, `year`) VALUES
-(5, 42, 'tes', 'agdaagd', 'gadgd', 'agdag', 'adjfa;k', '2023-11-08 14:56:33', '2024');
+INSERT INTO `movassessmentmembers` (`id`, `municipality_id`, `chairperson`, `member1`, `member2`, `member3`, `member4`, `date`) VALUES
+(5, 42, '', '', '', '', '', '2024-11-18 16:00:00');
 
 -- --------------------------------------------------------
 
@@ -1176,19 +1167,9 @@ CREATE TABLE `movrate` (
   `IV_muni_pdf_rate` decimal(11,0) DEFAULT NULL,
   `V_1_pdf_rate` decimal(11,0) DEFAULT NULL,
   `threepeoplesorg_rate` decimal(11,0) DEFAULT NULL,
-  `status_rate` varchar(100) GENERATED ALWAYS AS (case when `IA_1a_pdf_rate` is not null and `IA_1b_pdf_rate` is not null and `IA_2a_pdf_rate` is not null and `IA_2b_pdf_rate` is not null and `IA_2c_pdf_rate` is not null and `IA_2d_pdf_rate` is not null and `IA_2e_pdf_rate` is not null and `IB_1forcities_pdf_rate` is not null and `IB_1aformuni_pdf_rate` is not null and `IB_1bformuni_pdf_rate` is not null and `IB_2_pdf_rate` is not null and `IB_3_pdf_rate` is not null and `IB_4_pdf_rate` is not null and `IC_1_pdf_rate` is not null and `IC_2_pdf_rate` is not null and `ID_1_pdf_rate` is not null and `ID_2_pdf_rate` is not null and `IIA_pdf_rate` is not null and `IIB_1_pdf_rate` is not null and `IIB_2_pdf_rate` is not null and `IIC_pdf_rate` is not null and `IIIA_pdf_rate` is not null and `IIIB_pdf_rate` is not null and `IIIC_1forcities_pdf_rate` is not null and `IIIC_1forcities2_pdf_rate` is not null and `IIIC_1forcities3_pdf_rate` is not null and `IIIC_2formuni1_pdf_rate` is not null and `IIIC_2formuni2_pdf_rate` is not null and `IIIC_2formuni3_pdf_rate` is not null and `IIID_pdf_rate` is not null and `IV_forcities_pdf_rate` is not null and `IV_muni_pdf_rate` is not null and `V_1_pdf_rate` is not null and `threepeoplesorg_rate` is not null then 'Rate Status: Rated' else 'Rate Status: Pending' end) STORED,
   `total` int(11) GENERATED ALWAYS AS (ifnull(`IA_1a_pdf_rate`,0) + ifnull(`IA_1b_pdf_rate`,0) + ifnull(`IA_2a_pdf_rate`,0) + ifnull(`IA_2b_pdf_rate`,0) + ifnull(`IA_2c_pdf_rate`,0) + ifnull(`IA_2d_pdf_rate`,0) + ifnull(`IA_2e_pdf_rate`,0) + ifnull(`IB_1forcities_pdf_rate`,0) + ifnull(`IB_1aformuni_pdf_rate`,0) + ifnull(`IB_1bformuni_pdf_rate`,0) + ifnull(`IB_2_pdf_rate`,0) + ifnull(`IB_3_pdf_rate`,0) + ifnull(`IB_4_pdf_rate`,0) + ifnull(`IC_1_pdf_rate`,0) + ifnull(`IC_2_pdf_rate`,0) + ifnull(`ID_1_pdf_rate`,0) + ifnull(`ID_2_pdf_rate`,0) + ifnull(`IIA_pdf_rate`,0) + ifnull(`IIB_1_pdf_rate`,0) + ifnull(`IIB_2_pdf_rate`,0) + ifnull(`IIC_pdf_rate`,0) + ifnull(`IIIA_pdf_rate`,0) + ifnull(`IIIB_pdf_rate`,0) + ifnull(`IIIC_1forcities_pdf_rate`,0) + ifnull(`IIIC_1forcities2_pdf_rate`,0) + ifnull(`IIIC_1forcities3_pdf_rate`,0) + ifnull(`IIIC_2formuni1_pdf_rate`,0) + ifnull(`IIIC_2formuni2_pdf_rate`,0) + ifnull(`IIIC_2formuni3_pdf_rate`,0) + ifnull(`IIID_pdf_rate`,0) + ifnull(`IV_forcities_pdf_rate`,0) + ifnull(`IV_muni_pdf_rate`,0) + ifnull(`V_1_pdf_rate`,0) + ifnull(`threepeoplesorg_rate`,0)) STORED,
-  `year` year(4) NOT NULL DEFAULT current_timestamp(),
   `daterate` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `movrate`
---
-
-INSERT INTO `movrate` (`id`, `barangay`, `mov_id`, `IA_1a_pdf_rate`, `IA_1b_pdf_rate`, `IA_2a_pdf_rate`, `IA_2b_pdf_rate`, `IA_2c_pdf_rate`, `IA_2d_pdf_rate`, `IA_2e_pdf_rate`, `IB_1forcities_pdf_rate`, `IB_1aformuni_pdf_rate`, `IB_1bformuni_pdf_rate`, `IB_2_pdf_rate`, `IB_3_pdf_rate`, `IB_4_pdf_rate`, `IC_1_pdf_rate`, `IC_2_pdf_rate`, `ID_1_pdf_rate`, `ID_2_pdf_rate`, `IIA_pdf_rate`, `IIB_1_pdf_rate`, `IIB_2_pdf_rate`, `IIC_pdf_rate`, `IIIA_pdf_rate`, `IIIB_pdf_rate`, `IIIC_1forcities_pdf_rate`, `IIIC_1forcities2_pdf_rate`, `IIIC_1forcities3_pdf_rate`, `IIIC_2formuni1_pdf_rate`, `IIIC_2formuni2_pdf_rate`, `IIIC_2formuni3_pdf_rate`, `IIID_pdf_rate`, `IV_forcities_pdf_rate`, `IV_muni_pdf_rate`, `V_1_pdf_rate`, `threepeoplesorg_rate`, `year`, `daterate`) VALUES
-(36, 96, 40, 5, 5, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 5, 2, 2, 8, 10, 1, 1, 8, 10, 5, 2, 1, 2, 2, 2, 1, 10, 2, 3, 2, 1, '2023', '2023-11-18 10:39:05'),
-(37, 96, 41, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2024', '2024-11-19 14:12:41');
 
 --
 -- Triggers `movrate`
@@ -1250,17 +1231,8 @@ CREATE TABLE `movremark` (
   `IV_muni_pdf_remark` varchar(255) DEFAULT NULL,
   `V_1_pdf_remark` varchar(255) DEFAULT NULL,
   `threepeoplesorg_remark` varchar(255) DEFAULT NULL,
-  `year` year(4) NOT NULL DEFAULT current_timestamp(),
   `dateremark` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `movremark`
---
-
-INSERT INTO `movremark` (`id`, `barangay`, `mov_id`, `IA_1a_pdf_remark`, `IA_1b_pdf_remark`, `IA_2a_pdf_remark`, `IA_2b_pdf_remark`, `IA_2c_pdf_remark`, `IA_2d_pdf_remark`, `IA_2e_pdf_remark`, `IB_1forcities_pdf_remark`, `IB_1aformuni_pdf_remark`, `IB_1bformuni_pdf_remark`, `IB_2_pdf_remark`, `IB_3_pdf_remark`, `IB_4_pdf_remark`, `IC_1_pdf_remark`, `IC_2_pdf_remark`, `ID_1_pdf_remark`, `ID_2_pdf_remark`, `IIA_pdf_remark`, `IIB_1_pdf_remark`, `IIB_2_pdf_remark`, `IIC_pdf_remark`, `IIIA_pdf_remark`, `IIIB_pdf_remark`, `IIIC_1forcities_pdf_remark`, `IIIC_1forcities2_pdf_remark`, `IIIC_1forcities3_pdf_remark`, `IIIC_2formuni1_pdf_remark`, `IIIC_2formuni2_pdf_remark`, `IIIC_2formuni3_pdf_remark`, `IIID_pdf_remark`, `IV_forcities_pdf_remark`, `IV_muni_pdf_remark`, `V_1_pdf_remark`, `threepeoplesorg_remark`, `year`, `dateremark`) VALUES
-(11, 96, 40, 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'palitan', 'ongoing', '2023', '2023-11-18 10:39:05'),
-(12, 96, 41, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '45', 'dge4', '2024', '2024-11-19 14:12:41');
 
 -- --------------------------------------------------------
 
@@ -1393,7 +1365,9 @@ INSERT INTO `security` (`id`, `user_id`, `question1`, `answer1`, `question2`, `a
 (49, 138, '1', '$2y$10$FQOo9n9yF8GbCI9LhJTfO.jrPFfXJsZ1yha6IOePppJsGUQvpN06G', '3', '$2y$10$uIRPkQ/7UX9w9nYubyJkRufe.CVUMlCP2ed5hR/pUi0E/Hdl9X8L6', '4', '$2y$10$1N9f8IatncWprQXWvZntguyNZ94hpjTZOoUdhCtGO9RG9xYcSGEHW'),
 (50, 139, '1', '$2y$10$uOFqXh72hDD7Boht0VyZk./r7rNpKdZ9EbTXZMbiIOpx2C3gP/tP6', '2', '$2y$10$jEhNa6FzzR.n2k8alsjakelOtRjfAlEvCr3TLbADZh.nsWU9Mqlpm', '4', '$2y$10$MH0Xqbx.xsUPCMaY4t.bw.Q.6sUcERJTjcG0i7/m7CTjwg/JjF2ay'),
 (51, 140, '2', '$2y$10$YposSkY4AivhNMKj9d9fTeY6QNJxs/NWbnBEKuinwtYKa8r4mz0XC', '1', '$2y$10$L56K02Yo4cH1lb6z9nWBHeNXM1w24fRLmx.IdZp8or95UhzapDaOi', '3', '$2y$10$kO7H8o5cTF32u7aQafaWWe52akl9yvpZL0brsDXQUlYdpa8tLynDu'),
-(52, 141, '1', '$2y$10$c3.3Aq47AKPQp6tT623kPeTBFDDx6nsusumGpnx9TOs2vY9n5sUIy', '1', '$2y$10$W5X4ugVqOavKBMw3d72A2eG0SYazpKY6c9tx8axXdnYahKfyR2gFu', '1', '$2y$10$XvS/XgLtfr9v6evZ9m3Px.JcqcMM9z/yX1NHKuNCEUoWM5wJdNOsW');
+(54, 144, '3', '$2y$10$dhMi1dw1MEYOnPhOkIx59ui294sPDVtxzoTk9DgUZ9xa5Anmab8PO', '1', '$2y$10$kn8.G9q15eOdp3FPkNCqJeUzV8moLHSX/GxRj9iki1qYHGS1S2xni', '2', '$2y$10$k8rFh52qMzPhzUAf233wgeUe5bE7fT2nvRlKWUTVJEe0v8kVLGccq'),
+(55, 145, '1', '$2y$10$Clbp8XtBPxSuHQzCQfVLzORmT/FdLncGCCJZJwq4bhXbL.0M8vJ8a', '2', '$2y$10$04x3kfB6mNzlG/QI0iKHLuqBPls4FvRUDDO0a1c6mXU/lnBeDVndi', '3', '$2y$10$4PCOOcMclqvQUgU7NXfThOIgY5AnhziWVUiWDV619OJXs3/8scjQy'),
+(56, 148, '1', '$2y$10$2gWF/CAJMK3AlFDkNiWhyeKxWXy.I5pAjG7gOfMv1XGIDloP975m2', '3', '$2y$10$Frh.XjMJZ.fKR7H5uBFO0OGF0SwuiGdoEaqMfwHs/dNpHE943NoM6', '3', '$2y$10$nHWbnVVdMLacGQFDHwkcBu4hJopEuvkBRi27W4hBvXX/vcIU/Y8OO');
 
 -- --------------------------------------------------------
 
@@ -1512,7 +1486,8 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `email` varchar(100) NOT NULL,
   `contact_number` varchar(11) DEFAULT NULL,
-  `user_type` enum('superadmin','admin','user') NOT NULL,
+  `user_type` enum('superadmin','admin','user','assessor') NOT NULL,
+  `assessor_type` varchar(20) DEFAULT NULL,
   `municipality_id` int(11) DEFAULT NULL,
   `barangay_id` int(11) DEFAULT NULL,
   `registration_date` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -1528,29 +1503,31 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `first_name`, `last_name`, `password`, `email`, `contact_number`, `user_type`, `municipality_id`, `barangay_id`, `registration_date`, `profile_picture`, `verified`, `attempt_count`, `restrict_end`, `lgu_logo`, `city_logo`) VALUES
-(1, 'SuperAdmins', 'DILGs', 'Head', '$2y$10$TrBHp44V3RHaAaVwmtAreeDmUU5iSlSWXmXv6vmocjS6NtT.K8KF6', 'superadmin@gmail.com', '09212342546', 'superadmin', NULL, NULL, '2023-08-04 01:05:56', '1.jpg', 0, 0, NULL, 'angel.png', 'angel.png'),
-(107, 'binanclgoo@eKP.Aces', 'Fatima Nona', 'Alon', '$2y$10$5i4PM0wyi8jMYs8Ixr8XNempA5Myc1qIIgzB5gj7G/GSRUOZHlzEq', 'clgoobinan@gmail.com', '09567004685', 'admin', 41, NULL, '2024-04-19 09:01:14', NULL, 0, 0, NULL, NULL, NULL),
-(108, 'losbanosmlgoo@eKP.Aces', 'Michiko ', 'Escalante', '$2y$10$7dluF21OMfD.82Ihdnj7y.85w1XQvUY1h4r0FoVBnxAenU6KUiFIS', 'mlgoolosbanos2@gmail.com', '09567004685', 'admin', 42, NULL, '2024-03-08 08:47:23', NULL, 0, 0, NULL, NULL, NULL),
-(109, 'SanVicente_Binan_eKP.Aces', 'Barangay San Vicente', 'City of Binan', '$2y$10$KLTiy/M2p/iszSETtzZpqeFQyFRSvqKUTrT9JLoKUieXCU4ldZDk2', 'barangaysanvicenteofficial@gmail.com', '09190955719', 'user', 41, 74, '2024-03-11 02:11:59', '109.png', 1, 0, NULL, 'Biñan City OFFICIAL LOGO.png', '243194454_199740088924858_2035192919547994160_n.png'),
-(110, 'BatongMalake_LosBaÃ±os_eKP.Aces', 'Barangay Batong Malake', 'Los BaÃ±os', '$2y$10$eayLrM0RoJWODnE2MJ3xFuOYdVJ/yR2tq9CrKe1AXIavbYtBexLfe', 'nidomyla@gmail.com', '09650758255', 'user', 42, 76, '2024-03-11 02:16:57', '110.jpg', 1, 0, NULL, 'th (1).jpg', 'LUPON LOGO.jpg'),
-(111, 'clgoosantarosa', 'Melody', 'Barairo', '$2y$10$tzq6l0PCamb2MqnpXF6hCexa2EvVzNLdmrpKZboo64W3wp46Mn09K', 'clgoosantarosa2@gmail.com', '09955880245', 'admin', 43, NULL, '2024-03-27 03:54:13', NULL, 0, 0, NULL, NULL, NULL),
-(112, 'clgoosanpedro', 'LENIE', 'BAUTISTA', '$2y$10$fGE932U4UaDzIRWVYq6iwuVNlkTEejUZzY.3GuuMp8/71S2.f7L6u', 'clgoosanpedro1@gmail.com', '09985514533', 'admin', 44, NULL, '2024-03-27 03:58:17', NULL, 0, 0, NULL, NULL, NULL),
-(113, 'clgoocalamba4', 'Jennifer', 'Quirante', '$2y$10$dt070nbAOYHBcUG8DJ3s7u9.YxvFdTVxtFBUJT3Jr/rcI9yM2pGcm', 'clgoocalamba4@gmail.com', '09178754605', 'admin', 45, NULL, '2024-03-27 04:04:20', NULL, 0, 0, NULL, NULL, NULL),
-(115, 'samplebarangay', 'sample', 'Barangay', '$2y$10$G7d1ThN/qa2W2RNovjr.zO0f1CUXoUSTAPT/N31rkz.jmgN2A4ubq', 'samplebarangay@gmail.com', '09212342546', 'user', 52, 1, '2024-03-30 04:50:57', '115.jpg', 1, 1, NULL, 'drink.jpg', 'drink3.jpg'),
-(116, 'MLGOO CALAUAN', 'LOIDA', 'VISTA', '$2y$10$KntShdyO8v6zviVwnFvTfe34DEO.lMROz3qnYElWffIOK6fqKxuZC', 'mlgoocalauan2023@gmail.com', '09273834670', 'admin', 46, NULL, '2024-04-19 00:37:07', NULL, 0, 0, NULL, NULL, NULL),
-(117, 'MLGOO BAY', 'JAYSON', 'CHAVEZ', '$2y$10$TeoCPd6plmGxhQPPwPpnEOXRgNR.XoOH7pgV8HbpUiwQS2dmlQ4h6', 'mlgoobay2@gmail.com', '09285021005', 'admin', 47, NULL, '2024-04-19 00:42:32', NULL, 0, 0, NULL, NULL, NULL),
-(118, 'CLGOO SAN PABLO', 'Maria Alma', 'Barrientos', '$2y$10$C.RO0yMg.1TdCFepROoae.YneBGF.58uEKUGO9rK9Dethmx.MAl/W', 'clgoosanpablo8@gmail.com', '09053708601', 'admin', 48, NULL, '2024-04-19 00:50:54', NULL, 0, 0, NULL, NULL, NULL),
-(122, 'sampleadmin', 'Sample', 'Admin', '$2y$10$TrBHp44V3RHaAaVwmtAreeDmUU5iSlSWXmXv6vmocjS6NtT.K8KF6', 'sampleadmin@gmail.com', '09212342546', 'admin', 52, NULL, '2024-03-30 04:50:57', '122.jpg', NULL, 0, NULL, '', ''),
-(128, 'AlaminosAdmin', 'Alaminos', 'Muni', '$2y$10$0jVVb.sdNDY6zMYoACdCC.aQb2RhdfTpmOpL4xHEZnhKm3RvFE7Ru', 'clgooalaminos@gmail.com', '09605595411', 'admin', 54, NULL, '2024-09-02 01:53:11', NULL, 0, 0, NULL, NULL, NULL),
-(134, 'alaminosusername', 'alaminosfname', 'alaminoslname', '$2y$10$xz3yYT.BbszV7rFMit22oOuIkaxUxZHVD2gUvz7sT3AYTxaUcEWhe', 'alaminos@gmail.com', '09605595411', 'user', 54, 92, '2024-09-02 03:44:13', '134.png', 1, 0, NULL, NULL, 'pngwing.com.png'),
-(135, 'sanpedrousername', 'sanpedrofname', 'sanpedrolname', '$2y$10$a4nxbj4.n03Hp7taCK7GL.BaMSfT8AFaEPVaagQr0654AubHSuhse', 'SanPedro@gmail.com', '09605595411', 'user', 44, 93, '2024-09-02 03:47:44', NULL, 1, 0, NULL, 'drink2.jpg', NULL),
-(136, 'masayausername', 'masayafname', 'masayalname', '$2y$10$qyERj5ROeTdFBOtC.8DoYOXBb15i2g6G1AydAGu.fPtcComlrvK5O', 'masaya@gmail.com', '09605595411', 'user', 47, 94, '2024-09-07 04:55:00', NULL, 1, 0, NULL, NULL, NULL),
-(137, 'mlgoolosbanos2@gmail.com', 'test', 'sample', '$2y$10$jaQ3w0OhUd6iPDmzPMXl8eXcUq6GmO5bz5k5WwwwuvclOg4SIyGd2', 'bagongsilang@gmail.com', '09576123845', 'user', 42, 95, '2024-10-31 12:33:21', NULL, 1, 0, NULL, NULL, NULL),
-(138, 'anossample', 'asno', 'anosss', '$2y$10$G8LhDnmZp8zSg1pSEpCR8upRq5tmP.DMHgWd5JQfN63bfaqBEAYi.', 'anos@gmail.com', '0951276495', 'user', 42, 96, '2024-11-04 17:59:16', NULL, 1, 0, NULL, NULL, NULL),
-(139, 'tes', 'fk;nsfk;a;', 'lfansflna', '$2y$10$xG3M9zusn62RAGMvf9c6/.wRpJ1uZpwILiaQ9P7g/t/Dr/HWUoW9G', 'maahas@gmail.com', '0957642036', 'user', 42, 97, '2024-11-06 06:48:12', NULL, 1, 0, NULL, NULL, NULL),
-(140, 'gdgsd', 'gsgsfgs', 'timugan', '$2y$10$T353GR/z2Txh4HCmgjOfKu68mkldaVZIxboU/iYnHinb3uFVg/sye', 'timug@gmail.com', '09572168924', 'user', 42, 98, '2024-11-06 09:41:43', NULL, 1, 0, NULL, NULL, NULL),
-(141, 'jm01', 'John', 'Monti', '$2y$10$4kz/aNUtfACanZtwPOV6n.n.9q1657D7mY2tvhNiENNENGpvwxXnO', 'monti@gmail.com', '09381949088', 'user', 45, 99, '2024-11-18 07:10:26', NULL, 1, 0, NULL, NULL, NULL);
+INSERT INTO `users` (`id`, `username`, `first_name`, `last_name`, `password`, `email`, `contact_number`, `user_type`, `assessor_type`, `municipality_id`, `barangay_id`, `registration_date`, `profile_picture`, `verified`, `attempt_count`, `restrict_end`, `lgu_logo`, `city_logo`) VALUES
+(1, 'SuperAdmins', 'DILGs', 'Head', '$2y$10$TrBHp44V3RHaAaVwmtAreeDmUU5iSlSWXmXv6vmocjS6NtT.K8KF6', 'superadmin@gmail.com', '09212342546', 'superadmin', NULL, NULL, NULL, '2023-08-04 01:05:56', '1.jpg', 0, 0, NULL, 'angel.png', 'angel.png'),
+(107, 'binanclgoo@eKP.Aces', 'Fatima Nona', 'Alon', '$2y$10$5i4PM0wyi8jMYs8Ixr8XNempA5Myc1qIIgzB5gj7G/GSRUOZHlzEq', 'clgoobinan@gmail.com', '09567004685', 'admin', NULL, 41, NULL, '2024-04-19 09:01:14', NULL, 0, 0, NULL, NULL, NULL),
+(108, 'losbanosmlgoo@eKP.Aces', 'Michiko ', 'Escalante', '$2y$10$7dluF21OMfD.82Ihdnj7y.85w1XQvUY1h4r0FoVBnxAenU6KUiFIS', 'mlgoolosbanos2@gmail.com', '09567004685', 'admin', NULL, 42, NULL, '2024-03-08 08:47:23', NULL, 0, 0, NULL, NULL, NULL),
+(109, 'SanVicente_Binan_eKP.Aces', 'Barangay San Vicente', 'City of Binan', '$2y$10$KLTiy/M2p/iszSETtzZpqeFQyFRSvqKUTrT9JLoKUieXCU4ldZDk2', 'barangaysanvicenteofficial@gmail.com', '09190955719', 'user', NULL, 41, 74, '2024-03-11 02:11:59', '109.png', 1, 0, NULL, 'Biñan City OFFICIAL LOGO.png', '243194454_199740088924858_2035192919547994160_n.png'),
+(110, 'BatongMalake_LosBaÃ±os_eKP.Aces', 'Barangay Batong Malake', 'Los BaÃ±os', '$2y$10$eayLrM0RoJWODnE2MJ3xFuOYdVJ/yR2tq9CrKe1AXIavbYtBexLfe', 'nidomyla@gmail.com', '09650758255', 'user', NULL, 42, 76, '2024-03-11 02:16:57', '110.jpg', 1, 0, NULL, 'th (1).jpg', 'LUPON LOGO.jpg'),
+(111, 'clgoosantarosa', 'Melody', 'Barairo', '$2y$10$tzq6l0PCamb2MqnpXF6hCexa2EvVzNLdmrpKZboo64W3wp46Mn09K', 'clgoosantarosa2@gmail.com', '09955880245', 'admin', NULL, 43, NULL, '2024-03-27 03:54:13', NULL, 0, 0, NULL, NULL, NULL),
+(112, 'clgoosanpedro', 'LENIE', 'BAUTISTA', '$2y$10$fGE932U4UaDzIRWVYq6iwuVNlkTEejUZzY.3GuuMp8/71S2.f7L6u', 'clgoosanpedro1@gmail.com', '09985514533', 'admin', NULL, 44, NULL, '2024-03-27 03:58:17', NULL, 0, 0, NULL, NULL, NULL),
+(113, 'clgoocalamba4', 'Jennifer', 'Quirante', '$2y$10$dt070nbAOYHBcUG8DJ3s7u9.YxvFdTVxtFBUJT3Jr/rcI9yM2pGcm', 'clgoocalamba4@gmail.com', '09178754605', 'admin', NULL, 45, NULL, '2024-03-27 04:04:20', NULL, 0, 0, NULL, NULL, NULL),
+(115, 'samplebarangay', 'sample', 'Barangay', '$2y$10$G7d1ThN/qa2W2RNovjr.zO0f1CUXoUSTAPT/N31rkz.jmgN2A4ubq', 'samplebarangay@gmail.com', '09212342546', 'user', NULL, 52, 1, '2024-03-30 04:50:57', '115.jpg', 1, 1, NULL, 'drink.jpg', 'drink3.jpg'),
+(116, 'MLGOO CALAUAN', 'LOIDA', 'VISTA', '$2y$10$KntShdyO8v6zviVwnFvTfe34DEO.lMROz3qnYElWffIOK6fqKxuZC', 'mlgoocalauan2023@gmail.com', '09273834670', 'admin', NULL, 46, NULL, '2024-04-19 00:37:07', NULL, 0, 0, NULL, NULL, NULL),
+(117, 'MLGOO BAY', 'JAYSON', 'CHAVEZ', '$2y$10$TeoCPd6plmGxhQPPwPpnEOXRgNR.XoOH7pgV8HbpUiwQS2dmlQ4h6', 'mlgoobay2@gmail.com', '09285021005', 'admin', NULL, 47, NULL, '2024-04-19 00:42:32', NULL, 0, 0, NULL, NULL, NULL),
+(118, 'CLGOO SAN PABLO', 'Maria Alma', 'Barrientos', '$2y$10$C.RO0yMg.1TdCFepROoae.YneBGF.58uEKUGO9rK9Dethmx.MAl/W', 'clgoosanpablo8@gmail.com', '09053708601', 'admin', NULL, 48, NULL, '2024-04-19 00:50:54', NULL, 0, 0, NULL, NULL, NULL),
+(122, 'sampleadmin', 'Sample', 'Admin', '$2y$10$TrBHp44V3RHaAaVwmtAreeDmUU5iSlSWXmXv6vmocjS6NtT.K8KF6', 'sampleadmin@gmail.com', '09212342546', 'admin', NULL, 52, NULL, '2024-03-30 04:50:57', '122.jpg', NULL, 0, NULL, '', ''),
+(128, 'AlaminosAdmin', 'Alaminos', 'Muni', '$2y$10$0jVVb.sdNDY6zMYoACdCC.aQb2RhdfTpmOpL4xHEZnhKm3RvFE7Ru', 'clgooalaminos@gmail.com', '09605595411', 'admin', NULL, 54, NULL, '2024-09-02 01:53:11', NULL, 0, 0, NULL, NULL, NULL),
+(134, 'alaminosusername', 'alaminosfname', 'alaminoslname', '$2y$10$xz3yYT.BbszV7rFMit22oOuIkaxUxZHVD2gUvz7sT3AYTxaUcEWhe', 'alaminos@gmail.com', '09605595411', 'user', NULL, 54, 92, '2024-09-02 03:44:13', '134.png', 1, 0, NULL, NULL, 'pngwing.com.png'),
+(135, 'sanpedrousername', 'sanpedrofname', 'sanpedrolname', '$2y$10$a4nxbj4.n03Hp7taCK7GL.BaMSfT8AFaEPVaagQr0654AubHSuhse', 'SanPedro@gmail.com', '09605595411', 'user', NULL, 44, 93, '2024-09-02 03:47:44', NULL, 1, 0, NULL, 'drink2.jpg', NULL),
+(136, 'masayausername', 'masayafname', 'masayalname', '$2y$10$qyERj5ROeTdFBOtC.8DoYOXBb15i2g6G1AydAGu.fPtcComlrvK5O', 'masaya@gmail.com', '09605595411', 'user', NULL, 47, 94, '2024-09-07 04:55:00', NULL, 1, 0, NULL, NULL, NULL),
+(137, 'mlgoolosbanos2@gmail.com', 'test', 'sample', '$2y$10$jaQ3w0OhUd6iPDmzPMXl8eXcUq6GmO5bz5k5WwwwuvclOg4SIyGd2', 'bagongsilang@gmail.com', '09576123845', 'user', NULL, 42, 95, '2024-10-31 12:33:21', NULL, 1, 0, NULL, NULL, NULL),
+(138, 'anossample', 'asno', 'anosss', '$2y$10$G8LhDnmZp8zSg1pSEpCR8upRq5tmP.DMHgWd5JQfN63bfaqBEAYi.', 'anos@gmail.com', '0951276495', 'user', NULL, 42, 96, '2024-11-04 17:59:16', NULL, 1, 0, NULL, NULL, NULL),
+(139, 'tes', 'fk;nsfk;a;', 'lfansflna', '$2y$10$xG3M9zusn62RAGMvf9c6/.wRpJ1uZpwILiaQ9P7g/t/Dr/HWUoW9G', 'maahas@gmail.com', '0957642036', 'user', NULL, 42, 97, '2024-11-06 06:48:12', NULL, 1, 0, NULL, NULL, NULL),
+(140, 'gdgsd', 'gsgsfgs', 'timugan', '$2y$10$T353GR/z2Txh4HCmgjOfKu68mkldaVZIxboU/iYnHinb3uFVg/sye', 'timug@gmail.com', '09572168924', 'user', NULL, 42, 98, '2024-11-06 09:41:43', NULL, 1, 0, NULL, NULL, NULL),
+(141, 'calambausername', 'calambafname', 'calambalname', '$2y$10$IUjr1f03qLER9ZcXfB6fceowVExfzKg3FU4YZxpNW/wwXeOK5vFsW', 'calamba@gmail.com', '09605595411', 'user', NULL, 45, 99, '2024-12-09 20:22:49', NULL, 0, 0, NULL, NULL, NULL),
+(146, 'bot', 'michael', 'larios', '$2y$10$EYPLRVFB8h9sNJ.Z.zUcreQAyvPWEpkKQud3UplArgOtzpv0Rls5C', 'michael@gmail.com', '09605595411', 'user', NULL, 45, 100, '2024-12-10 00:00:02', NULL, 1, 0, NULL, NULL, NULL),
+(148, 'calamba assesor', 'jomel', 'escasura', '$2y$10$gA0x1p./DOMBy40HPljiruwQqSTOQ05v5GumUp7bfcT/ZvHtfjymi', 'calambaassessor@gmail.com', '09605595411', 'assessor', 'doctor', 45, NULL, '2024-12-10 06:37:48', '148.jpg', 0, 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1831,18 +1808,69 @@ INSERT INTO `user_logs` (`log_id`, `user_id`, `timestamp`, `activity`) VALUES
 (236, 115, '2024-11-15 11:12:38', 'User logged in'),
 (237, 115, '2024-11-15 11:12:47', 'User logged in'),
 (238, 115, '2024-11-15 22:10:57', 'User logged in'),
-(239, 113, '2024-11-18 07:10:37', 'User logged in'),
-(240, 141, '2024-11-18 07:11:27', 'User logged in'),
-(241, 113, '2024-11-18 07:19:25', 'User logged in'),
-(242, 138, '2024-11-18 10:34:37', 'User logged in'),
-(243, 108, '2024-11-18 10:37:47', 'User logged in'),
-(244, 138, '2024-11-18 10:43:17', 'User logged in'),
-(245, 108, '2024-11-18 13:02:02', 'User logged in'),
-(246, 138, '2024-11-18 13:34:04', 'User logged in'),
-(247, 108, '2024-11-19 14:11:35', 'User logged in'),
-(248, 138, '2024-11-19 14:13:00', 'User logged in'),
-(249, 108, '2024-11-19 14:44:04', 'User logged in'),
-(250, 138, '2024-11-19 16:55:38', 'User logged in');
+(239, 115, '2024-11-19 08:58:30', 'User logged in'),
+(240, 108, '2024-11-19 09:07:35', 'User logged in'),
+(241, 134, '2024-11-19 09:28:43', 'User logged in'),
+(242, 108, '2024-11-19 09:39:29', 'User logged in'),
+(243, 108, '2024-11-19 10:41:09', 'User logged in'),
+(244, 108, '2024-11-20 18:22:18', 'User logged in'),
+(245, 134, '2024-11-20 18:23:38', 'User logged in'),
+(246, 115, '2024-11-20 18:23:46', 'User logged in'),
+(247, 115, '2024-11-21 10:08:04', 'User logged in'),
+(248, 115, '2024-11-21 22:22:58', 'User logged in'),
+(249, 115, '2024-11-21 22:27:07', 'User logged in'),
+(250, 115, '2024-11-21 22:27:37', 'User logged in'),
+(251, 115, '2024-11-21 22:28:50', 'User logged in'),
+(252, 115, '2024-11-22 01:40:46', 'User logged in'),
+(253, 115, '2024-11-22 01:40:55', 'User logged in'),
+(254, 115, '2024-11-22 08:08:07', 'User logged in'),
+(255, 115, '2024-12-08 14:11:04', 'User logged in'),
+(256, 113, '2024-12-09 20:17:53', 'User logged in'),
+(257, 144, '2024-12-09 21:33:24', 'User logged in'),
+(258, 144, '2024-12-09 22:09:52', 'User logged in'),
+(259, 144, '2024-12-09 22:27:29', 'User logged in'),
+(260, 144, '2024-12-09 22:30:01', 'User logged in'),
+(261, 144, '2024-12-09 22:40:16', 'User logged in'),
+(262, 144, '2024-12-09 22:41:51', 'User logged in'),
+(263, 115, '2024-12-09 22:43:11', 'User logged in'),
+(264, 144, '2024-12-09 22:44:40', 'User logged in'),
+(265, 108, '2024-12-09 22:47:40', 'User logged in'),
+(266, 144, '2024-12-09 22:48:31', 'User logged in'),
+(267, 144, '2024-12-09 22:50:36', 'User logged in'),
+(268, 144, '2024-12-09 22:51:49', 'User logged in'),
+(269, 144, '2024-12-09 22:54:45', 'User logged in'),
+(270, 108, '2024-12-09 22:58:28', 'User logged in'),
+(271, 144, '2024-12-09 22:59:23', 'User logged in'),
+(272, 144, '2024-12-09 23:04:01', 'User logged in'),
+(273, 144, '2024-12-09 23:11:06', 'User logged in'),
+(274, 144, '2024-12-09 23:12:14', 'User logged in'),
+(275, 144, '2024-12-09 23:18:37', 'User logged in'),
+(276, 144, '2024-12-09 23:21:03', 'User logged in'),
+(277, 144, '2024-12-09 23:24:08', 'User logged in'),
+(278, 144, '2024-12-09 23:27:08', 'User logged in'),
+(279, 144, '2024-12-09 23:30:07', 'User logged in'),
+(280, 144, '2024-12-09 23:39:08', 'User logged in'),
+(281, 108, '2024-12-09 23:40:08', 'User logged in'),
+(282, 113, '2024-12-09 23:44:11', 'User logged in'),
+(283, 128, '2024-12-09 23:45:16', 'User logged in'),
+(284, 108, '2024-12-09 23:45:33', 'User logged in'),
+(285, 113, '2024-12-09 23:46:20', 'User logged in'),
+(286, 144, '2024-12-09 23:46:40', 'User logged in'),
+(287, 145, '2024-12-09 23:56:51', 'User logged in'),
+(288, 113, '2024-12-10 00:01:09', 'User logged in'),
+(289, 146, '2024-12-10 00:01:36', 'User logged in'),
+(290, 144, '2024-12-10 00:01:47', 'User logged in'),
+(291, 144, '2024-12-10 05:10:56', 'User logged in'),
+(292, 144, '2024-12-10 05:31:19', 'User logged in'),
+(293, 144, '2024-12-10 05:31:37', 'User logged in'),
+(294, 144, '2024-12-10 05:34:09', 'User logged in'),
+(295, 144, '2024-12-10 05:34:18', 'User logged in'),
+(296, 144, '2024-12-10 05:36:28', 'User logged in'),
+(297, 147, '2024-12-10 06:29:41', 'User logged in'),
+(298, 144, '2024-12-10 06:35:27', 'User logged in'),
+(299, 144, '2024-12-10 06:35:59', 'User logged in'),
+(300, 148, '2024-12-10 06:38:19', 'User logged in'),
+(301, 148, '2024-12-11 15:07:55', 'User logged in');
 
 --
 -- Indexes for dumped tables
@@ -1998,7 +2026,7 @@ ALTER TABLE `active_sessions`
 -- AUTO_INCREMENT for table `barangays`
 --
 ALTER TABLE `barangays`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=100;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 
 --
 -- AUTO_INCREMENT for table `case_progress`
@@ -2034,7 +2062,7 @@ ALTER TABLE `lupons`
 -- AUTO_INCREMENT for table `mov`
 --
 ALTER TABLE `mov`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `movassessmentmembers`
@@ -2046,19 +2074,19 @@ ALTER TABLE `movassessmentmembers`
 -- AUTO_INCREMENT for table `movdraft_file`
 --
 ALTER TABLE `movdraft_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `movrate`
 --
 ALTER TABLE `movrate`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `movremark`
 --
 ALTER TABLE `movremark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `municipalities`
@@ -2076,7 +2104,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `security`
 --
 ALTER TABLE `security`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `upload_files`
@@ -2088,7 +2116,7 @@ ALTER TABLE `upload_files`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 
 --
 -- AUTO_INCREMENT for table `user_files`
@@ -2100,7 +2128,7 @@ ALTER TABLE `user_files`
 -- AUTO_INCREMENT for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=302;
 
 --
 -- Constraints for dumped tables
@@ -2158,14 +2186,14 @@ ALTER TABLE `movdraft_file`
 -- Constraints for table `movrate`
 --
 ALTER TABLE `movrate`
-  ADD CONSTRAINT `movrate_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `barangays` (`id`),
+  ADD CONSTRAINT `movrate_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `mov` (`barangay_id`),
   ADD CONSTRAINT `movrate_ibfk_3` FOREIGN KEY (`mov_id`) REFERENCES `mov` (`id`);
 
 --
 -- Constraints for table `movremark`
 --
 ALTER TABLE `movremark`
-  ADD CONSTRAINT `movremark_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `barangays` (`id`),
+  ADD CONSTRAINT `movremark_ibfk_2` FOREIGN KEY (`barangay`) REFERENCES `mov` (`barangay_id`),
   ADD CONSTRAINT `movremark_ibfk_3` FOREIGN KEY (`mov_id`) REFERENCES `mov` (`id`);
 
 --

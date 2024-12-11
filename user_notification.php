@@ -14,9 +14,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   exit;
 }
 
-date_default_timezone_set('Asia/Manila');
-
 include 'user_notification_handler.php';
+
+// to access filter to select tag
+$filter = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -49,7 +50,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
 
-  if (isset($_POST['submit_filter'])) {
+
+  if (isset($_POST['filter_period'])) {
     $filter = $_POST['filter_period'];
     $extraCondition = "";
 
@@ -128,31 +130,15 @@ function get_time_ago($time)
 
 </head>
 
-<body class="bg-[#E8E8E7] h-screen w-screen flex flex-col gap-y-2 items-center justify-start">
+<body class="bg-[#E8E8E7] h-screen w-screen flex flex-col gap-y-2 items-center justify-center">
 
-  <section class="w-[60rem] max-w-[90%] flex justify-between mt-3">
-    <h3 class="text-4xl font-bold text-gray-700">Notifications</h3>
-    <a href="user_dashboard.php" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">back to dashboard</a>
-  </section>
+    <section class="w-[70%] flex justify-between">
+      <h3 class="text-4xl font-bold text-gray-700">Notifications</h3>
+      <a href="user_dashboard.php" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">back to dashboard</a>
+    </section>
 
-  <section class="bg-white shadow rounded-lg h-[4rem] w-[60rem] max-w-[90%] flex items-center justify-between p-3">
+    <section class="bg-white shadow rounded-lg h-[4rem] w-[70%] flex items-center justify-between p-3">
 
-    <section class="flex gap-x-2">
-      <form action="" method="POST" class="m-0 p-0">
-        <input
-          type="submit"
-          value="All"
-          name="submit_all"
-          class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
-      </form>
-
-      <form action="" method="POST" class="m-0 p-0">
-        <input
-          type="submit"
-          value="Unread"
-          name="submit_unread"
-          class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
-      </form>
 
       <form action="" method="POST" class="m-0 p-0">
         <input
@@ -161,106 +147,133 @@ function get_time_ago($time)
           name="submit_readAll"
           class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
       </form>
+
+      <!-- ----------------------------- -->
+      <section class="flex gap-x-2">
+
+        <form action="" method="POST" class="m-0 p-0">
+          <input
+            type="submit"
+            value="All"
+            name="submit_all"
+            class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+        </form>
+
+        <form action="" method="POST" class="m-0 p-0">
+          <input
+            type="submit"
+            value="Unread"
+            name="submit_unread"
+            class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+        </form>
+
+        <form action="" method="POST" class="m-0 p-0">
+          <select
+            name="filter_period"
+            class="p-1 rounded-sm bg-gray-100 border border-gray-300"
+            onchange="this.form.submit()">
+
+            <?php
+            if ($filter === "") {
+              echo "<option disabled selected class='text-sm text-gray-500'>Select date</option>";
+            }
+            ?>
+
+            <option <?php echo $filter === "today" ? "selected" : ""; ?> value="today">Today</option>
+            <option <?php echo $filter === "week" ? "selected" : ""; ?> value="week">This Week</option>
+            <option <?php echo $filter === "month" ? "selected" : ""; ?> value="month">This Month</option>
+          </select>
+        </form>
+
+
+      </section>
     </section>
 
+    </section>
 
-    <!-- ----------------------------- -->
-    <form action="" method="POST" class="m-0 p-0">
-      <select name="filter_period" class="p-1 rounded-sm bg-gray-100 border border-gray-300">
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-      </select>
-      <button type="submit" name="submit_filter" class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">Filter</button>
-    </form>
-  </section>
-  <!-- ----------------------------- -->
+    <section class="bg-white shadow h-[75%] w-[70%] overflow-y-auto">
+      <?php if (!empty($notifData)) { ?>
+        <?php foreach ($notifData as $row) { ?>
 
 
-  </section>
-
-  <section class="bg-white shadow h-[31rem] w-[60rem] max-w-[90%] overflow-y-auto">
-    <?php if (!empty($notifData)) { ?>
-      <?php foreach ($notifData as $row) { ?>
-
-        <div class="relative <?php echo $row['seen'] === 1 ? 'bg-white' : 'bg-blue-100' ?> hover:bg-gray-100 h-fit w-full border p-3 pl-4 flex items-center justify-between">
+          <div class="relative <?php echo $row['seen'] === 1 ? 'bg-white' : 'bg-blue-100' ?> hover:bg-gray-100 h-fit w-full border p-3 pl-4 flex items-center justify-between">
 
 
-          <div class="flex flex-col gap-y-1 items-start cursor-default">
+            <div class="flex flex-col gap-y-1 items-start cursor-default">
 
-            <div class="flex">
-              <p clas>The case </p>
+              <div class="flex">
+                <p clas>The case </p>
+                <form action="" method="POST" class="m-0 p-0">
+                  <input
+                    type="hidden"
+                    name="notif_id"
+                    value="<?php echo $row['id']; ?>">
+                  <input
+                    id="textToCopy<?php echo $row['id']; ?>"
+                    type="submit"
+                    value="<?php echo htmlspecialchars($row['CNum']); ?>"
+                    name="submit_read"
+                    class="px-1 underline text-blue-500 cursor-pointer">
+                </form>
+                <p>has lapsed 14 days</p>
+              </div>
+
+              <button data-tooltip-placement="right" data-tooltip-target="tooltip-light_<?php echo $row['id']; ?>" data-tooltip-style="light" type="button" class="cursor-default">
+                <p class="text-sm text-gray-500">
+                  <?php
+                  $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
+                  echo get_time_ago($adjustedDate);
+                  ?>
+                </p>
+              </button>
+
+              <div id="tooltip-light_<?php echo $row['id']; ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-1 bg-white border border-gray-200 rounded-lg shadow-xl opacity-0 tooltip">
+                <p class="text-sm text-gray-500">
+                  <?php
+                  $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
+                  echo date('M d, h:i A', $adjustedDate);
+                  ?>
+                </p>
+                <div class="tooltip-arrow" data-popper-arrow></div>
+              </div>
+
+
+            </div>
+
+            <!-- --------------------------- -->
+            <section class="flex gap-x-4 items-center">
+
+              <i class="ti ti-copy text-2xl cursor-pointer" onclick="copyText(<?php echo $row['id']; ?>)"></i>
+
               <form action="" method="POST" class="m-0 p-0">
                 <input
                   type="hidden"
                   name="notif_id"
                   value="<?php echo $row['id']; ?>">
-                <input
-                  id="textToCopy<?php echo $row['id']; ?>"
-                  type="submit"
-                  value="<?php echo htmlspecialchars($row['CNum']); ?>"
-                  name="submit_read"
-                  class="px-1 underline text-blue-500 cursor-pointer">
+
+                <button type="submit" id="notiftoremove<?php echo $row['id']; ?>" name="submit_remove_notif">
+                  <i class="ti ti-trash-x text-2xl text-red-500 cursor-pointer"></i>
+                </button>
+
               </form>
-              <p>has lapsed 14 days</p>
-            </div>
 
-            <button data-tooltip-placement="right" data-tooltip-target="tooltip-light_<?php echo $row['id']; ?>" data-tooltip-style="light" type="button" class="cursor-default">
-              <p class="text-sm text-gray-500">
-                <?php
-                $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
-                echo get_time_ago($adjustedDate);
-                ?>
-              </p>
-            </button>
-
-            <div id="tooltip-light_<?php echo $row['id']; ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-1 bg-white border border-gray-200 rounded-lg shadow-xl opacity-0 tooltip">
-              <p class="text-sm text-gray-500">
-                <?php
-                $adjustedDate = strtotime($row['Mdate'] . ' +14 days');
-                echo date('M d, h:i A', $adjustedDate);
-                ?>
-              </p>
-              <div class="tooltip-arrow" data-popper-arrow></div>
-            </div>
+            </section>
+            <!-- ----------------------------- -->
 
 
           </div>
 
-          <!-- --------------------------- -->
-          <section class="flex gap-x-4 items-center">
-
-            <i class="ti ti-copy text-2xl cursor-pointer" onclick="copyText(<?php echo $row['id']; ?>)"></i>
-
-            <form action="" method="POST" class="m-0 p-0">
-              <input
-                type="hidden"
-                name="notif_id"
-                value="<?php echo $row['id']; ?>">
-
-              <button type="submit" id="notiftoremove<?php echo $row['id']; ?>" name="submit_remove_notif">
-                <i class="ti ti-trash-x text-2xl text-red-500 cursor-pointer"></i>
-              </button>
-
-            </form>
-
-          </section>
-          <!-- ----------------------------- -->
-
-
-        </div>
-
+        <?php } ?>
+      <?php } else { ?>
+        <section class="h-full w-full flex flex-col items-center justify-center gap-y-2">
+          <img
+            src="https://cdni.iconscout.com/illustration/premium/thumb/no-notification-illustration-download-in-svg-png-gif-file-formats--notifications-mail-e-commerce-pack-shopping-illustrations-6743718.png?f=webp"
+            alt="empty image"
+            class="h-[14rem]">
+          <p class="text-3xl text-gray-500 font-bold">No notification yet!</p>
+        </section>
       <?php } ?>
-    <?php } else { ?>
-      <section class="h-full w-full flex flex-col items-center justify-center gap-y-2">
-        <img
-          src="https://cdni.iconscout.com/illustration/premium/thumb/no-notification-illustration-download-in-svg-png-gif-file-formats--notifications-mail-e-commerce-pack-shopping-illustrations-6743718.png?f=webp"
-          alt="empty image"
-          class="h-[14rem]">
-        <p class="text-3xl text-gray-500 font-bold">No notification yet!</p>
-      </section>
-    <?php } ?>
-  </section>
+    </section>
 
   <!-- for custom alert -->
   <div class="hidden bg-red-500 text-white p-4 absolute top-5 left-1/2 transform -translate-x-1/2 rounded-lg z-[1000]" id="customAlert"></div>

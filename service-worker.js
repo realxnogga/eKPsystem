@@ -1,6 +1,5 @@
 const CACHE_NAME = "app-cache-v1";
 const STATIC_CACHE_URLS = [
-  "registration.php",
   "offline.html",
   "output.css",
   "node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css",

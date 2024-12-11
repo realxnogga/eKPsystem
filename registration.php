@@ -78,8 +78,8 @@ include 'registration_handler.php';
                 </div>
                 <b>
 
-                  <?php if (isset($errors['registration'])): ?>
-                    <p style="color: <?php echo $errors['registration'] ? 'green' : 'red'; ?>; font-style: italic;"><?php echo $errors['registration']; ?></p>
+                  <?php if (isset($errors)): ?>
+                    <p style="color: <?php echo strpos($errors, 'successful') ? 'green' : 'red'; ?>; font-style: italic;"><?php echo $errors; ?></p>
                   <?php endif; ?>
 
                   <b>
@@ -100,18 +100,11 @@ include 'registration_handler.php';
                         <option value="San Pedro">San Pedro</option>
                         <option value="Sta Rosa">Sta Rosa</option>
                       </select>
-                      <?php if (isset($errors['municipality'])): ?>
-                        <p style="color: red; font-style: italic;"><?php echo $errors['municipality']; ?></p>
-                      <?php endif; ?>
-
 
                       <div class="form-row">
                         <div class="col">
                           <label for="mediation">Username:</label>
                           <input type="text" class="form-control" required name="username" placeholder="Enter username" value="">
-                          <?php if (isset($errors['username'])): ?>
-                            <p style="color: red; font-style: italic;"><?php echo $errors['username']; ?></p>
-                          <?php endif; ?>
                         </div>
                       </div>
 
@@ -157,9 +150,6 @@ include 'registration_handler.php';
                               <button class="btn btn-outline-secondary" type="button" id="toggle-confirm-password"><i class="fas fa-eye"></i></button>
                             </div>
                           </div>
-                          <?php if (isset($errors['password'])): ?>
-                            <p style="color: red; font-style: italic;"><?php echo $errors['password']; ?></p>
-                          <?php endif; ?>
                         </div>
                       </div>
 
@@ -168,10 +158,22 @@ include 'registration_handler.php';
                         <option value="" disabled selected>Select</option>
                         <option value="user">Barangay Secretary</option>
                         <option value="admin">C/MLGOOs</option>
+
+                        <option value="assessor">Assessor</option>
+
                       </select>
 
                       <br>
-
+                       
+                      <div style="display: none;" id="assessorField">
+                        <label for="assessor">Select Assessor:</label>
+                        <select class="form-select" id="assessor" name="assessor" required>
+                          <option disabled selected>Select</option>
+                          <option value="prof">Prof</option>
+                          <option value="doctor">Doctor</option>
+                        </select>
+                      </div>
+                  
                       <div style="display: none;" id="barangay-secretary-field">
                         <label for="mediation">Select Barangay:</label>
                         <select class="form-select" id="second-dropdown" name="barangay_name" required>
@@ -179,9 +181,6 @@ include 'registration_handler.php';
                         </select>
                       </div>
 
-                      <?php if (isset($errors['barangay'])): ?>
-                        <p style="color: red; font-style: italic;"><?php echo $errors['barangay']; ?></p>
-                      <?php endif; ?>
                       <p>Already have an account?<a href="login.php"> Login here</a>.</p>
                       <input type="submit" name="register" class="btn btn-primary m1" value="Register"><br><br>
                     </form>
@@ -241,10 +240,20 @@ include 'registration_handler.php';
     const userTypeSelect = document.getElementById("exampleFormControlSelect1");
     const barangaySecretaryField = document.getElementById("barangay-secretary-field");
 
+    const assessorField = document.getElementById("assessorField");
+
+
     if (userTypeSelect.value === "user") {
       barangaySecretaryField.style.display = "block";
-    } else {
+      assessorField.style.display = "none";
+    }
+    else if (userTypeSelect.value === "assessor") {
+      assessorField.style.display = "block";
       barangaySecretaryField.style.display = "none";
+    }
+     else {
+      barangaySecretaryField.style.display = "none";
+      assessorField.style.display = "none";
     }
   }
 </script>

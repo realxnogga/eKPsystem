@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 include 'connection.php';
 $userId = $_SESSION['user_id'];
@@ -61,19 +61,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($updateStmt->execute()) {
 
             if ($usertype === "user") {
-         header('Location: user_setting.php');
-         exit();
-}
-        elseif ($usertype === "superadmin") {
-    header('Location: sa_setting.php');
-    exit();
-        }
-        elseif($usertype === "admin"){
-      header('Location: admin_setting.php');
-    exit();
-            
-        }
-
+                header('Location: user_setting.php');
+                exit();
+            } elseif ($usertype === "superadmin") {
+                header('Location: sa_setting.php');
+                exit();
+            } elseif ($usertype === "admin") {
+                header('Location: admin_setting.php');
+                exit();
+            }
+            elseif ($usertype === "assessor") {
+                header('Location: assessor_setting.php');
+                exit();
+            }
         } else {
             // Update failed
             $error = "Failed to update user data. Please try again.";
@@ -81,4 +81,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
-?>

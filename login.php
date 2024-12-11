@@ -87,10 +87,7 @@ session_unset();
                   <div class="form-row">
                     <div class="col">
                       <label for="email" class="form-label">Email Address</label>
-                      <input type="email" class="form-control" id="email" name="email">
-                      <?php 
-                       echo isset($_GET['error']) && ($_GET['error'] === 'emailIsEmpty' || $_GET['error'] === 'passwordAndEmailIsEmpty') ? '<p class="text-danger">Email is required</p>': ''
-                       ?>
+                      <input type="email" class="form-control" id="email" name="email" required>
                     </div>
                   </div>
 
@@ -100,15 +97,12 @@ session_unset();
                     <div class="col">
                       <label for="login-password" class="form-label">Password</label>
                       <div class="input-group">
-                        <input type="password" class="form-control" name="password" id="login-password">
+                        <input type="password" class="form-control" name="password" id="login-password" required>
                        
                         <div class="input-group-append">
                           <button class="btn btn-outline-secondary" type="button" id="toggle-login-password"><i class="fas fa-eye"></i></button>
                         </div>
                       </div>
-                      <?php 
-                       echo isset($_GET['error']) && ($_GET['error'] === 'passwordIsEmpty' || $_GET['error'] === 'passwordAndEmailIsEmpty') ? '<p class="text-danger">Password is required</p>': ''
-                       ?>
                     </div>
 
                     <br>

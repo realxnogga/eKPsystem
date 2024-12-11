@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_ACTIVE) {
     session_destroy();
 }
 
-$errors = array(); // Array to store error messages
+$errors = ''; // Array to store error messages
 
 
 if (isset($_POST['register'])) {
@@ -33,6 +33,9 @@ if (isset($_POST['register'])) {
     $utype = $_POST['utype'] ?? '';
     $utype = filter_var($utype, FILTER_SANITIZE_STRING);
 
+    $assessorType = $_POST['assessor'] ?? '';
+    $assessorType = filter_var($assessorType, FILTER_SANITIZE_STRING);
+
     $brgy_name = $_POST['barangay_name'] ?? '';
     $brgy_name = filter_var($brgy_name, FILTER_SANITIZE_STRING);
 
@@ -42,6 +45,25 @@ if (isset($_POST['register'])) {
     $lname = $_POST['last_name'] ?? '';
     $lname = filter_var($lname, FILTER_SANITIZE_STRING);
 
+    // --------------------
+    if ($utype === 'assessor') {
+      
+        if ($pass !== $cpass) {
+            $errors = "Password does not match the confirmed password. Please try again.";
+            $pass = '';
+            $cpass = '';
+        }
+
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email");
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->execute();
+        $existing_email = $stmt->fetch();
+
+        if ($existing_email) {
+            $errors = "Email already exists. Please choose a different email address.";
+        }
+    }
+    // --------------------
 
     if ($utype === 'admin') {
         $stmt = $conn->prepare("SELECT id FROM municipalities WHERE municipality_name = :municipality_name");
@@ -50,7 +72,7 @@ if (isset($_POST['register'])) {
         $existing_municipality = $stmt->fetch();
 
         if ($pass !== $cpass) {
-            $errors['password'] = "Password does not match the confirmed password. Please try again.";
+            $errors = "Password does not match the confirmed password. Please try again.";
             $pass = '';
             $cpass = '';
         }
@@ -59,7 +81,7 @@ if (isset($_POST['register'])) {
             $stmt->bindParam(':municipality_name', $munic_name, PDO::PARAM_STR);
             $stmt->execute();
         } else {
-            $errors['municipality'] = "The selected Municipality has already been registered.<br> Please contact Admin.";
+            $errors = "The selected Municipality has already been registered.<br> Please contact Admin.";
         }
 
         //Email Checker
@@ -69,7 +91,7 @@ if (isset($_POST['register'])) {
         $existing_email = $stmt->fetch();
 
         if ($existing_email) {
-            $errors['email'] = "Email already exists. Please choose a different email address.";
+            $errors = "Email already exists. Please choose a different email address.";
             // You should consider handling this error appropriately, not just exit.
         }
     }
@@ -83,13 +105,13 @@ if (isset($_POST['register'])) {
         $existing_barangay = $stmt->fetch();
 
         if ($pass !== $cpass) {
-            $errors['password'] = "Password does not match the confirmed password. Please try again.";
+            $errors = "Password does not match the confirmed password. Please try again.";
             $pass = '';
             $cpass = '';
         }
 
         if ($existing_barangay) {
-            $errors['barangay'] = "The selected Barangay is already existing for that Municipality.";
+            $errors = "The selected Barangay is already existing for that Municipality.";
         }
 
         $stmt = $conn->prepare("SELECT id FROM municipalities WHERE municipality_name = :municipality_name");
@@ -98,7 +120,7 @@ if (isset($_POST['register'])) {
         $existing_municipality = $stmt->fetch();
 
         if (!$existing_municipality) {
-            $errors['municipality'] = "Municipality could not be found or has not registered yet. Please check your selected Municipality.";
+            $errors = "Municipality could not be found or has not registered yet. Please check your selected Municipality.";
         }
 
         //Email Checker
@@ -108,7 +130,7 @@ if (isset($_POST['register'])) {
         $existing_email = $stmt->fetch();
 
         if ($existing_email) {
-            $errors['email'] = "Email already exists. Please choose a different email address.";
+            $errors = "Email already exists. Please choose a different email address.";
         }
 
 
@@ -125,8 +147,8 @@ if (isset($_POST['register'])) {
 
 
     if (empty($errors)) {
-        $stmt = $conn->prepare("INSERT INTO users (username, password, email, contact_number, user_type, municipality_id, barangay_id, first_name, last_name) 
-                        VALUES (:username, :password, :email, :contact_number, :user_type, 
+        $stmt = $conn->prepare("INSERT INTO users (username, password, email, contact_number, user_type, assessor_type, municipality_id, barangay_id, first_name, last_name) 
+                        VALUES (:username, :password, :email, :contact_number, :user_type, :assessor_type, 
                         (SELECT id FROM municipalities WHERE municipality_name = :municipality_name),
                         :barangay_id, :first_name, :last_name)");
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
@@ -134,16 +156,17 @@ if (isset($_POST['register'])) {
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->bindParam(':contact_number', $cont_num, PDO::PARAM_STR);
         $stmt->bindParam(':user_type', $utype, PDO::PARAM_STR);
+        $stmt->bindParam(':assessor_type', $assessorType, PDO::PARAM_STR);
         $stmt->bindParam(':municipality_name', $munic_name, PDO::PARAM_STR);
         $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
         $stmt->bindParam(':first_name', $fname, PDO::PARAM_STR);
         $stmt->bindParam(':last_name', $lname, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
-            $errors['registration'] = "User registration successful. Proceed to Login";
+            $errors  = "User registration successful. Proceed to Login";
             $username = $munic_name = $email = $cont_num = $pass = $cpass = $utype = $brgy_name = $fname = $lname = '';
         } else {
-            $errors['registration'] = "User registration failed. Please try again later.";
+            $errors = "User registration failed. Please try again later.";
         }
     }
 }

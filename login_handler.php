@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['email'] = $user['email'];
                     $_SESSION['user_type'] = $user['user_type'];
+                    $_SESSION['assessor_type'] = $user['assessor_type'];
                     $_SESSION['municipality_id'] = $user['municipality_id'];
                     $_SESSION['first_name'] = $user['first_name']; // Store first name
                     $_SESSION['last_name'] = $user['last_name'];   // Store last name
@@ -60,6 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($user['user_type'] === 'admin') {
                         header("Location: admin_dashboard.php");
                         exit;
+
+                    } elseif ($user['user_type'] === 'assessor') {
+                        header("Location: assessor_ltia_admin_dashboard.php");
+                        exit;
+
                     } elseif ($user['user_type'] === 'user') {
                         header("Location: user_dashboard.php");
                         exit;

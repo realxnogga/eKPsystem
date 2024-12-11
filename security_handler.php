@@ -73,6 +73,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) 
         case "admin":
             $isFirstTimeToAddSecurity ? header('Location: admin_dashboard.php') : header('Location: admin_setting.php');
             break;
+        case "assessor":
+            $isFirstTimeToAddSecurity ? header('Location: assessor_ltia_admin_dashboard.php') : header('Location: assessor_setting.php');
+            break;
     }
 
     exit();
