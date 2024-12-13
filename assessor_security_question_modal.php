@@ -48,8 +48,8 @@ if ($securityQuestions) {
       <!-- Modal body -->
       <div class="p-4 md:p-5 space-y-4">
 
-
-        <form id="securityForm" method="post" action="security_handler.php">
+                                              <!-- add ../ cus current url contains LTIA/ -->
+        <form id="securityForm" method="post" action="../security_handler.php">
           <div class="tab-pane fade <?php echo !isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-security">
             <h6>
               <?php if (!empty($message)) { ?>

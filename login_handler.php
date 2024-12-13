@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            if ($user['user_type'] !== 'user' || $user['verified']) {
+            if (!in_array($user['user_type'], ['user', 'assessor']) || $user['verified']) {
                 // Check if another user with the same barangay is already logged in
                 if (isset($_SESSION['barangay_id']) && $_SESSION['status'] === 'loggedin') {
                     if ($_SESSION['barangay_id'] === $user['barangay_id']) {
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         exit;
 
                     } elseif ($user['user_type'] === 'assessor') {
-                        header("Location: assessor_ltia_admin_dashboard.php");
+                        header("Location: LTIA/assessor_ltia_admin_dashboard.php");
                         exit;
 
                     } elseif ($user['user_type'] === 'user') {

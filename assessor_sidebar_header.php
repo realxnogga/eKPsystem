@@ -8,8 +8,6 @@ $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 $stmt->execute();
 $assessor = $stmt->fetch(PDO::FETCH_ASSOC);
 
-$_SESSION['test'] = $assessor;
-
 function isActive($path)
 {
   $currentPage = basename($_SERVER['SCRIPT_NAME']);
@@ -117,15 +115,8 @@ function traverseDirectory()
 
       <p>
         <?php
-        $temp = '';
-        if ($assessor['assessor_type'] === "prof") {
-          $temp = 'Prof';
-        } elseif ($assessor['assessor_type'] === "doctor") {
-          $temp = 'Doc';
-        }
-        echo $temp . ' ' . $assessor['first_name'] . ' ' .  $assessor['last_name'];
+         echo $assessor['first_name'] . ' ' . $assessor['last_name'];
         ?>
-
       </p>
 
     </div>
@@ -134,7 +125,7 @@ function traverseDirectory()
     <ul class="font-medium">
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>assessor_ltia_admin_dashboard.php" class="<?php echo isActive('assessor_ltia_admin_dashboard.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>LTIA/assessor_ltia_admin_dashboard.php" class="<?php echo isActive('LTIA/assessor_ltia_admin_dashboard.php') . ' ' . isActive('LTIA/assessor_ltia_adminform2evaluate.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-certificate-2 text-2xl"></i>
           <span>LTIA Admin Dashboard</span>
         </a>

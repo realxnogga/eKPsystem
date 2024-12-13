@@ -84,7 +84,7 @@ if ($action_submitted) {
             <br>
 
             <form method="GET" action="" class="searchInput">
-              <input type="text" class="form-control" name="search" id="search" placeholder="Search by Name or Barangay Name">
+              <input type="text" class="form-control" name="search" id="search" placeholder="Search by Name or Barangay Name" required>
               <input type="submit" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 ml-2 rounded-md text-white" value="Search">
             </form>
 
@@ -139,12 +139,15 @@ if ($action_submitted) {
                   // Your actions/buttons for search results
                   echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
                   echo '<input type="hidden"  name="user_id" value="' . $verifiedUser['id'] . '">';
-                  echo '<button class="bg-green-500 hover:bg-green-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">Lock</button>';
+                  // echo '<button class="bg-green-500 hover:bg-green-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">1Lock</button>';
+
+                  echo '<button class="bg-red-500 hover:bg-red-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">Lock</button>';
+
                   echo '</form>';
                   echo '</td>';
                   echo '<td>';
                   // Your actions/buttons for search results
-                  echo '<form method="post" class="form-control" action="admin_viewreport.php">';
+                  echo '<form method="post" action="admin_viewreport.php">';
                   echo '<input type="hidden" name="user_id" value="' . $verifiedUser['id'] . '">';
                   // Fetch barangay_id and include it as a hidden input
                   $barangayIdQuery = "SELECT barangay_id FROM users WHERE id = ?";
@@ -152,7 +155,10 @@ if ($action_submitted) {
                   $barangayStatement->execute([$verifiedUser['id']]);
                   $barangayId = $barangayStatement->fetchColumn();
                   echo '<input type="hidden" name="barangay_id" value="' . $barangayId . '">';
-                  echo '<button class="btn btn-success m-1" type="submit" name="viewreport">View Report</button>';
+                  // echo '<button class="btn btn-success m-1" type="submit" name="viewreport">View Report</button>';
+
+                  echo '<button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="viewreport">View Report</button>';
+
                   echo '</form>';
                   echo '</td>';
                   echo '</tr>';
@@ -174,7 +180,7 @@ if ($action_submitted) {
                   echo '<td>' . $verifiedUser['first_name'] . ' ' . $verifiedUser['last_name'] . '</td>';
                   echo '<td>' . $verifiedUser['email'] . '</td>';
                   echo '<td>' . $verifiedUser['contact_number'] . '</td>';
-                  echo '<td>' . $barangayName . '</td>';
+                  echo '<td>' . ($barangayName === '' ? '(NA)assessor' : $barangayName) . '</td>';
                   echo '<td>';
                   // Your actions/buttons for verified users
                   echo '<form method="post"  action="' . $_SERVER['PHP_SELF'] . '">';

@@ -18,23 +18,24 @@ if ($_SESSION['user_type'] !== 'admin') {
 
 // Check if the user_id parameter is set in the URL
 if (isset($_GET['user_id'])) {
-   $userId = $_GET['user_id'];
+  $userId = $_GET['user_id'];
+
 
 
   // Fetch user data based on the provided user_id
-  $stmt = $conn->prepare("SELECT u.id, u.municipality_id, u.first_name, u.last_name, u.contact_number, u.email, m.municipality_name, b.barangay_name
-                            FROM users u
-                            INNER JOIN municipalities m ON u.municipality_id = m.id
-                            INNER JOIN barangays b ON u.barangay_id = b.id
-                            WHERE u.user_type = 'user' AND u.id = :user_id");
+  $stmt = $conn->prepare("SELECT u.id, u.municipality_id, u.first_name, u.last_name, u.contact_number, u.email, m.municipality_name, 
+  IFNULL(b.barangay_name, '(NA)assessor') AS barangay_name
+  FROM users u
+  INNER JOIN municipalities m ON u.municipality_id = m.id
+  LEFT JOIN barangays b ON u.barangay_id = b.id
+  WHERE u.user_type IN ('user', 'assessor') AND u.id = :user_id");
   $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
   $stmt->execute();
   $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
   if (!$user) {
     // User not found, handle this case
-    header("Location: admin_dashboard.php");
+    header("Location: admin_acc_req.php");
     exit;
   }
 } else {
@@ -86,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>User Manage Account</title>
   <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
-  
+
 
 </head>
 
@@ -97,61 +98,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
 
-        <!--  Row 1 -->
-        <div class="card">
-          <div class="card-body">
+      <!--  Row 1 -->
+      <div class="card">
+        <div class="card-body">
 
-            <div class="d-flex align-items-center">
-              <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
-              <div>
-                <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
-              </div>
+          <div class="d-flex align-items-center">
+            <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+            <div>
+              <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
             </div>
-            <br>
-
-            <h5 class="card-title mb-9 fw-semibold">User Manage Account</h5>
-            <hr>
-            <b>
-
-              <?php if (isset($error)) { ?>
-                <p class="text-danger"><?php echo $error; ?></p>
-              <?php } ?>
-              <form method="post">
-                <!-- Display user information in form fields -->
-                <div class="form-group">
-                  <label for="municipality_name">Municipality Name:</label>
-                  <input type="text" class="form-control" id="municipality_name" name="municipality_name" value="<?php echo $user['municipality_name']; ?>" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="barangay_name">Barangay Name:</label>
-                  <input type="text" class="form-control" id="barangay_name" name="barangay_name" value="<?php echo $user['barangay_name']; ?>" readonly>
-                </div>
-                <div class="form-group">
-                  <label>First Name:</label>
-                  <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>" required>
-                </div>
-                <div class="form-group">
-                  <label>Last Name:</label>
-                  <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>" required>
-                </div>
-                <div class="form-group">
-                  <label>Contact Number:</label>
-                  <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>" required>
-                </div>
-                <div class="form-group">
-                  <label>Email:</label>
-                  <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>" required>
-                </div>
-                <div class="form-group">
-                  <label>New Password (leave empty to keep current password):</label>
-                  <input type="password" class="form-control" id="new_password" name="new_password">
-                </div><br>
-                <button type="submit" class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white">Save Changes</button>
-              </form>
-            </b>
           </div>
+          <br>
+
+          <h5 class="card-title mb-9 fw-semibold">User Manage Account</h5>
+          <hr>
+          <b>
+
+            <?php if (isset($error)) { ?>
+              <p class="text-danger"><?php echo $error; ?></p>
+            <?php } ?>
+            <form method="post">
+              <!-- Display user information in form fields -->
+              <div class="form-group">
+                <label for="municipality_name">Municipality Name:</label>
+                <input type="text" class="form-control" id="municipality_name" name="municipality_name" value="<?php echo $user['municipality_name']; ?>" readonly>
+              </div>
+              <div class="form-group">
+                <label for="barangay_name">Barangay Name:</label>
+                <input type="text" class="form-control" id="barangay_name" name="barangay_name" value="<?php echo $user['barangay_name']; ?>" readonly>
+              </div>
+              <div class="form-group">
+                <label>First Name:</label>
+                <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>" required>
+              </div>
+              <div class="form-group">
+                <label>Last Name:</label>
+                <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>" required>
+              </div>
+              <div class="form-group">
+                <label>Contact Number:</label>
+                <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>" required>
+              </div>
+              <div class="form-group">
+                <label>Email:</label>
+                <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>" required>
+              </div>
+              <div class="form-group">
+                <label>New Password (leave empty to keep current password):</label>
+                <input type="password" class="form-control" id="new_password" name="new_password">
+              </div><br>
+              <button type="submit" class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white">Save Changes</button>
+            </form>
+          </b>
         </div>
       </div>
+    </div>
   </div>
 </body>
 

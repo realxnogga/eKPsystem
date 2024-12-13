@@ -15,12 +15,13 @@ include 'admin_func.php';
 $currentMunicipalityID = $_SESSION['municipality_id'] ?? null;
 
 $search_query = isset($_GET['search']) ? $_GET['search'] : '';
+
 $accountRequestsQuery = "SELECT u.id, u.username, u.first_name, u.last_name, u.email, u.contact_number, b.barangay_name, u.verified 
                          FROM users u 
                          LEFT JOIN barangays b ON u.barangay_id = b.id 
                          WHERE u.verified = 0 
                          AND u.municipality_id = ? 
-                         AND u.user_type = 'user'
+                         AND u.user_type IN ('user', 'assessor') 
                          AND (u.first_name LIKE ? OR u.last_name LIKE ? OR b.barangay_name LIKE ?)
                          ORDER BY b.barangay_name"; // Order by barangay_name for readability
 
@@ -28,6 +29,7 @@ $search_query_like = '%' . $search_query . '%';
 $accountRequestsStatement = $conn->prepare($accountRequestsQuery);
 $accountRequestsStatement->execute([$currentMunicipalityID, $search_query_like, $search_query_like, $search_query_like]);
 $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -67,13 +69,13 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
             <br>
 
             <form method="GET" action="" class="searchInput" style="display: flex; align-items: center;">
-              <input type="text" class="form-control" name="search" id="search" placeholder="Search by Name or Barangay Name" class="searchInput">
+              <input type="text" class="form-control" name="search" id="search" placeholder="Search by Name or Barangay Name" class="searchInput" required>
               <input type="submit" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 ml-2 rounded-md text-white" value="Search" class="refresh-button">
             </form>
 
 
-
             <?php
+
             echo '<div id="account-requests" style="display: block;">';
 
             if (!empty($accountRequests)) {
@@ -87,7 +89,8 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                 echo '<td>' . $user['first_name'] . ' ' . $user['last_name'] . '</td>';
                 echo '<td>' . $user['email'] . '</td>';
                 echo '<td>' . $user['contact_number'] . '</td>';
-                echo '<td>' . $user['barangay_name'] . '</td>';
+                echo '<td>' . (!empty($user['barangay_name']) ? $user['barangay_name'] : '(NA)assessor') . '</td>';
+
                 echo '<td>';
 
                 if (!isset($user['verified']) || !$user['verified']) {
