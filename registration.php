@@ -159,18 +159,20 @@ include 'registration_handler.php';
                         <option value="user">Barangay Secretary</option>
                         <option value="admin">C/MLGOOs</option>
 
-                        <option value="assessor">Assessor</option>
-
+                        <option value="assessor">Assessor Member Commitee</option>
                       </select>
-
                       <br>
-                       
+                      
                       <div style="display: none;" id="assessorField">
-                        <label for="assessor">Select Assessor:</label>
+                        <label for="assessor">Select Sectors/Department:</label>
                         <select class="form-select" id="assessor" name="assessor" required>
                           <option disabled selected>Select</option>
-                          <option value="prof">Prof</option>
-                          <option value="doctor">Doctor</option>
+                          <option value="Department of Justice">Department of Justice</option>
+                          <option value="Philippine National Police">Philippine National Police</option>
+                          <option value="Local Trial Court">Local Trial Court</option>
+                          <option value="Liga ng mga Barangay Chapter President">Liga ng mga Barangay Chapter President</option>
+                          <option value="Representative of the Local Peace and Order Council">Representative of the Local Peace and Order Council</option>
+                          <option value="Representative of a Civil Society Organization">Representative of a Civil Society Organization</option>
                         </select>
                       </div>
                   
@@ -184,7 +186,7 @@ include 'registration_handler.php';
                       <p>Already have an account?<a href="login.php"> Login here</a>.</p>
                       <input type="submit" name="register" class="btn btn-primary m1" value="Register"><br><br>
                     </form>
-                  </b>
+                  </b><br>
                 </b>
               </div>
             </div>

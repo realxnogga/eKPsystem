@@ -262,8 +262,8 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 
 <body class="bg-[#E8E8E7]">
-	<?php include "../admin_sidebar_header.php"; ?>
-	<div class="p-4 sm:ml-44 ">
+<?php include "../assessor_sidebar_header.php"; ?>
+<div class="p-4 sm:ml-44 ">
 		<div class="rounded-lg mt-16">
 			<!-- First Card -->
 			<div class="card">

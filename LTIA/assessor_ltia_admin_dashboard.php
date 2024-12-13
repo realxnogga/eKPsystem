@@ -68,7 +68,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   <title>LTIA</title>
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
-
   <script src="../node_modules/chart.js/dist/chart.umd.js"></script>
   
 </head>
