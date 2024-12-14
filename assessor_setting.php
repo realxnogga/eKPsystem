@@ -43,8 +43,8 @@ if ($securityQuestions) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Setting</title>
-  
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+ 
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -91,7 +91,10 @@ if ($securityQuestions) {
                         <label for="first_name">Username:</label>
                         <input type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>">
                       </div>
-
+                      <div class="form-group">
+                        <label for="Sectors/Department">Sectors/Department:</label>
+                        <input type="text" class="form-control" id="assessor_type" name="assessor_type" value="<?php echo $user['assessor_type']; ?>">
+                      </div>
                       <div class="form-group">
                         <label for="first_name">First Name:</label>
                         <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>">

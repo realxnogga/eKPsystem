@@ -385,6 +385,11 @@ $(document).ready(function () {
     });
 
 </script>
+<style>
+        * {
+            color: black !important;
+        }
+    </style>
 </head>
 <body class="bg-[#E8E8E7]">
   <?php include "../assessor_sidebar_header.php"; ?>
@@ -409,7 +414,6 @@ $(document).ready(function () {
             </h2>
         </div>
     </div>
-
             <div class="menu">
               <ul class="flex space-x-4">
               <li>
