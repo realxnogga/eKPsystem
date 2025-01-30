@@ -218,6 +218,18 @@ $(document).ready(function () {
                         $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || 'No ratings available at this time');
                         $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || 'No ratings available at this time');
                         $('#status_rate').text(data.rates.status_rate || 'Rate Status: Pending');
+                        
+                        // After setting all the rates, check for empty ones and highlight them
+                        $('input[type="number"].score-input').each(function() {
+                            var value = $(this).val();
+                            if (value === '' || value === null) {
+                                $(this).css('background-color', '#ffebee'); // Light red background
+                                $(this).css('border-color', '#ef5350'); // Red border
+                            } else {
+                                $(this).css('background-color', ''); // Reset background
+                                $(this).css('border-color', ''); // Reset border
+                            }
+                        });
                     } else {
                         clearRates();
                     }
@@ -320,6 +332,12 @@ $(document).ready(function () {
       $('input[name="V_1_pdf_rate"]').val('');
       $('input[name="threepeoplesorg_rate"]').val('');
       $('#status_rate').text('');
+      
+      // Reset all input styling
+      $('input[type="number"].score-input').css({
+          'background-color': '',
+          'border-color': ''
+      });
     }
 
     // Function to clear remarks
@@ -360,6 +378,97 @@ $(document).ready(function () {
       $('textarea[name="threepeoplesorg_remark"]').val('');
 
     }
+
+    // Add event listeners for rate inputs and remark textareas
+    $('input[type="number"].score-input, textarea[placeholder="Remarks"]').on('change', function() {
+        // Check if a barangay is selected
+        var selectedBarangay = $('#barangay_select').val();
+        if (!selectedBarangay) {
+            alert('Please select a barangay first');
+            $(this).val(''); // Clear the input
+            return;
+        }
+        
+        // For number inputs, validate min/max
+        if ($(this).attr('type') === 'number') {
+            var min = parseFloat($(this).attr('min'));
+            var max = parseFloat($(this).attr('max'));
+            var value = parseFloat($(this).val());
+            
+            if (value < min || value > max) {
+                alert(`Please enter a number between ${min} and ${max}`);
+                $(this).val(''); // Clear invalid input
+                return;
+            }
+        }
+        
+        // Automatically submit the form
+        $('form').submit();
+        
+        if ($(this).val() !== '') {
+            $(this).css('background-color', ''); // Reset background
+            $(this).css('border-color', ''); // Reset border
+        } else {
+            $(this).css('background-color', '#ffebee'); // Light red background
+            $(this).css('border-color', '#ef5350'); // Red border
+        }
+    });
+
+    // Add form submission handler
+    $('form').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate all number inputs before submission
+        var isValid = true;
+        $('input[type="number"].score-input').each(function() {
+            var min = parseFloat($(this).attr('min'));
+            var max = parseFloat($(this).attr('max'));
+            var value = parseFloat($(this).val());
+            
+            if (value !== '' && (value < min || value > max)) {
+                alert(`Please ensure all ratings are between their specified minimum and maximum values`);
+                isValid = false;
+                return false;
+            }
+        });
+        
+        if (!isValid) {
+            return false;
+        }
+        
+        // Create FormData object
+        var formData = new FormData(this);
+        
+        // Submit form via AJAX
+        $.ajax({
+            url: 'adminevaluate_handler.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // Only attempt to parse and show errors if response is not empty
+                if (response && response.trim() !== '') {
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.status === 'error') {
+                            $('#modalMessage').text(result.message);
+                            $('#responseModal').modal('show');
+                        }
+                    } catch (e) {
+                        // Do nothing on parse error - assume success
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                // Only show modal for actual AJAX errors
+                if (error) {
+                    $('#modalMessage').text('Error saving changes');
+                    $('#responseModal').modal('show');
+                }
+            }
+        });
+    });
 });
 
     // Handle PDF viewing inside the modal
