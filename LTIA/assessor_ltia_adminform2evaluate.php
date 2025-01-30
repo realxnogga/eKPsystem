@@ -90,7 +90,7 @@ try {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Assessor Form 2 Evaluate</title>
+  <title>LTIA</title>
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
 <style>
 /* CSS to ensure alerts fit well within the table cells */
@@ -109,9 +109,8 @@ try {
     text-overflow: ellipsis; /* Add ellipsis if text is too long */
     white-space: nowrap;    /* Prevent wrapping */
 }
-
 </style>
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+  <link rel="stylesheet" href="../assets/css/styles.min.css" />
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -218,6 +217,18 @@ $(document).ready(function () {
                         $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || 'No ratings available at this time');
                         $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || 'No ratings available at this time');
                         $('#status_rate').text(data.rates.status_rate || 'Rate Status: Pending');
+                        
+                        // After setting all the rates, check for empty ones and highlight them
+                        $('input[type="number"].score-input').each(function() {
+                            var value = $(this).val();
+                            if (value === '' || value === null) {
+                                $(this).css('background-color', '#ffebee'); // Light red background
+                                $(this).css('border-color', '#ef5350'); // Red border
+                            } else {
+                                $(this).css('background-color', ''); // Reset background
+                                $(this).css('border-color', ''); // Reset border
+                            }
+                        });
                     } else {
                         clearRates();
                     }
@@ -320,6 +331,12 @@ $(document).ready(function () {
       $('input[name="V_1_pdf_rate"]').val('');
       $('input[name="threepeoplesorg_rate"]').val('');
       $('#status_rate').text('');
+      
+      // Reset all input styling
+      $('input[type="number"].score-input').css({
+          'background-color': '',
+          'border-color': ''
+      });
     }
 
     // Function to clear remarks
@@ -360,6 +377,97 @@ $(document).ready(function () {
       $('textarea[name="threepeoplesorg_remark"]').val('');
 
     }
+
+    // Add event listeners for rate inputs and remark textareas
+    $('input[type="number"].score-input, textarea[placeholder="Remarks"]').on('change', function() {
+        // Check if a barangay is selected
+        var selectedBarangay = $('#barangay_select').val();
+        if (!selectedBarangay) {
+            alert('Please select a barangay first');
+            $(this).val(''); // Clear the input
+            return;
+        }
+        
+        // For number inputs, validate min/max
+        if ($(this).attr('type') === 'number') {
+            var min = parseFloat($(this).attr('min'));
+            var max = parseFloat($(this).attr('max'));
+            var value = parseFloat($(this).val());
+            
+            if (value < min || value > max) {
+                alert(`Please enter a number between ${min} and ${max}`);
+                $(this).val(''); // Clear invalid input
+                return;
+            }
+        }
+        
+        // Automatically submit the form
+        $('form').submit();
+        
+        if ($(this).val() !== '') {
+            $(this).css('background-color', ''); // Reset background
+            $(this).css('border-color', ''); // Reset border
+        } else {
+            $(this).css('background-color', '#ffebee'); // Light red background
+            $(this).css('border-color', '#ef5350'); // Red border
+        }
+    });
+
+    // Add form submission handler
+    $('form').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate all number inputs before submission
+        var isValid = true;
+        $('input[type="number"].score-input').each(function() {
+            var min = parseFloat($(this).attr('min'));
+            var max = parseFloat($(this).attr('max'));
+            var value = parseFloat($(this).val());
+            
+            if (value !== '' && (value < min || value > max)) {
+                alert(`Please ensure all ratings are between their specified minimum and maximum values`);
+                isValid = false;
+                return false;
+            }
+        });
+        
+        if (!isValid) {
+            return false;
+        }
+        
+        // Create FormData object
+        var formData = new FormData(this);
+        
+        // Submit form via AJAX
+        $.ajax({
+            url: 'assessor_ltia_adminform2evaluate.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // Only attempt to parse and show errors if response is not empty
+                if (response && response.trim() !== '') {
+                    try {
+                        var result = JSON.parse(response);
+                        if (result.status === 'error') {
+                            $('#modalMessage').text(result.message);
+                            $('#responseModal').modal('show');
+                        }
+                    } catch (e) {
+                        // Do nothing on parse error - assume success
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                // Only show modal for actual AJAX errors
+                if (error) {
+                    $('#modalMessage').text('Error saving changes');
+                    $('#responseModal').modal('show');
+                }
+            }
+        });
+    });
 });
 
     // Handle PDF viewing inside the modal
@@ -385,15 +493,9 @@ $(document).ready(function () {
     });
 
 </script>
-<style>
-        * {
-            color: black !important;
-        }
-    </style>
 </head>
 <body class="bg-[#E8E8E7]">
-  <?php include "../assessor_sidebar_header.php"; ?>
-  <div class="p-4 sm:ml-44 ">
+<?php include "../assessor_sidebar_header.php"; ?>  <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
     <div class="card">
     <div class="card-body">
@@ -414,16 +516,17 @@ $(document).ready(function () {
             </h2>
         </div>
     </div>
+
             <div class="menu">
               <ul class="flex space-x-4">
               <li>
                   <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessorForm3summary.php';" style="margin-left: 0;">
                   <i class="ti ti-file-analytics mr-2">  </i>
-                  My Summary
+                     My Summary
                   </button>
                 </li>
                 <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessor_ltia_admin_dashboard.php';" style="margin-left: 0;">
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='ltia_admin_dashboard.php';" style="margin-left: 0;">
                   <i class="ti ti-building-community mr-2"> </i> 
                       Back
                   </button>
@@ -523,7 +626,7 @@ if (classification === "City") {
                             <?php endforeach; ?>
                         </select>
                     </div>
-    <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
+    <form method="post" action="assessor_ltia_adminform2evaluate.php" enctype="multipart/form-data">
     <input type="hidden" id="selected_barangay" name="selected_barangay" value="" /><br><br>
     <!-- Example form input for mov_id -->
     <input type="hidden" id="mov_id" name="mov_id" readonly> <!-- Display fetched mov_id -->

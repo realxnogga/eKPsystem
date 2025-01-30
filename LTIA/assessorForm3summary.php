@@ -63,51 +63,7 @@ function getAdjectivalRating($total)
 	} else {
 		return "Very Poor";
 	}
-}
-// Fetch existing certification data if it exists
-$query = "SELECT * FROM movassessmentmembers WHERE municipality_id = :municipality_id LIMIT 1";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
-$stmt->execute();
-$certification_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Process form submission
-// Process form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$chairperson = $_POST['chairperson'];
-	$member1 = $_POST['member1'];
-	$member2 = $_POST['member2'];
-	$member3 = $_POST['member3'];
-	$date = date("Y-m-d");
-
-	if ($certification_data) {
-		// Update existing record
-		$query = "UPDATE movassessmentmembers SET chairperson = :chairperson, member1 = :member1, member2 = :member2, member3 = :member3, date = :date WHERE municipality_id = :municipality_id";
-	} else {
-		// Insert new record
-		$query = "INSERT INTO movassessmentmembers (municipality_id, chairperson, member1, member2, member3, date) VALUES (:municipality_id, :chairperson, :member1, :member2, :member3, :date)";
-	}
-
-	$stmt = $conn->prepare($query);
-	$stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
-	$stmt->bindParam(':chairperson', $chairperson, PDO::PARAM_STR);
-	$stmt->bindParam(':member1', $member1, PDO::PARAM_STR);
-	$stmt->bindParam(':member2', $member2, PDO::PARAM_STR);
-	$stmt->bindParam(':member3', $member3, PDO::PARAM_STR);
-	$stmt->bindParam(':date', $date, PDO::PARAM_STR);
-
-	if ($stmt->execute()) {
-		$message = "Members Saved";
-		$certification_data = [
-			'chairperson' => $chairperson,
-			'member1' => $member1,
-			'member2' => $member2,
-			'member3' => $member3,
-			'date' => $date
-		];
-	} else {
-		$message = "Error saving certification details.";
-	}
 } // Fetch available years from movrate table
 $query = "SELECT DISTINCT YEAR(daterate) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
 $stmt = $conn->prepare($query);
@@ -267,7 +223,7 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="card">
 				<div class="card-body">
 					<div class="menu flex items-center justify-between">
-						<button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform2evaluate.php';">
+						<button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessor_ltia_admin_dashboard.php';">
 							<i class="ti ti-building-community mr-2"></i> Back
 						</button>
 					</div>
@@ -286,8 +242,6 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			</div>
 					</div>
 				
-			
-
 			<div class="text-right">
 				<button onclick="printSecondCard()" class="btn btn-primary">Print</button>
 			</div>
@@ -382,7 +336,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
-
 						<br>
 						<b>B. COMPARATIVE EVALUATION RESULTS</b><br>
 
@@ -416,16 +369,16 @@ document.addEventListener('DOMContentLoaded', function () {
 						<b>C. I CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION</b><br><br>
 						<div class="certification-section text-center">
 							<form method="post" action="" enctype="multipart/form-data">
-								<input type="text" name="chairperson" class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['chairperson'] ?? ''); ?>"><br>
+								<input type="text" name=" " class="underline-input" placeholder="Enter Name" value="<>"><br>
 								Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-								<input type="text" name="member1" class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member1'] ?? ''); ?>"><br>
+								<input type="text" name=" " class="underline-input" placeholder="Enter Name" value=" "><br>
 								Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-								<input type="text" name="member2" class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member2'] ?? ''); ?>"><br>
+								<input type="text" name=" " class="underline-input" placeholder="Enter Name" value=" "><br>
 								Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-								<input type="text" name="member3" class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['member3'] ?? ''); ?>"><br>
+								<input type="text" name=" " class="underline-input" placeholder="Enter Name" value=" "><br>
 								Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 							
 						</div>

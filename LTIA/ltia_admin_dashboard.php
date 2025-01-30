@@ -24,7 +24,7 @@ function getPerformanceRating($total) {
         return "Very Poor";
     }
 }
-
+  
 // Fetch available years for the dropdown
 $yearQuery = "SELECT DISTINCT EXTRACT(YEAR FROM daterate) AS year FROM movrate WHERE barangay IN (SELECT id FROM barangays WHERE municipality_id = :municipality_id) ORDER BY year DESC";
 $yearStmt = $conn->prepare($yearQuery);

@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user' || !isset(
     header("Location: login.php");
     exit;
 }
-
+    
 function getPerformanceRating($total) {
     if ($total >= 100) return "Outstanding";
     if ($total >= 90) return "Very Satisfactory";
@@ -53,73 +53,67 @@ try {
     $total = "Error";
     $performance = "Error fetching data";
 }
+$barangay = $_SESSION['barangay_id']; // Assign barangay from session
 
-// Handle form submission
+// Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize and validate inputs
-    $fields = ['Punong_Barangay', 'Barangay_Secretary', 'Barangay_Treasurer'];
-    for ($i = 1; $i <= 7; $i++) {
-        $fields[] = "Kagawad$i";
+    $punong_barangay = $_POST['Punong_Barangay'];
+    $barangay_secretary = $_POST['Barangay_Secretary'];
+    $barangay_treasurer = $_POST['Barangay_Treasurer'];
+    $kagawad1 = $_POST['Kagawad1'];
+    $kagawad2 = $_POST['Kagawad2'];
+    $kagawad3 = $_POST['Kagawad3'];
+    $kagawad4 = $_POST['Kagawad4'];
+    $kagawad5 = $_POST['Kagawad5'];
+    $kagawad6 = $_POST['Kagawad6'];
+    $kagawad7 = $_POST['Kagawad7'];
+    $date = date("Y-m-d");
+
+    if ($certification_data) {
+        // Update existing record
+        $query = "UPDATE movbrgy_officers SET 
+            punong_barangay = :punong_barangay, 
+            barangay_secretary = :barangay_secretary, 
+            barangay_treasurer = :barangay_treasurer, 
+            kagawad1 = :kagawad1, 
+            kagawad2 = :kagawad2, 
+            kagawad3 = :kagawad3, 
+            kagawad4 = :kagawad4, 
+            kagawad5 = :kagawad5, 
+            kagawad6 = :kagawad6, 
+            kagawad7 = :kagawad7, 
+            date = :date 
+            WHERE barangay = :barangay";
+    } else {
+        // Insert new record
+        $query = "INSERT INTO movbrgy_officers (
+            barangay, punong_barangay, barangay_secretary, barangay_treasurer, kagawad1, kagawad2, kagawad3, kagawad4, kagawad5, kagawad6, kagawad7, date
+        ) VALUES (
+            :barangay, :punong_barangay, :barangay_secretary, :barangay_treasurer, :kagawad1, :kagawad2, :kagawad3, :kagawad4, :kagawad5, :kagawad6, :kagawad7, :date
+        )";
     }
 
-    $data = [];
-    $errors = [];
-    foreach ($fields as $field) {
-        $data[$field] = trim($_POST[$field]);
-        if (empty($data[$field])) {
-            $errors[$field] = "$field is required.";
-        }
-    }
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':barangay', $barangay, PDO::PARAM_STR); // Now it's correctly bound to $barangay
+    $stmt->bindParam(':punong_barangay', $punong_barangay, PDO::PARAM_STR);
+    $stmt->bindParam(':barangay_secretary', $barangay_secretary, PDO::PARAM_STR);
+    $stmt->bindParam(':barangay_treasurer', $barangay_treasurer, PDO::PARAM_STR);
+    $stmt->bindParam(':kagawad1', $kagawad1, PDO::PARAM_STR);
+    $stmt->bindParam(':kagawad2', $kagawad2, PDO::PARAM_STR);
+    $stmt->bindParam(':kagawad3', $kagawad3, PDO::PARAM_STR);
+    $stmt->bindParam(':kagawad4', $kagawad4, PDO::PARAM_STR);
+    $stmt->bindParam(':kagawad5', $kagawad5, PDO::PARAM_STR);
+    $stmt->bindParam(':kagawad6', $kagawad6, PDO::PARAM_STR);
+    $stmt->bindParam(':kagawad7', $kagawad7, PDO::PARAM_STR);
+    $stmt->bindParam(':date', $date, PDO::PARAM_STR);
 
-    if (empty($errors)) {
-        try {
-            $query = $certification_data ? "
-                UPDATE movbrgy_officers SET 
-                    Punong_Barangay = :Punong_Barangay, 
-                    Barangay_Secretary = :Barangay_Secretary, 
-                    Barangay_Treasurer = :Barangay_Treasurer, 
-                    Kagawad1 = :Kagawad1, 
-                    Kagawad2 = :Kagawad2, 
-                    Kagawad3 = :Kagawad3, 
-                    Kagawad4 = :Kagawad4, 
-                    Kagawad5 = :Kagawad5, 
-                    Kagawad6 = :Kagawad6, 
-                    Kagawad7 = :Kagawad7, 
-                    date = :date 
-                WHERE barangay = :barangay
-            " : "
-                INSERT INTO movbrgy_officers (
-                    barangay, Punong_Barangay, Barangay_Secretary, Barangay_Treasurer, 
-                    Kagawad1, Kagawad2, Kagawad3, Kagawad4, Kagawad5, Kagawad6, Kagawad7, date
-                ) VALUES (
-                    :barangay, :Punong_Barangay, :Barangay_Secretary, :Barangay_Treasurer, 
-                    :Kagawad1, :Kagawad2, :Kagawad3, :Kagawad4, :Kagawad5, :Kagawad6, :Kagawad7, :date
-                )
-            ";
-
-            $stmt = $conn->prepare($query);
-            $stmt->bindParam(':barangay', $_SESSION['barangay_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':Punong_Barangay', $data['Punong_Barangay'], PDO::PARAM_STR);
-            $stmt->bindParam(':Barangay_Secretary', $data['Barangay_Secretary'], PDO::PARAM_STR);
-            $stmt->bindParam(':Barangay_Treasurer', $data['Barangay_Treasurer'], PDO::PARAM_STR);
-            for ($i = 1; $i <= 7; $i++) {
-                $stmt->bindParam(":Kagawad$i", $data["Kagawad$i"], PDO::PARAM_STR);
-            }
-            $stmt->bindValue(':date', date('Y-m-d'), PDO::PARAM_STR);
-
-            if ($stmt->execute()) {
-                $message = "Barangay Officers Saved.";
-            } else {
-                $message = "Error saving details.";
-            }
-        } catch (PDOException $e) {
-            error_log("Database error: " . $e->getMessage());
-            $message = "Error saving details.";
-        }
+    if ($stmt->execute()) {
+        $message = "Barangay Officers Saved.";
+    } else {
+        $message = "Error saving details.";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
