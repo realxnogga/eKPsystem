@@ -109,7 +109,6 @@ try {
     text-overflow: ellipsis; /* Add ellipsis if text is too long */
     white-space: nowrap;    /* Prevent wrapping */
 }
-
 </style>
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -413,9 +412,15 @@ $(document).ready(function () {
             <div class="menu">
               <ul class="flex space-x-4">
               <li>
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessors.php';" style="margin-left: 0;">
+                  <i class="ti ti-users-group mr-2"></i>
+                      Assessors
+                  </button>
+                </li>
+              <li>
                   <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform3.php';" style="margin-left: 0;">
                   <i class="ti ti-file-analytics mr-2">  </i>
-                      Summary
+                     My Summary
                   </button>
                 </li>
                 <li>

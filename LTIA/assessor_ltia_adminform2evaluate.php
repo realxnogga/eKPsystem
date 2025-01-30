@@ -419,7 +419,7 @@ $(document).ready(function () {
               <li>
                   <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessorForm3summary.php';" style="margin-left: 0;">
                   <i class="ti ti-file-analytics mr-2">  </i>
-                      Summary
+                  My Summary
                   </button>
                 </li>
                 <li>

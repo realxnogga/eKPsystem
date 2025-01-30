@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     `IIC_pdf_rate`, `IIIA_pdf_rate`, `IIIB_pdf_rate`, `IIIC_1forcities_pdf_rate`, 
                     `IIIC_1forcities2_pdf_rate`, `IIIC_1forcities3_pdf_rate`, `IIIC_2formuni1_pdf_rate`, 
                     `IIIC_2formuni2_pdf_rate`, `IIIC_2formuni3_pdf_rate`, `IIID_pdf_rate`, 
-                    `IV_forcities_pdf_rate`, `IV_muni_pdf_rate`, `V_1_pdf_rate`, `threepeoplesorg_rate`, `status_rate`
+                    `IV_forcities_pdf_rate`, `IV_muni_pdf_rate`, `V_1_pdf_rate`, `threepeoplesorg_rate`
                 FROM movrate
                 WHERE mov_id = :mov_id AND barangay = :barangay_id
             ";

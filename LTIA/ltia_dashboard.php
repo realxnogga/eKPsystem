@@ -261,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-container">
         <form method="post" action="" enctype="multipart/form-data">
             <!-- Punong Barangay -->
-            <label for="LTFO" class="form-label" style="font-size: 1rem;">Lupong Tagapamayapa Federation Officers:</label>
+            <label for="LTFO" class="form-label" style="font-size: 1rem;">Sangguniang Barangay:</label>
             <div class="form-group">
                 <label for="Punong_Barangay">Punong Barangay:</label>
                 <input type="text" id="Punong_Barangay" name="Punong_Barangay" class="underline-input" 

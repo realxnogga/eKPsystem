@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						</div>
 
 						<br>
-						<b>C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION</b><br><br>
+						<b>C. I CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION</b><br><br>
 						<div class="certification-section text-center">
 							<form method="post" action="" enctype="multipart/form-data">
 								<input type="text" name="chairperson" class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($certification_data['chairperson'] ?? ''); ?>"><br>
