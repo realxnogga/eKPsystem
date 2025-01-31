@@ -3,9 +3,9 @@
 require 'connection.php';
 require "include/custom-scrollbar.php";
 
-$userId = $_SESSION['user_id'];
+$userID = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
-$stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+$stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
 $stmt->execute();
 $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 

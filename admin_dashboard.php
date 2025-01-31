@@ -198,7 +198,12 @@ if ($action_submitted) {
                   $barangayStatement->execute([$verifiedUser['id']]);
                   $barangayId = $barangayStatement->fetchColumn();
                   echo '<input type="hidden" name="barangay_id" value="' . $barangayId . '">';
-                  echo '<button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="viewreport">View Report</button>';
+                  echo '<button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 ml-2 rounded-md text-white" 
+        type="submit" 
+        name="viewreport" 
+        formaction="admin_viewreport.php?user_id=' . $verifiedUser['id'] . '&barangay_id=' . $barangayId . '">
+        View Report
+      </button>';
                   echo '</form>';
                   echo '</td>';
                   echo '</tr>';

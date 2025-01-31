@@ -1,4 +1,5 @@
 <?php 
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $stmt = $conn->prepare("SELECT mayor, region, budget, population, landarea, totalcase, numlupon, male, female, criminal, civil, others, totalNature, media, concil, arbit, totalSet, pending, dismissed, repudiated, certcourt, dropped, totalUnset, outsideBrgy FROM reports WHERE user_id = :user_id AND barangay_id = :barangay_id ORDER BY report_date DESC LIMIT 1");
@@ -124,20 +125,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the "Annual Report" select button is pressed
   if (isset($_POST['submit_annual'])) {
         $annual_report_data = fetchAnnualReportData($conn, $userID, $selected_year);
-        $selected_year = $_POST['selected_year'];
+        $selected_year = $_POST['selected_year'] ?? '';
 
         // Fetch annual report data for the selected year
 
         // Assign fetched annual report data to the corresponding variables
 
-        $mayor = $report_data['mayor'];
-        $region = $report_data['region'];
-        $budget = $report_data['budget'];
-        $population = $report_data['population'];
-        $landarea = $report_data['landarea'];
-        $male = $report_data['male'];
-        $female = $report_data['female'];
-        $numlup = $report_data['numlupon'];
+        $mayor = $report_data['mayor'] ?? '';
+        $region = $report_data['region'] ?? '';
+        $budget = $report_data['budget'] ?? '';
+        $population = $report_data['population'] ?? '';
+        $landarea = $report_data['landarea'] ?? '';
+        $male = $report_data['male'] ?? '';
+        $female = $report_data['female'] ?? '';
+        $numlup = $report_data['numlupon'] ?? '';
 
         
         $criminalCount = $annual_report_data['criminal_sum'] ?? '';

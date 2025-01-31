@@ -61,22 +61,6 @@ function updateNotifStatus($conn, $userID, $setFields = "", $extraCondition = ""
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // count notification function
 function countNotification($arg)
 {
