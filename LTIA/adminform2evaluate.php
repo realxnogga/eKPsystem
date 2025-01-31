@@ -3,7 +3,7 @@ session_start();
 
 include '../connection.php'; // Ensure this file is using a PDO connection
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_type'], ['admin', 'assessor'])) {
     header("Location: login.php");
     exit;
 }
@@ -109,6 +109,7 @@ try {
     text-overflow: ellipsis; /* Add ellipsis if text is too long */
     white-space: nowrap;    /* Prevent wrapping */
 }
+
 </style>
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -521,15 +522,9 @@ $(document).ready(function () {
             <div class="menu">
               <ul class="flex space-x-4">
               <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessors.php';" style="margin-left: 0;">
-                  <i class="ti ti-users-group mr-2"></i>
-                      Assessors
-                  </button>
-                </li>
-              <li>
                   <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform3.php';" style="margin-left: 0;">
                   <i class="ti ti-file-analytics mr-2">  </i>
-                     My Summary
+                      Summary
                   </button>
                 </li>
                 <li>
@@ -763,7 +758,7 @@ if (classification === "City") {
             <td><textarea name="IA_2b_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <td>c) Conciliation (15 days from initial confrontation with the Pangkat)</td>
+                <td>c) Conciliation (with extended period not to exceed another 15 days)</td>
                 <td>2</td>
                 <td class="file-column" data-type="IA_2c">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->

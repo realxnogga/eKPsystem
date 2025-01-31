@@ -3,7 +3,7 @@ session_start();
 
 include '../connection.php'; // Ensure this file is using a PDO connection
 
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'assessor') {
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_type'], ['admin', 'assessor'])) {
     header("Location: login.php");
     exit;
 }
@@ -109,6 +109,7 @@ try {
     text-overflow: ellipsis; /* Add ellipsis if text is too long */
     white-space: nowrap;    /* Prevent wrapping */
 }
+
 </style>
   <link rel="stylesheet" href="../assets/css/styles.min.css" />
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -440,7 +441,7 @@ $(document).ready(function () {
         
         // Submit form via AJAX
         $.ajax({
-            url: 'assessor_ltia_adminform2evaluate.php',
+            url: 'adminevaluate_handler.php',
             type: 'POST',
             data: formData,
             processData: false,
@@ -495,7 +496,8 @@ $(document).ready(function () {
 </script>
 </head>
 <body class="bg-[#E8E8E7]">
-<?php include "../assessor_sidebar_header.php"; ?>  <div class="p-4 sm:ml-44 ">
+  <<?php include "../assessor_sidebar_header.php"; ?>
+  <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
     <div class="card">
     <div class="card-body">
@@ -520,9 +522,9 @@ $(document).ready(function () {
             <div class="menu">
               <ul class="flex space-x-4">
               <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessorForm3summary.php';" style="margin-left: 0;">
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform3.php';" style="margin-left: 0;">
                   <i class="ti ti-file-analytics mr-2">  </i>
-                     My Summary
+                      Summary
                   </button>
                 </li>
                 <li>
@@ -626,7 +628,7 @@ if (classification === "City") {
                             <?php endforeach; ?>
                         </select>
                     </div>
-    <form method="post" action="assessor_ltia_adminform2evaluate.php" enctype="multipart/form-data">
+    <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
     <input type="hidden" id="selected_barangay" name="selected_barangay" value="" /><br><br>
     <!-- Example form input for mov_id -->
     <input type="hidden" id="mov_id" name="mov_id" readonly> <!-- Display fetched mov_id -->
@@ -756,7 +758,7 @@ if (classification === "City") {
             <td><textarea name="IA_2b_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <td>c) Conciliation (15 days from initial confrontation with the Pangkat)</td>
+                <td>c) Conciliation (with extended period not to exceed another 15 days)</td>
                 <td>2</td>
                 <td class="file-column" data-type="IA_2c">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
