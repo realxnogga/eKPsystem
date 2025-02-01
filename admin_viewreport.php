@@ -173,7 +173,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <form method="POST">
 
-              <h2>Annual Report (<?php echo empty($selectedYear) ? $latestYear . ' latest' : $selectedYear; ?>)</h2>
+              <h2>Annual Report (<?php echo empty($selectedYear) ? (empty($latestYear) ? '<span style="font-style: italic; color: gray;">No Report Yet</span>' : $latestYear) : $selectedYear; ?>)</h2>
               <label>Select Year:</label>
               <select name="selected_year">
 
@@ -184,18 +184,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php foreach ($yearArray as $year) : ?>
                   <option
                     value="<?php echo $year['year']; ?>"
-                    <?php echo ($selectedYear == $year['year']) ? 'selected' : ''; ?>>
+                    <?php echo ($selectedYear == $year['year']) ? 'selected' : ''; ?>> 
                     <?php echo $year['year']; ?>
                   </option>
                 <?php endforeach; ?>
               </select>
               <input type="submit" name="submit_annual" value="Select Annual Report">
               <!-- ------------------------------------- -->
-              <h2>Monthly Report (<?php echo empty($selectedMonth) ? $latestMonth . ' latest': $selectedMonth; ?>)</h2>
+              <h2>Monthly Report (<?php echo empty($selectedMonth) ? (empty($latestMonth) ? '<span style="font-style: italic; color: gray;">No Report Yet</span>' : $latestMonth) : $selectedMonth; ?>)</h2>
               <label>Select Month:</label>
               <select name="selected_month">
 
-                <option value="" disabled <?php echo empty($monthArray) ? 'selected' : ''; ?>>Select a Month</option>
+                <option value="" <?php echo empty($monthArray) ? 'selected' : ''; ?>>Select a Month</option>
 
                 <?php foreach ($monthArray as $month) : ?>
                   <option
@@ -214,31 +214,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                   <label for="mayor">MAYOR:</label>
                   <input type="text" class="form-control" id="mayor" name="mayor" readonly
-                    value="<?php echo empty($reportData) ? $lmrd['mayor'] : $reportData['mayor']; ?>">
+                    value="<?php echo !empty($reportData) ? $reportData['mayor'] : (!empty($lmrd) ? $lmrd['mayor'] : ''); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="region">REGION:</label>
                   <input type="text" class="form-control" id="region" name="region" readonly
-                    value="<?php echo empty($reportData) ? $lmrd['region'] : $reportData['region']; ?>">
+                    value="<?php  echo !empty($reportData) ? $reportData['region'] : (!empty($lmrd) ? $lmrd['region'] : ''); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="budget">BUDGET ALLOCATED:</label>
                   <input type="text" class="form-control" id="budget" name="budget" readonly
-                    value="<?php echo empty($reportData) ? $lmrd['budget'] : $reportData['budget']; ?>">
+                  value="<?php  echo !empty($reportData) ? $reportData['budget'] : (!empty($lmrd) ? $lmrd['budget'] : ''); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="popul">POPULATION:</label>
                   <input type="text" class="form-control" id="popul" name="population" readonly
-                    value="<?php echo empty($reportData) ? $lmrd['population'] : $reportData['population']; ?>">
+                  value="<?php  echo !empty($reportData) ? $reportData['population'] : (!empty($lmrd) ? $lmrd['population'] : ''); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="landarea">LAND AREA:</label>
                   <input type="text" class="form-control" id="landarea" name="landarea" readonly
-                    value="<?php echo empty($reportData) ? $lmrd['landarea'] : $reportData['landarea']; ?>">
+                  value="<?php  echo !empty($reportData) ? $reportData['landarea'] : (!empty($lmrd) ? $lmrd['landarea'] : ''); ?>">
                 </div>
 
               </div>
@@ -247,25 +247,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-group">
                   <label for="totalc">TOTAL NO. OF CASES:</label>
                   <input type="number" class="form-control" id="totalc" name="totalc" readonly
-                    value="<?php echo empty($reportData) ? $lmrd['totalcase'] : $reportData['totalcase']; ?>">
+                  value="<?php  echo !empty($reportData) ? $reportData['totalcase'] : (!empty($lmrd) ? $lmrd['totalcase'] : ''); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="numlup">NUMBER OF LUPONS:</label>
                   <input type="number" class="form-control" id="numlup" name="numlup" readonly
-                    value="<?php echo empty($reportData) ? $lmrd['numlupon'] : $reportData['numlupon']; ?>">
+                  value="<?php  echo !empty($reportData) ? $reportData['numlupon'] : (!empty($lmrd) ? $lmrd['numlupon'] : ''); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="male">MALE:</label>
                   <input type="number" class="form-control" id="male" name="male" readonly
-                    value="<?php echo empty($reportData) ? $lmrd['male'] : $reportData['male']; ?>">
+                  value="<?php  echo !empty($reportData) ? $reportData['male'] : (!empty($lmrd) ? $lmrd['male'] : ''); ?>">
                 </div>
 
                 <div class="form-group">
                   <label for="female">FEMALE:</label>
                   <input type="number" class="form-control" id="female" name="female" readonly
-                    value="<?php echo empty($reportData) ? $lmrd['female'] : $reportData['female']; ?>">
+                  value="<?php  echo !empty($reportData) ? $reportData['female'] : (!empty($lmrd) ? $lmrd['female'] : ''); ?>">
                 </div>
 
 
@@ -277,22 +277,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                       <div class="col-md-4">
                         <label for="criminal">Criminal:</label>
                         <input type="number" class="form-control" id="criminal" name="criminal" readonly
-                          value="<?php echo empty($reportData) ? $lmrd['criminal'] : $reportData['criminal']; ?>">
+                        value="<?php  echo !empty($reportData) ? $reportData['criminal'] : (!empty($lmrd) ? $lmrd['criminal'] : ''); ?>">
                       </div>
                       <div class="col-md-4">
                         <label for="civil">Civil:</label>
                         <input type="number" class="form-control" id="civil" name="civil" readonly
-                          value="<?php echo empty($reportData) ? $lmrd['civil'] : $reportData['civil']; ?>">
+                        value="<?php  echo !empty($reportData) ? $reportData['civil'] : (!empty($lmrd) ? $lmrd['civil'] : ''); ?>">
                       </div>
                       <div class="col-md-4">
                         <label for="others">Others:</label>
                         <input type="number" class="form-control" id="others" name="others" readonly
-                          value="<?php echo empty($reportData) ? $lmrd['others'] : $reportData['others']; ?>">
+                        value="<?php  echo !empty($reportData) ? $reportData['others'] : (!empty($lmrd) ? $lmrd['others'] : ''); ?>">
                       </div>
                       <div class="col-md-4">
                         <label for="totalNature">Total:</label>
                         <input type="number" class="form-control" id="totalNature" name="totalNature" readonly
-                          value="<?php echo empty($reportData) ? $lmrd['totalNature'] : $reportData['totalNature']; ?>">
+                        value="<?php  echo !empty($reportData) ? $reportData['totalNature'] : (!empty($lmrd) ? $lmrd['totalNature'] : ''); ?>">
                       </div>
 
                     </div>
@@ -307,22 +307,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col-md-4">
                       <label for="mediation">Mediation:</label>
                       <input type="number" class="form-control" id="mediation" name="mediation" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['media'] : $reportData['media']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['media'] : (!empty($lmrd) ? $lmrd['media'] : ''); ?>">
                     </div>
                     <div class="col-md-4">
                       <label for="conciliation">Conciliation:</label>
                       <input type="number" class="form-control" id="conciliation" name="conciliation" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['concil'] : $reportData['concil']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['concil'] : (!empty($lmrd) ? $lmrd['concil'] : ''); ?>">
                     </div>
                     <div class="col-md-4">
                       <label for="arbit">Arbitration:</label>
                       <input type="number" class="form-control" id="arbit" name="arbit" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['arbit'] : $reportData['arbit']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['arbit'] : (!empty($lmrd) ? $lmrd['arbit'] : ''); ?>">
                     </div>
                     <div class="col-md-4">
                       <label for="totalSet">Total:</label>
                       <input type="number" class="form-control" id="totalSet" name="totalSet" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['totalSet'] : $reportData['totalSet']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['totalSet'] : (!empty($lmrd) ? $lmrd['totalSet'] : ''); ?>">
                     </div>
 
                     <b>Outside the Jurisdiction of Barangay</b>
@@ -330,7 +330,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col-md-2">
                       <label for="outside"></label>
                       <input type="number" class="form-control" id="outside" name="outside" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['outsideBrgy'] : $reportData['outsideBrgy']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['outsideBrgy'] : (!empty($lmrd) ? $lmrd['outsideBrgy'] : ''); ?>">
                     </div>
                   </div>
                 </div>
@@ -342,37 +342,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="col-md-4">
                       <label for="pending">Pending:</label>
                       <input type="number" class="form-control" id="pending" name="pending" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['pending'] : $reportData['pending']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['pending'] : (!empty($lmrd) ? $lmrd['pending'] : ''); ?>">
                     </div>
 
                     <div class="col-md-4">
                       <label for="dismissed">Dismissed:</label>
                       <input type="number" class="form-control" id="dismissed" name="dismissed" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['dismissed'] : $reportData['dismissed']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['dismissed'] : (!empty($lmrd) ? $lmrd['dismissed'] : ''); ?>">
                     </div>
 
                     <div class="col-md-4">
                       <label for="repudiated">Repudiated:</label>
                       <input type="number" class="form-control" id="repudiated" name="repudiated" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['repudiated'] : $reportData['repudiated']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['repudiated'] : (!empty($lmrd) ? $lmrd['repudiated'] : ''); ?>">
                     </div>
 
                     <div class="col-md-4">
                       <label for="certified">Certified to Court:</label>
                       <input type="number" class="form-control" id="certified" name="certified" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['certcourt'] : $reportData['certcourt']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['certcourt'] : (!empty($lmrd) ? $lmrd['certcourt'] : ''); ?>">
                     </div>
 
                     <div class="col-md-4">
                       <label for="dropped">Dropped/Withdrawn:</label>
                       <input type="number" class="form-control" id="dropped" name="dropped" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['dropped'] : $reportData['dropped']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['dropped'] : (!empty($lmrd) ? $lmrd['dropped'] : ''); ?>">
                     </div>
 
                     <div class="col-md-4">
                       <label for="totalUnset">Total:</label>
                       <input type="number" class="form-control" id="totalUnset" name="totalUnset" readonly
-                        value="<?php echo empty($reportData) ? $lmrd['totalUnset'] : $reportData['totalUnset']; ?>">
+                      value="<?php  echo !empty($reportData) ? $reportData['totalUnset'] : (!empty($lmrd) ? $lmrd['totalUnset'] : ''); ?>">
                     </div>
                   </div>
 
