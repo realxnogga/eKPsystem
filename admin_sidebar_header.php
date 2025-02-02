@@ -1,4 +1,3 @@
-
 <?php
 require 'connection.php';
 require "include/custom-scrollbar.php";
@@ -11,9 +10,9 @@ $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
 function isActive($path)
 {
-    $currentPage = basename($_SERVER['SCRIPT_NAME']);
-    $targetPage = basename($path);
-    return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
+  $currentPage = basename($_SERVER['SCRIPT_NAME']);
+  $targetPage = basename($path);
+  return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
 }
 
 function getFullUrl()
@@ -44,7 +43,7 @@ function traverseDirectory()
 <script src="<?php echo traverseDirectory(); ?>node_modules/jquery/dist/jquery.min.js"></script>
 
 <script src="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.js"></script>
-<link href="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.css"  rel="stylesheet" />
+<link href="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
 
 <!-- tabler icon -->
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
@@ -63,7 +62,7 @@ function traverseDirectory()
 
         <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="flex ms-2 md:me-24">
           <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
-              EKPsys
+            EKPsys
           </p>
         </a>
 
@@ -112,33 +111,41 @@ function traverseDirectory()
     <div class="w-full flex flex-col gap-y-1 items-center mb-3">
       <img class="w-20 h-20 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $admin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
 
-      <p><?php echo $admin['first_name'] .' '.  $admin['last_name']; ?> </p>
+      <p><?php echo $admin['first_name'] . ' ' .  $admin['last_name']; ?> </p>
 
     </div>
 
 
     <ul class="font-medium">
       <li>
-        <a href="<?php echo traverseDirectory(); ?>admin_dashboard.php" class="<?php echo isActive('admin_dashboard.php') .' '.isActive('admin_viewreport.php') .' '.isActive('sec-corner.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>admin_dashboard.php" class="<?php echo isActive('admin_dashboard.php') . ' ' . isActive('admin_viewreport.php') . ' ' . isActive('sec-corner.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-dashboard text-2xl"></i>
           <span>Secretaries Corner</span>
         </a>
       </li>
       <li>
-        <a href="<?php echo traverseDirectory(); ?>admin_acc_req.php" class="<?php echo isActive('admin_acc_req.php') .' '.isActive('admin_manage_acc_req.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>admin_acc_req.php" class="<?php echo isActive('admin_acc_req.php') . ' ' . isActive('admin_manage_acc_req.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-user text-2xl"></i>
           <span>Account Requests</span>
         </a>
       </li>
-    
+
       <hr class="my-1">
       <li>
-        <a href="<?php echo traverseDirectory(); ?>LTIA/ltia_admin_dashboard.php" class="<?php echo isActive('LTIA/ltia_admin_dashboard.php') .' '.isActive('LTIA/adminform2evaluate.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-certificate-2 text-2xl"></i>
+        <a href="<?php echo traverseDirectory(); ?>LTIA/ltia_admin_dashboard.php" class="<?php echo isActive('LTIA/ltia_admin_dashboard.php') . ' ' . isActive('LTIA/adminform2evaluate.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+          <i class="ti ti-certificate-2 text-2xl"></i>
           <span>LTIA</span>
         </a>
       </li>
+
+      <li>
+        <a href="<?php echo traverseDirectory(); ?>admin_ltia_assessor_req.php" class="<?php echo isActive('admin_ltia_assessor_req.php') . ' ' . isActive('admin_manage_ltia_acc_req.php') ; ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+          <i class="ti ti-certificate-2 text-2xl"></i>
+          <span>LTIA assesor request</span>
+        </a>
+      </li>
       <hr class="my-1">
+
 
       <li>
         <a href="<?php echo traverseDirectory(); ?>admin_setting.php" class="<?php echo isActive('admin_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">

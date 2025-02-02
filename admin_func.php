@@ -30,49 +30,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["action"]) && isset($_P
     $userId = $_POST["user_id"];
 
     if ($action === "verify") {
-    // Perform logic to verify the user
-    $verifyQuery = "UPDATE users SET verified = 1 WHERE id = ?";
-    $verifyStatement = $conn->prepare($verifyQuery);
-    $verifyStatement->execute([$userId]);
+        // Perform logic to verify the user
+        $verifyQuery = "UPDATE users SET verified = 1 WHERE id = ?";
+        $verifyStatement = $conn->prepare($verifyQuery);
+        $verifyStatement->execute([$userId]);
 
-    // Redirect to refresh the page or show a success message
-    header("Location: admin_acc_req.php");
-    exit();
-} 
+        // Redirect to refresh the page or show a success message
+       
+
+        // redirect base on usertype
+        // -------------------------------------------------------------
+        $stmt = $conn->prepare("SELECT user_type FROM users WHERE id = :user_id");
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        $userType = $stmt->fetchColumn(); 
+
+        if ($userType === "assessor") {
+            header("Location: admin_ltia_assessor_req.php");
+            exit();
+        } elseif ($userType === "user") {
+            header("Location: admin_acc_req.php");
+        exit();
+        } 
+        // -------------------------------------------------------------
 
 
-elseif ($action === "deny") {
-    // Show a confirmation dialog before deleting
-    echo '<script>
+    } elseif ($action === "deny") {
+        // Show a confirmation dialog before deleting
+        echo '<script>
             var result = confirm("Are you sure you want to deny this request? The request will be deleted.");
             if (result) {
                 window.location.href = "admin_dashboard.php?deny_user_id=' . $userId . '";
             }
           </script>';
-} elseif ($action === "unverify") {
-    // Perform logic to unverify the user
-    $unverifyQuery = "UPDATE users SET verified = 0 WHERE id = ?";
-    $unverifyStatement = $conn->prepare($unverifyQuery); // Replace $conn with $conn
-    $unverifyStatement->execute([$userId]);
+    } elseif ($action === "unverify") {
+        // Perform logic to unverify the user
+        $unverifyQuery = "UPDATE users SET verified = 0 WHERE id = ?";
+        $unverifyStatement = $conn->prepare($unverifyQuery); // Replace $conn with $conn
+        $unverifyStatement->execute([$userId]);
 
-    // Redirect to refresh the page or show a success message
-    header("Location: admin_dashboard.php");
-    exit();
-}
+        // Redirect to refresh the page or show a success message
+        header("Location: admin_dashboard.php");
+        exit();
+    }
 }
 
 if (isset($_GET['deny_user_id'])) {
     $denyUserId = $_GET['deny_user_id'];
-    
+
     try {
         $conn->beginTransaction();
-        
+
         // Get the barangay_id of the user to be deleted
         $barangayIdQuery = "SELECT barangay_id FROM users WHERE id = ?";
         $barangayIdStatement = $conn->prepare($barangayIdQuery);
         $barangayIdStatement->execute([$denyUserId]);
         $barangayId = $barangayIdStatement->fetchColumn();
-        
+
         // Update the users table to remove the reference to the barangay
         $updateUserQuery = "UPDATE users SET barangay_id = NULL WHERE id = ?";
         $updateUserStatement = $conn->prepare($updateUserQuery);
@@ -99,4 +113,3 @@ if (isset($_GET['deny_user_id'])) {
         echo "Error: " . $e->getMessage();
     }
 }
-?>

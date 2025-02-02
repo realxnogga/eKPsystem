@@ -21,7 +21,7 @@ $accountRequestsQuery = "SELECT u.id, u.username, u.first_name, u.last_name, u.e
                          LEFT JOIN barangays b ON u.barangay_id = b.id 
                          WHERE u.verified = 0 
                          AND u.municipality_id = ? 
-                         AND u.user_type IN ('user', 'assessor') 
+                         AND u.user_type = 'user'
                          AND (u.first_name LIKE ? OR u.last_name LIKE ? OR b.barangay_name LIKE ?)
                          ORDER BY b.barangay_name"; // Order by barangay_name for readability
 
@@ -89,7 +89,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                 echo '<td>' . $user['first_name'] . ' ' . $user['last_name'] . '</td>';
                 echo '<td>' . $user['email'] . '</td>';
                 echo '<td>' . $user['contact_number'] . '</td>';
-                echo '<td>' . (!empty($user['barangay_name']) ? $user['barangay_name'] : '(NA)assessor') . '</td>';
+                echo '<td>' . $user['barangay_name'] . '</td>';
 
                 echo '<td>';
 

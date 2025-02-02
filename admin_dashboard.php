@@ -37,7 +37,7 @@ if ($action_submitted) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Secretaries Corner</title>
-  
+
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
   <style>
@@ -90,7 +90,7 @@ if ($action_submitted) {
 
 
             <?php // Your code before the table structure
-            $verifiedUsersQuery = "SELECT id, username, first_name, last_name, email, contact_number, barangay_id 
+            $verifiedUsersQuery = "SELECT id, username, first_name, last_name, email, contact_number, user_type, barangay_id 
                         FROM users 
                         WHERE verified = 1 
                         AND municipality_id = ?";
@@ -197,13 +197,25 @@ if ($action_submitted) {
                   $barangayStatement = $conn->prepare($barangayIdQuery);
                   $barangayStatement->execute([$verifiedUser['id']]);
                   $barangayId = $barangayStatement->fetchColumn();
+
+                  if ($verifiedUser['user_type'] === 'assessor') {
+                    echo '<button class="bg-gray-500 hover:bg-gray-400 px-3 py-2 ml-2 rounded-md text-white disabled:opacity-50 disabled:cursor-not-allowed" 
+                    type="submit" 
+                    name="viewreport" 
+                    formaction="admin_viewreport.php?user_id=' . $verifiedUser['id'] . '&barangay_id=' . $barangayId . '" disabled>
+                   N/A
+                  </button>';
+                  } else {
+                    echo '<button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 ml-2 rounded-md text-white disabled:opacity-50 disabled:cursor-not-allowed" 
+                    type="submit" 
+                    name="viewreport" 
+                    formaction="admin_viewreport.php?user_id=' . $verifiedUser['id'] . '&barangay_id=' . $barangayId . '" 
+                    ' . ($verifiedUser['user_type'] === 'assessor' ? 'disabled' : '') . '>
+                    View Report 
+                  </button>';
+                  }
                   echo '<input type="hidden" name="barangay_id" value="' . $barangayId . '">';
-                  echo '<button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 ml-2 rounded-md text-white" 
-        type="submit" 
-        name="viewreport" 
-        formaction="admin_viewreport.php?user_id=' . $verifiedUser['id'] . '&barangay_id=' . $barangayId . '">
-        View Report
-      </button>';
+
                   echo '</form>';
                   echo '</td>';
                   echo '</tr>';

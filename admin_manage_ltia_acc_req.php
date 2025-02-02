@@ -23,18 +23,20 @@ if (isset($_GET['user_id'])) {
 
 
   // Fetch user data based on the provided user_id
-  $stmt = $conn->prepare("SELECT u.id, u.municipality_id, u.first_name, u.last_name, u.contact_number, u.email, m.municipality_name, b.barangay_name
-  FROM users u
-  INNER JOIN municipalities m ON u.municipality_id = m.id
-  INNER JOIN barangays b ON u.barangay_id = b.id
-  WHERE u.user_type = 'user' AND u.id = :user_id");
+ $stmt = $conn->prepare("
+    SELECT u.id, u.municipality_id, u.first_name, u.last_name, u.contact_number, u.email, m.municipality_name
+    FROM users u
+    INNER JOIN municipalities m ON u.municipality_id = m.id
+    WHERE u.user_type = 'assessor' AND u.id = :user_id
+");
 $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 $stmt->execute();
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+
   if (!$user) {
     // User not found, handle this case
-    header("Location: admin_acc_req.php");
+    header("Location: admin_ltia_assessor_req.php");
     exit;
   }
 } else {
@@ -85,8 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>User Manage Account</title>
-  <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
-
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
 </head>
 
@@ -117,14 +118,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <p class="text-danger"><?php echo $error; ?></p>
             <?php } ?>
             <form method="post">
-              <!-- Display user information in form fields -->
               <div class="form-group">
                 <label for="municipality_name">Municipality Name:</label>
                 <input type="text" class="form-control" id="municipality_name" name="municipality_name" value="<?php echo $user['municipality_name']; ?>" readonly>
-              </div>
-              <div class="form-group">
-                <label for="barangay_name">Barangay Name:</label>
-                <input type="text" class="form-control" id="barangay_name" name="barangay_name" value="<?php echo $user['barangay_name']; ?>" readonly>
               </div>
               <div class="form-group">
                 <label>First Name:</label>
