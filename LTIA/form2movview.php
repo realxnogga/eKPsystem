@@ -2,30 +2,62 @@
 session_start();
 include '../connection.php';
 
+// Define selected year first
+$currentYear = date('Y');
+$selectedYear = isset($_GET['year']) ? $_GET['year'] : $currentYear;
+
+// First, let's make sure the year column exists and is properly created in all tables
+try {
+    // Update mov table
+    $conn->exec("ALTER TABLE mov DROP COLUMN IF EXISTS `year`");
+    $conn->exec("ALTER TABLE mov ADD COLUMN `year` YEAR(4) NOT NULL DEFAULT YEAR(CURRENT_DATE)");
+    $conn->exec("UPDATE mov SET `year` = YEAR(CURRENT_DATE)");
+    
+    // Update movrate table
+    $conn->exec("ALTER TABLE movrate DROP COLUMN IF EXISTS `year`");
+    $conn->exec("ALTER TABLE movrate ADD COLUMN `year` YEAR(4) NOT NULL DEFAULT YEAR(CURRENT_DATE)");
+    $conn->exec("UPDATE movrate SET `year` = YEAR(CURRENT_DATE)");
+    
+    // Update movremark table
+    $conn->exec("ALTER TABLE movremark DROP COLUMN IF EXISTS `year`");
+    $conn->exec("ALTER TABLE movremark ADD COLUMN `year` YEAR(4) NOT NULL DEFAULT YEAR(CURRENT_DATE)");
+    $conn->exec("UPDATE movremark SET `year` = YEAR(CURRENT_DATE)");
+    
+    // Force a table refresh
+    $conn->exec("FLUSH TABLES mov, movrate, movremark");
+    
+    // Close and reopen the connection
+    $conn = null;
+    include '../connection.php';
+} catch (PDOException $e) {
+    die("Failed to update table structures: " . $e->getMessage());
+}
+
 if (!isset($_SESSION['user_id'], $_SESSION['user_type'], $_SESSION['barangay_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: ../login.php?error=session_expired");
     exit;
 }
 
-// Define allowed file columns
-$allowed_columns = [
-    'IA_1a_pdf_File', 'IA_1b_pdf_File', 'IA_2a_pdf_File', 'IA_2b_pdf_File',
-    'IA_2c_pdf_File', 'IA_2d_pdf_File', 'IA_2e_pdf_File', 'IB_1forcities_pdf_File',
-    'IB_1aformuni_pdf_File', 'IB_1bformuni_pdf_File', 'IB_2_pdf_File', 'IB_3_pdf_File',
-    'IB_4_pdf_File', 'IC_1_pdf_File', 'IC_2_pdf_File', 'ID_1_pdf_File', 'ID_2_pdf_File',
-    'IIA_pdf_File', 'IIB_1_pdf_File', 'IIB_2_pdf_File', 'IIC_pdf_File', 'IIIA_pdf_File',
-    'IIIB_pdf_File', 'IIIC_1forcities_pdf_File', 'IIIC_1forcities2_pdf_File',
-    'IIIC_1forcities3_pdf_File', 'IIIC_2formuni1_pdf_File', 'IIIC_2formuni2_pdf_File',
-    'IIIC_2formuni3_pdf_File', 'IIID_pdf_File', 'IV_forcities_pdf_File', 'IV_muni_pdf_File',
-    'V_1_pdf_File', 'threepeoplesorg_pdf_File'
-];
+// First check if a record exists for this year
+$checkSql = "SELECT COUNT(*) FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND `year` = :year";
+$checkStmt = $conn->prepare($checkSql);
+$checkStmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+$checkStmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$checkStmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+$checkStmt->execute();
 
-// Get selected year
-$currentYear = date('Y');
-$selectedYear = isset($_GET['year']) && ctype_digit($_GET['year']) ? $_GET['year'] : $currentYear;
+if ($checkStmt->fetchColumn() == 0) {
+    // No record exists for this year, so create one
+    $insertSql = "INSERT INTO mov (user_id, barangay_id, `year`) VALUES (:user_id, :barangay_id, :year)";
+    $insertStmt = $conn->prepare($insertSql);
+    $insertStmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $insertStmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+    $insertStmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+    $insertStmt->execute();
+}
 
-// Fetch uploaded files
-$sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
+// Now fetch the record
+$sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND `year` = :year";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
 $stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
@@ -34,8 +66,8 @@ $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
 // Fetch rates and remarks
-$rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id AND year = :year";
-$remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id AND year = :year";
+$rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id AND `year` = :year";
+$remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id AND `year` = :year";
 
 $rate_stmt = $conn->prepare($rate_sql);
 $remark_stmt = $conn->prepare($remark_sql);
@@ -50,6 +82,28 @@ $remark_stmt->execute();
 
 $rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 $remark_row = $remark_stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+
+// Fetch years
+$yearQuery = "SELECT DISTINCT `year` FROM mov";
+$yearResult = $conn->query($yearQuery);
+$years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
+if (!in_array($currentYear, $years)) {
+    $years[] = $currentYear;
+}
+rsort($years);
+
+// Define allowed file columns
+$allowed_columns = [
+    'IA_1a_pdf_File', 'IA_1b_pdf_File', 'IA_2a_pdf_File', 'IA_2b_pdf_File',
+    'IA_2c_pdf_File', 'IA_2d_pdf_File', 'IA_2e_pdf_File', 'IB_1forcities_pdf_File',
+    'IB_1aformuni_pdf_File', 'IB_1bformuni_pdf_File', 'IB_2_pdf_File', 'IB_3_pdf_File',
+    'IB_4_pdf_File', 'IC_1_pdf_File', 'IC_2_pdf_File', 'ID_1_pdf_File', 'ID_2_pdf_File',
+    'IIA_pdf_File', 'IIB_1_pdf_File', 'IIB_2_pdf_File', 'IIC_pdf_File', 'IIIA_pdf_File',
+    'IIIB_pdf_File', 'IIIC_1forcities_pdf_File', 'IIIC_1forcities2_pdf_File',
+    'IIIC_1forcities3_pdf_File', 'IIIC_2formuni1_pdf_File', 'IIIC_2formuni2_pdf_File',
+    'IIIC_2formuni3_pdf_File', 'IIID_pdf_File', 'IV_forcities_pdf_File', 'IV_muni_pdf_File',
+    'V_1_pdf_File', 'threepeoplesorg_pdf_File'
+];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $upload_dir = 'movfolder/';
@@ -70,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($allowed_columns as $column) {
         $update_sql .= "$column = :$column, ";
     }
-    $update_sql = rtrim($update_sql, ', ') . " WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
+    $update_sql = rtrim($update_sql, ', ') . " WHERE user_id = :user_id AND barangay_id = :barangay_id AND `year` = :year";
 
     $update_stmt = $conn->prepare($update_sql);
     foreach ($allowed_columns as $column) {
@@ -88,14 +142,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch years
-$yearQuery = "SELECT DISTINCT year FROM mov";
-$yearResult = $conn->query($yearQuery);
-$years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
-if (!in_array($currentYear, $years)) {
-    $years[] = $currentYear;
-}
-rsort($years);
 // Define user and barangay ID from session
 $userID = $_SESSION['user_id'];
 $barangayID = $_SESSION['barangay_id'] ?? '';
@@ -219,7 +265,7 @@ if (!empty($municipalityID)) {
                </h2>
                         <?php
                         // Update your SQL queries to include the selected year as a filter
-                        $sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
+                        $sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND `year` = :year";
                         $stmt = $conn->prepare($sql);
                         $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
                         $stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
@@ -227,7 +273,7 @@ if (!empty($municipalityID)) {
                         $stmt->execute();
                         $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
                         // Fetch rates from the movrate table for the selected year
-                      $rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id AND year = :year";
+                      $rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id AND `year` = :year";
                       $rate_stmt = $conn->prepare($rate_sql);
                       $rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
                       $rate_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
@@ -235,7 +281,7 @@ if (!empty($municipalityID)) {
                       $rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize as an empty array if no records found
 
                       // Fetch remarks from the movremark table for the selected year
-                      $remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id AND year = :year";
+                      $remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id AND `year` = :year";
                       $remark_stmt = $conn->prepare($remark_sql);
                       $remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
                       $remark_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
