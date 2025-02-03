@@ -341,41 +341,40 @@ $(document).ready(function () {
 
     // Function to clear remarks
     function clearRemarks() {
-      $('textarea[name="IA_1a_pdf_remark"]').val('');
-      $('textarea[name="IA_1b_pdf_remark"]').val('');
-      $('textarea[name="IA_2a_pdf_remark"]').val('');
-      $('textarea[name="IA_2b_pdf_remark"]').val('');
-      $('textarea[name="IA_2c_pdf_remark"]').val('');
-      $('textarea[name="IA_2d_pdf_remark"]').val('');
-      $('textarea[name="IA_2e_pdf_remark"]').val('');
-      $('textarea[name="IB_1forcities_pdf_remark"]').val('');
-      $('textarea[name="IB_1aformuni_pdf_remark"]').val('');
-      $('textarea[name="IB_1bformuni_pdf_remark"]').val('');
-      $('textarea[name="IB_2_pdf_remark"]').val('');
-      $('textarea[name="IB_3_pdf_remark"]').val('');
-      $('textarea[name="IB_4_pdf_remark"]').val('');
-      $('textarea[name="IC_1_pdf_remark"]').val('');
-      $('textarea[name="IC_2_pdf_remark"]').val('');
-      $('textarea[name="ID_1_pdf_remark"]').val('');
-      $('textarea[name="ID_2_pdf_remark"]').val('');
-      $('textarea[name="IIA_pdf_remark"]').val('');
-      $('textarea[name="IIB_1_pdf_remark"]').val('');
-      $('textarea[name="IIB_2_pdf_remark"]').val('');
-      $('textarea[name="IIC_pdf_remark"]').val('');
-      $('textarea[name="IIIA_pdf_remark"]').val('');
-      $('textarea[name="IIIB_pdf_remark"]').val('');
-      $('textarea[name="IIIC_1forcities_pdf_remark"]').val('');
-      $('textarea[name="IIIC_1forcities2_pdf_remark"]').val('');
-      $('textarea[name="IIIC_1forcities3_pdf_remark"]').val('');
-      $('textarea[name="IIIC_2formuni1_pdf_remark"]').val('');
-      $('textarea[name="IIIC_2formuni2_pdf_remark"]').val('');
-      $('textarea[name="IIIC_2formuni3_pdf_remark"]').val('');
-      $('textarea[name="IIID_pdf_remark"]').val('');
-      $('textarea[name="IV_forcities_pdf_remark"]').val('');
-      $('textarea[name="IV_muni_pdf_remark"]').val('');
-      $('textarea[name="V_1_pdf_remark"]').val('');
-      $('textarea[name="threepeoplesorg_remark"]').val('');
-
+        $('textarea[name="IA_1a_pdf_remark"]').val('');
+        $('textarea[name="IA_1b_pdf_remark"]').val('');
+        $('textarea[name="IA_2a_pdf_remark"]').val('');
+        $('textarea[name="IA_2b_pdf_remark"]').val('');
+        $('textarea[name="IA_2c_pdf_remark"]').val('');
+        $('textarea[name="IA_2d_pdf_remark"]').val('');
+        $('textarea[name="IA_2e_pdf_remark"]').val('');
+        $('textarea[name="IB_1forcities_pdf_remark"]').val('');
+        $('textarea[name="IB_1aformuni_pdf_remark"]').val('');
+        $('textarea[name="IB_1bformuni_pdf_remark"]').val('');
+        $('textarea[name="IB_2_pdf_remark"]').val('');
+        $('textarea[name="IB_3_pdf_remark"]').val('');
+        $('textarea[name="IB_4_pdf_remark"]').val('');
+        $('textarea[name="IC_1_pdf_remark"]').val('');
+        $('textarea[name="IC_2_pdf_remark"]').val('');
+        $('textarea[name="ID_1_pdf_remark"]').val('');
+        $('textarea[name="ID_2_pdf_remark"]').val('');
+        $('textarea[name="IIA_pdf_remark"]').val('');
+        $('textarea[name="IIB_1_pdf_remark"]').val('');
+        $('textarea[name="IIB_2_pdf_remark"]').val('');
+        $('textarea[name="IIC_pdf_remark"]').val('');
+        $('textarea[name="IIIA_pdf_remark"]').val('');
+        $('textarea[name="IIIB_pdf_remark"]').val('');
+        $('textarea[name="IIIC_1forcities_pdf_remark"]').val('');
+        $('textarea[name="IIIC_1forcities2_pdf_remark"]').val('');
+        $('textarea[name="IIIC_1forcities3_pdf_remark"]').val('');
+        $('textarea[name="IIIC_2formuni1_pdf_remark"]').val('');
+        $('textarea[name="IIIC_2formuni2_pdf_remark"]').val('');
+        $('textarea[name="IIIC_2formuni3_pdf_remark"]').val('');
+        $('textarea[name="IIID_pdf_remark"]').val('');
+        $('textarea[name="IV_forcities_pdf_remark"]').val('');
+        $('textarea[name="IV_muni_pdf_remark"]').val('');
+        $('textarea[name="V_1_pdf_remark"]').val('');
+        $('textarea[name="threepeoplesorg_remark"]').val('');
     }
 
     // Add event listeners for rate inputs and remark textareas
