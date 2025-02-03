@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>LTIA</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/styles.min.css" />
+    <link rel="stylesheet" href="../assets/css/styles.min.css" />
 </head>
 <style>
                .form-container {
@@ -192,6 +192,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 20px; /* Space from the form content */
         }
 </style>
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        // Pass PHP variable to JavaScript
+        const message = "<?php echo isset($message) ? htmlspecialchars($message, ENT_QUOTES, 'UTF-8') : ''; ?>";
+
+        // Update modal content and show it
+        document.addEventListener('DOMContentLoaded', function() {
+            if (message) {
+                // Update the modal body with the message
+                document.getElementById('modalBody').textContent = message;
+
+                // Show the modal
+                const myModal = new bootstrap.Modal(document.getElementById('messageModal'), {});
+                myModal.show();
+            }
+        });
+    </script>
 <body class="bg-[#E8E8E7]">
     <!-- Sidebar -->
     <?php include "../user_sidebar_header.php"; ?>
@@ -240,6 +260,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <span class="fs-6"><?php echo htmlspecialchars($performance); ?></span>
                         </button>
                     </div>
+ <!-- Modal -->
+ <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Message will be inserted here dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" style="color: #003366;"data-bs-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
                     <!-- Text Section -->          
 <div class="flex flex-col text-justify w-75 me-5">

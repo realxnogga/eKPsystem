@@ -16,7 +16,7 @@ $currentMunicipalityID = $_SESSION['municipality_id'] ?? null;
 
 $search_query = isset($_GET['search']) ? $_GET['search'] : '';
 
-$accountRequestsQuery = "SELECT u.id, u.username, u.first_name, u.last_name, u.email, u.contact_number, b.barangay_name, u.verified 
+$accountRequestsQuery = "SELECT u.id, u.username, u.first_name, u.last_name, u.assessor_type, u.email, u.contact_number, b.barangay_name, u.verified 
                        FROM users u 
                        LEFT JOIN barangays b ON u.barangay_id = b.id 
                        WHERE u.verified = 0 
@@ -77,13 +77,15 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
 
                         if (!empty($accountRequests)) {
                             echo '<table class="table table-striped">';
-                            echo '<thead class="thead-dark"><tr><th>Username</th><th>Email</th><th>Contact No.</th><th>Actions</th></tr></thead>';
+                            echo '<thead class="thead-dark"><tr><th>Username</th><th>Name</th><th>Department</th><th>Email</th><th>Contact No.</th><th>Actions</th></tr></thead>';
                             echo '<tbody>';
 
                             foreach ($accountRequests as $user) {
                                 echo '<tr>';
                                 echo '<td>' . $user['username'] . '</td>';
-                                echo '<td>' . $user['email'] . '</td>';
+                                echo '<td>' . $user['last_name'] . ' ' . $user['first_name'] . '</td>';  
+                                echo '<td>' . $user['assessor_type'] . '</td>';
+                                echo '<td>' . $user['email'] . '</td>'; 
                                 echo '<td>' . $user['contact_number'] . '</td>';
 
                                 echo '<td>';
