@@ -26,13 +26,13 @@ function getPerformanceRating($total) {
 }
   
 // Fetch available years for the dropdown
-$yearQuery = "SELECT DISTINCT EXTRACT(YEAR FROM daterate) AS year FROM movrate WHERE barangay IN (SELECT id FROM barangays WHERE municipality_id = :municipality_id) ORDER BY year DESC";
+$yearQuery = "SELECT DISTINCT year FROM movrate WHERE barangay IN (SELECT id FROM barangays WHERE municipality_id = :municipality_id) ORDER BY year DESC";
 $yearStmt = $conn->prepare($yearQuery);
 $yearStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $yearStmt->execute();
 $years = $yearStmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Add current year if it’s missing
+// Add current year if it's missing
 if (!in_array($currentYear, $years)) {
     array_unshift($years, $currentYear);
 }
@@ -41,7 +41,7 @@ if (!in_array($currentYear, $years)) {
 $query = "
 SELECT b.barangay_name, COALESCE(m.total, 0) AS total 
 FROM barangays b 
-LEFT JOIN movrate m ON b.id = m.barangay AND EXTRACT(YEAR FROM m.daterate) = :year
+LEFT JOIN movrate m ON b.id = m.barangay AND m.year = :year
 WHERE b.municipality_id = :municipality_id
 ";
 
