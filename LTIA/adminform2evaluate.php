@@ -217,7 +217,6 @@ $(document).ready(function () {
                         $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate || 'No ratings available at this time');
                         $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || 'No ratings available at this time');
                         $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || 'No ratings available at this time');
-                        $('#status_rate').text(data.rates.status_rate || 'Rate Status: Pending');
                         
                         // After setting all the rates, check for empty ones and highlight them
                         $('input[type="number"].score-input').each(function() {
@@ -236,40 +235,40 @@ $(document).ready(function () {
 
                     // Handle remarks
                     if (data.remarks) {
-                      $('textarea[name="IA_1a_pdf_remark"]').val(data.remarks.IA_1a_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_1b_pdf_remark"]').val(data.remarks.IA_1b_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2a_pdf_remark"]').val(data.remarks.IA_2a_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2b_pdf_remark"]').val(data.remarks.IA_2b_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2c_pdf_remark"]').val(data.remarks.IA_2c_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2d_pdf_remark"]').val(data.remarks.IA_2d_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2e_pdf_remark"]').val(data.remarks.IA_2e_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_1forcities_pdf_remark"]').val(data.remarks.IB_1forcities_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_1aformuni_pdf_remark"]').val(data.remarks.IB_1aformuni_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_1bformuni_pdf_remark"]').val(data.remarks.IB_1bformuni_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_2_pdf_remark"]').val(data.remarks.IB_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_3_pdf_remark"]').val(data.remarks.IB_3_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_4_pdf_remark"]').val(data.remarks.IB_4_pdf_remark || 'No remarks available');
-                      $('textarea[name="IC_1_pdf_remark"]').val(data.remarks.IC_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="IC_2_pdf_remark"]').val(data.remarks.IC_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="ID_1_pdf_remark"]').val(data.remarks.ID_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="ID_2_pdf_remark"]').val(data.remarks.ID_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIA_pdf_remark"]').val(data.remarks.IIA_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIB_1_pdf_remark"]').val(data.remarks.IIB_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIB_2_pdf_remark"]').val(data.remarks.IIB_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIC_pdf_remark"]').val(data.remarks.IIC_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIA_pdf_remark"]').val(data.remarks.IIIA_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIB_pdf_remark"]').val(data.remarks.IIIB_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_1forcities_pdf_remark"]').val(data.remarks.IIIC_1forcities_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_1forcities2_pdf_remark"]').val(data.remarks.IIIC_1forcities2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_1forcities3_pdf_remark"]').val(data.remarks.IIIC_1forcities3_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_2formuni1_pdf_remark"]').val(data.remarks.IIIC_2formuni1_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_2formuni2_pdf_remark"]').val(data.remarks.IIIC_2formuni2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_2formuni3_pdf_remark"]').val(data.remarks.IIIC_2formuni3_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIID_pdf_remark"]').val(data.remarks.IIID_pdf_remark || 'No remarks available');
-                      $('textarea[name="IV_forcities_pdf_remark"]').val(data.remarks.IV_forcities_pdf_remark || 'No remarks available');
-                      $('textarea[name="IV_muni_pdf_remark"]').val(data.remarks.IV_muni_pdf_remark || 'No remarks available');
-                      $('textarea[name="V_1_pdf_remark"]').val(data.remarks.V_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="threepeoplesorg_remark"]').val(data.remarks.threepeoplesorg_remark || 'No remarks available');
+                        $('textarea[name="IA_1a_pdf_remark"]').val(data.remarks.IA_1a_pdf_remark || '');
+                        $('textarea[name="IA_1b_pdf_remark"]').val(data.remarks.IA_1b_pdf_remark || '');
+                        $('textarea[name="IA_2a_pdf_remark"]').val(data.remarks.IA_2a_pdf_remark || '');
+                        $('textarea[name="IA_2b_pdf_remark"]').val(data.remarks.IA_2b_pdf_remark || '');
+                        $('textarea[name="IA_2c_pdf_remark"]').val(data.remarks.IA_2c_pdf_remark || '');
+                        $('textarea[name="IA_2d_pdf_remark"]').val(data.remarks.IA_2d_pdf_remark || '');
+                        $('textarea[name="IA_2e_pdf_remark"]').val(data.remarks.IA_2e_pdf_remark || '');
+                        $('textarea[name="IB_1forcities_pdf_remark"]').val(data.remarks.IB_1forcities_pdf_remark || '');
+                        $('textarea[name="IB_1aformuni_pdf_remark"]').val(data.remarks.IB_1aformuni_pdf_remark || '');
+                        $('textarea[name="IB_1bformuni_pdf_remark"]').val(data.remarks.IB_1bformuni_pdf_remark || '');
+                        $('textarea[name="IB_2_pdf_remark"]').val(data.remarks.IB_2_pdf_remark || '');
+                        $('textarea[name="IB_3_pdf_remark"]').val(data.remarks.IB_3_pdf_remark || '');
+                        $('textarea[name="IB_4_pdf_remark"]').val(data.remarks.IB_4_pdf_remark || '');
+                        $('textarea[name="IC_1_pdf_remark"]').val(data.remarks.IC_1_pdf_remark || '');
+                        $('textarea[name="IC_2_pdf_remark"]').val(data.remarks.IC_2_pdf_remark || '');
+                        $('textarea[name="ID_1_pdf_remark"]').val(data.remarks.ID_1_pdf_remark || '');
+                        $('textarea[name="ID_2_pdf_remark"]').val(data.remarks.ID_2_pdf_remark || '');
+                        $('textarea[name="IIA_pdf_remark"]').val(data.remarks.IIA_pdf_remark || '');
+                        $('textarea[name="IIB_1_pdf_remark"]').val(data.remarks.IIB_1_pdf_remark || '');
+                        $('textarea[name="IIB_2_pdf_remark"]').val(data.remarks.IIB_2_pdf_remark || '');
+                        $('textarea[name="IIC_pdf_remark"]').val(data.remarks.IIC_pdf_remark || '');
+                        $('textarea[name="IIIA_pdf_remark"]').val(data.remarks.IIIA_pdf_remark || '');
+                        $('textarea[name="IIIB_pdf_remark"]').val(data.remarks.IIIB_pdf_remark || '');
+                        $('textarea[name="IIIC_1forcities_pdf_remark"]').val(data.remarks.IIIC_1forcities_pdf_remark || '');
+                        $('textarea[name="IIIC_1forcities2_pdf_remark"]').val(data.remarks.IIIC_1forcities2_pdf_remark || '');
+                        $('textarea[name="IIIC_1forcities3_pdf_remark"]').val(data.remarks.IIIC_1forcities3_pdf_remark || '');
+                        $('textarea[name="IIIC_2formuni1_pdf_remark"]').val(data.remarks.IIIC_2formuni1_pdf_remark || '');
+                        $('textarea[name="IIIC_2formuni2_pdf_remark"]').val(data.remarks.IIIC_2formuni2_pdf_remark || '');
+                        $('textarea[name="IIIC_2formuni3_pdf_remark"]').val(data.remarks.IIIC_2formuni3_pdf_remark || '');
+                        $('textarea[name="IIID_pdf_remark"]').val(data.remarks.IIID_pdf_remark || '');
+                        $('textarea[name="IV_forcities_pdf_remark"]').val(data.remarks.IV_forcities_pdf_remark || '');
+                        $('textarea[name="IV_muni_pdf_remark"]').val(data.remarks.IV_muni_pdf_remark || '');
+                        $('textarea[name="V_1_pdf_remark"]').val(data.remarks.V_1_pdf_remark || '');
+                        $('textarea[name="threepeoplesorg_remark"]').val(data.remarks.threepeoplesorg_remark || '');
                     } else {
                         clearRemarks();
                     }
