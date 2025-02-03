@@ -123,43 +123,46 @@ try {
 
     // Set default rates and remarks if none exist
     if ($rates) {
-        $response['rates'] = $rates;
+        // Convert any NULL values to empty strings for rates
+        $response['rates'] = array_map(function($value) {
+            return $value === null ? '' : $value;
+        }, $rates);
     } else {
         $response['rates'] = [
-            'IA_1a_pdf_rate' => '0',
-            'IA_1b_pdf_rate' => '0',
-            'IA_2a_pdf_rate' => '0',
-            'IA_2b_pdf_rate' => '0',
-            'IA_2c_pdf_rate' => '0',
-            'IA_2d_pdf_rate' => '0',
-            'IA_2e_pdf_rate' => '0',
-            'IB_1forcities_pdf_rate' => '0',
-            'IB_1aformuni_pdf_rate' => '0',
-            'IB_1bformuni_pdf_rate' => '0',
-            'IB_2_pdf_rate' => '0',
-            'IB_3_pdf_rate' => '0',
-            'IB_4_pdf_rate' => '0',
-            'IC_1_pdf_rate' => '0',
-            'IC_2_pdf_rate' => '0',
-            'ID_1_pdf_rate' => '0',
-            'ID_2_pdf_rate' => '0',
-            'IIA_pdf_rate' => '0',
-            'IIB_1_pdf_rate' => '0',
-            'IIB_2_pdf_rate' => '0',
-            'IIC_pdf_rate' => '0',
-            'IIIA_pdf_rate' => '0',
-            'IIIB_pdf_rate' => '0',
-            'IIIC_1forcities_pdf_rate' => '0',
-            'IIIC_1forcities2_pdf_rate' => '0',
-            'IIIC_1forcities3_pdf_rate' => '0',
-            'IIIC_2formuni1_pdf_rate' => '0',
-            'IIIC_2formuni2_pdf_rate' => '0',
-            'IIIC_2formuni3_pdf_rate' => '0',
-            'IIID_pdf_rate' => '0',
-            'IV_forcities_pdf_rate' => '0',
-            'IV_muni_pdf_rate' => '0',
-            'V_1_pdf_rate' => '0',
-            'threepeoplesorg_rate' => '0'
+            'IA_1a_pdf_rate' => '',
+            'IA_1b_pdf_rate' => '',
+            'IA_2a_pdf_rate' => '',
+            'IA_2b_pdf_rate' => '',
+            'IA_2c_pdf_rate' => '',
+            'IA_2d_pdf_rate' => '',
+            'IA_2e_pdf_rate' => '',
+            'IB_1forcities_pdf_rate' => '',
+            'IB_1aformuni_pdf_rate' => '',
+            'IB_1bformuni_pdf_rate' => '',
+            'IB_2_pdf_rate' => '',
+            'IB_3_pdf_rate' => '',
+            'IB_4_pdf_rate' => '',
+            'IC_1_pdf_rate' => '',
+            'IC_2_pdf_rate' => '',
+            'ID_1_pdf_rate' => '',
+            'ID_2_pdf_rate' => '',
+            'IIA_pdf_rate' => '',
+            'IIB_1_pdf_rate' => '',
+            'IIB_2_pdf_rate' => '',
+            'IIC_pdf_rate' => '',
+            'IIIA_pdf_rate' => '',
+            'IIIB_pdf_rate' => '',
+            'IIIC_1forcities_pdf_rate' => '',
+            'IIIC_1forcities2_pdf_rate' => '',
+            'IIIC_1forcities3_pdf_rate' => '',
+            'IIIC_2formuni1_pdf_rate' => '',
+            'IIIC_2formuni2_pdf_rate' => '',
+            'IIIC_2formuni3_pdf_rate' => '',
+            'IIID_pdf_rate' => '',
+            'IV_forcities_pdf_rate' => '',
+            'IV_muni_pdf_rate' => '',
+            'V_1_pdf_rate' => '',
+            'threepeoplesorg_rate' => ''
         ];
     }
 
