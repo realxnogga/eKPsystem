@@ -65,7 +65,7 @@ function getAdjectivalRating($total)
 	}
 
 } // Fetch available years from movrate table
-$query = "SELECT DISTINCT YEAR(daterate) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
+$query = "SELECT DISTINCT YEAR(year) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $years = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -86,7 +86,7 @@ $query = "
     FROM barangays b
     JOIN movrate m ON b.id = m.barangay
     WHERE b.municipality_id = :municipality_id
-      AND YEAR(m.daterate) = :selectedYear  -- use 'daterate' instead of 'date'
+      AND YEAR(m.year) = :selectedYear  -- use 'year' instead of 'date'
     ORDER BY m.total DESC";
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);

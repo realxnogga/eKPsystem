@@ -177,7 +177,7 @@ if (!empty($municipalityID)) {
                 <td><input type="file" id="IA_2b_pdf_File" name="IA_2b_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
               <tr>
-                <td>c) Conciliation (15 days from initial confrontation with the Pangkat)</td>
+                <td>c) Conciliation (with extended period not to exceed another 15 days)</td>
                 <td><input type="file" id="IA_2c_pdf_File" name="IA_2c_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
               </tr>
               <tr>

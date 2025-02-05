@@ -18,9 +18,9 @@ $year = isset($_GET['year']) ? (int)$_GET['year'] : date('Y'); // Default to the
 
 try {
     $query = "
-        SELECT `total`, `daterate`
+        SELECT `total`, `year`
         FROM `movrate`
-        WHERE EXTRACT(YEAR FROM `daterate`) = :year 
+        WHERE `year` = :year 
           AND `barangay` = :barangay
     ";
     $stmt = $conn->prepare($query);
@@ -33,7 +33,7 @@ try {
     $performance = $row ? getPerformanceRating($total) : "No Rating yet";
 
     // Fetch distinct years for dropdown
-    $yearQuery = "SELECT DISTINCT EXTRACT(YEAR FROM `daterate`) AS year FROM `movrate` ORDER BY year DESC";
+    $yearQuery = "SELECT DISTINCT `year` FROM `movrate` ORDER BY year DESC";
     $yearResult = $conn->query($yearQuery);
     $years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
 
@@ -281,7 +281,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="flex flex-col text-justify w-75 me-5">
     <p class="h3 fw-bold" style="color: #003366;">The Lupong Tagapamayapa Incentives Award (LTIA)</p>
     <p class="text-muted" style="font-size: 1rem;">
-        The Lupong Tagapamayapa Incentives Award (LTIA) was conceptualized and implemented in 1982 and has been elevated to a Presidential Award pursuant to Executive Order No. 394 s. 1997 entitled “Establishing the Lupong Tagapamayapa Incentives Award.”
+        The Lupong Tagapamayapa Incentives Award (LTIA) was conceptualized and implemented in 1982 and has been elevated to a Presidential Award pursuant to Executive Order No. 394 s. 1997 entitled "Establishing the Lupong Tagapamayapa Incentives Award."
     </p>
     <p class="text-muted" style="font-size: 1rem;">
         This award is an avenue for granting economic and other incentives to the Lupong Tagapamayapa (LT) for their outstanding contributions to attaining the objectives of the Katarungang Pambarangay (KP).

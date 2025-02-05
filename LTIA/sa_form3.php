@@ -62,7 +62,7 @@ $stmt->execute();
 $assessment_members = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Fetch available years from `movrate` table for dropdown
-$query = "SELECT DISTINCT YEAR(daterate) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
+$query = "SELECT DISTINCT year FROM movrate ORDER BY year DESC"; // Changed from YEAR(daterate)
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $years = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -76,7 +76,7 @@ $query = "
     FROM barangays b
     JOIN movrate m ON b.id = m.barangay
     WHERE b.municipality_id = :municipality_id
-      AND YEAR(m.daterate) = :selectedYear  -- use 'daterate' instead of 'date'
+      AND m.year = :selectedYear  -- Changed from YEAR(m.daterate)
     ORDER BY m.total DESC";
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);

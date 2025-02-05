@@ -183,41 +183,13 @@ $(document).ready(function () {
 
                     // Handle rates
                     if (data.rates) {
-                        $('input[name="IA_1a_pdf_rate"]').val(data.rates.IA_1a_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IA_1b_pdf_rate"]').val(data.rates.IA_1b_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IA_2a_pdf_rate"]').val(data.rates.IA_2a_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IA_2b_pdf_rate"]').val(data.rates.IA_2b_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IA_2c_pdf_rate"]').val(data.rates.IA_2c_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IA_2d_pdf_rate"]').val(data.rates.IA_2d_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IA_2e_pdf_rate"]').val(data.rates.IA_2e_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IB_1forcities_pdf_rate"]').val(data.rates.IB_1forcities_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IB_1aformuni_pdf_rate"]').val(data.rates.IB_1aformuni_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IB_1bformuni_pdf_rate"]').val(data.rates.IB_1bformuni_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IB_2_pdf_rate"]').val(data.rates.IB_2_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IB_3_pdf_rate"]').val(data.rates.IB_3_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IB_4_pdf_rate"]').val(data.rates.IB_4_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IC_1_pdf_rate"]').val(data.rates.IC_1_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IC_2_pdf_rate"]').val(data.rates.IC_2_pdf_rate || 'No ratings available at this time');
-                        $('input[name="ID_1_pdf_rate"]').val(data.rates.ID_1_pdf_rate || 'No ratings available at this time');
-                        $('input[name="ID_2_pdf_rate"]').val(data.rates.ID_2_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIA_pdf_rate"]').val(data.rates.IIA_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIB_1_pdf_rate"]').val(data.rates.IIB_1_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIB_2_pdf_rate"]').val(data.rates.IIB_2_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIC_pdf_rate"]').val(data.rates.IIC_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIIA_pdf_rate"]').val(data.rates.IIIA_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIIB_pdf_rate"]').val(data.rates.IIIB_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIIC_1forcities_pdf_rate"]').val(data.rates.IIIC_1forcities_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIIC_1forcities2_pdf_rate"]').val(data.rates.IIIC_1forcities2_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIIC_1forcities3_pdf_rate"]').val(data.rates.IIIC_1forcities3_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIIC_2formuni1_pdf_rate"]').val(data.rates.IIIC_2formuni1_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIIC_2formuni2_pdf_rate"]').val(data.rates.IIIC_2formuni2_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIIC_2formuni3_pdf_rate"]').val(data.rates.IIIC_2formuni3_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IIID_pdf_rate"]').val(data.rates.IIID_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IV_forcities_pdf_rate"]').val(data.rates.IV_forcities_pdf_rate || 'No ratings available at this time');
-                        $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate || 'No ratings available at this time');
-                        $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || 'No ratings available at this time');
-                        $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || 'No ratings available at this time');
-                        $('#status_rate').text(data.rates.status_rate || 'Rate Status: Pending');
+                        fileTypes.forEach(function(type) {
+                            var rateKey = type + '_pdf_rate';
+                            if (type === 'threepeoplesorg') {
+                                rateKey = 'threepeoplesorg_rate'; // Special case
+                            }
+                            $('input[name="' + rateKey + '"]').val(data.rates[rateKey] || '');
+                        });
                         
                         // After setting all the rates, check for empty ones and highlight them
                         $('input[type="number"].score-input').each(function() {
@@ -236,43 +208,13 @@ $(document).ready(function () {
 
                     // Handle remarks
                     if (data.remarks) {
-                      $('textarea[name="IA_1a_pdf_remark"]').val(data.remarks.IA_1a_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_1b_pdf_remark"]').val(data.remarks.IA_1b_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2a_pdf_remark"]').val(data.remarks.IA_2a_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2b_pdf_remark"]').val(data.remarks.IA_2b_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2c_pdf_remark"]').val(data.remarks.IA_2c_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2d_pdf_remark"]').val(data.remarks.IA_2d_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2e_pdf_remark"]').val(data.remarks.IA_2e_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_1forcities_pdf_remark"]').val(data.remarks.IB_1forcities_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_1aformuni_pdf_remark"]').val(data.remarks.IB_1aformuni_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_1bformuni_pdf_remark"]').val(data.remarks.IB_1bformuni_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_2_pdf_remark"]').val(data.remarks.IB_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_3_pdf_remark"]').val(data.remarks.IB_3_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_4_pdf_remark"]').val(data.remarks.IB_4_pdf_remark || 'No remarks available');
-                      $('textarea[name="IC_1_pdf_remark"]').val(data.remarks.IC_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="IC_2_pdf_remark"]').val(data.remarks.IC_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="ID_1_pdf_remark"]').val(data.remarks.ID_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="ID_2_pdf_remark"]').val(data.remarks.ID_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIA_pdf_remark"]').val(data.remarks.IIA_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIB_1_pdf_remark"]').val(data.remarks.IIB_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIB_2_pdf_remark"]').val(data.remarks.IIB_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIC_pdf_remark"]').val(data.remarks.IIC_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIA_pdf_remark"]').val(data.remarks.IIIA_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIB_pdf_remark"]').val(data.remarks.IIIB_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_1forcities_pdf_remark"]').val(data.remarks.IIIC_1forcities_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_1forcities2_pdf_remark"]').val(data.remarks.IIIC_1forcities2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_1forcities3_pdf_remark"]').val(data.remarks.IIIC_1forcities3_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_2formuni1_pdf_remark"]').val(data.remarks.IIIC_2formuni1_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_2formuni2_pdf_remark"]').val(data.remarks.IIIC_2formuni2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_2formuni3_pdf_remark"]').val(data.remarks.IIIC_2formuni3_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIID_pdf_remark"]').val(data.remarks.IIID_pdf_remark || 'No remarks available');
-                      $('textarea[name="IV_forcities_pdf_remark"]').val(data.remarks.IV_forcities_pdf_remark || 'No remarks available');
-                      $('textarea[name="IV_muni_pdf_remark"]').val(data.remarks.IV_muni_pdf_remark || 'No remarks available');
-                      $('textarea[name="V_1_pdf_remark"]').val(data.remarks.V_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="threepeoplesorg_remark"]').val(data.remarks.threepeoplesorg_remark || 'No remarks available');
+                        Object.keys(data.remarks).forEach(key => {
+                            $('textarea[name="' + key + '"]').val(data.remarks[key] || '');
+                        });
                     } else {
                         clearRemarks();
                     }
+
                 },
                 error: function (xhr, status, error) {
                     console.log('Error fetching files:', xhr.responseText);
@@ -522,7 +464,7 @@ $(document).ready(function () {
             <div class="menu">
               <ul class="flex space-x-4">
               <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform3.php';" style="margin-left: 0;">
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessorForm3summary.php';" style="margin-left: 0;">
                   <i class="ti ti-file-analytics mr-2">  </i>
                       Summary
                   </button>

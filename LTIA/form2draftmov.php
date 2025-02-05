@@ -290,7 +290,7 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr>
-                <td>c) Conciliation (15 days from initial confrontation with the Pangkat)</td>
+                <td>c) Conciliation (with extended period not to exceed another 15 days)</td>
                 <td><input type="file" id="IA_2c_pdf_File" name="IA_2c_pdf_File" accept=".pdf" onchange="validateFileType(this)" />
                 <input type="hidden" name="IA_2c_pdf_File" id="IA_2c_pdf_File" value="<?php echo $row['IA_2c_pdf_File']; ?>">
             </td>
@@ -716,7 +716,7 @@ if (!empty($municipalityID)) {
                 <td></td>
                 <td></td>
               </tr>
-              <tr>
+              <tr id = "city-row">
                 <td>For Cities - the office or space should be exclusive for KP matters</td>
                 <td><input type="file" id="IV_forcities_pdf_File" name="IV_forcities_pdf_File" accept=".pdf" onchange="validateFileType(this)" />
                 <input type="hidden" name="IV_forcities_pdf_File" id="IV_forcities_pdf_File" value="<?php echo $row['IV_forcities_pdf_File']; ?>">
