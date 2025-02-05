@@ -70,14 +70,17 @@ $years = $stmt->fetchAll(PDO::FETCH_COLUMN);
 // Get selected year from request or default to the latest year
 $selectedYear = $_GET['year'] ?? $years[0];
 
-// Filter dataset by selected year
+// Modify the query to calculate average for duplicate entries
 $query = "
-    SELECT b.barangay_name AS barangay, m.total 
+    SELECT b.barangay_name AS barangay, 
+           AVG(m.total) as average_total,
+           COUNT(*) as entry_count
     FROM barangays b
     JOIN movrate m ON b.id = m.barangay
     WHERE b.municipality_id = :municipality_id
-      AND m.year = :selectedYear  -- Changed from YEAR(m.daterate)
-    ORDER BY m.total DESC";
+      AND m.year = :selectedYear
+    GROUP BY b.barangay_name
+    ORDER BY AVG(m.total) DESC";
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
@@ -218,11 +221,13 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php 
               $num = 1;
               $rank = 1;
-              foreach ($barangay_ratings as $row): ?>
+              foreach ($barangay_ratings as $row): 
+                  $average_total = round($row['average_total'], 2); // Round to 2 decimal places
+                  ?>
                   <tr>
                       <td><?php echo $num++; ?>. <?php echo htmlspecialchars($row['barangay']); ?></td>
-                      <td><?php echo htmlspecialchars($row['total']); ?></td>
-                      <td><?php echo getAdjectivalRating($row['total']); ?></td>
+                      <td><?php echo htmlspecialchars($average_total); ?></td>
+                      <td><?php echo getAdjectivalRating($average_total); ?></td>
                       <td><?php echo $rank++; ?></td>
                   </tr>
               <?php endforeach; ?>
@@ -262,5 +267,31 @@ document.addEventListener('DOMContentLoaded', function () {
 }.spacingtabs2 {
     padding-left: 2em; /* Adjust as needed for spacing */
 }
+
+.barangay-select {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    width: 100%;
+}
+
+.barangay-select option {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.barangay-select:focus {
+    outline: none;
+    border-color: #666;
+}
 </style>
+<script>
+document.querySelectorAll('.barangay-select').forEach(select => {
+    select.addEventListener('change', function() {
+        // You can add any additional functionality here if needed
+    });
+});
+</script>
 </html>
