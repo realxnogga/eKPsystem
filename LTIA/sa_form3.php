@@ -270,6 +270,13 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endforeach; ?>
           </tbody>
           </table>
+          <form method="POST" class="inline">
+                      <button type="submit" name="save_averages" 
+                              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                          Save Averages
+                      </button>
+                  </form>
+              </div>
           <br>
                     <b> C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION </b><br><br>
                     <div class="certification-section text-center">
@@ -292,6 +299,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 <br>
                 <br>
+                <div class="text-center mt-4">
           </div>
         </div>
       </div>
@@ -343,12 +351,4 @@ document.querySelectorAll('.barangay-select').forEach(select => {
     });
 });
 </script>
-<div class="text-center mt-4">
-    <form method="POST" class="inline">
-        <button type="submit" name="save_averages" 
-                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Save Averages
-        </button>
-    </form>
-</div>
 </html>
