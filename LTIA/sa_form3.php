@@ -87,6 +87,43 @@ $stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
 $stmt->execute();
 $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Add this after fetching barangay_ratings
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_averages'])) {
+    try {
+        // Begin transaction
+        $conn->beginTransaction();
+        
+        // Use INSERT ... ON DUPLICATE KEY UPDATE
+        $upsert_query = "INSERT INTO average (mov_id, barangay, avg, year) 
+                        SELECT 
+                            mv.id as mov_id,
+                            b.id as barangay,
+                            AVG(m.total) as avg,
+                            :year
+                        FROM movrate m 
+                        JOIN barangays b ON m.barangay = b.id
+                        JOIN mov mv ON mv.barangay_id = b.id AND mv.year = :year
+                        WHERE b.municipality_id = :municipality_id
+                        AND m.year = :year
+                        GROUP BY b.id, mv.id
+                        HAVING mov_id IS NOT NULL
+                        ON DUPLICATE KEY UPDATE
+                            avg = VALUES(avg),
+                            year = VALUES(year)";
+                        
+        $stmt = $conn->prepare($upsert_query);
+        $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+        $stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $conn->commit();
+        echo "<script>alert('Averages saved/updated successfully!');</script>";
+    } catch (PDOException $e) {
+        $conn->rollBack();
+        echo "<script>alert('Error saving averages: " . addslashes($e->getMessage()) . "');</script>";
+    }
+}
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -286,6 +323,18 @@ document.addEventListener('DOMContentLoaded', function () {
     outline: none;
     border-color: #666;
 }
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.inline {
+    display: inline-block;
+}
 </style>
 <script>
 document.querySelectorAll('.barangay-select').forEach(select => {
@@ -294,4 +343,12 @@ document.querySelectorAll('.barangay-select').forEach(select => {
     });
 });
 </script>
+<div class="text-center mt-4">
+    <form method="POST" class="inline">
+        <button type="submit" name="save_averages" 
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Save Averages
+        </button>
+    </form>
+</div>
 </html>
