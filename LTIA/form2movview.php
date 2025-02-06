@@ -21,25 +21,50 @@ $allowed_columns = [
     'V_1_pdf_File', 'threepeoplesorg_pdf_File'
 ];
 
+// Current year
+$currentYear = date('Y');
+
+// Fetch unique years from the database
+$yearQuery = "SELECT DISTINCT year FROM mov
+              UNION SELECT DISTINCT YEAR(year) FROM movdraft_file
+              UNION SELECT DISTINCT YEAR(year) FROM movrate
+              UNION SELECT DISTINCT YEAR(year) FROM movremark";
+$yearResult = $conn->query($yearQuery);
+$years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
+
+// Ensure current year is in the list even if there's no data
+if (!in_array($currentYear, $years)) {
+    $years[] = $currentYear;
+}
+
+// Sort years in descending order
+rsort($years);
+
+// Check if a specific year is selected, otherwise default to the current year
+$selectedYear = isset($_GET['year']) ? $_GET['year'] : $currentYear;
+
 // Fetch uploaded files from the database
-$sql = "SELECT " . implode(', ', $allowed_columns) . " FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id";
+$sql = "SELECT " . implode(', ', $allowed_columns) . " FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
 $stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $row as an empty array if no records found
 
 // Fetch rates from the movrate table
-$rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id";
+$rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id AND year = :year";
 $rate_stmt = $conn->prepare($rate_sql);
 $rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$rate_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 $rate_stmt->execute();
 $rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $rate_row as an empty array if no records found
 
 // Fetch remarks from the movremark table
-$remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id";
+$remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id AND year = :year";
 $remark_stmt = $conn->prepare($remark_sql);
 $remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$remark_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 $remark_stmt->execute();
 $remark_row = $remark_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $remark_row as an empty array if no records found
 
@@ -67,87 +92,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Prepare SQL for updating the file paths
- // Make sure $selectedYear is set from the form submission or session
-$selectedYear = isset($_POST['year']) ? $_POST['year'] : date('Y');
+    $update_sql = "UPDATE mov SET ";
+    $bind_params = [];
+    $columns_to_update = [];
 
-$update_sql = "UPDATE mov SET ";
-$bind_params = [];
-$columns_to_update = [];
-
-// Loop through allowed columns, but only update those where a file was uploaded
-foreach ($allowed_columns as $column) {
-    if (!empty($_FILES[$column]['name'])) { // Check if the column has a new file
-        $columns_to_update[] = "$column = ?";
-        $bind_params[] = $row[$column]; // Store new file path
+    // Loop through allowed columns, but only update those where a file was uploaded
+    foreach ($allowed_columns as $column) {
+        if (!empty($_FILES[$column]['name'])) { // Check if the column has a new file
+            $columns_to_update[] = "$column = ?";
+            $bind_params[] = $row[$column]; // Store new file path
+        }
     }
-}
 
-// Proceed only if at least one column is updated
-if (!empty($columns_to_update)) {
-    $update_sql .= implode(', ', $columns_to_update);
-    $update_sql .= " WHERE user_id = ? AND barangay_id = ? AND year = ?";
+    // Proceed only if at least one column is updated
+    if (!empty($columns_to_update)) {
+        $update_sql .= implode(', ', $columns_to_update);
+        $update_sql .= " WHERE user_id = ? AND barangay_id = ? AND year = ?";
 
-    $update_stmt = $conn->prepare($update_sql);
+        $update_stmt = $conn->prepare($update_sql);
 
-    // Bind dynamically selected parameters
-    $param_index = 1;
-    foreach ($bind_params as $param) {
-        $update_stmt->bindParam($param_index++, $param, PDO::PARAM_STR);
-    }
-    $update_stmt->bindParam($param_index++, $_SESSION['user_id'], PDO::PARAM_INT);
-    $update_stmt->bindParam($param_index++, $_SESSION['barangay_id'], PDO::PARAM_INT);
-    $update_stmt->bindParam($param_index++, $selectedYear, PDO::PARAM_INT);
+        // Bind dynamically selected parameters
+        $param_index = 1;
+        foreach ($bind_params as $param) {
+            $update_stmt->bindParam($param_index++, $param, PDO::PARAM_STR);
+        }
+        $update_stmt->bindParam($param_index++, $_SESSION['user_id'], PDO::PARAM_INT);
+        $update_stmt->bindParam($param_index++, $_SESSION['barangay_id'], PDO::PARAM_INT);
+        $update_stmt->bindParam($param_index++, $selectedYear, PDO::PARAM_INT);
 
-    // Debugging: Check SQL query and values
-    error_log("SQL Query: " . $update_sql);
-    error_log("Bound Values: " . print_r($bind_params, true));
+        // Debugging: Check SQL query and values
+        error_log("SQL Query: " . $update_sql);
+        error_log("Bound Values: " . print_r($bind_params, true));
 
-    if ($update_stmt->execute()) {
-        echo "<script>alert('Files updated successfully for the year $selectedYear!');</script>";
+        if ($update_stmt->execute()) {
+            echo "<script>alert('Files updated successfully for the year $selectedYear!');</script>";
+        } else {
+            echo "<script>alert('Error updating files. Please try again.');</script>";
+            error_log("Error: " . print_r($update_stmt->errorInfo(), true));
+        }
     } else {
-        echo "<script>alert('Error updating files. Please try again.');</script>";
-        error_log("Error: " . print_r($update_stmt->errorInfo(), true));
+        echo "<script>document.getElementById('noChangesMessage').innerHTML = 'No file changes detected for the selected year.';</script>";
     }
-} else {
-    echo "<script>document.getElementById('noChangesMessage').innerHTML = 'No file changes detected for the selected year.';</script>";
+
+    // Redirect to prevent form resubmission
+    header("Location: " . $_SERVER['REQUEST_URI']);
+    exit;
 }
-
-// Redirect to prevent form resubmission
-header("Location: " . $_SERVER['REQUEST_URI']);
-exit;
-
-}
-// Current year
-$currentYear = date('Y');
-
-// Fetch unique years from the database
-$yearQuery = "SELECT DISTINCT year FROM mov
-              UNION SELECT DISTINCT YEAR(year) FROM movdraft_file
-              UNION SELECT DISTINCT YEAR(year) FROM movrate
-              UNION SELECT DISTINCT YEAR(year) FROM movremark";
-$yearResult = $conn->query($yearQuery);
-$years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
-
-// Ensure current year is in the list even if there's no data
-if (!in_array($currentYear, $years)) {
-    $years[] = $currentYear;
-}
-
-// Sort years in descending order
-rsort($years);
-
-// Check if a specific year is selected, otherwise default to the current year
-$selectedYear = isset($_GET['year']) ? $_GET['year'] : $currentYear;
-$sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-$stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-$stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
-$stmt->execute();
-$row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-
-
-//cities or municipality//
 
 // Define user and barangay ID from session
 $userID = $_SESSION['user_id'];
@@ -339,9 +329,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('#municipality-row').forEach(row => row.style.display = '');
       }
     });
-
-
-
 </script>
 <!doctype html>
 <html lang="en">
@@ -366,16 +353,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" />
                         </div>
                         <h1 class="text-xl font-bold">
-                Lupong Tagapamayapa Incentives Award (LTIA)
-                        <form method="get" action=""  class="inline-block">
-                        <select name="year" id="year" onchange="this.form.submit()">
-                            <?php foreach ($years as $year) : ?>
-                                <option value="<?= $year ?>" <?= $year == $selectedYear ? 'selected' : '' ?>>
-                                    <?= $year ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </form> 
+                Lupong Tagapamayapa Incentives Award (LTIA)   
+<form method="get" action="" class="inline-block">
+    <select name="year" id="year" onchange="this.form.submit()">
+        <?php foreach ($years as $year) : ?>
+            <option value="<?= $year ?>" <?= $year == $selectedYear ? 'selected' : '' ?>>
+                <?= $year ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</form>
                     <hr class="my-2">
             <span>Barangay </span> 
                   <span ><?= htmlspecialchars($barangayName, ENT_QUOTES, 'UTF-8') ?></span>, 
@@ -431,8 +418,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IA_1a_pdf_rate']) ? $rate_row['IA_1a_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IA_1a_pdf_remark']) ? $remark_row['IA_1a_pdf_remark'] : 'No remarks'; ?></td>
+            <td><?php echo isset($rate_row['IA_1a_pdf_rate']) ? $rate_row['IA_1a_pdf_rate'] : 'Not rated'; ?></td> *sum all the IA_1a_pdf_rate rate_row here, and it should be the same account with the rate_row in the form2movview.php(apply to all)
+            <td><?php echo isset($remark_row['IA_1a_pdf_remark']) ? $remark_row['IA_1a_pdf_remark'] : 'No remarks'; ?></td> fetch all the assessor here that has remarks for this criteria, if not then dont sho (apply to all)
             <td class="text-center align-middle"><input type="file" id="IA_1a_pdf_File" name="IA_1a_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit1', 'cancel1')" />
               <input type="hidden" name="IA_1a_pdf_File_hidden" id="IA_1a_pdf_File_hidden" value="<?php echo !empty($row['IA_1a_pdf_File']) ? htmlspecialchars($row['IA_1a_pdf_File']) : ''; ?>">
           <button type="submit" name="update" value="IA_1a_pdf_File" id="submit1" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
@@ -448,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IA_1b_pdf_rate']) ? $rate_row['IA_1b_pdf_rate'] : 'Not rated'; ?></td>
+            <td><?php echo isset($rate_row['IA_1b_pdf_rate']) ? $rate_row['IA_1b_pdf_rate'] : 'Not rated'; ?></td>*sum all the IA_1a_pdf_rate rate_row here, and it should be the same account with the rate_row in the form2movview.php()
             <td><?php echo isset($remark_row['IA_1b_pdf_remark']) ? $remark_row['IA_1b_pdf_remark'] : 'No remarks'; ?></td>
             <td class="text-center align-middle"><input type="file" id="IA_1b_pdf_File" name="IA_1b_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit2', 'cancel2')" />
               <input type="hidden" name="IA_1b_pdf_File_hidden" id="IA_1b_pdf_File_hidden" value="<?php echo !empty($row['IA_1b_pdf_File']) ? htmlspecialchars($row['IA_1b_pdf_File']) : ''; ?>">
