@@ -120,6 +120,99 @@ try {
 
  <script>
 $(document).ready(function () {
+    // Function to highlight empty rating inputs only
+    function highlightEmptyInputs() {
+        $('input[type="number"].score-input').each(function() {
+            if ($(this).val() === '') {
+                $(this).css({
+                    'background-color': '#ffebee',  // Light red background
+                    'border-color': '#ef5350'       // Red border
+                });
+            } else {
+                $(this).css({
+                    'background-color': '',  // Reset to default
+                    'border-color': ''       // Reset to default
+                });
+            }
+        });
+    }
+
+    // Call the function on page load
+    highlightEmptyInputs();
+
+    // Split the event handlers for ratings and remarks
+    $('input[type="number"].score-input').on('change', function() {
+        // Check if a barangay is selected
+        var selectedBarangay = $('#barangay_select').val();
+        if (!selectedBarangay) {
+            alert('Please select a barangay first');
+            $(this).val(''); // Clear the input
+            $(this).css({
+                'background-color': '#ffebee',
+                'border-color': '#ef5350'
+            });
+            return;
+        }
+        
+        // Validate min/max
+        var min = parseFloat($(this).attr('min'));
+        var max = parseFloat($(this).attr('max'));
+        var value = parseFloat($(this).val());
+        
+        if (value < min || value > max) {
+            alert(`Please enter a number between ${min} and ${max}`);
+            $(this).val(''); // Clear invalid input
+            $(this).css({
+                'background-color': '#ffebee',
+                'border-color': '#ef5350'
+            });
+            return;
+        }
+        
+        // Update input styling based on value
+        if ($(this).val() !== '') {
+            $(this).css({
+                'background-color': '',
+                'border-color': ''
+            });
+        } else {
+            $(this).css({
+                'background-color': '#ffebee',
+                'border-color': '#ef5350'
+            });
+        }
+        
+        // Automatically submit the form
+        $('form').submit();
+    });
+
+    // Separate handler for remarks - no highlighting
+    $('textarea[placeholder="Remarks"]').on('change', function() {
+        var selectedBarangay = $('#barangay_select').val();
+        if (!selectedBarangay) {
+            alert('Please select a barangay first');
+            $(this).val(''); // Clear the input
+            return;
+        }
+        
+        // Automatically submit the form
+        $('form').submit();
+    });
+
+    // Update clearRates function
+    function clearRates() {
+        // ... existing clearRates code ...
+        
+        // After clearing rates, highlight empty inputs
+        highlightEmptyInputs();
+        
+        // Reset only the rating input styling
+        $('input[type="number"].score-input').css({
+            'background-color': '#ffebee',
+            'border-color': '#ef5350'
+        });
+    }
+
     // Handle barangay selection
     $('#barangay_select').on('change', function () {
         var selectedBarangayName = $(this).val();
@@ -236,40 +329,40 @@ $(document).ready(function () {
 
                     // Handle remarks
                     if (data.remarks) {
-                      $('textarea[name="IA_1a_pdf_remark"]').val(data.remarks.IA_1a_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_1b_pdf_remark"]').val(data.remarks.IA_1b_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2a_pdf_remark"]').val(data.remarks.IA_2a_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2b_pdf_remark"]').val(data.remarks.IA_2b_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2c_pdf_remark"]').val(data.remarks.IA_2c_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2d_pdf_remark"]').val(data.remarks.IA_2d_pdf_remark || 'No remarks available');
-                      $('textarea[name="IA_2e_pdf_remark"]').val(data.remarks.IA_2e_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_1forcities_pdf_remark"]').val(data.remarks.IB_1forcities_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_1aformuni_pdf_remark"]').val(data.remarks.IB_1aformuni_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_1bformuni_pdf_remark"]').val(data.remarks.IB_1bformuni_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_2_pdf_remark"]').val(data.remarks.IB_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_3_pdf_remark"]').val(data.remarks.IB_3_pdf_remark || 'No remarks available');
-                      $('textarea[name="IB_4_pdf_remark"]').val(data.remarks.IB_4_pdf_remark || 'No remarks available');
-                      $('textarea[name="IC_1_pdf_remark"]').val(data.remarks.IC_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="IC_2_pdf_remark"]').val(data.remarks.IC_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="ID_1_pdf_remark"]').val(data.remarks.ID_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="ID_2_pdf_remark"]').val(data.remarks.ID_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIA_pdf_remark"]').val(data.remarks.IIA_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIB_1_pdf_remark"]').val(data.remarks.IIB_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIB_2_pdf_remark"]').val(data.remarks.IIB_2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIC_pdf_remark"]').val(data.remarks.IIC_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIA_pdf_remark"]').val(data.remarks.IIIA_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIB_pdf_remark"]').val(data.remarks.IIIB_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_1forcities_pdf_remark"]').val(data.remarks.IIIC_1forcities_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_1forcities2_pdf_remark"]').val(data.remarks.IIIC_1forcities2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_1forcities3_pdf_remark"]').val(data.remarks.IIIC_1forcities3_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_2formuni1_pdf_remark"]').val(data.remarks.IIIC_2formuni1_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_2formuni2_pdf_remark"]').val(data.remarks.IIIC_2formuni2_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIIC_2formuni3_pdf_remark"]').val(data.remarks.IIIC_2formuni3_pdf_remark || 'No remarks available');
-                      $('textarea[name="IIID_pdf_remark"]').val(data.remarks.IIID_pdf_remark || 'No remarks available');
-                      $('textarea[name="IV_forcities_pdf_remark"]').val(data.remarks.IV_forcities_pdf_remark || 'No remarks available');
-                      $('textarea[name="IV_muni_pdf_remark"]').val(data.remarks.IV_muni_pdf_remark || 'No remarks available');
-                      $('textarea[name="V_1_pdf_remark"]').val(data.remarks.V_1_pdf_remark || 'No remarks available');
-                      $('textarea[name="threepeoplesorg_remark"]').val(data.remarks.threepeoplesorg_remark || 'No remarks available');
+                        $('textarea[name="IA_1a_pdf_remark"]').val(data.remarks.IA_1a_pdf_remark || '');
+                        $('textarea[name="IA_1b_pdf_remark"]').val(data.remarks.IA_1b_pdf_remark || '');
+                        $('textarea[name="IA_2a_pdf_remark"]').val(data.remarks.IA_2a_pdf_remark || '');
+                        $('textarea[name="IA_2b_pdf_remark"]').val(data.remarks.IA_2b_pdf_remark || '');
+                        $('textarea[name="IA_2c_pdf_remark"]').val(data.remarks.IA_2c_pdf_remark || '');
+                        $('textarea[name="IA_2d_pdf_remark"]').val(data.remarks.IA_2d_pdf_remark || '');
+                        $('textarea[name="IA_2e_pdf_remark"]').val(data.remarks.IA_2e_pdf_remark || '');
+                        $('textarea[name="IB_1forcities_pdf_remark"]').val(data.remarks.IB_1forcities_pdf_remark || '');
+                        $('textarea[name="IB_1aformuni_pdf_remark"]').val(data.remarks.IB_1aformuni_pdf_remark || '');
+                        $('textarea[name="IB_1bformuni_pdf_remark"]').val(data.remarks.IB_1bformuni_pdf_remark || '');
+                        $('textarea[name="IB_2_pdf_remark"]').val(data.remarks.IB_2_pdf_remark || '');
+                        $('textarea[name="IB_3_pdf_remark"]').val(data.remarks.IB_3_pdf_remark || '');
+                        $('textarea[name="IB_4_pdf_remark"]').val(data.remarks.IB_4_pdf_remark || '');
+                        $('textarea[name="IC_1_pdf_remark"]').val(data.remarks.IC_1_pdf_remark || '');
+                        $('textarea[name="IC_2_pdf_remark"]').val(data.remarks.IC_2_pdf_remark || '');
+                        $('textarea[name="ID_1_pdf_remark"]').val(data.remarks.ID_1_pdf_remark || '');
+                        $('textarea[name="ID_2_pdf_remark"]').val(data.remarks.ID_2_pdf_remark || '');
+                        $('textarea[name="IIA_pdf_remark"]').val(data.remarks.IIA_pdf_remark || '');
+                        $('textarea[name="IIB_1_pdf_remark"]').val(data.remarks.IIB_1_pdf_remark || '');
+                        $('textarea[name="IIB_2_pdf_remark"]').val(data.remarks.IIB_2_pdf_remark || '');
+                        $('textarea[name="IIC_pdf_remark"]').val(data.remarks.IIC_pdf_remark || '');
+                        $('textarea[name="IIIA_pdf_remark"]').val(data.remarks.IIIA_pdf_remark || '');
+                        $('textarea[name="IIIB_pdf_remark"]').val(data.remarks.IIIB_pdf_remark || '');
+                        $('textarea[name="IIIC_1forcities_pdf_remark"]').val(data.remarks.IIIC_1forcities_pdf_remark || '');
+                        $('textarea[name="IIIC_1forcities2_pdf_remark"]').val(data.remarks.IIIC_1forcities2_pdf_remark || '');
+                        $('textarea[name="IIIC_1forcities3_pdf_remark"]').val(data.remarks.IIIC_1forcities3_pdf_remark || '');
+                        $('textarea[name="IIIC_2formuni1_pdf_remark"]').val(data.remarks.IIIC_2formuni1_pdf_remark || '');
+                        $('textarea[name="IIIC_2formuni2_pdf_remark"]').val(data.remarks.IIIC_2formuni2_pdf_remark || '');
+                        $('textarea[name="IIIC_2formuni3_pdf_remark"]').val(data.remarks.IIIC_2formuni3_pdf_remark || '');
+                        $('textarea[name="IIID_pdf_remark"]').val(data.remarks.IIID_pdf_remark || '');
+                        $('textarea[name="IV_forcities_pdf_remark"]').val(data.remarks.IV_forcities_pdf_remark || '');
+                        $('textarea[name="IV_muni_pdf_remark"]').val(data.remarks.IV_muni_pdf_remark || '');
+                        $('textarea[name="V_1_pdf_remark"]').val(data.remarks.V_1_pdf_remark || '');
+                        $('textarea[name="threepeoplesorg_remark"]').val(data.remarks.threepeoplesorg_remark || '');
                     } else {
                         clearRemarks();
                     }
@@ -295,88 +388,42 @@ $(document).ready(function () {
     clearRemarks();
 }
 
-    // Function to clear rates
-    function clearRates() {
-      $('input[name="IA_1a_pdf_rate"]').val('');
-      $('input[name="IA_1b_pdf_rate"]').val('');
-      $('input[name="IA_2a_pdf_rate"]').val('');
-      $('input[name="IA_2b_pdf_rate"]').val('');
-      $('input[name="IA_2c_pdf_rate"]').val('');
-      $('input[name="IA_2d_pdf_rate"]').val('');
-      $('input[name="IA_2e_pdf_rate"]').val('');
-      $('input[name="IB_1forcities_pdf_rate"]').val('');
-      $('input[name="IB_1aformuni_pdf_rate"]').val('');
-      $('input[name="IB_1bformuni_pdf_rate"]').val('');
-      $('input[name="IB_2_pdf_rate"]').val('');
-      $('input[name="IB_3_pdf_rate"]').val('');
-      $('input[name="IB_4_pdf_rate"]').val('');
-      $('input[name="IC_1_pdf_rate"]').val('');
-      $('input[name="IC_2_pdf_rate"]').val('');
-      $('input[name="ID_1_pdf_rate"]').val('');
-      $('input[name="ID_2_pdf_rate"]').val('');
-      $('input[name="IIA_pdf_rate"]').val('');
-      $('input[name="IIB_1_pdf_rate"]').val('');
-      $('input[name="IIB_2_pdf_rate"]').val('');
-      $('input[name="IIC_pdf_rate"]').val('');
-      $('input[name="IIIA_pdf_rate"]').val('');
-      $('input[name="IIIB_pdf_rate"]').val('');
-      $('input[name="IIIC_1forcities_pdf_rate"]').val('');
-      $('input[name="IIIC_1forcities2_pdf_rate"]').val('');
-      $('input[name="IIIC_1forcities3_pdf_rate"]').val('');
-      $('input[name="IIIC_2formuni1_pdf_rate"]').val('');
-      $('input[name="IIIC_2formuni2_pdf_rate"]').val('');
-      $('input[name="IIIC_2formuni3_pdf_rate"]').val('');
-      $('input[name="IIID_pdf_rate"]').val('');
-      $('input[name="IV_forcities_pdf_rate"]').val('');
-      $('input[name="IV_muni_pdf_rate"]').val('');
-      $('input[name="V_1_pdf_rate"]').val('');
-      $('input[name="threepeoplesorg_rate"]').val('');
-      $('#status_rate').text('');
-      
-      // Reset all input styling
-      $('input[type="number"].score-input').css({
-          'background-color': '',
-          'border-color': ''
-      });
-    }
-
     // Function to clear remarks
     function clearRemarks() {
-      $('textarea[name="IA_1a_pdf_remark"]').val('');
-      $('textarea[name="IA_1b_pdf_remark"]').val('');
-      $('textarea[name="IA_2a_pdf_remark"]').val('');
-      $('textarea[name="IA_2b_pdf_remark"]').val('');
-      $('textarea[name="IA_2c_pdf_remark"]').val('');
-      $('textarea[name="IA_2d_pdf_remark"]').val('');
-      $('textarea[name="IA_2e_pdf_remark"]').val('');
-      $('textarea[name="IB_1forcities_pdf_remark"]').val('');
-      $('textarea[name="IB_1aformuni_pdf_remark"]').val('');
-      $('textarea[name="IB_1bformuni_pdf_remark"]').val('');
-      $('textarea[name="IB_2_pdf_remark"]').val('');
-      $('textarea[name="IB_3_pdf_remark"]').val('');
-      $('textarea[name="IB_4_pdf_remark"]').val('');
-      $('textarea[name="IC_1_pdf_remark"]').val('');
-      $('textarea[name="IC_2_pdf_remark"]').val('');
-      $('textarea[name="ID_1_pdf_remark"]').val('');
-      $('textarea[name="ID_2_pdf_remark"]').val('');
-      $('textarea[name="IIA_pdf_remark"]').val('');
-      $('textarea[name="IIB_1_pdf_remark"]').val('');
-      $('textarea[name="IIB_2_pdf_remark"]').val('');
-      $('textarea[name="IIC_pdf_remark"]').val('');
-      $('textarea[name="IIIA_pdf_remark"]').val('');
-      $('textarea[name="IIIB_pdf_remark"]').val('');
-      $('textarea[name="IIIC_1forcities_pdf_remark"]').val('');
-      $('textarea[name="IIIC_1forcities2_pdf_remark"]').val('');
-      $('textarea[name="IIIC_1forcities3_pdf_remark"]').val('');
-      $('textarea[name="IIIC_2formuni1_pdf_remark"]').val('');
-      $('textarea[name="IIIC_2formuni2_pdf_remark"]').val('');
-      $('textarea[name="IIIC_2formuni3_pdf_remark"]').val('');
-      $('textarea[name="IIID_pdf_remark"]').val('');
-      $('textarea[name="IV_forcities_pdf_remark"]').val('');
-      $('textarea[name="IV_muni_pdf_remark"]').val('');
-      $('textarea[name="V_1_pdf_remark"]').val('');
-      $('textarea[name="threepeoplesorg_remark"]').val('');
-
+        $('textarea[name="IA_1a_pdf_remark"]').val('');
+        $('textarea[name="IA_1b_pdf_remark"]').val('');
+        $('textarea[name="IA_2a_pdf_remark"]').val('');
+        $('textarea[name="IA_2b_pdf_remark"]').val('');
+        $('textarea[name="IA_2c_pdf_remark"]').val('');
+        $('textarea[name="IA_2d_pdf_remark"]').val('');
+        $('textarea[name="IA_2e_pdf_remark"]').val('');
+        $('textarea[name="IB_1forcities_pdf_remark"]').val('');
+        $('textarea[name="IB_1aformuni_pdf_remark"]').val('');
+        $('textarea[name="IB_1bformuni_pdf_remark"]').val('');
+        $('textarea[name="IB_2_pdf_remark"]').val('');
+        $('textarea[name="IB_3_pdf_remark"]').val('');
+        $('textarea[name="IB_4_pdf_remark"]').val('');
+        $('textarea[name="IC_1_pdf_remark"]').val('');
+        $('textarea[name="IC_2_pdf_remark"]').val('');
+        $('textarea[name="ID_1_pdf_remark"]').val('');
+        $('textarea[name="ID_2_pdf_remark"]').val('');
+        $('textarea[name="IIA_pdf_remark"]').val('');
+        $('textarea[name="IIB_1_pdf_remark"]').val('');
+        $('textarea[name="IIB_2_pdf_remark"]').val('');
+        $('textarea[name="IIC_pdf_remark"]').val('');
+        $('textarea[name="IIIA_pdf_remark"]').val('');
+        $('textarea[name="IIIB_pdf_remark"]').val('');
+        $('textarea[name="IIIC_1forcities_pdf_remark"]').val('');
+        $('textarea[name="IIIC_1forcities2_pdf_remark"]').val('');
+        $('textarea[name="IIIC_1forcities3_pdf_remark"]').val('');
+        $('textarea[name="IIIC_2formuni1_pdf_remark"]').val('');
+        $('textarea[name="IIIC_2formuni2_pdf_remark"]').val('');
+        $('textarea[name="IIIC_2formuni3_pdf_remark"]').val('');
+        $('textarea[name="IIID_pdf_remark"]').val('');
+        $('textarea[name="IV_forcities_pdf_remark"]').val('');
+        $('textarea[name="IV_muni_pdf_remark"]').val('');
+        $('textarea[name="V_1_pdf_remark"]').val('');
+        $('textarea[name="threepeoplesorg_remark"]').val('');
     }
 
     // Add event listeners for rate inputs and remark textareas

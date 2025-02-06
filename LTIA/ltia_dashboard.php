@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user' || !isset(
     header("Location: login.php");
     exit;
 }
-    
 function getPerformanceRating($total) {
     if ($total >= 100) return "Outstanding";
     if ($total >= 90) return "Very Satisfactory";
@@ -14,26 +13,46 @@ function getPerformanceRating($total) {
     if ($total >= 70) return "Poor";
     return "Very Poor";
 }
+
 $year = isset($_GET['year']) ? (int)$_GET['year'] : date('Y'); // Default to the current year
 
 try {
+    // Fetch the municipality_id of the logged-in user
+    $municipalityQuery = "
+        SELECT municipality_id 
+        FROM users 
+        WHERE id = :user_id
+    ";
+    $stmt = $conn->prepare($municipalityQuery);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
+    $municipalityRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$municipalityRow) {
+        throw new Exception("User's municipality not found.");
+    }
+
+    $municipality_id = $municipalityRow['municipality_id'];
+
+    // Fetch the average total of all users in the same municipality
     $query = "
-        SELECT `total`, `daterate`
-        FROM `movrate`
-        WHERE EXTRACT(YEAR FROM `daterate`) = :year 
-          AND `barangay` = :barangay
+        SELECT AVG(movrate.total) AS avg_total
+        FROM movrate
+        JOIN users ON movrate.user_id = users.id
+        WHERE users.municipality_id = :municipality_id 
+          AND movrate.year = :year
     ";
     $stmt = $conn->prepare($query);
+    $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
     $stmt->bindParam(':year', $year, PDO::PARAM_INT);
-    $stmt->bindParam(':barangay', $_SESSION['barangay_id'], PDO::PARAM_INT);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $total = $row ? $row['total'] : "N/A";
-    $performance = $row ? getPerformanceRating($total) : "No Rating yet";
+    $avg_total = $row ? number_format($row['avg_total'], 2) : "N/A";
+    $performance = $row && $row['avg_total'] !== null ? getPerformanceRating($row['avg_total']) : "No Rating yet";
 
     // Fetch distinct years for dropdown
-    $yearQuery = "SELECT DISTINCT EXTRACT(YEAR FROM `daterate`) AS year FROM `movrate` ORDER BY year DESC";
+    $yearQuery = "SELECT DISTINCT `year` FROM `movrate` ORDER BY year DESC";
     $yearResult = $conn->query($yearQuery);
     $years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
 
@@ -50,9 +69,14 @@ try {
     $certification_data = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log("Database error: " . $e->getMessage());
-    $total = "Error";
+    $avg_total = "Error";
+    $performance = "Error fetching data";
+} catch (Exception $e) {
+    error_log("Application error: " . $e->getMessage());
+    $avg_total = "Error";
     $performance = "Error fetching data";
 }
+
 $barangay = $_SESSION['barangay_id']; // Assign barangay from session
 
 // Process form submission
@@ -124,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>LTIA</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/styles.min.css" />
+    <link rel="stylesheet" href="../assets/css/styles.min.css" />
 </head>
 <style>
                .form-container {
@@ -192,6 +216,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 20px; /* Space from the form content */
         }
 </style>
+  <!-- Bootstrap JS and dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        // Pass PHP variable to JavaScript
+        const message = "<?php echo isset($message) ? htmlspecialchars($message, ENT_QUOTES, 'UTF-8') : ''; ?>";
+
+        // Update modal content and show it
+        document.addEventListener('DOMContentLoaded', function() {
+            if (message) {
+                // Update the modal body with the message
+                document.getElementById('modalBody').textContent = message;
+
+                // Show the modal
+                const myModal = new bootstrap.Modal(document.getElementById('messageModal'), {});
+                myModal.show();
+            }
+        });
+    </script>
 <body class="bg-[#E8E8E7]">
     <!-- Sidebar -->
     <?php include "../user_sidebar_header.php"; ?>
@@ -236,16 +280,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         
                     <div class="d-flex justify-content-between align-items-center mb-5">
                         <button type="button" class="btn btn-circle bg-primary text-white d-flex flex-column justify-content-center align-items-center shadow-lg ms-5" onclick="location.href='form2movview.php';" style="width: 150px; height: 150px; font-size: 1.5rem;">
-                            <span class="fw-bold fs-2"><?php echo htmlspecialchars($total); ?></span> 
-                            <span class="fs-6"><?php echo htmlspecialchars($performance); ?></span>
+                        <span class="fw-bold fs-2"><?php echo htmlspecialchars($avg_total); ?></span> 
+                        <span class="fs-6"><?php echo htmlspecialchars($performance); ?></span>
                         </button>
                     </div>
+ <!-- Modal -->
+ <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Message will be inserted here dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" style="color: #003366;"data-bs-dismiss="modal">Okay</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
                     <!-- Text Section -->          
 <div class="flex flex-col text-justify w-75 me-5">
     <p class="h3 fw-bold" style="color: #003366;">The Lupong Tagapamayapa Incentives Award (LTIA)</p>
     <p class="text-muted" style="font-size: 1rem;">
-        The Lupong Tagapamayapa Incentives Award (LTIA) was conceptualized and implemented in 1982 and has been elevated to a Presidential Award pursuant to Executive Order No. 394 s. 1997 entitled “Establishing the Lupong Tagapamayapa Incentives Award.”
+        The Lupong Tagapamayapa Incentives Award (LTIA) was conceptualized and implemented in 1982 and has been elevated to a Presidential Award pursuant to Executive Order No. 394 s. 1997 entitled "Establishing the Lupong Tagapamayapa Incentives Award."
     </p>
     <p class="text-muted" style="font-size: 1rem;">
         This award is an avenue for granting economic and other incentives to the Lupong Tagapamayapa (LT) for their outstanding contributions to attaining the objectives of the Katarungang Pambarangay (KP).

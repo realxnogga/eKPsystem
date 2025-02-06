@@ -1,9 +1,10 @@
 <?php
 session_start();
 include '../connection.php';
+// include '../functions.php';
 
-if (!isset($_SESSION['user_id'], $_SESSION['user_type'], $_SESSION['barangay_id']) || $_SESSION['user_type'] !== 'user') {
-    header("Location: ../login.php?error=session_expired");
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
+    header("Location: ../login.php");
     exit;
 }
 
@@ -20,11 +21,123 @@ $allowed_columns = [
     'V_1_pdf_File', 'threepeoplesorg_pdf_File'
 ];
 
-// Get selected year
-$currentYear = date('Y');
-$selectedYear = isset($_GET['year']) && ctype_digit($_GET['year']) ? $_GET['year'] : $currentYear;
+// Fetch uploaded files from the database
+$sql = "SELECT " . implode(', ', $allowed_columns) . " FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+$stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$stmt->execute();
+$row = $stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $row as an empty array if no records found
 
-// Fetch uploaded files
+// Fetch rates from the movrate table
+$rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id";
+$rate_stmt = $conn->prepare($rate_sql);
+$rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$rate_stmt->execute();
+$rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $rate_row as an empty array if no records found
+
+// Fetch remarks from the movremark table
+$remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id";
+$remark_stmt = $conn->prepare($remark_sql);
+$remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$remark_stmt->execute();
+$remark_row = $remark_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $remark_row as an empty array if no records found
+
+$file_changed = false; // Flag to track if any files have changed
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $upload_dir = 'movfolder/';
+
+    foreach ($allowed_columns as $column) {
+        if (isset($_FILES[$column]) && $_FILES[$column]['error'] === UPLOAD_ERR_OK) {
+            $file_name = time() . '_' . basename($_FILES[$column]['name']);
+            $file_path = $upload_dir . $file_name;
+
+            if (move_uploaded_file($_FILES[$column]['tmp_name'], $file_path)) {
+                // New file uploaded, use the new file name
+                $row[$column] = $file_name;
+                $file_changed = true; // Mark file as changed
+            }
+        } else {
+            // No new file uploaded, retain the old file
+            if (isset($_POST[$column . '_hidden'])) {
+                $row[$column] = $_POST[$column . '_hidden'];
+            }
+        }
+    }
+
+    // Prepare SQL for updating the file paths
+ // Make sure $selectedYear is set from the form submission or session
+$selectedYear = isset($_POST['year']) ? $_POST['year'] : date('Y');
+
+$update_sql = "UPDATE mov SET ";
+$bind_params = [];
+$columns_to_update = [];
+
+// Loop through allowed columns, but only update those where a file was uploaded
+foreach ($allowed_columns as $column) {
+    if (!empty($_FILES[$column]['name'])) { // Check if the column has a new file
+        $columns_to_update[] = "$column = ?";
+        $bind_params[] = $row[$column]; // Store new file path
+    }
+}
+
+// Proceed only if at least one column is updated
+if (!empty($columns_to_update)) {
+    $update_sql .= implode(', ', $columns_to_update);
+    $update_sql .= " WHERE user_id = ? AND barangay_id = ? AND year = ?";
+
+    $update_stmt = $conn->prepare($update_sql);
+
+    // Bind dynamically selected parameters
+    $param_index = 1;
+    foreach ($bind_params as $param) {
+        $update_stmt->bindParam($param_index++, $param, PDO::PARAM_STR);
+    }
+    $update_stmt->bindParam($param_index++, $_SESSION['user_id'], PDO::PARAM_INT);
+    $update_stmt->bindParam($param_index++, $_SESSION['barangay_id'], PDO::PARAM_INT);
+    $update_stmt->bindParam($param_index++, $selectedYear, PDO::PARAM_INT);
+
+    // Debugging: Check SQL query and values
+    error_log("SQL Query: " . $update_sql);
+    error_log("Bound Values: " . print_r($bind_params, true));
+
+    if ($update_stmt->execute()) {
+        echo "<script>alert('Files updated successfully for the year $selectedYear!');</script>";
+    } else {
+        echo "<script>alert('Error updating files. Please try again.');</script>";
+        error_log("Error: " . print_r($update_stmt->errorInfo(), true));
+    }
+} else {
+    echo "<script>document.getElementById('noChangesMessage').innerHTML = 'No file changes detected for the selected year.';</script>";
+}
+
+// Redirect to prevent form resubmission
+header("Location: " . $_SERVER['REQUEST_URI']);
+exit;
+
+}
+// Current year
+$currentYear = date('Y');
+
+// Fetch unique years from the database
+$yearQuery = "SELECT DISTINCT year FROM mov
+              UNION SELECT DISTINCT YEAR(year) FROM movdraft_file
+              UNION SELECT DISTINCT YEAR(year) FROM movrate
+              UNION SELECT DISTINCT YEAR(year) FROM movremark";
+$yearResult = $conn->query($yearQuery);
+$years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
+
+// Ensure current year is in the list even if there's no data
+if (!in_array($currentYear, $years)) {
+    $years[] = $currentYear;
+}
+
+// Sort years in descending order
+rsort($years);
+
+// Check if a specific year is selected, otherwise default to the current year
+$selectedYear = isset($_GET['year']) ? $_GET['year'] : $currentYear;
 $sql = "SELECT * FROM mov WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
@@ -33,69 +146,9 @@ $stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 
-// Fetch rates and remarks
-$rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id AND year = :year";
-$remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id AND year = :year";
 
-$rate_stmt = $conn->prepare($rate_sql);
-$remark_stmt = $conn->prepare($remark_sql);
+//cities or municipality//
 
-$rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-$rate_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
-$remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-$remark_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
-
-$rate_stmt->execute();
-$remark_stmt->execute();
-
-$rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-$remark_row = $remark_stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $upload_dir = 'movfolder/';
-    foreach ($allowed_columns as $column) {
-        if (isset($_FILES[$column]) && $_FILES[$column]['error'] === UPLOAD_ERR_OK) {
-            $file_name = time() . '_' . basename($_FILES[$column]['name']);
-            $file_path = $upload_dir . $file_name;
-
-            if (move_uploaded_file($_FILES[$column]['tmp_name'], $file_path)) {
-                $row[$column] = $file_name;
-            }
-        } else {
-            $row[$column] = $_POST[$column . '_hidden'] ?? null;
-        }
-    }
-
-    $update_sql = "UPDATE mov SET ";
-    foreach ($allowed_columns as $column) {
-        $update_sql .= "$column = :$column, ";
-    }
-    $update_sql = rtrim($update_sql, ', ') . " WHERE user_id = :user_id AND barangay_id = :barangay_id AND year = :year";
-
-    $update_stmt = $conn->prepare($update_sql);
-    foreach ($allowed_columns as $column) {
-        $update_stmt->bindValue(":$column", $row[$column] ?? null, PDO::PARAM_STR);
-    }
-    $update_stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $update_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-    $update_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
-
-    if ($update_stmt->execute()) {
-        header("Location: " . $_SERVER['PHP_SELF'] . "?year=" . $selectedYear);
-        exit;
-    } else {
-        error_log("Update failed: " . print_r($update_stmt->errorInfo(), true));
-    }
-}
-
-// Fetch years
-$yearQuery = "SELECT DISTINCT year FROM mov";
-$yearResult = $conn->query($yearQuery);
-$years = $yearResult->fetchAll(PDO::FETCH_COLUMN);
-if (!in_array($currentYear, $years)) {
-    $years[] = $currentYear;
-}
-rsort($years);
 // Define user and barangay ID from session
 $userID = $_SESSION['user_id'];
 $barangayID = $_SESSION['barangay_id'] ?? '';
@@ -114,7 +167,6 @@ $checkStmt->execute();
 if ($checkStmt->fetchColumn() > 0) {
     $submissionExists = true;
 }
-
 // Query to fetch the barangay name and municipality ID
 if (!empty($barangayID)) {
     $barangayQuery = "SELECT barangay_name, municipality_id FROM barangays WHERE id = :barangay_id";
@@ -128,7 +180,6 @@ if (!empty($barangayID)) {
         $municipalityID = $barangayResult['municipality_id'];
     }
 }
-
 // Query to fetch the municipality name
 if (!empty($municipalityID)) {
     $municipalityQuery = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
@@ -137,20 +188,123 @@ if (!empty($municipalityID)) {
     $municipalityStmt->execute();
     $municipalityName = $municipalityStmt->fetchColumn() ?: 'Unknown';
 }
-
 ?>
+<!--script for toggling submit button and cancel button-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function toggleSubmitButton(input, submitId, cancelId) {
+    var submitButton = document.getElementById(submitId);
+    var cancelButton = document.getElementById(cancelId);
 
+    if (input.files.length > 0) {
+        submitButton.style.display = "inline-block";
+        cancelButton.style.display = "inline-block";
+    } else {
+        submitButton.style.display = "none";
+        cancelButton.style.display = "none";
+    }
+}
+function clearInput(inputId, submitId, cancelId) {
+    var input = document.getElementById(inputId);
+    var submitButton = document.getElementById(submitId);
+    var cancelButton = document.getElementById(cancelId);
 
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LTIA</title>
-  <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
-  <link rel="stylesheet" href="css/td_hover.css">
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    input.value = ""; // Clear the file input
+    submitButton.style.display = "none";
+    cancelButton.style.display = "none";
+}
+document.addEventListener("DOMContentLoaded", function () {
+    // Attach event listeners to all submit buttons
+    document.querySelectorAll("button[type='submit']").forEach(button => {
+        button.addEventListener("click", function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            var columnName = this.value; // Get column name from button value
+            var form = this.closest("form"); // Find the nearest form
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You are about to update this column!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, update it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit(); // Submit form after confirmation
+
+                    // Show success message after submission
+                    Swal.fire({
+                        title: "Updated!",
+                        text: columnName + " has been updated.",
+                        icon: "success",
+                        confirmButtonColor: "#3085d6"
+                    });
+                }
+            });
+        });
+    });
+});
+//hide the input file if not the current year//
+document.addEventListener("DOMContentLoaded", function () {
+    var currentYear = new Date().getFullYear(); // Get the current year
+    var selectedYear = document.getElementById("year").value; // Get the selected year
+
+    // Get all file input and button elements
+    var fileInputs = document.querySelectorAll('td input[type="file"]');
+    var updateButtons = document.querySelectorAll('td button[name="update"]');
+    var cancelButtons = document.querySelectorAll('td button[id^="cancel"]');
+    var fileColumnHeader = document.querySelector("th:nth-child(5)"); // The "Choose Files to Replace MOV" column header
+    var fileCells = document.querySelectorAll("td:nth-child(5)"); // All file input cells
+
+    if (selectedYear != currentYear) {
+        // Hide the file column header
+        if (fileColumnHeader) {
+            fileColumnHeader.style.display = "none";
+        }
+        // Hide file input cells
+        fileCells.forEach(cell => {
+            cell.style.display = "none";
+        });
+    } else {
+        // Show the file column header
+        if (fileColumnHeader) {
+            fileColumnHeader.style.display = "";
+        }
+        // Show file input cells
+        fileCells.forEach(cell => {
+            cell.style.display = "";
+        });
+    }
+
+    // Function to toggle submit and cancel buttons when a file is selected
+    window.toggleSubmitButton = function (input, submitBtnId, cancelBtnId) {
+        var submitButton = document.getElementById(submitBtnId);
+        var cancelButton = document.getElementById(cancelBtnId);
+        if (input.files.length > 0) {
+            submitButton.style.display = "inline-block";
+            cancelButton.style.display = "inline-block";
+        } else {
+            submitButton.style.display = "none";
+            cancelButton.style.display = "none";
+        }
+    };
+
+    // Function to clear file input and hide buttons
+    window.clearInput = function (inputId, submitBtnId, cancelBtnId) {
+        var input = document.getElementById(inputId);
+        var submitButton = document.getElementById(submitBtnId);
+        var cancelButton = document.getElementById(cancelBtnId);
+
+        input.value = ""; // Clear the file input
+        submitButton.style.display = "none";
+        cancelButton.style.display = "none";
+    };
+});
+
+//cities or municipality//
+document.addEventListener('DOMContentLoaded', function () {
       const cities = ["Calamba", "Biñan", "San Pedro", "Sta Rosa", "Cabuyao", "San Pablo"];
       const municipalities = ["Bay", "Alaminos", "Calauan", "Los Baños"];
 
@@ -185,7 +339,18 @@ if (!empty($municipalityID)) {
         document.querySelectorAll('#municipality-row').forEach(row => row.style.display = '');
       }
     });
-  </script>
+
+
+
+</script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LTIA</title>
+  <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+  <link rel="stylesheet" href="css/td_hover.css">
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -226,22 +391,6 @@ if (!empty($municipalityID)) {
                         $stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
                         $stmt->execute();
                         $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
-                        // Fetch rates from the movrate table for the selected year
-                      $rate_sql = "SELECT * FROM movrate WHERE barangay = :barangay_id AND year = :year";
-                      $rate_stmt = $conn->prepare($rate_sql);
-                      $rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-                      $rate_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
-                      $rate_stmt->execute();
-                      $rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize as an empty array if no records found
-
-                      // Fetch remarks from the movremark table for the selected year
-                      $remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id AND year = :year";
-                      $remark_stmt = $conn->prepare($remark_sql);
-                      $remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-                      $remark_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
-                      $remark_stmt->execute();
-                      $remark_row = $remark_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize as an empty array if no records found
-
                         ?>
                         </h1>
                     </div>
@@ -254,7 +403,7 @@ if (!empty($municipalityID)) {
                           </button>
                             </li>
                         </ul>
-                    </div>  
+                    </div>
                 </div>
                 
                 <div class="container mt-5">
@@ -349,7 +498,7 @@ if (!empty($municipalityID)) {
     </td>
               </tr>
               <tr>
-                <td>c) Conciliation (15 days from initial confrontation with the Pangkat)</td>
+                <td>c) Conciliation (with extended period not to exceed another 15 days)</td>
                 <td>
                 <?php if (!empty($row['IA_2c_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_2c_pdf_File']; ?>">View</button>
@@ -428,7 +577,7 @@ if (!empty($municipalityID)) {
                onchange="toggleSubmitButton(this, 'submit8', 'cancel8')" />
               <input type="hidden" name="IB_1forcities_pdf_File_hidden" id="IB_1forcities_pdf_File_hidden" 
                value="<?php echo !empty($row['IB_1forcities_pdf_File']) ? htmlspecialchars($row['IB_1forcities_pdf_File']) : ''; ?>">
-          <button type="submit" name="update" value="IB_1forcities_pdf_File" id="submit2" 
+          <button type="submit" name="update" value="IB_1forcities_pdf_File" id="submit8" 
                 style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
           <button type="button" id="cancel8" onclick="clearInput('IB_1forcities_pdf_File', 'submit8', 'cancel8')" 
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
@@ -1096,6 +1245,7 @@ if (!empty($municipalityID)) {
             <th><?php echo isset($rate_row['total']) ? $rate_row['total'] : ' '; ?></th>
             <td></td>
               </tr>
+<<<<<<< HEAD
             </tbody>
           </table>
     </form>
@@ -1117,6 +1267,12 @@ if (!empty($municipalityID)) {
   </div>
 </div>
 
+=======
+            </tbody>  
+          </table>
+    </form>
+    
+>>>>>>> 5db5392e8d740ab8410000d0e81ac1ef6228590a
 <!-- Main modal -->
 <div id="large-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative w-full max-w-4xl max-h-full">
@@ -1143,12 +1299,6 @@ if (!empty($municipalityID)) {
 </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-    <?php if (!empty($message)) : ?>
-        var responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
-        responseModal.show();
-    <?php endif; ?>
-});
     $(document).ready(function() {
         $('.view-pdf').attr('data-modal-target', 'large-modal');
         $('.view-pdf').attr('data-modal-toggle', 'large-modal');
@@ -1159,38 +1309,6 @@ if (!empty($municipalityID)) {
 
         });
     });
-    function toggleSubmitButton(input, submitId, cancelId) {
-    const submitButton = document.getElementById(submitId);
-    const cancelButton = document.getElementById(cancelId);
-
-    if (input.files.length > 0) {
-        if (submitButton) submitButton.style.display = 'inline-block'; // Show Update button
-        if (cancelButton) cancelButton.style.display = 'inline-block'; // Show Cancel button
-    } else {
-        if (submitButton) submitButton.style.display = 'none'; // Hide Update button
-        if (cancelButton) cancelButton.style.display = 'none'; // Hide Cancel button
-    }
-}
-
-function clearInput(inputId, submitId, cancelId) {
-    const input = document.getElementById(inputId);
-    const submitButton = document.getElementById(submitId);
-    const cancelButton = document.getElementById(cancelId);
-
-    if (input) input.value = ''; // Clear file input
-    if (submitButton) submitButton.style.display = 'none'; // Hide Update button
-    if (cancelButton) cancelButton.style.display = 'none'; // Hide Cancel button
-}
-
-
-function validateFileType(input) {
-    const file = input.files[0];
-    if (file && !file.name.endsWith('.pdf')) {
-        alert('Please upload a valid PDF file.');
-        input.value = ''; // Clear the invalid file
-    }
-}
-  
   </script>
 </body>
 </html>

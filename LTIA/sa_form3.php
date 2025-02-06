@@ -62,7 +62,7 @@ $stmt->execute();
 $assessment_members = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Fetch available years from `movrate` table for dropdown
-$query = "SELECT DISTINCT YEAR(daterate) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
+$query = "SELECT DISTINCT year FROM movrate ORDER BY year DESC"; // Changed from YEAR(daterate)
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $years = $stmt->fetchAll(PDO::FETCH_COLUMN);
@@ -70,9 +70,11 @@ $years = $stmt->fetchAll(PDO::FETCH_COLUMN);
 // Get selected year from request or default to the latest year
 $selectedYear = $_GET['year'] ?? $years[0];
 
-// Filter dataset by selected year
+// Modify the query to calculate average for duplicate entries
 $query = "
-    SELECT b.barangay_name AS barangay, m.total 
+    SELECT b.barangay_name AS barangay, 
+           AVG(m.total) as average_total,
+           COUNT(*) as entry_count
     FROM barangays b
     JOIN movrate m ON b.id = m.barangay
     WHERE b.municipality_id = :municipality_id
@@ -83,6 +85,43 @@ $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
 $stmt->execute();
 $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Add this after fetching barangay_ratings
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_averages'])) {
+    try {
+        // Begin transaction
+        $conn->beginTransaction();
+        
+        // Use INSERT ... ON DUPLICATE KEY UPDATE
+        $upsert_query = "INSERT INTO average (mov_id, barangay, avg, year) 
+                        SELECT 
+                            mv.id as mov_id,
+                            b.id as barangay,
+                            AVG(m.total) as avg,
+                            :year
+                        FROM movrate m 
+                        JOIN barangays b ON m.barangay = b.id
+                        JOIN mov mv ON mv.barangay_id = b.id AND mv.year = :year
+                        WHERE b.municipality_id = :municipality_id
+                        AND m.year = :year
+                        GROUP BY b.id, mv.id
+                        HAVING mov_id IS NOT NULL
+                        ON DUPLICATE KEY UPDATE
+                            avg = VALUES(avg),
+                            year = VALUES(year)";
+                        
+        $stmt = $conn->prepare($upsert_query);
+        $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+        $stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $conn->commit();
+        echo "<script>alert('Averages saved/updated successfully!');</script>";
+    } catch (PDOException $e) {
+        $conn->rollBack();
+        echo "<script>alert('Error saving averages: " . addslashes($e->getMessage()) . "');</script>";
+    }
+}
 
 ?>
 <!doctype html>
@@ -218,16 +257,25 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php 
               $num = 1;
               $rank = 1;
-              foreach ($barangay_ratings as $row): ?>
+              foreach ($barangay_ratings as $row): 
+                  $average_total = round($row['average_total'], 2); // Round to 2 decimal places
+                  ?>
                   <tr>
                       <td><?php echo $num++; ?>. <?php echo htmlspecialchars($row['barangay']); ?></td>
-                      <td><?php echo htmlspecialchars($row['total']); ?></td>
-                      <td><?php echo getAdjectivalRating($row['total']); ?></td>
+                      <td><?php echo htmlspecialchars($average_total); ?></td>
+                      <td><?php echo getAdjectivalRating($average_total); ?></td>
                       <td><?php echo $rank++; ?></td>
                   </tr>
               <?php endforeach; ?>
           </tbody>
           </table>
+          <form method="POST" class="inline">
+                      <button type="submit" name="save_averages" 
+                              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                          Save Averages
+                      </button>
+                  </form>
+              </div>
           <br>
                     <b> C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION </b><br><br>
                     <div class="certification-section text-center">
@@ -250,6 +298,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 <br>
                 <br>
+                <div class="text-center mt-4">
           </div>
         </div>
       </div>
@@ -262,5 +311,43 @@ document.addEventListener('DOMContentLoaded', function () {
 }.spacingtabs2 {
     padding-left: 2em; /* Adjust as needed for spacing */
 }
+
+.barangay-select {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    width: 100%;
+}
+
+.barangay-select option {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.barangay-select:focus {
+    outline: none;
+    border-color: #666;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.inline {
+    display: inline-block;
+}
 </style>
+<script>
+document.querySelectorAll('.barangay-select').forEach(select => {
+    select.addEventListener('change', function() {
+        // You can add any additional functionality here if needed
+    });
+});
+</script>
 </html>

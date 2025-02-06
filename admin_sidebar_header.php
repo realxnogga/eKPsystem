@@ -95,10 +95,6 @@ function traverseDirectory()
               </li>
 
               <li>
-                <a href="<?php echo traverseDirectory(); ?>admin_manual.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Admin Manual</a>
-              </li>
-
-              <li>
                 <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
               </li>
             </ul>
@@ -143,7 +139,7 @@ function traverseDirectory()
       </li>
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>admin_ltia_assessor_req.php" class="<?php echo isActive('admin_ltia_assessor_req.php') . ' ' . isActive('admin_manage_ltia_acc_req.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>admin_ltia_assessor_req.php" class="<?php echo isActive('admin_ltia_assessor_req.php') . ' ' . isActive('admin_manage_ltia_acc_req.php') ; ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-certificate-2 text-2xl"></i>
           <span>LTIA assesor request</span>
         </a>
