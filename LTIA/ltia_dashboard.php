@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user' || !isset(
     header("Location: login.php");
     exit;
 }
-    
+
 function getPerformanceRating($total) {
     if ($total >= 100) return "Outstanding";
     if ($total >= 90) return "Very Satisfactory";
@@ -14,23 +14,43 @@ function getPerformanceRating($total) {
     if ($total >= 70) return "Poor";
     return "Very Poor";
 }
+
 $year = isset($_GET['year']) ? (int)$_GET['year'] : date('Y'); // Default to the current year
 
 try {
+    // Fetch the municipality_id of the logged-in user
+    $municipalityQuery = "
+        SELECT municipality_id 
+        FROM users 
+        WHERE id = :user_id
+    ";
+    $stmt = $conn->prepare($municipalityQuery);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
+    $municipalityRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$municipalityRow) {
+        throw new Exception("User's municipality not found.");
+    }
+
+    $municipality_id = $municipalityRow['municipality_id'];
+
+    // Fetch the average total of all users in the same municipality
     $query = "
-        SELECT `total`, `year`
-        FROM `movrate`
-        WHERE `year` = :year 
-          AND `barangay` = :barangay
+        SELECT AVG(movrate.total) AS avg_total
+        FROM movrate
+        JOIN users ON movrate.user_id = users.id
+        WHERE users.municipality_id = :municipality_id 
+          AND movrate.year = :year
     ";
     $stmt = $conn->prepare($query);
+    $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
     $stmt->bindParam(':year', $year, PDO::PARAM_INT);
-    $stmt->bindParam(':barangay', $_SESSION['barangay_id'], PDO::PARAM_INT);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $total = $row ? $row['total'] : "N/A";
-    $performance = $row ? getPerformanceRating($total) : "No Rating yet";
+    $avg_total = $row ? number_format($row['avg_total'], 2) : "N/A";
+    $performance = $row && $row['avg_total'] !== null ? getPerformanceRating($row['avg_total']) : "No Rating yet";
 
     // Fetch distinct years for dropdown
     $yearQuery = "SELECT DISTINCT `year` FROM `movrate` ORDER BY year DESC";
@@ -50,9 +70,14 @@ try {
     $certification_data = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log("Database error: " . $e->getMessage());
-    $total = "Error";
+    $avg_total = "Error";
+    $performance = "Error fetching data";
+} catch (Exception $e) {
+    error_log("Application error: " . $e->getMessage());
+    $avg_total = "Error";
     $performance = "Error fetching data";
 }
+
 $barangay = $_SESSION['barangay_id']; // Assign barangay from session
 
 // Process form submission
@@ -256,8 +281,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         
                     <div class="d-flex justify-content-between align-items-center mb-5">
                         <button type="button" class="btn btn-circle bg-primary text-white d-flex flex-column justify-content-center align-items-center shadow-lg ms-5" onclick="location.href='form2movview.php';" style="width: 150px; height: 150px; font-size: 1.5rem;">
-                            <span class="fw-bold fs-2"><?php echo htmlspecialchars($total); ?></span> 
-                            <span class="fs-6"><?php echo htmlspecialchars($performance); ?></span>
+                        <span class="fw-bold fs-2"><?php echo htmlspecialchars($avg_total); ?></span> 
+                        <span class="fs-6"><?php echo htmlspecialchars($performance); ?></span>
                         </button>
                     </div>
  <!-- Modal -->
