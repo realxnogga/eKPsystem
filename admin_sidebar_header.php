@@ -146,7 +146,6 @@ function traverseDirectory()
       </li>
       <hr class="my-1">
 
-
       <li>
         <a href="<?php echo traverseDirectory(); ?>admin_setting.php" class="<?php echo isActive('admin_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>

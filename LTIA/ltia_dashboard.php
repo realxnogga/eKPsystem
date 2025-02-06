@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user' || !isset(
     header("Location: login.php");
     exit;
 }
-
 function getPerformanceRating($total) {
     if ($total >= 100) return "Outstanding";
     if ($total >= 90) return "Very Satisfactory";

@@ -1232,10 +1232,34 @@ document.addEventListener('DOMContentLoaded', function () {
             <th><?php echo isset($rate_row['total']) ? $rate_row['total'] : ' '; ?></th>
             <td></td>
               </tr>
+<<<<<<< HEAD
+            </tbody>
+          </table>
+    </form>
+    <!-- Modal -->
+<div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="responseModalLabel">Notification</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <?php if (!empty($message)) echo htmlspecialchars($message); ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+=======
             </tbody>  
           </table>
     </form>
     
+>>>>>>> 5db5392e8d740ab8410000d0e81ac1ef6228590a
 <!-- Main modal -->
 <div id="large-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative w-full max-w-4xl max-h-full">

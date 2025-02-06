@@ -124,6 +124,10 @@ function traverseDirectory()
               </li>
 
               <li>
+                <a href="<?php echo traverseDirectory(); ?>user_manual.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">User Manual</a>
+              </li>
+
+              <li>
                 <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
               </li>
 
@@ -185,12 +189,12 @@ function traverseDirectory()
         </a>
       </li>
 
-      <li>
+      <!-- <li>
         <a href="<?php echo traverseDirectory(); ?>user_signed_documents.php" class="<?php echo isActive('user_signed_documents.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-writing-sign text-2xl"></i>
           <span>Confideration Corner</span>
         </a>
-      </li>
+      </li> -->
 
       <hr class="my-1">
       <li>
