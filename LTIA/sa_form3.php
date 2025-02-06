@@ -50,7 +50,8 @@ if (isset($_GET['municipality_id'])) {
           return "Very Poor";
       }
     }
-} else {
+} 
+else {
     echo "No municipality selected.";
     exit;
 }
@@ -78,7 +79,7 @@ $query = "
     FROM barangays b
     JOIN movrate m ON b.id = m.barangay
     WHERE b.municipality_id = :municipality_id
-      AND YEAR(m.daterate) = :selectedYear  -- use 'daterate' instead of 'date'
+      AND YEAR(m.year) = :selectedYear  -- use 'daterate' instead of 'date'
     ORDER BY m.total DESC";
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
@@ -190,14 +191,15 @@ document.addEventListener('DOMContentLoaded', function () {
               <i class="ti ti-building-community mr-2"> </i> Back
             </button>
                     <form method="get" action="">
-          <select name="year" onchange="this.form.submit()">
-            <?php foreach ($years as $year): ?>
-              <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
-                <?php echo htmlspecialchars($year); ?>
-              </option>
-            <?php endforeach; ?>
-          </select>
-        </form>
+                      <input type="hidden" name="municipality_id" value="<?php echo $municipality_id; ?>">
+                      <select name="year" onchange="this.form.submit()">
+                        <?php foreach ($years as $year): ?>
+                          <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
+                            <?php echo htmlspecialchars($year); ?>
+                          </option>
+                        <?php endforeach; ?>
+                      </select>
+                    </form>
           </div>
         </div>
       </div>
