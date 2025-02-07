@@ -57,12 +57,13 @@ try {
     }
 
     if ($user_type === 'assessor') {
-        // Get assessor's own rates for current year
+        // Get assessor's own rates for current year and current date only
         $rateQuery = "SELECT * FROM movrate 
                      WHERE mov_id = :mov_id 
                      AND barangay = :barangay_id 
                      AND user_id = :user_id 
                      AND user_type = 'assessor'
+                     AND DATE(created_at) = CURDATE()
                      AND YEAR(created_at) = :current_year
                      ORDER BY created_at DESC 
                      LIMIT 1";
@@ -74,12 +75,13 @@ try {
         $stmt->execute();
         $rates = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Get assessor's own remarks for current year
+        // Get assessor's own remarks for current year and current date only
         $remarkQuery = "SELECT * FROM movremark 
                        WHERE mov_id = :mov_id 
                        AND barangay = :barangay_id 
                        AND user_id = :user_id 
                        AND user_type = 'assessor'
+                       AND DATE(created_at) = CURDATE()
                        AND YEAR(created_at) = :current_year
                        ORDER BY created_at DESC 
                        LIMIT 1";
@@ -91,11 +93,12 @@ try {
         $stmt->execute();
         $remarks = $stmt->fetch(PDO::FETCH_ASSOC);
     } else {
-        // For admin, get only admin ratings and remarks for current year
+        // For admin, get only admin ratings and remarks for current year and current date
         $rateQuery = "SELECT * FROM movrate 
                      WHERE mov_id = :mov_id 
                      AND barangay = :barangay_id
                      AND user_type = 'admin'
+                     AND DATE(created_at) = CURDATE()
                      AND YEAR(created_at) = :current_year
                      ORDER BY created_at DESC 
                      LIMIT 1";
@@ -110,6 +113,7 @@ try {
                        WHERE mov_id = :mov_id 
                        AND barangay = :barangay_id
                        AND user_type = 'admin'
+                       AND DATE(created_at) = CURDATE()
                        AND YEAR(created_at) = :current_year
                        ORDER BY created_at DESC 
                        LIMIT 1";
