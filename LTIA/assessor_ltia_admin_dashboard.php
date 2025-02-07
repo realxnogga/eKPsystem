@@ -32,9 +32,11 @@ $yearQuery = "SELECT DISTINCT year FROM movrate
                   SELECT id FROM barangays 
                   WHERE municipality_id = :municipality_id
               ) 
+              AND user_id = :user_id
               ORDER BY year DESC";
 $yearStmt = $conn->prepare($yearQuery);
 $yearStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$yearStmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
 $yearStmt->execute();
 $years = $yearStmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -43,17 +45,18 @@ if (!in_array($currentYear, $years)) {
     array_unshift($years, $currentYear);
 }
 
-// Fetch barangays and total scores for the selected year
+// Fetch barangays and scores for the selected year
 $query = "
 SELECT b.barangay_name, COALESCE(m.total, 0) AS total 
 FROM barangays b 
-LEFT JOIN movrate m ON b.id = m.barangay AND m.year = :year
+LEFT JOIN movrate m ON b.id = m.barangay AND m.year = :year AND m.user_id = :user_id
 WHERE b.municipality_id = :municipality_id
 ";
 
 $stmt = $conn->prepare($query);
 $stmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $stmt->bindValue(':year', $selectedYear, PDO::PARAM_INT);
+$stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
 $stmt->execute();
 
 $barangays = [];
