@@ -24,9 +24,14 @@ function getPerformanceRating($total) {
         return "Very Poor";
     }
 }
-  
+
 // Fetch available years for the dropdown
-$yearQuery = "SELECT DISTINCT year FROM movrate WHERE barangay IN (SELECT id FROM barangays WHERE municipality_id = :municipality_id) ORDER BY year DESC";
+$yearQuery = "SELECT DISTINCT year FROM average 
+              WHERE barangay IN (
+                  SELECT id FROM barangays 
+                  WHERE municipality_id = :municipality_id
+              ) 
+              ORDER BY year DESC";
 $yearStmt = $conn->prepare($yearQuery);
 $yearStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $yearStmt->execute();
@@ -37,11 +42,11 @@ if (!in_array($currentYear, $years)) {
     array_unshift($years, $currentYear);
 }
 
-// Fetch barangays and total scores for the selected year
+// Fetch barangays and average scores for the selected year
 $query = "
-SELECT b.barangay_name, COALESCE(m.total, 0) AS total 
+SELECT b.barangay_name, COALESCE(a.avg, 0) AS total 
 FROM barangays b 
-LEFT JOIN movrate m ON b.id = m.barangay AND m.year = :year
+LEFT JOIN average a ON b.id = a.barangay AND a.year = :year
 WHERE b.municipality_id = :municipality_id
 ";
 
