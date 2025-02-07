@@ -58,7 +58,20 @@ $rate_stmt = $conn->prepare($rate_sql);
 $rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
 $rate_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 $rate_stmt->execute();
-$rate_row = $rate_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $rate_row as an empty array if no records found
+$rate_rows = $rate_stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all rows
+
+// Sum up the rates
+$rate_sums = [];
+foreach ($rate_rows as $rate_row) {
+    foreach ($rate_row as $key => $value) {
+        if (strpos($key, '_rate') !== false) {
+            if (!isset($rate_sums[$key])) {
+                $rate_sums[$key] = 0;
+            }
+            $rate_sums[$key] += $value;
+        }
+    }
+}
 
 // Fetch remarks from the movremark table
 $remark_sql = "SELECT * FROM movremark WHERE barangay = :barangay_id AND year = :year";
@@ -66,7 +79,17 @@ $remark_stmt = $conn->prepare($remark_sql);
 $remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
 $remark_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 $remark_stmt->execute();
-$remark_row = $remark_stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $remark_row as an empty array if no records found
+$remark_rows = $remark_stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all rows
+
+// Fetch assessor names
+$assessor_sql = "SELECT id, assessor_type FROM users WHERE user_type = 'assessor'";
+$assessor_stmt = $conn->prepare($assessor_sql);
+$assessor_stmt->execute();
+$assessors = $assessor_stmt->fetchAll(PDO::FETCH_ASSOC);
+$assessor_names = [];
+foreach ($assessors as $assessor) {
+    $assessor_names[$assessor['id']] = $assessor['assessor_type'];
+}
 
 $file_changed = false; // Flag to track if any files have changed
 
@@ -179,6 +202,7 @@ if (!empty($municipalityID)) {
     $municipalityName = $municipalityStmt->fetchColumn() ?: 'Unknown';
 }
 ?>
+
 <!--script for toggling submit button and cancel button-->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
@@ -227,10 +251,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Show success message after submission
                     Swal.fire({
                         title: "Updated!",
-                        text: columnName + " has been updated.",
+                        text: "File has been updated.",
                         icon: "success",
-                        confirmButtonColor: "#3085d6"
-                    });
+                        timer: 115000,
+                        showConfirmButton: false
+
+                      });
                 }
             });
         });
@@ -329,6 +355,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('#municipality-row').forEach(row => row.style.display = '');
       }
     });
+
 </script>
 <!doctype html>
 <html lang="en">
@@ -338,6 +365,66 @@ document.addEventListener('DOMContentLoaded', function () {
   <title>LTIA</title>
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <link rel="stylesheet" href="css/td_hover.css">
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  
+  <style>
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-info:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+}
+
+.update-btn {
+    display: none;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.update-btn:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.cancel-btn {
+    display: none;
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.cancel-btn:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+.comment {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+.comment strong {
+    color: #333;
+}
+.comment p {
+    margin: 0;
+    color: #555;
+}
+</style>
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -353,16 +440,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             <img src="images/dilglogo.png" alt="DILG Logo" class="h-20" />
                         </div>
                         <h1 class="text-xl font-bold">
-                Lupong Tagapamayapa Incentives Award (LTIA)   
-<form method="get" action="" class="inline-block">
-    <select name="year" id="year" onchange="this.form.submit()">
-        <?php foreach ($years as $year) : ?>
-            <option value="<?= $year ?>" <?= $year == $selectedYear ? 'selected' : '' ?>>
-                <?= $year ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-</form>
+                Lupong Tagapamayapa Incentives Award (LTIA)
+                        <form method="get" action=""  class="inline-block">
+                        <select name="year" id="year" onchange="this.form.submit()">
+                            <?php foreach ($years as $year) : ?>
+                                <option value="<?= $year ?>" <?= $year == $selectedYear ? 'selected' : '' ?>>
+                                    <?= $year ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </form> 
                     <hr class="my-2">
             <span>Barangay </span> 
                   <span ><?= htmlspecialchars($barangayName, ENT_QUOTES, 'UTF-8') ?></span>, 
@@ -418,8 +505,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IA_1a_pdf_rate']) ? $rate_row['IA_1a_pdf_rate'] : 'Not rated'; ?></td> *sum all the IA_1a_pdf_rate rate_row here, and it should be the same account with the rate_row in the form2movview.php(apply to all)
-            <td><?php echo isset($remark_row['IA_1a_pdf_remark']) ? $remark_row['IA_1a_pdf_remark'] : 'No remarks'; ?></td> fetch all the assessor here that has remarks for this criteria, if not then dont sho (apply to all)
+            <td>
+              <?php echo isset($rate_sums['IA_1a_pdf_rate']) ? $rate_sums['IA_1a_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                                            <?php foreach ($remark_rows as $remark_row) : ?>
+                                                <?php if (!empty($remark_row['IA_1a_pdf_remark'])) : ?>
+                                                    <div class="comment">
+                                                        <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                                                        <p><?php echo htmlspecialchars($remark_row['IA_1a_pdf_remark']); ?></p>
+                                                    </div>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </td>
             <td class="text-center align-middle"><input type="file" id="IA_1a_pdf_File" name="IA_1a_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit1', 'cancel1')" />
               <input type="hidden" name="IA_1a_pdf_File_hidden" id="IA_1a_pdf_File_hidden" value="<?php echo !empty($row['IA_1a_pdf_File']) ? htmlspecialchars($row['IA_1a_pdf_File']) : ''; ?>">
           <button type="submit" name="update" value="IA_1a_pdf_File" id="submit1" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
@@ -435,8 +533,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IA_1b_pdf_rate']) ? $rate_row['IA_1b_pdf_rate'] : 'Not rated'; ?></td>*sum all the IA_1a_pdf_rate rate_row here, and it should be the same account with the rate_row in the form2movview.php()
-            <td><?php echo isset($remark_row['IA_1b_pdf_remark']) ? $remark_row['IA_1b_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IA_1b_pdf_rate']) ? $rate_sums['IA_1b_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+            <?php foreach ($remark_rows as $remark_row) : ?>
+                  <?php if (!empty($remark_row['IA_1b_pdf_remark'])) : ?>
+                    <div class="comment">
+                        <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                         <p><?php echo htmlspecialchars($remark_row['IA_1b_pdf_remark']); ?></p>
+                        </div>
+                    <?php endif; ?>
+                  <?php endforeach; ?>
+              </td>   
             <td class="text-center align-middle"><input type="file" id="IA_1b_pdf_File" name="IA_1b_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit2', 'cancel2')" />
               <input type="hidden" name="IA_1b_pdf_File_hidden" id="IA_1b_pdf_File_hidden" value="<?php echo !empty($row['IA_1b_pdf_File']) ? htmlspecialchars($row['IA_1b_pdf_File']) : ''; ?>">
           <button type="submit" name="update" value="IA_1b_pdf_File" id="submit2" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
@@ -459,8 +568,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IA_2a_pdf_rate']) ? $rate_row['IA_2a_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IA_2a_pdf_remark']) ? $remark_row['IA_2a_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IA_2a_pdf_rate']) ? $rate_sums['IA_2a_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IA_2a_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IA_2a_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IA_2a_pdf_File" name="IA_2a_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit3', 'cancel3')" />
               <input type="hidden" name="IA_2a_pdf_File_hidden" id="IA_2a_pdf_File_hidden" value="<?php echo !empty($row['IA_2a_pdf_File']) ? htmlspecialchars($row['IA_2a_pdf_File']) : ''; ?>">
           <button type="submit" name="update" value="IA_2a_pdf_File" id="submit3" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
@@ -476,8 +596,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IA_2b_pdf_rate']) ? $rate_row['IA_2b_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IA_2b_pdf_remark']) ? $remark_row['IA_2b_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IA_2b_pdf_rate']) ? $rate_sums['IA_2b_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IA_2b_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IA_2b_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IA_2b_pdf_File" name="IA_2b_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit4', 'cancel4')" />
               <input type="hidden" name="IA_2b_pdf_File_hidden" id="IA_2b_pdf_File_hidden" value="<?php echo !empty($row['IA_2b_pdf_File']) ? htmlspecialchars($row['IA_2b_pdf_File']) : ''; ?>">
           <button type="submit" name="update" value="IA_2b_pdf_File" id="submit4" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
@@ -493,8 +624,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IA_2c_pdf_rate']) ? $rate_row['IA_2c_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IA_2c_pdf_remark']) ? $remark_row['IA_2c_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IA_2c_pdf_rate']) ? $rate_sums['IA_2c_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IA_2c_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IA_2c_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IA_2c_pdf_File" name="IA_2c_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit5', 'cancel5')" />
               <input type="hidden" name="IA_2c_pdf_File_hidden" id="IA_2c_pdf_File_hidden" value="<?php echo !empty($row['IA_2c_pdf_File']) ? htmlspecialchars($row['IA_2c_pdf_File']) : ''; ?>">
           <button type="submit" name="update" value="IA_2c_pdf_File" id="submit5" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
@@ -510,8 +652,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No file uploaded</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IA_2d_pdf_rate']) ? $rate_row['IA_2d_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IA_2d_pdf_remark']) ? $remark_row['IA_2d_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IA_2d_pdf_rate']) ? $rate_sums['IA_2d_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IA_2d_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IA_2d_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IA_2d_pdf_File" name="IA_2d_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit6', 'cancel6')" />
               <input type="hidden" name="IA_2d_pdf_File_hidden" id="IA_2d_pdf_File_hidden" value="<?php echo !empty($row['IA_2d_pdf_File']) ? htmlspecialchars($row['IA_2d_pdf_File']) : ''; ?>">
           <button type="submit" name="update" value="IA_2d_pdf_File" id="submit6" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
@@ -527,8 +680,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IA_2e_pdf_rate']) ? $rate_row['IA_2e_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IA_2e_pdf_remark']) ? $remark_row['IA_2e_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IA_2e_pdf_rate']) ? $rate_sums['IA_2e_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IA_2e_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IA_2e_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IA_2e_pdf_File" name="IA_2e_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit7', 'cancel7')" />
               <input type="hidden" name="IA_2e_pdf_File_hidden" id="IA_2e_pdf_File_hidden" value="<?php echo !empty($row['IA_2e_pdf_File']) ? htmlspecialchars($row['IA_2e_pdf_File']) : ''; ?>">
           <button type="submit" name="update" value="IA_2e_pdf_File" id="submit7" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
@@ -558,9 +722,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IB_1forcities_pdf_rate']) ? $rate_row['IB_1forcities_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IB_1forcities_pdf_remark']) ? $remark_row['IB_1forcities_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_1forcities_pdf_File" name="IB_1forcities_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IB_1forcities_pdf_rate']) ? $rate_sums['IB_1forcities_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IB_1forcities_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IB_1forcities_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+           <td class="text-center align-middle"><input type="file" id="IB_1forcities_pdf_File" name="IB_1forcities_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit8', 'cancel8')" />
               <input type="hidden" name="IB_1forcities_pdf_File_hidden" id="IB_1forcities_pdf_File_hidden" 
                value="<?php echo !empty($row['IB_1forcities_pdf_File']) ? htmlspecialchars($row['IB_1forcities_pdf_File']) : ''; ?>">
@@ -586,9 +761,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IB_1aformuni_pdf_rate']) ? $rate_row['IB_1aformuni_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IB_1aformuni_pdf_remark']) ? $remark_row['IB_1aformuni_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_1aformuni_pdf_File" name="IB_1aformuni_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IB_1aformuni_pdf_rate']) ? $rate_sums['IB_1aformuni_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IB_1aformuni_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IB_1aformuni_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+           <td class="text-center align-middle"><input type="file" id="IB_1aformuni_pdf_File" name="IB_1aformuni_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit9', 'cancel9')" />
               <input type="hidden" name="IB_1aformuni_pdf_File_hidden" id="IB_1aformuni_pdf_File_hidden" 
                value="<?php echo !empty($row['IB_1aformuni_pdf_File']) ? htmlspecialchars($row['IB_1aformuni_pdf_File']) : ''; ?>">
@@ -607,9 +793,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IB_1bformuni_pdf_rate']) ? $rate_row['IB_1bformuni_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IB_1bformuni_pdf_remark']) ? $remark_row['IB_1bformuni_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_1bformuni_pdf_File" name="IB_1bformuni_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IB_1bformuni_pdf_rate']) ? $rate_sums['IB_1bformuni_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IB_1bformuni_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IB_1bformuni_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+           <td class="text-center align-middle"><input type="file" id="IB_1bformuni_pdf_File" name="IB_1bformuni_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit10', 'cancel10')" />
               <input type="hidden" name="IB_1bformuni_pdf_File_hidden" id="IB_1bformuni_pdf_File_hidden" 
                value="<?php echo !empty($row['IB_1bformuni_pdf_File']) ? htmlspecialchars($row['IB_1bformuni_pdf_File']) : ''; ?>">
@@ -628,8 +825,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IB_2_pdf_rate']) ? $rate_row['IB_2_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IB_2_pdf_remark']) ? $remark_row['IB_2_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IB_2_pdf_rate']) ? $rate_sums['IB_2_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IB_2_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IB_2_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IB_2_pdf_File" name="IB_2_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit11', 'cancel11')" />
               <input type="hidden" name="IB_2_pdf_File_hidden" id="IB_2_pdf_File_hidden" 
@@ -649,9 +857,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IB_3_pdf_rate']) ? $rate_row['IB_3_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IB_3_pdf_remark']) ? $remark_row['IB_3_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_3_pdf_File" name="IB_3_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IB_3_pdf_rate']) ? $rate_sums['IB_3_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IB_3_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IB_3_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+           <td class="text-center align-middle"><input type="file" id="IB_3_pdf_File" name="IB_3_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit12', 'cancel12')" />
               <input type="hidden" name="IB_3_pdf_File_hidden" id="IB_3_pdf_File_hidden" 
                value="<?php echo !empty($row['IB_3_pdf_File']) ? htmlspecialchars($row['IB_3_pdf_File']) : ''; ?>">
@@ -670,9 +889,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IB_4_pdf_rate']) ? $rate_row['IB_4_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IB_4_pdf_remark']) ? $remark_row['IB_4_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IB_4_pdf_File" name="IB_4_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IB_4_pdf_rate']) ? $rate_sums['IB_4_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IB_4_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IB_4_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+           <td class="text-center align-middle"><input type="file" id="IB_4_pdf_File" name="IB_4_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit13', 'cancel13')" />
               <input type="hidden" name="IB_4_pdf_File_hidden" id="IB_4_pdf_File_hidden" 
                value="<?php echo !empty($row['IB_4_pdf_File']) ? htmlspecialchars($row['IB_4_pdf_File']) : ''; ?>">
@@ -698,9 +928,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IC_1_pdf_rate']) ? $rate_row['IC_1_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IC_1_pdf_remark']) ? $remark_row['IC_1_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IC_1_pdf_File" name="IC_1_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IC_1_pdf_rate']) ? $rate_sums['IC_1_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IC_1_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IC_1_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+           <td class="text-center align-middle"><input type="file" id="IC_1_pdf_File" name="IC_1_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit14', 'cancel14')" />
               <input type="hidden" name="IC_1_pdf_File_hidden" id="IC_1_pdf_File_hidden" 
                value="<?php echo !empty($row['IC_1_pdf_File']) ? htmlspecialchars($row['IC_1_pdf_File']) : ''; ?>">
@@ -719,8 +960,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IC_2_pdf_rate']) ? $rate_row['IC_2_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IC_2_pdf_remark']) ? $remark_row['IC_2_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IC_2_pdf_rate']) ? $rate_sums['IC_2_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IC_2_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IC_2_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IC_2_pdf_File" name="IC_2_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit15', 'cancel15')" />
               <input type="hidden" name="IC_2_pdf_File_hidden" id="IC_2_pdf_File_hidden" 
@@ -747,9 +999,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['ID_1_pdf_rate']) ? $rate_row['ID_1_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['ID_1_pdf_remark']) ? $remark_row['ID_1_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="ID_1_pdf_File" name="ID_1_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['ID_1_pdf_rate']) ? $rate_sums['ID_1_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['ID_1_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['ID_1_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+             <td class="text-center align-middle"><input type="file" id="ID_1_pdf_File" name="ID_1_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit16', 'cancel16')" />
               <input type="hidden" name="ID_1_pdf_File_hidden" id="ID_1_pdf_File_hidden" 
                value="<?php echo !empty($row['ID_1_pdf_File']) ? htmlspecialchars($row['ID_1_pdf_File']) : ''; ?>">
@@ -768,9 +1031,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['ID_2_pdf_rate']) ? $rate_row['ID_2_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['ID_2_pdf_remark']) ? $remark_row['ID_2_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="ID_2_pdf_File" name="ID_2_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['ID_2_pdf_rate']) ? $rate_sums['ID_2_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['ID_2_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['ID_2_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+           <td class="text-center align-middle"><input type="file" id="ID_2_pdf_File" name="ID_2_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit17', 'cancel17')" />
               <input type="hidden" name="ID_2_pdf_File_hidden" id="ID_2_pdf_File_hidden" 
                value="<?php echo !empty($row['ID_2_pdf_File']) ? htmlspecialchars($row['ID_2_pdf_File']) : ''; ?>">
@@ -796,8 +1070,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIA_pdf_rate']) ? $rate_row['IIA_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIA_pdf_remark']) ? $remark_row['IIA_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IIA_pdf_rate']) ? $rate_sums['IIA_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIA_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIA_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IIA_pdf_File" name="IIA_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit18', 'cancel18')" />
               <input type="hidden" name="IIA_pdf_File_hidden" id="IIA_pdf_File_hidden" 
@@ -824,8 +1109,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIB_1_pdf_rate']) ? $rate_row['IIB_1_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIB_1_pdf_remark']) ? $remark_row['IIB_1_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IIB_1_pdf_rate']) ? $rate_sums['IIB_1_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIB_1_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIB_1_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IIB_1_pdf_File" name="IIB_1_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit19', 'cancel19')" />
               <input type="hidden" name="IIB_1_pdf_File_hidden" id="IIB_1_pdf_File_hidden" 
@@ -845,9 +1141,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIB_2_pdf_rate']) ? $rate_row['IIB_2_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIB_2_pdf_remark']) ? $remark_row['IIB_2_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIB_2_pdf_File" name="IIB_2_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IIB_2_pdf_rate']) ? $rate_sums['IIB_2_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIB_2_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIB_2_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+              <td class="text-center align-middle"><input type="file" id="IIB_2_pdf_File" name="IIB_2_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit20', 'cancel20')" />
               <input type="hidden" name="IIB_2_pdf_File_hidden" id="IIB_2_pdf_File_hidden" 
                value="<?php echo !empty($row['IIB_2_pdf_File']) ? htmlspecialchars($row['IIB_2_pdf_File']) : ''; ?>">
@@ -866,8 +1173,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIC_pdf_rate']) ? $rate_row['IIC_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIC_pdf_remark']) ? $remark_row['IIC_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IIC_pdf_rate']) ? $rate_sums['IIC_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIC_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIC_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IIC_pdf_File" name="IIC_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit21', 'cancel21')" />
               <input type="hidden" name="IIC_pdf_File_hidden" id="IIC_pdf_File_hidden" 
@@ -895,8 +1213,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIIA_pdf_rate']) ? $rate_row['IIIA_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIIA_pdf_remark']) ? $remark_row['IIIA_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IIIA_pdf_rate']) ? $rate_sums['IIIA_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIIA_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIIA_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IIIA_pdf_File" name="IIIA_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit22', 'cancel22')" />
               <input type="hidden" name="IIIA_pdf_File_hidden" id="IIIA_pdf_File_hidden" 
@@ -909,7 +1238,6 @@ document.addEventListener('DOMContentLoaded', function () {
           </tr>
               <tr>
                 <td>B. Coordination with Concerned Agencies relating to disputes filed (PNP, DSWD, DILG, DAR, DENR, Office of the Prosecutor, Court, DOJ, CHR, etc.)</td>
-
                 <td>
                 <?php if (!empty($row['IIIB_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIIB_pdf_File']; ?>">View</button>
@@ -917,9 +1245,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIIB_pdf_rate']) ? $rate_row['IIIB_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIIB_pdf_remark']) ? $remark_row['IIIB_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIB_pdf_File" name="IIIB_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IIIB_pdf_rate']) ? $rate_sums['IIIB_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIIB_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIIB_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+             <td class="text-center align-middle"><input type="file" id="IIIB_pdf_File" name="IIIB_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit23', 'cancel23')" />
               <input type="hidden" name="IIIB_pdf_File_hidden" id="IIIB_pdf_File_hidden" 
                value="<?php echo !empty($row['IIIB_pdf_File']) ? htmlspecialchars($row['IIIB_pdf_File']) : ''; ?>">
@@ -939,6 +1278,9 @@ document.addEventListener('DOMContentLoaded', function () {
               <tr id="city-row">
                 <td>1. For Cities</td>
                 <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
               </tr>
               <tr id="city-row">
                 <td>
@@ -953,9 +1295,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIIC_1forcities_pdf_rate']) ? $rate_row['IIIC_1forcities_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIIC_1forcities_pdf_remark']) ? $remark_row['IIIC_1forcities_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIC_1forcities_pdf_File" name="IIIC_1forcities_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IIIC_1forcities_pdf_rate']) ? $rate_sums['IIIC_1forcities_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIIC_1forcities_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIIC_1forcities_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+             <td class="text-center align-middle"><input type="file" id="IIIC_1forcities_pdf_File" name="IIIC_1forcities_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit24', 'cancel24')" />
               <input type="hidden" name="IIIC_1forcities_pdf_File_hidden" id="IIIC_1forcities_pdf_File_hidden" 
                value="<?php echo !empty($row['IIIC_1forcities_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities_pdf_File']) : ''; ?>">
@@ -978,9 +1331,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIIC_1forcities2_pdf_rate']) ? $rate_row['IIIC_1forcities2_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIIC_1forcities2_remark']) ? $remark_row['IIIC_1forcities2_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIC_1forcities2_pdf_File" name="IIIC_1forcities2_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IIIC_1forcities2_pdf_rate']) ? $rate_sums['IIIC_1forcities2_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIIC_1forcities2_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIIC_1forcities2_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+             <td class="text-center align-middle"><input type="file" id="IIIC_1forcities2_pdf_File" name="IIIC_1forcities2_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit25', 'cancel25')" />
               <input type="hidden" name="IIIC_1forcities2_pdf_File_hidden" id="IIIC_1forcities2_pdf_File_hidden" 
                value="<?php echo !empty($row['IIIC_1forcities2_pdf_File']) ? htmlspecialchars($row['IIIC_1forcities2_pdf_File']) : ''; ?>">
@@ -1003,8 +1367,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIIC_1forcities3_pdf_rate']) ? $rate_row['IIIC_1forcities3_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIIC_1forcities3_pdf_remark']) ? $remark_row['IIIC_1forcities3_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IIIC_1forcities3_pdf_rate']) ? $rate_sums['IIIC_1forcities3_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIIC_1forcities3_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIIC_1forcities3_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IIIC_1forcities3_pdf_File" name="IIIC_1forcities3_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit26', 'cancel26')" />
               <input type="hidden" name="IIIC_1forcities3_pdf_File_hidden" id="IIIC_1forcities3_pdf_File_hidden" 
@@ -1035,8 +1410,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIIC_2formuni1_pdf_rate']) ? $rate_row['IIIC_2formuni1_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIIC_2formuni1_pdf_remark']) ? $remark_row['IIIC_2formuni1_pdf_remark'] : 'No remarks'; ?></td>
+            <td>
+              <?php echo isset($rate_sums['IIIC_2formuni1_pdf_rate']) ? $rate_sums['IIIC_2formuni1_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIIC_2formuni1_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIIC_2formuni1_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
             <td class="text-center align-middle"><input type="file" id="IIIC_2formuni1_pdf_File" name="IIIC_2formuni1_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit27', 'cancel27')" />
               <input type="hidden" name="IIIC_2formuni1_pdf_File_hidden" id="IIIC_2formuni1_pdf_File_hidden" 
@@ -1060,9 +1446,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIIC_2formuni2_pdf_rate']) ? $rate_row['IIIC_2formuni2_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIIC_2formuni2_pdf_remark']) ? $remark_row['IIIC_2formuni2_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIC_2formuni2_pdf_File" name="IIIC_2formuni2_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IIIC_2formuni2_pdf_rate']) ? $rate_sums['IIIC_2formuni2_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIIC_2formuni2_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIIC_2formuni2_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+           <td class="text-center align-middle"><input type="file" id="IIIC_2formuni2_pdf_File" name="IIIC_2formuni2_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit28', 'cancel28')" />
               <input type="hidden" name="IIIC_2formuni2_pdf_File_hidden" id="IIIC_2formuni2_pdf_File_hidden" 
                value="<?php echo !empty($row['IIIC_2formuni2_pdf_File']) ? htmlspecialchars($row['IIIC_2formuni2_pdf_File']) : ''; ?>">
@@ -1085,9 +1482,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIIC_2formuni3_pdf_rate']) ? $rate_row['IIIC_2formuni3_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIIC_2formuni3_pdf_remark']) ? $remark_row['IIIC_2formuni3_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIIC_2formuni3_pdf_File" name="IIIC_2formuni3_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IIIC_2formuni3_pdf_rate']) ? $rate_sums['IIIC_2formuni3_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIIC_2formuni3_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIIC_2formuni3_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+             <td class="text-center align-middle"><input type="file" id="IIIC_2formuni3_pdf_File" name="IIIC_2formuni3_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit29', 'cancel29')" />
               <input type="hidden" name="IIIC_2formuni3_pdf_File_hidden" id="IIIC_2formuni3_pdf_File_hidden" 
                value="<?php echo !empty($row['IIIC_2formuni3_pdf_File']) ? htmlspecialchars($row['IIIC_2formuni3_pdf_File']) : ''; ?>">
@@ -1107,9 +1515,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IIID_pdf_rate']) ? $rate_row['IIID_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IIID_pdf_remark']) ? $remark_row['IIID_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IIID_pdf_File" name="IIID_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IIID_pdf_rate']) ? $rate_sums['IIID_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IIID_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IIID_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+           <td class="text-center align-middle"><input type="file" id="IIID_pdf_File" name="IIID_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit30', 'cancel30')" />
               <input type="hidden" name="IIID_pdf_File_hidden" id="IIID_pdf_File_hidden" 
                value="<?php echo !empty($row['IIID_pdf_File']) ? htmlspecialchars($row['IIID_pdf_File']) : ''; ?>">
@@ -1142,9 +1561,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IV_forcities_pdf_rate']) ? $rate_row['IV_forcities_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IV_forcities_pdf_remark']) ? $remark_row['IV_forcities_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IV_forcities_pdf_File" name="IV_forcities_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IV_forcities_pdf_rate']) ? $rate_sums['IV_forcities_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IV_forcities_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IV_forcities_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+             <td class="text-center align-middle"><input type="file" id="IV_forcities_pdf_File" name="IV_forcities_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit31', 'cancel31')" />
               <input type="hidden" name="IV_forcities_pdf_File_hidden" id="IV_forcities_pdf_File_hidden" 
                value="<?php echo !empty($row['IV_forcities_pdf_File']) ? htmlspecialchars($row['IV_forcities_pdf_File']) : ''; ?>">
@@ -1163,9 +1593,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['IV_muni_pdf_rate']) ? $rate_row['IV_muni_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['IV_muni_pdf_remark']) ? $remark_row['IV_muni_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="IV_muni_pdf_File" name="IV_muni_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['IV_muni_pdf_rate']) ? $rate_sums['IV_muni_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['IV_muni_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['IV_muni_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+             <td class="text-center align-middle"><input type="file" id="IV_muni_pdf_File" name="IV_muni_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit32', 'cancel32')" />
               <input type="hidden" name="IV_muni_pdf_File_hidden" id="IV_muni_pdf_File_hidden" 
                value="<?php echo !empty($row['IV_muni_pdf_File']) ? htmlspecialchars($row['IV_muni_pdf_File']) : ''; ?>">
@@ -1191,9 +1632,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>
-            <td><?php echo isset($rate_row['V_1_pdf_rate']) ? $rate_row['V_1_pdf_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['V_1_pdf_remark']) ? $remark_row['V_1_pdf_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="V_1_pdf_File" name="V_1_pdf_File" accept=".pdf" 
+            <td>
+              <?php echo isset($rate_sums['V_1_pdf_rate']) ? $rate_sums['V_1_pdf_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['V_1_pdf_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['V_1_pdf_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+           <td class="text-center align-middle"><input type="file" id="V_1_pdf_File" name="V_1_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit33', 'cancel33')" />
               <input type="hidden" name="V_1_pdf_File_hidden" id="V_1_pdf_File_hidden" 
                value="<?php echo !empty($row['V_1_pdf_File']) ? htmlspecialchars($row['V_1_pdf_File']) : ''; ?>">
@@ -1212,9 +1664,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span>No MOV Submitted</span>
               <?php endif; ?>
             </td>   
-            <td><?php echo isset($rate_row['threepeoplesorg_rate']) ? $rate_row['threepeoplesorg_rate'] : 'Not rated'; ?></td>
-            <td><?php echo isset($remark_row['threepeoplesorg_remark']) ? $remark_row['threepeoplesorg_remark'] : 'No remarks'; ?></td>
-            <td class="text-center align-middle"><input type="file" id="threepeoplesorg_pdf_File" name="threepeoplesorg_pdf_File" accept=".pdf" 
+             <td>
+              <?php echo isset($rate_sums['threepeoplesorg_rate']) ? $rate_sums['threepeoplesorg_rate'] : 'Not rated'; ?>
+            </td>
+            <td>
+                <?php foreach ($remark_rows as $remark_row) : ?>
+                      <?php if (!empty($remark_row['threepeoplesorg_remark'])) : ?>
+                        <div class="comment">
+                          <strong><?php echo $assessor_names[$remark_row['user_id']] ?? 'Unknown Assessor'; ?>:</strong>
+                          <p><?php echo htmlspecialchars($remark_row['threepeoplesorg_remark']); ?></p>
+                        </div>
+                      <?php endif; ?>
+                <?php endforeach; ?>
+          </td>
+            <td class="text-center align-middle">
+              <input type="file" id="threepeoplesorg_pdf_File" name="threepeoplesorg_pdf_File" accept=".pdf" 
                onchange="toggleSubmitButton(this, 'submit34', 'cancel34')" />
               <input type="hidden" name="threepeoplesorg_pdf_File_hidden" id="threepeoplesorg_pdf_File_hidden" 
                value="<?php echo !empty($row['threepeoplesorg_pdf_File']) ? htmlspecialchars($row['threepeoplesorg_pdf_File']) : ''; ?>">
@@ -1232,34 +1696,10 @@ document.addEventListener('DOMContentLoaded', function () {
             <th><?php echo isset($rate_row['total']) ? $rate_row['total'] : ' '; ?></th>
             <td></td>
               </tr>
-<<<<<<< HEAD
-            </tbody>
-          </table>
-    </form>
-    <!-- Modal -->
-<div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="responseModalLabel">Notification</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <?php if (!empty($message)) echo htmlspecialchars($message); ?>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-=======
             </tbody>  
           </table>
     </form>
     
->>>>>>> 5db5392e8d740ab8410000d0e81ac1ef6228590a
 <!-- Main modal -->
 <div id="large-modal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative w-full max-w-4xl max-h-full">
