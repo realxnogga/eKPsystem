@@ -609,105 +609,104 @@ $budgetCountArray = [
   <?php include "sa_sidebar_header.php"; ?>
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
-      <div class="card">
-        <div class="card-body">
-          <b>
-            <table>
+      <b>
+        <section class="overflow-y-scroll">
+        <table class="">
 
-              <h1> CONSOLIDATED KATARUNGANG PAMBARANGAY COMPLIANCE REPORT ON THE ACTION TAKEN BY THE LUPONG TAGAPAMAYAPA CY <?php echo date('Y'); ?>
-              </h1>
+          <h1> CONSOLIDATED KATARUNGANG PAMBARANGAY COMPLIANCE REPORT ON THE ACTION TAKEN BY THE LUPONG TAGAPAMAYAPA CY <?php echo date('Y'); ?>
+          </h1>
 
-              <tr>
-                <td rowspan="3"> PROVINCE <br> CITY </td>
-                <td rowspan="4" colspan="1"> C/M </td>
-                <td rowspan="2" colspan="4"> NATURE OF DISPUTES (2) </td>
-              </tr>
-              <tr>
-                <td colspan="4">SETTLED CASES (3)</td>
-                <td colspan="8">UNSETTLED CASES (4)</td>
-              </tr>
-              <tr>
-                <td colspan="1">CRIMI <br> NAL </td>
-                <td colspan="1"> CIVIL </td>
-                <td colspan="1">OTHERS </td>
-                <td colspan="1">TOTAL </td>
-                <td colspan="1">MEDIA <br> TION </td>
-                <td colspan="1">CONCIL<br>IATION </td>
-                <td colspan="1">ARBIT<br>RATION </td>
-                <td colspan="1">TOTAL </td>
-                <td colspan="1">REPUD<br>IATED </td>
-                <td colspan="1">DROP<br>PED</td>
-                <td colspan="1">PEND<br>ING </td>
-                <td colspan="1">DIS<br>MISSED </td>
-                <td colspan="1">CERTIFIED <br> TO FILE <br> ACTION IN <br> COURT </td>
-                <td colspan="1"> REFER <br> ED TO <br> CONCER <br> NED <br> AGENCY </td>
-                <td colspan="1">TOTAL </td>
-                <td colspan="1" rowspan="2">ESTIMA <br> TED <br> GOVT. <br> SAVINGS <br> (5) </td>
-              </tr>
+          <tr>
+            <td rowspan="3"> PROVINCE <br> CITY </td>
+            <td rowspan="4" colspan="1"> C/M </td>
+            <td rowspan="2" colspan="4"> NATURE OF DISPUTES (2) </td>
+          </tr>
+          <tr>
+            <td colspan="4">SETTLED CASES (3)</td>
+            <td colspan="8">UNSETTLED CASES (4)</td>
+          </tr>
+          <tr>
+            <td colspan="1">CRIMI <br> NAL </td>
+            <td colspan="1"> CIVIL </td>
+            <td colspan="1">OTHERS </td>
+            <td colspan="1">TOTAL </td>
+            <td colspan="1">MEDIA <br> TION </td>
+            <td colspan="1">CONCIL<br>IATION </td>
+            <td colspan="1">ARBIT<br>RATION </td>
+            <td colspan="1">TOTAL </td>
+            <td colspan="1">REPUD<br>IATED </td>
+            <td colspan="1">DROP<br>PED</td>
+            <td colspan="1">PEND<br>ING </td>
+            <td colspan="1">DIS<br>MISSED </td>
+            <td colspan="1">CERTIFIED <br> TO FILE <br> ACTION IN <br> COURT </td>
+            <td colspan="1"> REFER <br> ED TO <br> CONCER <br> NED <br> AGENCY </td>
+            <td colspan="1">TOTAL </td>
+            <td colspan="1" rowspan="2">ESTIMA <br> TED <br> GOVT. <br> SAVINGS <br> (5) </td>
+          </tr>
 
-              <tr>
-                <td colspan="1"> (1) </td>
-                <td colspan="1"> (2a) </td>
-                <td colspan="1"> (2b) </td>
-                <td colspan="1"> (2c) </td>
-                <td colspan="1"> (2d) </td>
-                <td colspan="1"> (3a) </td>
-                <td colspan="1"> (3b) </td>
-                <td colspan="1"> (3c) </td>
-                <td colspan="1"> (3d) </td>
-                <td colspan="1"> (4a)</td>
-                <td colspan="1"> (4b) </td>
-                <td colspan="1"> (4c) </td>
-                <td colspan="1"> (4d) </td>
-                <td colspan="1"> (4e) </td>
-                <td colspan="1"> (4f) </td>
-                <td colspan="1"> (4g) </td>
-              </tr>
-              <?php
+          <tr>
+            <td colspan="1"> (1) </td>
+            <td colspan="1"> (2a) </td>
+            <td colspan="1"> (2b) </td>
+            <td colspan="1"> (2c) </td>
+            <td colspan="1"> (2d) </td>
+            <td colspan="1"> (3a) </td>
+            <td colspan="1"> (3b) </td>
+            <td colspan="1"> (3c) </td>
+            <td colspan="1"> (3d) </td>
+            <td colspan="1"> (4a)</td>
+            <td colspan="1"> (4b) </td>
+            <td colspan="1"> (4c) </td>
+            <td colspan="1"> (4d) </td>
+            <td colspan="1"> (4e) </td>
+            <td colspan="1"> (4f) </td>
+            <td colspan="1"> (4g) </td>
+          </tr>
+          <?php
 
-              $municipalities = array(
-                "ALAMINOS",
-                "BAY",
-                "BIÑAN",
-                "CABUYAO",
-                "CALAMBA",
-                "CALAUAN",
-                "LOSBAÑOS",
-                "SAN PABLO",
-                "SAN PEDRO",
-                "STA ROSA"
-              );
+          $municipalities = array(
+            "ALAMINOS",
+            "BAY",
+            "BIÑAN",
+            "CABUYAO",
+            "CALAMBA",
+            "CALAUAN",
+            "LOSBAÑOS",
+            "SAN PABLO",
+            "SAN PEDRO",
+            "STA ROSA"
+          );
 
-              for ($i = 0; $i < 10; $i++) :
-              ?>
-                <tr>
-                  <td colspan="1"> </td>
-                  <td colspan="1"><?php echo $municipalities[$i]; ?></td>
-                  <td colspan="1"><?php echo $criminalCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $civilCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $othersCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $totalCountArray1[$i]; ?></td>
-                  <td colspan="1"><?php echo $mediationCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $conciliationCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $arbitrationCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $totalCountArray2[$i]; ?></td>
-                  <td colspan="1"><?php echo $repudiatedCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $droppedCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $pendingCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $dismissedCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $certcourtCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $outsideBrgyCountArray[$i]; ?></td>
-                  <td colspan="1"><?php echo $totalCountArray3[$i]; ?></td>
-                  <td colspan="1"><?php echo number_format($budgetCountArray[$i]); ?></td>
-                </tr>
-              <?php endfor; ?>
-            </table>
+          for ($i = 0; $i < 10; $i++) :
+          ?>
+            <tr>
+              <td colspan="1"> </td>
+              <td colspan="1"><?php echo $municipalities[$i]; ?></td>
+              <td colspan="1"><?php echo $criminalCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $civilCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $othersCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $totalCountArray1[$i]; ?></td>
+              <td colspan="1"><?php echo $mediationCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $conciliationCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $arbitrationCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $totalCountArray2[$i]; ?></td>
+              <td colspan="1"><?php echo $repudiatedCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $droppedCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $pendingCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $dismissedCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $certcourtCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $outsideBrgyCountArray[$i]; ?></td>
+              <td colspan="1"><?php echo $totalCountArray3[$i]; ?></td>
+              <td colspan="1"><?php echo number_format($budgetCountArray[$i]); ?></td>
+            </tr>
+          <?php endfor; ?>
+        </table>
+        </section>
 
-            <button class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="generatePDF()">Generate PDF</button>
-            <button class="px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ml-4" onclick="downloadExcel()">Download Excel</button>
-        </div>
-      </div>
+        <button class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="generatePDF()">Generate PDF</button>
+        <button class="px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ml-4" onclick="downloadExcel()">Download Excel</button>
     </div>
   </div>
 </body>
+
 </html>

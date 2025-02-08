@@ -97,7 +97,8 @@ if (isset($_POST['search'])) {
                     <td><?php echo $row['contact_number']; ?></td>
                     <td><?php echo $row['email']; ?></td>
                     <td>
-                      <a href="sa_manageregisteredmuni.php?admin_id=<?php echo $row['id']; ?>" class="btn btn-primary m1">
+                    
+                      <a href="sa_manageregisteredmuni.php?admin_id=<?php echo $row['id']; ?>&message=" class="btn btn-primary m1">
                         <i class="fas fa-cog"></i> Manage
                       </a>
                     </td>

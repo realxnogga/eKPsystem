@@ -3,9 +3,6 @@ session_start();
 include 'connection.php';
 $userId = $_SESSION['user_id'];
 
-// Initialize variables
-$message = '';
-$error = '';
 $usertype = $_SESSION['user_type'];
 
 $isFirstTimeToAddSecurity = null;
@@ -56,10 +53,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) 
         $insertSecurityStmt->bindParam(':question3', $question3, PDO::PARAM_STR);
         $insertSecurityStmt->bindParam(':answer3', password_hash($answer3, PASSWORD_BCRYPT), PDO::PARAM_STR);
 
+
+        function changeTextFunc($arg) {
+            if ($arg === 'user') return 'user';          
+            if ($arg=== 'superadmin') return 'sa';            
+            if ($arg === 'admin') return'admin';   
+            if ($arg === 'assessor') return 'assessor';
+        }
+        $temp = changeTextFunc($user_type);
+
         if ($insertSecurityStmt->execute()) {
-            $message = $existingSecurity ? "Security Questions updated successfully." : "Security Questions added successfully.";
+
+            if ($existingSecurity) {
+            
+                header("Location: {$temp}_setting.php?update_securityquestion_message=SQupdatedsuccessfully");
+                exit();
+                
+            }elseif (!$existingSecurity) {
+
+                header("Location: {$temp}_setting.php?update_securityquestion_message=SQaddedsuccessfully");
+                exit();
+
+            }
         } else {
-            $error = $existingSecurity ? "Failed to update Security Questions. Please try again." : "Failed to add Security Questions. Please try again.";
+
+            if ($existingSecurity) {
+
+                header("Location: {$temp}_setting.php?update_securityquestion_message=SQupdatederror");
+                exit();
+
+            }elseif (!$existingSecurity) {
+
+                header("Location: {$temp}_setting.php?update_securityquestion_message=SQaddederror");
+                exit();
+
+            }
         }
     }
 

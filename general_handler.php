@@ -4,10 +4,17 @@ include 'connection.php';
 $userId = $_SESSION['user_id'];
 
 // Initialize variables
-$message = '';
-$error = '';
 
 $usertype = $_SESSION['user_type'];
+
+function changeTextFunc($arg)
+{
+    if ($arg === 'user') return 'user';
+    if ($arg === 'superadmin') return 'sa';
+    if ($arg === 'admin') return 'admin';
+    if ($arg === 'assessor') return 'assessor';
+}
+$temp = changeTextFunc($usertype);
 
 // Process form submissions for updating user data
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -32,17 +39,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $emailExists = $checkEmailStmt->fetch(PDO::FETCH_ASSOC)['count'];
 
         if ($emailExists > 0) {
-            $error = "Email already in use. Please choose another one.";
+            header("Location: {$temp}_setting.php?update_account_message=emailalreadyinuse");
+            exit();
         }
     }
 
     // Check for password length
     if (!empty($_POST['new_password']) && strlen($_POST['new_password']) < 8) {
-        $error = "Password should be at least 8 characters long.";
+            header("Location: {$temp}_setting.php?update_account_message=passwordeightlong");
+            exit();
     }
 
-    if (empty($error)) {
-        // No errors, proceed with updating the user data
+    if (empty($update_account_message)) {
+        // No update_account_messages, proceed with updating the user data
         if (!empty($_POST['new_password'])) {
             $newPassword = password_hash($_POST['new_password'], PASSWORD_BCRYPT);
             $updateStmt = $conn->prepare("UPDATE users SET username = :username, first_name = :first_name, last_name = :last_name, contact_number = :contact_number, email = :email, password = :password WHERE id = :user_id");
@@ -59,25 +68,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $updateStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 
         if ($updateStmt->execute()) {
-
-            if ($usertype === "user") {
-                header('Location: user_setting.php');
-                exit();
-            } elseif ($usertype === "superadmin") {
-                header('Location: sa_setting.php');
-                exit();
-            } elseif ($usertype === "admin") {
-                header('Location: admin_setting.php');
-                exit();
-            }
-            elseif ($usertype === "assessor") {
-                header('Location: assessor_setting.php');
-                exit();
-            }
+            header("Location: {$temp}_setting.php?update_account_message=success");
+            exit();
         } else {
-            // Update failed
-            $error = "Failed to update user data. Please try again.";
-            // Handle the error, redirect or display error message
+            header("Location: {$temp}_setting.php?update_account_message=failed");
+            exit();
         }
     }
 }

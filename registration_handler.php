@@ -49,7 +49,7 @@ if (isset($_POST['register'])) {
     if ($utype === 'assessor') {
       
         if ($pass !== $cpass) {
-            $errors = "Password does not match the confirmed password. Please try again.";
+            $errors = "Password does not match";
             $pass = '';
             $cpass = '';
         }
@@ -60,7 +60,7 @@ if (isset($_POST['register'])) {
         $existing_email = $stmt->fetch();
 
         if ($existing_email) {
-            $errors = "Email already exists. Please choose a different email address.";
+            $errors = "Email already exists";
         }
     }
     // --------------------
@@ -72,7 +72,7 @@ if (isset($_POST['register'])) {
         $existing_municipality = $stmt->fetch();
 
         if ($pass !== $cpass) {
-            $errors = "Password does not match the confirmed password. Please try again.";
+            $errors = "Password does not match";
             $pass = '';
             $cpass = '';
         }
@@ -81,7 +81,7 @@ if (isset($_POST['register'])) {
             $stmt->bindParam(':municipality_name', $munic_name, PDO::PARAM_STR);
             $stmt->execute();
         } else {
-            $errors = "The selected Municipality has already been registered.<br> Please contact Admin.";
+            $errors = "The selected Municipality has already been registered";
         }
 
         //Email Checker
@@ -91,7 +91,7 @@ if (isset($_POST['register'])) {
         $existing_email = $stmt->fetch();
 
         if ($existing_email) {
-            $errors = "Email already exists. Please choose a different email address.";
+            $errors = "Email already exists";
             // You should consider handling this error appropriately, not just exit.
         }
     }
@@ -105,13 +105,13 @@ if (isset($_POST['register'])) {
         $existing_barangay = $stmt->fetch();
 
         if ($pass !== $cpass) {
-            $errors = "Password does not match the confirmed password. Please try again.";
+            $errors = "Password does not match";
             $pass = '';
             $cpass = '';
         }
 
         if ($existing_barangay) {
-            $errors = "The selected Barangay is already existing for that Municipality.";
+            $errors = "The selected Barangay is already exists";
         }
 
         $stmt = $conn->prepare("SELECT id FROM municipalities WHERE municipality_name = :municipality_name");
@@ -120,7 +120,7 @@ if (isset($_POST['register'])) {
         $existing_municipality = $stmt->fetch();
 
         if (!$existing_municipality) {
-            $errors = "Municipality could not be found or has not registered yet. Please check your selected Municipality.";
+            $errors = "Municipality could not be found or has not registered yet";
         }
 
         //Email Checker
@@ -130,7 +130,7 @@ if (isset($_POST['register'])) {
         $existing_email = $stmt->fetch();
 
         if ($existing_email) {
-            $errors = "Email already exists. Please choose a different email address.";
+            $errors = "Email already exists";
         }
 
 
@@ -163,10 +163,10 @@ if (isset($_POST['register'])) {
         $stmt->bindParam(':last_name', $lname, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
-            $errors  = "User registration successful. Proceed to Login";
+            $errors  = "User registration successful";
             $username = $munic_name = $email = $cont_num = $pass = $cpass = $utype = $brgy_name = $fname = $lname = '';
         } else {
-            $errors = "User registration failed. Please try again later.";
+            $errors = "User registration failed";
         }
     }
 }

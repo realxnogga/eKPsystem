@@ -54,10 +54,6 @@ function fetchLatestMonthlyReportDataFunc($conn, $user_id, $whatMonth)
 }
 $lmrd = fetchLatestMonthlyReportDataFunc($conn, $userID, $latestMonth);
 
-$_SESSION['test'] = $lmrd;
-
-
-
 
 function getVariedYearsFunc($conn, $userID)
 {

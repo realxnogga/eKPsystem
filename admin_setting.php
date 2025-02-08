@@ -1,7 +1,6 @@
 <?php
 session_start();
 include 'connection.php';
-//include 'admin-navigation.php';
 
 $usertype = $_SESSION['user_type'];
 
@@ -38,7 +37,7 @@ if ($securityQuestions) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Setting</title>
-  
+
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 </head>
 
@@ -73,13 +72,21 @@ if ($securityQuestions) {
                   <h5 class="card-title mb-9 fw-semibold">Account Settings</h5>
                   <hr>
                   <b>
-                    <?php if (!empty($message)) { ?>
-                      <p class="text-success"><?php echo $message; ?></p>
-                    <?php } ?>
+                    <?php
 
-                    <?php if (!empty($error)) { ?>
-                      <p class="text-danger"><?php echo $error; ?></p>
-                    <?php } ?>
+                    if (isset($_GET['update_account_message'])) {
+                      if ($_GET['update_account_message'] === 'success') {
+                        echo "<div class='alert alert-success' role='alert'>Updated successfully.</div>";
+                      }
+                      if ($_GET['update_account_message'] === 'emailalreadyinuse') {
+                        echo "<div class='alert alert-danger' role='alert'>Email already in use.</div>";
+                      }
+                      if ($_GET['update_account_message'] === 'passwordeightlong') {
+                        echo "<div class='alert alert-danger' role='alert'>Password should be at least 8 characters long.</div>";
+                      }
+                    }
+
+                    ?>
 
                     <form id="userSettingsForm" method="post" action="general_handler.php">
                       <div class="form-group">
@@ -105,7 +112,7 @@ if ($securityQuestions) {
                       </div>
                       <div class="form-group">
                         <label for="new_password">New Password (Leave empty to keep current password):</label>
-                        <input type="password" class="form-control" pattern=".{8,}" title="Password must be at least 8 characters long" id="new_password" name="new_password" placeholder="">
+                        <input type="password" class="form-control" title="Password must be at least 8 characters long" id="new_password" name="new_password" placeholder="">
                       </div> <input type="hidden" name="active_tab" value="general"><br>
                       <button type="submit" name="general_settings" class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white">Save Changes</button>
                     </form>
@@ -130,13 +137,24 @@ if ($securityQuestions) {
                     <div class="tab-pane fade <?php echo !isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-security">
                       <b>
                         <h6>
-                          <?php if (!empty($message)) { ?>
-                            <p class="text-success"><?php echo $message; ?></p>
-                          <?php } ?>
+                          
+                          <?php
+                          if (isset($_GET['update_securityquestion_message'])) {
+                            if ($_GET['update_securityquestion_message'] === 'SQupdatedsuccessfully') {
+                              echo "<div class='alert alert-success' role='alert'>Security answer updated successfully.</div>";
+                            }
+                            if ($_GET['update_securityquestion_message'] === 'SQaddedsuccessfully') {
+                              echo "<div class='alert alert-success' role='alert'>Security answer added successfully.</div>";
+                            }
+                            if ($_GET['update_securityquestion_message'] === 'SQupdatederror') {
+                              echo "<div class='alert alert-danger' role='alert'>Updating security answer failed.</div>";
+                            }
+                            if ($_GET['update_securityquestion_message'] === 'SQaddederror') {
+                              echo "<div class='alert alert-danger' role='alert'>Adding security answer failed.</div>";
+                            }
+                          }
+                          ?>
 
-                          <?php if (!empty($error)) { ?>
-                            <p class="text-danger"><?php echo $error; ?></p>
-                          <?php } ?>
                         </h6>
 
                         <div class="form-group">

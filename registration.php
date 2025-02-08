@@ -22,7 +22,7 @@ include 'registration_handler.php';
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
 
   <script src="service-worker-registration.js"></script>
-  
+
 </head>
 
 <style>
@@ -77,10 +77,33 @@ include 'registration_handler.php';
                   </b>
                 </div>
                 <b>
+                  
+                    <?php
+                    if (isset($errors)) {
+                      if (strpos($errors, 'Password does not match') !== false) {
+                        echo "<div class='alert alert-danger' role='alert'>Password does not match the confirmed password. Please try again.</div>";
+                      }
+                      if (strpos($errors, 'Email already exists') !== false) {
+                        echo "<div class='alert alert-danger' role='alert'>Email already exists. Please choose a different email address.</div>";
+                      }
+                      if (strpos($errors, 'The selected Municipality has already been registered') !== false) {
+                        echo "<div class='alert alert-danger' role='alert'>The selected Municipality has already been registered.<br> Please contact Admin.</div>";
+                      }
+                      if (strpos($errors, 'The selected Barangay is already exists') !== false) {
+                        echo "<div class='alert alert-danger' role='alert'>The selected Barangay is already existing for that Municipality.</div>";
+                      }
+                      if (strpos($errors, 'Municipality could not be found or has not registered yet') !== false) {
+                        echo "<div class='alert alert-danger' role='alert'>Municipality could not be found or has not registered yet. Please check your selected Municipality.</div>";
+                      }
+                      if (strpos($errors, 'User registration failed') !== false) {
+                        echo "<div class='alert alert-danger' role='alert'>User registration failed. Please try again later.</div>";
+                      }
+                      if (strpos($errors, 'User registration successful') !== false) {
+                        echo "<div class='alert alert-success' role='alert'>User registration successful. Proceed to Login.</div>";
+                      }
+                    }
+                    ?>
 
-                  <?php if (isset($errors)): ?>
-                    <p style="color: <?php echo strpos($errors, 'successful') ? 'green' : 'red'; ?>; font-style: italic;"><?php echo $errors; ?></p>
-                  <?php endif; ?>
 
                   <b>
 
@@ -162,7 +185,7 @@ include 'registration_handler.php';
                         <option value="assessor">Assessor Member Commitee</option>
                       </select>
                       <br>
-                      
+
                       <div style="display: none;" id="assessorField">
                         <label for="assessor">Select Sectors/Department:</label>
                         <select class="form-select" id="assessor" name="assessor" required>
@@ -175,7 +198,7 @@ include 'registration_handler.php';
                           <option value="Representative of a Civil Society Organization">Representative of a Civil Society Organization</option>
                         </select>
                       </div>
-                  
+
                       <div style="display: none;" id="barangay-secretary-field">
                         <label for="mediation">Select Barangay:</label>
                         <select class="form-select" id="second-dropdown" name="barangay_name" required>
@@ -248,12 +271,10 @@ include 'registration_handler.php';
     if (userTypeSelect.value === "user") {
       barangaySecretaryField.style.display = "block";
       assessorField.style.display = "none";
-    }
-    else if (userTypeSelect.value === "assessor") {
+    } else if (userTypeSelect.value === "assessor") {
       assessorField.style.display = "block";
       barangaySecretaryField.style.display = "none";
-    }
-     else {
+    } else {
       barangaySecretaryField.style.display = "none";
       assessorField.style.display = "none";
     }

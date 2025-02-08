@@ -8,6 +8,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
   exit;
 }
 
+$error = '';
+
 // Check if the admin user ID is provided in the URL
 if (isset($_GET['admin_id'])) {
   $adminId = $_GET['admin_id'];
@@ -22,12 +24,14 @@ if (isset($_GET['admin_id'])) {
 
   if (!$adminUser) {
     // Admin user not found, handle this case
-    header("Location: sa_registeredmuni.php");
+    header("Location: sa_manageregisteredmuni.php?admin_id=" . urlencode($adminId) . "&message=usernotfound");
+
     exit;
   }
 } else {
   // Admin user ID is not provided in the URL, handle this case
-  header("Location: sa_registeredmuni.php");
+  header("Location: sa_manageregisteredmuni.php?admin_id=" . urlencode($adminId) . "&message=nouserid");
+
   exit;
 }
 
@@ -58,11 +62,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if ($updateStmt->execute()) {
     // Redirect back to the superadmin dashboard after successful update
-    header("Location: sa_registeredmuni.php");
+    header("Location: sa_manageregisteredmuni.php?admin_id=" . urlencode($adminId) . "&message=success");
     exit;
   } else {
     // Handle the case where the update fails
-    $error = "Update failed. Please try again.";
+
+    header("Location: sa_manageregisteredmuni.php?admin_id=" . urlencode($adminId) . "&message=error");
+    exit();
   }
 }
 ?>
@@ -162,9 +168,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <br>
             <hr>
             <br>
-            <?php if (isset($error)) { ?>
-              <p class="text-danger"><?php echo $error; ?></p>
-            <?php } ?>
+
+
+            <?php
+
+            if (isset($_GET['message'])) {
+              if ($_GET['message'] === 'success') {
+                echo '<div class="alert alert-success" role="alert">Update success.</div>';
+              }
+              if ($_GET['message'] === 'error') {
+                echo '<div class="alert alert-danger" role="alert">Update failed.</div>';
+              }
+            }
+
+            ?>
+
+
+
             <form method="post">
 
               <form method="post">

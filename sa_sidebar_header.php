@@ -153,6 +153,13 @@ function traverseDirectory()
         </a>
       </li>
 
+      <li>
+        <a href="<?php echo traverseDirectory(); ?>sa_feedback.php" class="<?php echo isActive('sa_feedback.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+          <i class="ti ti-settings text-2xl"></i>
+          <span>Feedback</span>
+        </a>
+      </li>
+
     </ul>
   </div>
 </aside>
