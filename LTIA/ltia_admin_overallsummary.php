@@ -288,7 +288,7 @@ const barangayChart = new Chart(ctx, {
   data: {
     labels: barangays,
     datasets: [{
-      label: 'Total Score',
+      label: 'Total Score Average',
       data: totals,
       backgroundColor: totals.map(total => 
         total >= 100 ? 'rgba(0, 51, 102, 0.6)' : 'rgba(0, 51, 102, 0.6)'), 
