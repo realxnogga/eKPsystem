@@ -62,6 +62,17 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $barangays[] = $row['barangay_name'];
     $totals[] = $row['total'];
 }
+
+// Fetch assessor_type data for the same municipality
+$assessorQuery = "
+SELECT u.first_name, u.last_name, u.assessor_type
+FROM users u
+WHERE u.municipality_id = :municipality_id AND u.user_type = 'assessor'
+";
+$assessorStmt = $conn->prepare($assessorQuery);
+$assessorStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$assessorStmt->execute();
+$assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html lang="en">
@@ -104,100 +115,100 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             </div>
             <div class="menu">
               <ul class="flex space-x-4">
-              <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='ltia_admin_overallsummary.php';" style="margin-left: 0;">
-                  <i class="ti ti-report-analytics mr-2"> </i> 
-                      Overall Summary
-                  </button>
-                </li>
                 <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform2evaluate.php';" style="margin-left: 0;">
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='ltia_admin_dashboard.php';" style="margin-left: 0;">
                   <i class="ti ti-building-community mr-2"> </i> 
-                      Barangays
+                      Back
                   </button>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div id="chart-container" class="mt-6">
-            <canvas id="barangayChart"></canvas>
-          </div>
+          <div class="flex mt-6">
+  <div id="chart-container" class="w-1/2">
+    <canvas id="barangayChart"></canvas>
+  </div>
+  <div id="additional-info" class="w-1/2 p-4 bg-white rounded-lg shadow-md ml-4">
+    <!-- Add your additional content here -->
+    <h2 class="text-lg font-bold mb-4">Members Committee</h2>
+    <?php if (!empty($assessors)): ?>
+      <ul>
+        <?php foreach ($assessors as $assessor): ?>
+          <li><strong><?php echo htmlspecialchars($assessor['assessor_type']); ?></strong>: <?php echo htmlspecialchars($assessor['first_name'] . ' ' . $assessor['last_name']); ?></li>
+        <?php endforeach; ?>
+      </ul>
+    <?php else: ?>
+      <p>No assessors found for this municipality.</p>
+    <?php endif; ?>
+  </div>
+</div>
 
-          <script>
-  const barangays = <?php echo json_encode($barangays); ?>;
-  const totals = <?php echo json_encode($totals); ?>;
+<script>
+const barangays = <?php echo json_encode($barangays); ?>;
+const totals = <?php echo json_encode($totals); ?>;
 
-  const performanceLabels = totals.map(total => {
-    if (total >= 100) return 'Outstanding';
-    else if (total >= 90) return 'Very Satisfactory';
-    else if (total >= 80) return 'Fair';
-    else if (total >= 70) return 'Poor';
-    else return 'Very Poor';
-  });
+const performanceLabels = totals.map(total => {
+  if (total >= 100) return 'Outstanding';
+  else if (total >= 90) return 'Very Satisfactory';
+  else if (total >= 80) return 'Fair';
+  else if (total >= 70) return 'Poor';
+  else return 'Very Poor';
+});
 
-  const ctx = document.getElementById('barangayChart').getContext('2d');
-  const barangayChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: barangays,
-      datasets: [{
-        label: 'Total Score',
-        data: totals,
-        backgroundColor: totals.map(total => 
-          total >= 100 ? 'rgba(0, 51, 102, 0.6)' : 'rgba(0, 51, 102, 0.6)'), 
-        borderColor: totals.map(total => 
-          total >= 100 ? 'rgba(0, 153, 51, 1)' : 'rgba(54, 162, 235, 1)'),
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 120,
-          title: {
-            display: true,
-            text: 'Total Score'
-          }
-        }
-      },
-      plugins: {
-        legend: {
+const ctx = document.getElementById('barangayChart').getContext('2d');
+const barangayChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: barangays,
+    datasets: [{
+      label: 'Total Score',
+      data: totals,
+      backgroundColor: totals.map(total => 
+        total >= 100 ? 'rgba(0, 51, 102, 0.6)' : 'rgba(0, 51, 102, 0.6)'), 
+      borderColor: totals.map(total => 
+        total >= 100 ? 'rgba(0, 153, 51, 1)' : 'rgba(54, 162, 235, 1)'),
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 120,
+        title: {
           display: true,
-          position: 'top',
-          labels: {
-            color: '#333',
-            font: {
-              size: 14
-            }
-          }
-        },
-        tooltip: {
-          callbacks: {
-            afterLabel: function(context) {
-              return 'Performance: ' + performanceLabels[context.dataIndex];
-            }
+          text: 'Total Score'
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        labels: {
+          color: '#333',
+          font: {
+            size: 14
           }
         }
       },
-      animation: {
-        duration: 1000, // Animation duration in milliseconds
-        easing: 'easeInOutBounce', // Animation easing function
+      tooltip: {
+        callbacks: {
+          afterLabel: function(context) {
+            return 'Performance: ' + performanceLabels[context.dataIndex];
+          }
+        }
       }
+    },
+    animation: {
+      duration: 1000, // Animation duration in milliseconds
+      easing: 'easeInOutBounce', // Animation easing function
     }
-  });
+  }
+});
 </script>
-
-         <footer class="position-relative">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="w-100">
-              <path fill="#0099ff" fill-opacity="1" d="M0,224L30,224C60,224,120,224,180,208C240,192,300,160,360,149.3C420,139,480,149,540,160C600,171,660,181,720,154.7C780,128,840,64,900,58.7C960,53,1020,107,1080,117.3C1140,128,1200,96,1260,69.3C1320,43,1380,21,1410,10.7L1440,0L1440,320L1410,320C1380,320,1320,320,1260,320C1200,320,1140,320,1080,320C1020,320,960,320,900,320C840,320,780,320,720,320C660,320,600,320,540,320C480,320,420,320,360,320C300,320,240,320,180,320C120,320,60,320,30,320L0,320Z"></path>
-            </svg>
-            <div class="position-absolute bottom-0 end-0 mb-3 me-3 d-flex justify-content-center">
-              <img src="images/ltialogo.png" alt="LTIA Logo" class="img-fluid" style="max-height: 80px; width: auto;" />
-            </div>
-          </footer>
 
         </div>
       </div>
@@ -212,8 +223,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       margin: auto;
     }
   </style>
-
-   
 
     </div>
   </div>
