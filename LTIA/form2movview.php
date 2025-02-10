@@ -58,18 +58,31 @@ $rate_stmt = $conn->prepare($rate_sql);
 $rate_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
 $rate_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 $rate_stmt->execute();
-$rate_rows = $rate_stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all rows
+$rate_rows = $rate_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Sum up the rates
+// Calculate average rates
 $rate_sums = [];
+$rate_counts = [];
 foreach ($rate_rows as $rate_row) {
     foreach ($rate_row as $key => $value) {
-        if (strpos($key, '_rate') !== false) {
+        if (strpos($key, '_rate') !== false && $value !== null) {
             if (!isset($rate_sums[$key])) {
                 $rate_sums[$key] = 0;
+                $rate_counts[$key] = 0;
             }
             $rate_sums[$key] += $value;
+            $rate_counts[$key]++;
         }
+    }
+}
+
+// Calculate averages
+$rate_averages = [];
+foreach ($rate_sums as $key => $sum) {
+    if ($rate_counts[$key] > 0) {
+        $rate_averages[$key] = round($sum / $rate_counts[$key], 2);
+    } else {
+        $rate_averages[$key] = 'Not rated';
     }
 }
 
@@ -506,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IA_1a_pdf_rate']) ? $rate_sums['IA_1a_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IA_1a_pdf_rate']) ? $rate_averages['IA_1a_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                                             <?php foreach ($remark_rows as $remark_row) : ?>
@@ -534,7 +547,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IA_1b_pdf_rate']) ? $rate_sums['IA_1b_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IA_1b_pdf_rate']) ? $rate_averages['IA_1b_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
             <?php foreach ($remark_rows as $remark_row) : ?>
@@ -569,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IA_2a_pdf_rate']) ? $rate_sums['IA_2a_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IA_2a_pdf_rate']) ? $rate_averages['IA_2a_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -597,7 +610,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IA_2b_pdf_rate']) ? $rate_sums['IA_2b_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IA_2b_pdf_rate']) ? $rate_averages['IA_2b_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -625,7 +638,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IA_2c_pdf_rate']) ? $rate_sums['IA_2c_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IA_2c_pdf_rate']) ? $rate_averages['IA_2c_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -653,7 +666,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IA_2d_pdf_rate']) ? $rate_sums['IA_2d_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IA_2d_pdf_rate']) ? $rate_averages['IA_2d_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -681,7 +694,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IA_2e_pdf_rate']) ? $rate_sums['IA_2e_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IA_2e_pdf_rate']) ? $rate_averages['IA_2e_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -723,7 +736,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IB_1forcities_pdf_rate']) ? $rate_sums['IB_1forcities_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IB_1forcities_pdf_rate']) ? $rate_averages['IB_1forcities_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -762,7 +775,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IB_1aformuni_pdf_rate']) ? $rate_sums['IB_1aformuni_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IB_1aformuni_pdf_rate']) ? $rate_averages['IB_1aformuni_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -794,7 +807,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IB_1bformuni_pdf_rate']) ? $rate_sums['IB_1bformuni_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IB_1bformuni_pdf_rate']) ? $rate_averages['IB_1bformuni_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -826,7 +839,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IB_2_pdf_rate']) ? $rate_sums['IB_2_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IB_2_pdf_rate']) ? $rate_averages['IB_2_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -858,7 +871,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IB_3_pdf_rate']) ? $rate_sums['IB_3_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IB_3_pdf_rate']) ? $rate_averages['IB_3_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -890,7 +903,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IB_4_pdf_rate']) ? $rate_sums['IB_4_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IB_4_pdf_rate']) ? $rate_averages['IB_4_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -929,7 +942,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IC_1_pdf_rate']) ? $rate_sums['IC_1_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IC_1_pdf_rate']) ? $rate_averages['IC_1_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -961,7 +974,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IC_2_pdf_rate']) ? $rate_sums['IC_2_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IC_2_pdf_rate']) ? $rate_averages['IC_2_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1000,7 +1013,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['ID_1_pdf_rate']) ? $rate_sums['ID_1_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['ID_1_pdf_rate']) ? $rate_averages['ID_1_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1032,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['ID_2_pdf_rate']) ? $rate_sums['ID_2_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['ID_2_pdf_rate']) ? $rate_averages['ID_2_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1071,7 +1084,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIA_pdf_rate']) ? $rate_sums['IIA_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIA_pdf_rate']) ? $rate_averages['IIA_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1110,7 +1123,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIB_1_pdf_rate']) ? $rate_sums['IIB_1_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIB_1_pdf_rate']) ? $rate_averages['IIB_1_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1142,7 +1155,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIB_2_pdf_rate']) ? $rate_sums['IIB_2_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIB_2_pdf_rate']) ? $rate_averages['IIB_2_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1174,7 +1187,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIC_pdf_rate']) ? $rate_sums['IIC_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIC_pdf_rate']) ? $rate_averages['IIC_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1214,7 +1227,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIIA_pdf_rate']) ? $rate_sums['IIIA_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIIA_pdf_rate']) ? $rate_averages['IIIA_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1246,7 +1259,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIIB_pdf_rate']) ? $rate_sums['IIIB_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIIB_pdf_rate']) ? $rate_averages['IIIB_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1296,7 +1309,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIIC_1forcities_pdf_rate']) ? $rate_sums['IIIC_1forcities_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIIC_1forcities_pdf_rate']) ? $rate_averages['IIIC_1forcities_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1332,7 +1345,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIIC_1forcities2_pdf_rate']) ? $rate_sums['IIIC_1forcities2_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIIC_1forcities2_pdf_rate']) ? $rate_averages['IIIC_1forcities2_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1368,7 +1381,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIIC_1forcities3_pdf_rate']) ? $rate_sums['IIIC_1forcities3_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIIC_1forcities3_pdf_rate']) ? $rate_averages['IIIC_1forcities3_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1411,7 +1424,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIIC_2formuni1_pdf_rate']) ? $rate_sums['IIIC_2formuni1_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIIC_2formuni1_pdf_rate']) ? $rate_averages['IIIC_2formuni1_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1447,7 +1460,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIIC_2formuni2_pdf_rate']) ? $rate_sums['IIIC_2formuni2_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIIC_2formuni2_pdf_rate']) ? $rate_averages['IIIC_2formuni2_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1483,7 +1496,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIIC_2formuni3_pdf_rate']) ? $rate_sums['IIIC_2formuni3_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIIC_2formuni3_pdf_rate']) ? $rate_averages['IIIC_2formuni3_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1516,7 +1529,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IIID_pdf_rate']) ? $rate_sums['IIID_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IIID_pdf_rate']) ? $rate_averages['IIID_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1562,7 +1575,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IV_forcities_pdf_rate']) ? $rate_sums['IV_forcities_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IV_forcities_pdf_rate']) ? $rate_averages['IV_forcities_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1594,7 +1607,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['IV_muni_pdf_rate']) ? $rate_sums['IV_muni_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['IV_muni_pdf_rate']) ? $rate_averages['IV_muni_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1633,7 +1646,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>
             <td>
-              <?php echo isset($rate_sums['V_1_pdf_rate']) ? $rate_sums['V_1_pdf_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['V_1_pdf_rate']) ? $rate_averages['V_1_pdf_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
@@ -1665,7 +1678,7 @@ document.addEventListener('DOMContentLoaded', function () {
               <?php endif; ?>
             </td>   
              <td>
-              <?php echo isset($rate_sums['threepeoplesorg_rate']) ? $rate_sums['threepeoplesorg_rate'] : 'Not rated'; ?>
+              <?php echo isset($rate_averages['threepeoplesorg_rate']) ? $rate_averages['threepeoplesorg_rate'] : 'Not rated'; ?>
             </td>
             <td>
                 <?php foreach ($remark_rows as $remark_row) : ?>
