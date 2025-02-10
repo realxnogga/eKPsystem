@@ -1702,12 +1702,22 @@ document.addEventListener('DOMContentLoaded', function () {
     </td>   
           </tr>
               <tr>
-              <th>Total</th>
+                <th>Total</th>
                 <td></td>
-                <td>            
-            </td>
-            <th><?php echo isset($rate_row['total']) ? $rate_row['total'] : ' '; ?></th>
-            <td></td>
+                <td>
+                  <?php 
+                    // Calculate sum of all rates
+                    $total_rate = 0;
+                    foreach ($rate_averages as $rate) {
+                      if (is_numeric($rate)) {
+                        $total_rate += $rate;
+                      }
+                    }
+                    echo number_format($total_rate, 2);
+                  ?>
+                </td>
+                <td></td>
+                <td></td>
               </tr>
             </tbody>  
           </table>
