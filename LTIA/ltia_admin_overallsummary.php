@@ -132,13 +132,15 @@ $assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
           </div>
 
+          <h1 class="text-2xl font-bold mb-4">Overall Summary Info</h1>
+
           <div class="flex mt-6">
   <div id="chart-container" class="w-1/2">
     <canvas id="barangayChart"></canvas>
   </div>
   <div id="additional-info" class="w-1/2 p-4 bg-white rounded-lg shadow-md ml-4">
     <!-- Add your additional content here -->
-    <h2 class="text-lg font-bold mb-4">Members Committee  of <span id="details-municipality-type"></span> of <?php echo strtoupper(htmlspecialchars($municipalityName)); ?></h2>
+    <h2 class="text-lg font-bold mb-4">Members Committee of <span id="details-municipality-type"></span> of <?php echo strtoupper(htmlspecialchars($municipalityName)); ?></h2>
     <?php if (!empty($assessors)): ?>
       <ul>
         <?php foreach ($assessors as $assessor): ?>
@@ -148,6 +150,123 @@ $assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
     <?php else: ?>
       <p>No assessors found for this municipality.</p>
     <?php endif; ?>
+  </div>
+</div>
+
+<div class="w-full p-4 bg-white rounded-lg shadow-md mt-4">
+  <?php
+  try {
+    // Step 1: Get the municipality ID for the logged-in user
+    $query = "SELECT municipality_id FROM users WHERE id = :user_id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->execute();
+
+    $user_row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user_row && isset($user_row['municipality_id'])) {
+      $municipality_id = $user_row['municipality_id'];
+
+      // Step 2: Fetch municipality name
+      $query = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
+      $stmt = $conn->prepare($query);
+      $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+      $stmt->execute();
+
+      $municipality_row = $stmt->fetch(PDO::FETCH_ASSOC);
+      $municipality_name = $municipality_row ? strtoupper($municipality_row['municipality_name']) : 'No municipality found';
+
+      // Step 3: Fetch barangays and their total ratings from movrate, sorted by total in descending order
+      $query = "
+          SELECT b.barangay_name AS barangay, m.total 
+          FROM barangays b
+          JOIN movrate m ON b.id = m.barangay
+          WHERE b.municipality_id = :municipality_id
+          ORDER BY m.total DESC";
+
+      $stmt = $conn->prepare($query);
+      $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+      $stmt->execute();
+      $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+      $municipality_name = 'No municipality ID found for this user';
+      $barangay_ratings = []; // Empty if no data found
+    }
+  } catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+  }
+
+  function getAdjectivalRating($total)
+  {
+    if ($total >= 100) {
+      return "Outstanding";
+    } elseif ($total >= 90 && $total <= 99) {
+      return "Very Satisfactory";
+    } elseif ($total >= 80 && $total <= 89) {
+      return "Fair";
+    } elseif ($total >= 70 && $total <= 79) {
+      return "Poor";
+    } else {
+      return "Very Poor";
+    }
+  }
+
+  // Fetch available years from movrate table
+  $query = "SELECT DISTINCT YEAR(year) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
+  $stmt = $conn->prepare($query);
+  $stmt->execute();
+  $years = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+  // Add the current year if not present in the years array
+  $currentYear = (int)date('Y');
+  if (!in_array($currentYear, $years)) {
+    $years[] = $currentYear;
+    rsort($years); // Sort years in descending order
+  }
+
+  // Get selected year from request or default to the latest year
+  $selectedYear = $_GET['year'] ?? $currentYear;
+
+  // Filter dataset by selected year
+  $query = "
+      SELECT b.barangay_name AS barangay, m.total 
+      FROM barangays b
+      JOIN movrate m ON b.id = m.barangay
+      WHERE b.municipality_id = :municipality_id
+        AND YEAR(m.year) = :selectedYear  -- use 'year' instead of 'date'
+      ORDER BY m.total DESC";
+  $stmt = $conn->prepare($query);
+  $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+  $stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
+  $stmt->execute();
+  $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  ?>
+
+  <h2 class="text-lg font-bold mb-4">Comparative Evaluation Results</h2>
+  <div class="overflow-x-auto mt-4">
+    <table class="table table-bordered w-full border border-gray-800">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 text-left">LUPONG TAGAPAMAYAPA (LT)</th>
+          <th class="px-4 py-2 text-left">OVERALL PERFORMANCE RATING</th>
+          <th class="px-4 py-2 text-left">ADJECTIVAL RATING</th>
+          <th class="px-4 py-2 text-left">RANK</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $num = 1;
+        $rank = 1;
+        foreach ($barangay_ratings as $row): ?>
+          <tr>
+            <td class="px-4 py-2"><?php echo $num++; ?>. <span class="spacingtabs"><?php echo htmlspecialchars($row['barangay']); ?></span></td>
+            <td class="px-4 py-2"><?php echo htmlspecialchars($row['total']); ?></td>
+            <td class="px-4 py-2"><?php echo getAdjectivalRating($row['total']); ?></td>
+            <td class="px-4 py-2"><?php echo $rank++; ?></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -183,7 +302,7 @@ const barangayChart = new Chart(ctx, {
     scales: {
       y: {
         beginAtZero: true,
-        max: 120,
+        max: 100,
         title: {
           display: true,
           text: 'Total Score'

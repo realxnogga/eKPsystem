@@ -156,7 +156,7 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
       scales: {
         y: {
           beginAtZero: true,
-          max: 120,
+          max: 100,
           title: {
             display: true,
             text: 'Total Score'
