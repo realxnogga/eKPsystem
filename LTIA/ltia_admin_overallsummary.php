@@ -25,6 +25,13 @@ function getPerformanceRating($total) {
     }
 }
 
+// Fetch municipality name
+$municipalityQuery = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
+$municipalityStmt = $conn->prepare($municipalityQuery);
+$municipalityStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$municipalityStmt->execute();
+$municipalityName = $municipalityStmt->fetchColumn();
+
 // Fetch available years for the dropdown
 $yearQuery = "SELECT DISTINCT year FROM average 
               WHERE barangay IN (
@@ -131,7 +138,7 @@ $assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
   </div>
   <div id="additional-info" class="w-1/2 p-4 bg-white rounded-lg shadow-md ml-4">
     <!-- Add your additional content here -->
-    <h2 class="text-lg font-bold mb-4">Members Committee</h2>
+    <h2 class="text-lg font-bold mb-4">Members Committee  of <span id="details-municipality-type"></span> of <?php echo strtoupper(htmlspecialchars($municipalityName)); ?></h2>
     <?php if (!empty($assessors)): ?>
       <ul>
         <?php foreach ($assessors as $assessor): ?>
@@ -207,6 +214,48 @@ const barangayChart = new Chart(ctx, {
       easing: 'easeInOutBounce', // Animation easing function
     }
   }
+});
+
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+    // Lists of cities and municipalities
+    const cities = ["Calamba", "Biñan", "San Pedro", "Sta Rosa", "Cabuyao", "San Pablo"];
+    const municipalities = ["Bay", "Alaminos", "Calauan", "Los Baños"];
+
+    /**
+     * Normalize names for consistent comparison
+     * @param {string} name - Name to normalize
+     * @returns {string} Normalized name
+     */
+    function normalizeName(name) {
+        return name.toLowerCase().replace(/\s+/g, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    /**
+     * Classify a municipality name as "City" or "Municipality"
+     * @param {string} municipalityName - Name to classify
+     * @returns {string} "City", "Municipality", or "Unknown"
+     */
+    function classifyMunicipality(municipalityName) {
+        const normalized = normalizeName(municipalityName);
+        const normalizedCities = cities.map(normalizeName);
+        const normalizedMunicipalities = municipalities.map(normalizeName);
+
+        if (normalizedCities.includes(normalized)) {
+            return "City";
+        } else if (normalizedMunicipalities.includes(normalized)) {
+            return "Municipality";
+        } else {
+            return "Unknown";
+        }
+    }
+
+    // Get municipality name from PHP and classify
+    const municipalityName = <?php echo json_encode($municipalityName); ?>;
+    const classification = classifyMunicipality(municipalityName);
+
+    // Update header and details with the classification
+    document.getElementById("details-municipality-type").textContent = classification;
 });
 </script>
 

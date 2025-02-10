@@ -151,70 +151,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
 </head>
 <style>
-               .form-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%; /* Make the container take 100% of the width */
-            max-width: 100%; /* Ensure it doesn't exceed full width */
-            padding: 20px;
-            box-sizing: border-box; /* Include padding in the width calculation */
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+    .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%; /* Make the container take 100% of the width */
+        max-width: 100%; /* Ensure it doesn't exceed full width */
+        padding: 20px;
+        box-sizing: border-box; /* Include padding in the width calculation */
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
-        .form-group {
-            display: grid;
-            grid-template-columns: 200px 1fr; /* Label and input alignment */
-            gap: 15px; /* Space between label and input */
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    .form-group {
+        display: grid;
+        grid-template-columns: 200px 1fr; /* Label and input alignment */
+        gap: 15px; /* Space between label and input */
+        align-items: center;
+        margin-bottom: 20px;
+    }
 
-        .form-group label {
-            font-weight: bold;
-            text-align: right; /* Align labels to the right */
-        }
+    .form-group label {
+        font-weight: bold;
+        text-align: right; /* Align labels to the right */
+    }
 
-        .underline-input {
-            width: 40%;
-            border: none;
-            border-bottom: 2px solid #ccc;
-            padding: 5px;
-            outline: none;
-            text-align: center; /* Center the text inside the input */
-        }
+    .underline-input {
+        width: 40%;
+        border: none;
+        border-bottom: 2px solid #ccc;
+        padding: 5px;
+        outline: none;
+        text-align: center; /* Center the text inside the input */
+    }
 
-        .underline-input:focus {
-            border-bottom: 2px solid #007bff;
-        }
+    .underline-input:focus {
+        border-bottom: 2px solid #007bff;
+    }
 
-        .kagawads-container {
-            display: flex;
-            flex-wrap: wrap; /* Allow inputs to wrap */
-            gap: 15px; /* Space between inputs */
-            justify-content: center; /* Center the inputs */
-            margin-top: 10px;
-        }
+    .kagawads-container {
+        display: flex;
+        flex-wrap: wrap; /* Allow inputs to wrap */
+        gap: 15px; /* Space between inputs */
+        justify-content: center; /* Center the inputs */
+        margin-top: 10px;
+    }
 
-        .kagawad-input {
-            width: calc(33% - 10px); /* Fit three Kagawad inputs per row */
-            border: none;
-            border-bottom: 2px solid #ccc;
-            padding: 5px;
-            text-align: center;
-            outline: none;
-        }
+    .kagawad-input {
+        width: calc(33% - 10px); /* Fit three Kagawad inputs per row */
+        border: none;
+        border-bottom: 2px solid #ccc;
+        padding: 5px;
+        text-align: center;
+        outline: none;
+    }
 
-        .kagawad-input:focus {
-            border-bottom: 2px solid #007bff;
-        }
-        .submit-container {
-            width: 100%; /* Full width */
-            text-align: right; /* Align the button to the right */
-            margin-top: 20px; /* Space from the form content */
-        }
+    .kagawad-input:focus {
+        border-bottom: 2px solid #007bff;
+    }
+
+    .submit-container {
+        width: 100%; /* Full width */
+        text-align: right; /* Align the button to the right */
+        margin-top: 20px; /* Space from the form content */
+    }
+
+    .btn-circle-custom {
+        width: 150px;
+        height: 150px;
+        font-size: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    .btn-circle-custom:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        background-color: #0056b3; /* Change color on hover */
+        color: #fff; /* Ensure text color remains white */
+    }
+
+    .btn-circle-custom:hover span {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8); /* Glowing effect on text */
+    }
 </style>
   <!-- Bootstrap JS and dependencies -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -279,7 +298,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Circle Button with Conditional Text -->
                                         
                     <div class="d-flex justify-content-between align-items-center mb-5">
-                        <button type="button" class="btn btn-circle bg-primary text-white d-flex flex-column justify-content-center align-items-center shadow-lg ms-5" onclick="location.href='form2movview.php';" style="width: 150px; height: 150px; font-size: 1.5rem;">
+                        <button type="button" class="btn btn-circle bg-primary text-white d-flex flex-column justify-content-center align-items-center shadow-lg ms-5 btn-circle-custom" onclick="location.href='form2movview.php';">
                         <span class="fw-bold fs-2"><?php echo htmlspecialchars($avg_total); ?></span> 
                         <span class="fs-6"><?php echo htmlspecialchars($performance); ?></span>
                         </button>
