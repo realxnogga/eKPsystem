@@ -34,16 +34,14 @@ try {
 
     $municipality_id = $municipalityRow['municipality_id'];
 
-    // Fetch the average total of all users in the same municipality
+    // Fetch the average total for the specific barangay of the logged-in user
     $query = "
-        SELECT AVG(movrate.total) AS avg_total
-        FROM movrate
-        JOIN users ON movrate.user_id = users.id
-        WHERE users.municipality_id = :municipality_id 
-          AND movrate.year = :year
+        SELECT AVG(m.total) AS avg_total
+        FROM movrate m
+        WHERE m.barangay = :barangay_id AND m.year = :year
     ";
     $stmt = $conn->prepare($query);
-    $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+    $stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
     $stmt->bindParam(':year', $year, PDO::PARAM_INT);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
