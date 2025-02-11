@@ -196,13 +196,14 @@ $admin = $adminStmt->fetch(PDO::FETCH_ASSOC);
       $municipality_row = $stmt->fetch(PDO::FETCH_ASSOC);
       $municipality_name = $municipality_row ? strtoupper($municipality_row['municipality_name']) : 'No municipality found';
 
-      // Step 3: Fetch barangays and their total ratings from movrate, sorted by total in descending order
+      // Step 3: Fetch barangays and their total ratings from movrate, grouped by barangay and calculate the average
       $query = "
-          SELECT b.barangay_name AS barangay, m.total 
+          SELECT b.barangay_name AS barangay, AVG(m.total) AS average_total
           FROM barangays b
           JOIN movrate m ON b.id = m.barangay
           WHERE b.municipality_id = :municipality_id
-          ORDER BY m.total DESC";
+          GROUP BY b.barangay_name
+          ORDER BY average_total DESC";
 
       $stmt = $conn->prepare($query);
       $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
@@ -249,12 +250,13 @@ $admin = $adminStmt->fetch(PDO::FETCH_ASSOC);
 
   // Filter dataset by selected year
   $query = "
-      SELECT b.barangay_name AS barangay, m.total 
+      SELECT b.barangay_name AS barangay, AVG(m.total) AS average_total
       FROM barangays b
       JOIN movrate m ON b.id = m.barangay
       WHERE b.municipality_id = :municipality_id
         AND YEAR(m.year) = :selectedYear  -- use 'year' instead of 'date'
-      ORDER BY m.total DESC";
+      GROUP BY b.barangay_name
+      ORDER BY average_total DESC";
   $stmt = $conn->prepare($query);
   $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
   $stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
@@ -280,8 +282,8 @@ $admin = $adminStmt->fetch(PDO::FETCH_ASSOC);
         foreach ($barangay_ratings as $row): ?>
           <tr>
             <td class="px-4 py-2"><?php echo $num++; ?>. <span class="spacingtabs"><?php echo htmlspecialchars($row['barangay']); ?></span></td>
-            <td class="px-4 py-2"><?php echo htmlspecialchars($row['total']); ?></td>
-            <td class="px-4 py-2"><?php echo getAdjectivalRating($row['total']); ?></td>
+            <td class="px-4 py-2"><?php echo htmlspecialchars($row['average_total']); ?></td>
+            <td class="px-4 py-2"><?php echo getAdjectivalRating($row['average_total']); ?></td>
             <td class="px-4 py-2"><?php echo $rank++; ?></td>
           </tr>
         <?php endforeach; ?>
