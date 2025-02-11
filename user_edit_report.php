@@ -97,15 +97,15 @@ if (isset($_POST['update'])) {
 
   // Execute the update query
   if ($stmt->execute()) {
-    $message = "Report updated successfully";
-    // Fetch the updated report data from the database
-    $query = "SELECT * FROM reports WHERE report_id = :report_id";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':report_id', $report_id);
-    $stmt->execute();
-    $report = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    header("Location: user_edit_report.php?report_id=" . urlencode($_GET['report_id']) . "&edit_userreport_message=reporteditsuccess");
+    exit();
+
   } else {
-    $message = "Failed to update report";
+
+    header("Location: user_edit_report.php?report_id=" . urlencode($_GET['report_id']) . "&edit_userreport_message=reportediterror");
+    exit();
+
   }
 }
 
@@ -152,9 +152,17 @@ if (isset($_POST['update'])) {
                   <br>
 
                   <h5 class="card-title mb-9 fw-semibold">Edit Report of <?php echo $report_date; ?> </h5>
-                  <h6 class="text-success"> <?php if (isset($message)) {
-                                              echo $message;
-                                            } ?></h6>
+
+                  <?php
+                  if (isset($_GET['edit_userreport_message'])) {
+                    if ($_GET['edit_userreport_message'] === 'reporteditsuccess') {
+                      echo "<div id='alertMessage' class='alert alert-success' role='alert'>Report updated successfully.</div>";
+                    }
+                    if ($_GET['edit_userreport_message'] === 'reportediterror') {
+                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Report failed to update.</div>";
+                    }
+                  }
+                  ?>
 
                   <div style="display: flex; align-items: center;">
 
@@ -205,6 +213,8 @@ if (isset($_POST['update'])) {
       </div>
     </div>
   </div>
+
+  <script src="hide_toast.js"></script>
 </body>
 
 </html>

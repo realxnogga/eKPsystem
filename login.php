@@ -22,7 +22,7 @@ session_unset();
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
 
   <script src="service-worker-registration.js"></script>
-  
+
 </head>
 
 <style>
@@ -71,14 +71,14 @@ session_unset();
 
 
                 <?php
-
-                // Check if the 'error' query parameter is present in the URL
-                if (isset($_GET['error']) && $_GET['error'] === 'invalid_credentials') {
-                  echo '<div class="alert alert-danger" role="alert">Invalid email or password. Please try again.</div>';
-                } elseif (isset($_GET['error']) && $_GET['error'] === 'not_verified') {
-                  echo '<div class="alert alert-danger" role="alert">This account is not verified yet. Please contact your Admin.</div>';
-                } elseif (isset($_GET['error']) && $_GET['error'] === 'account_already_open') {
-                  echo '<div class="alert alert-danger" role="alert">Your Account is already open on another device.</div>';
+                if (isset($_GET['login_message'])) {
+                  if ($_GET['login_message'] === 'invalid_credentials') {
+                    echo '<div id="alertMessage" class="alert alert-danger" role="alert">Invalid email or password. Please try again.</div>';
+                  } elseif ($_GET['login_message'] === 'not_verified') {
+                    echo '<div id="alertMessage" class="alert alert-danger" role="alert">This account is not verified yet. Please contact your Admin.</div>';
+                  } elseif ($_GET['login_message'] === 'account_already_open') {
+                    echo '<div id="alertMessage" class="alert alert-danger" role="alert">Your Account is already open on another device.</div>';
+                  }
                 }
                 ?>
 
@@ -98,7 +98,7 @@ session_unset();
                       <label for="login-password" class="form-label">Password</label>
                       <div class="input-group">
                         <input type="password" class="form-control" name="password" id="login-password" required>
-                       
+
                         <div class="input-group-append">
                           <button class="btn btn-outline-secondary" type="button" id="toggle-login-password"><i class="fas fa-eye"></i></button>
                         </div>
@@ -128,6 +128,8 @@ session_unset();
       </div>
     </div>
   </div>
+
+  <script src="hide_toast.js"></script>
 </body>
 
 <script>

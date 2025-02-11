@@ -28,9 +28,9 @@ if (isset($_GET['user_id'])) {
   INNER JOIN municipalities m ON u.municipality_id = m.id
   INNER JOIN barangays b ON u.barangay_id = b.id
   WHERE u.user_type = 'user' AND u.id = :user_id");
-$stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
-$stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+  $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+  $stmt->execute();
+  $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
   if (!$user) {
     // User not found, handle this case
@@ -70,10 +70,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $updateStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 
   if ($updateStmt->execute()) {
-    // Redirect back to the admin dashboard after successful update
+    
+    header("Location: admin_manage_acc_req.php?user_id=" . urlencode($userId) . "&manage_brgy_message=success");
+    exit();
+
   } else {
-    // Handle the case where the update fails
-    $error = "Update failed. Please try again.";
+
+    header("Location: admin_manage_acc_req.php?user_id=" . urlencode($userId) . "&manage_brgy_message=error");
+    exit();
+
   }
 }
 ?>
@@ -111,11 +116,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
           <h5 class="card-title mb-9 fw-semibold">User Manage Account</h5>
           <hr>
+          <br>
           <b>
 
-            <?php if (isset($error)) { ?>
-              <p class="text-danger"><?php echo $error; ?></p>
-            <?php } ?>
+            <?php
+            if (isset($_GET['manage_brgy_message'])) {
+              if ($_GET['manage_brgy_message'] === 'success') {
+                echo "<div id='alertMessage' class='alert alert-success' role='alert'>Security answer updated successfully.</div>";
+              }
+              if ($_GET['manage_brgy_message'] === 'error') {
+                echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Security answer added successfully.</div>";
+              }
+            }
+            ?>
+
+
             <form method="post">
               <!-- Display user information in form fields -->
               <div class="form-group">
@@ -153,6 +168,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </div>
+
+  <script src="hide_toast.js"></script>
 </body>
 
 </html>

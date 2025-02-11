@@ -151,13 +151,13 @@ function uploadFile($file, $directory)
 
                   if (isset($_GET['update_account_message'])) {
                     if ($_GET['update_account_message'] === 'success') {
-                      echo "<div class='alert alert-success' role='alert'>Updated successfully.</div>";
+                      echo "<div id='alertMessage' class='alert alert-success' role='alert'>Updated successfully.</div>";
                     }
                     if ($_GET['update_account_message'] === 'emailalreadyinuse') {
-                      echo "<div class='alert alert-danger' role='alert'>Email already in use.</div>";
+                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Email already in use.</div>";
                     }
                     if ($_GET['update_account_message'] === 'passwordeightlong') {
-                      echo "<div class='alert alert-danger' role='alert'>Password should be at least 8 characters long.</div>";
+                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Password should be at least 8 characters long.</div>";
                     }
                   }
 
@@ -221,30 +221,25 @@ function uploadFile($file, $directory)
                   <hr>
                   <br>
 
-                  <!-- ################################################################### -->
+                  <?php
+                  if (isset($_GET['update_securityquestion_message'])) {
+                    if ($_GET['update_securityquestion_message'] === 'SQupdatedsuccessfully') {
+                      echo "<div id='alertMessage' class='alert alert-success' role='alert'>Security answer updated successfully.</div>";
+                    }
+                    if ($_GET['update_securityquestion_message'] === 'SQaddedsuccessfully') {
+                      echo "<div id='alertMessage' class='alert alert-success' role='alert'>Security answer added successfully.</div>";
+                    }
+                    if ($_GET['update_securityquestion_message'] === 'SQupdatederror') {
+                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Updating security answer failed.</div>";
+                    }
+                    if ($_GET['update_securityquestion_message'] === 'SQaddederror') {
+                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Adding security answer failed.</div>";
+                    }
+                  }
+                  ?>
 
                   <form id="securityForm" method="post" action="security_handler.php">
                     <div class="tab-pane fade <?php echo !isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-security">
-                      <h6>
-                        <?php
-
-                        if (isset($_GET['update_securityquestion_message'])) {
-                          if ($_GET['update_securityquestion_message'] === 'SQupdatedsuccessfully') {
-                            echo "<div class='alert alert-success' role='alert'>Security answer updated successfully.</div>";
-                          }
-                          if ($_GET['update_securityquestion_message'] === 'SQaddedsuccessfully') {
-                            echo "<div class='alert alert-success' role='alert'>Security answer added successfully.</div>";
-                          }
-                          if ($_GET['update_securityquestion_message'] === 'SQupdatederror') {
-                            echo "<div class='alert alert-danger' role='alert'>Updating security answer failed.</div>";
-                          }
-                          if ($_GET['update_securityquestion_message'] === 'SQaddederror') {
-                            echo "<div class='alert alert-danger' role='alert'>Adding security answer failed.</div>";
-                          }
-                        }
-
-                        ?>
-                      </h6>
                       <div class="form-group">
                         <label for="question1">Security Question 1:</label>
                         <select class="form-control" id="question1" name="question1" required>
@@ -298,6 +293,7 @@ function uploadFile($file, $directory)
               <div class="card-body">
                 <h5 class="card-title mb-9 fw-semibold">Upload LGU Logo</h5>
                 <hr>
+                <br>
                 <div class="d-flex align-items-center justify-content-between">
                   <input type="file" id="lgulogoInput" name="lgulogo" style="display: none;">
                   <img id="lgulogoPreview" src="lgu_logo/<?php echo $user['lgu_logo'] ?: 'defaultpic.jpg'; ?>" alt="LGU Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;">
@@ -313,6 +309,7 @@ function uploadFile($file, $directory)
               <div class="card-body">
                 <h5 class="card-title mb-9 fw-semibold">Upload KP Logo</h5>
                 <hr>
+                <br>
                 <div class="d-flex align-items-center justify-content-between">
                   <input type="file" id="kplogoInput" name="kplogo" style="display: none;">
                   <img id="kplogoPreview" src="city_logo/<?php echo $user['city_logo'] ?: 'defaultpic.jpg'; ?>" alt="KP Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;">
@@ -471,6 +468,7 @@ function uploadFile($file, $directory)
 
   </div>
 
+  <script src="hide_toast.js"></script>
 </body>
 
 </html>

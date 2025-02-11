@@ -24,13 +24,13 @@ if (isset($_GET['admin_id'])) {
 
   if (!$adminUser) {
     // Admin user not found, handle this case
-    header("Location: sa_manageregisteredmuni.php?admin_id=" . urlencode($adminId) . "&message=usernotfound");
+    header("Location: sa_registeredmuni.php");
 
     exit;
   }
 } else {
   // Admin user ID is not provided in the URL, handle this case
-  header("Location: sa_manageregisteredmuni.php?admin_id=" . urlencode($adminId) . "&message=nouserid");
+  header("Location: sa_registeredmuni.php");
 
   exit;
 }
@@ -62,12 +62,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if ($updateStmt->execute()) {
     // Redirect back to the superadmin dashboard after successful update
-    header("Location: sa_manageregisteredmuni.php?admin_id=" . urlencode($adminId) . "&message=success");
+    header("Location: sa_manageregisteredmuni.php?admin_id=" . urlencode($adminId) . "&update_muni_message=success");
     exit;
   } else {
     // Handle the case where the update fails
 
-    header("Location: sa_manageregisteredmuni.php?admin_id=" . urlencode($adminId) . "&message=error");
+    header("Location: sa_manageregisteredmuni.php?admin_id=" . urlencode($adminId) . "&update_muni_message=error");
     exit();
   }
 }
@@ -171,16 +171,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
             <?php
-
-            if (isset($_GET['message'])) {
-              if ($_GET['message'] === 'success') {
-                echo '<div class="alert alert-success" role="alert">Update success.</div>';
+            if (isset($_GET['update_muni_message'])) {
+              if ($_GET['update_muni_message'] === 'success') {
+                echo '<div id="alertMessage" class="alert alert-success" role="alert">Update success.</div>';
               }
-              if ($_GET['message'] === 'error') {
-                echo '<div class="alert alert-danger" role="alert">Update failed.</div>';
+              if ($_GET['update_muni_message'] === 'error') {
+                echo '<div id="alertMessage" class="alert alert-danger" role="alert">Update failed.</div>';
               }
             }
-
             ?>
 
 
@@ -218,6 +216,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </div>
+
+  <script src="hide_toast.js"></script>
 </body>
 
 </html>
