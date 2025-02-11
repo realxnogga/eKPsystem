@@ -33,14 +33,8 @@ $municipalityStmt->execute();
 $municipalityName = $municipalityStmt->fetchColumn();
 
 // Fetch available years for the dropdown
-$yearQuery = "SELECT DISTINCT year FROM average 
-              WHERE barangay IN (
-                  SELECT id FROM barangays 
-                  WHERE municipality_id = :municipality_id
-              ) 
-              ORDER BY year DESC";
+$yearQuery = "SELECT DISTINCT year FROM movrate ORDER BY year DESC";
 $yearStmt = $conn->prepare($yearQuery);
-$yearStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $yearStmt->execute();
 $years = $yearStmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -51,10 +45,11 @@ if (!in_array($currentYear, $years)) {
 
 // Fetch barangays and average scores for the selected year
 $query = "
-SELECT b.barangay_name, COALESCE(a.avg, 0) AS total 
+SELECT b.barangay_name, AVG(COALESCE(m.total, 0)) AS average_total 
 FROM barangays b 
-LEFT JOIN average a ON b.id = a.barangay AND a.year = :year
+LEFT JOIN movrate m ON b.id = m.barangay AND m.year = :year
 WHERE b.municipality_id = :municipality_id
+GROUP BY b.barangay_name
 ";
 
 $stmt = $conn->prepare($query);
@@ -67,7 +62,7 @@ $totals = [];
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $barangays[] = $row['barangay_name'];
-    $totals[] = $row['total'];
+    $totals[] = $row['average_total'];
 }
 
 // Fetch assessor_type data for the same municipality
@@ -310,7 +305,7 @@ const barangayChart = new Chart(ctx, {
   data: {
     labels: barangays,
     datasets: [{
-      label: 'Total Score Average',
+      label: 'Average Total Score',
       data: totals,
       backgroundColor: totals.map(total => 
         total >= 100 ? 'rgba(0, 51, 102, 0.6)' : 'rgba(0, 51, 102, 0.6)'), 
@@ -327,7 +322,7 @@ const barangayChart = new Chart(ctx, {
         max: 100,
         title: {
           display: true,
-          text: 'Total Score'
+          text: 'Average Total Score'
         }
       }
     },
