@@ -380,9 +380,8 @@ document.addEventListener('DOMContentLoaded', function () {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="css/td_hover.css">
-  <!-- Bootstrap CSS -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-  
+  <link rel="stylesheet" href="../assets/css/styles.min.css" />
+</head>
   <style>
 .btn-primary {
     background-color: #007bff;
@@ -451,7 +450,6 @@ input[type="file"] {
     text-overflow: ellipsis;
 }
 </style>
-</head>
 
 <body class="bg-[#E8E8E7]">
 <?php include "../user_sidebar_header.php"; ?>
@@ -1715,7 +1713,7 @@ input[type="file"] {
     </td>   
           </tr>
               <tr>
-                <th>Total</th>
+                <th>Total Average</th>
                 <td></td>
                 <td>
                   <?php 
