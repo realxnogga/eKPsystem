@@ -80,6 +80,17 @@ $assessorStmt = $conn->prepare($assessorQuery);
 $assessorStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $assessorStmt->execute();
 $assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch admin data for the same municipality
+$adminQuery = "
+SELECT u.first_name, u.last_name
+FROM users u
+WHERE u.municipality_id = :municipality_id AND u.user_type = 'admin'
+";
+$adminStmt = $conn->prepare($adminQuery);
+$adminStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$adminStmt->execute();
+$admin = $adminStmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html lang="en">
@@ -138,13 +149,22 @@ $assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
   <div id="chart-container" class="w-1/2">
     <canvas id="barangayChart"></canvas>
   </div>
-  <div id="additional-info" class="w-1/2 p-4 bg-white rounded-lg shadow-md ml-4">
+  <div id="additional-info" class="w-1/2 p-4 bg-white rounded-lg shadow-md ml-4" style="font-size: 16px;">
     <!-- Add your additional content here -->
     <h2 class="text-lg font-bold mb-4">Members Committee of <span id="details-municipality-type"></span> of <?php echo strtoupper(htmlspecialchars($municipalityName)); ?></h2>
+    <?php if (!empty($admin)): ?>
+      <div class="flex items-center mt-4">
+        <h3 class="text-lg font-bold" id="admin-title">Admin:</h3>
+        <p class="ml-2"><?php echo htmlspecialchars($admin['first_name'] . ' ' . $admin['last_name']); ?></p>
+      </div>
+    <?php else: ?>
+      <p>No admin found for this municipality.</p>
+      <hr>
+    <?php endif; ?>
     <?php if (!empty($assessors)): ?>
       <ul>
         <?php foreach ($assessors as $assessor): ?>
-          <li><strong><?php echo htmlspecialchars($assessor['assessor_type']); ?></strong>: <?php echo htmlspecialchars($assessor['first_name'] . ' ' . $assessor['last_name']); ?></li>
+          <li><strong h3 class="text-lg font-bold"><?php echo htmlspecialchars($assessor['assessor_type']); ?></strong>: <?php echo htmlspecialchars($assessor['first_name'] . ' ' . $assessor['last_name']); ?></li>
         <?php endforeach; ?>
       </ul>
     <?php else: ?>
@@ -375,6 +395,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Update header and details with the classification
     document.getElementById("details-municipality-type").textContent = classification;
+
+    // Update admin title based on classification
+    const adminTitle = document.getElementById("admin-title");
+    if (classification === "Municipality") {
+        adminTitle.textContent = "MLGOO:";
+    } else if (classification === "City") {
+        adminTitle.textContent = "CLGOO:";
+    }
 });
 </script>
 
