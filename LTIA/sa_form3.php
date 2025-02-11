@@ -68,16 +68,16 @@ $selectedYear = $_GET['year'] ?? $years[0];
 // Modify the query to calculate average for duplicate entries
 $query = "
     SELECT b.barangay_name AS barangay, 
-           AVG(m.total) as average_total,
-           COUNT(*) as entry_count
+           COALESCE(AVG(m.total), 0) as average_total,
+           COUNT(m.id) as entry_count
     FROM barangays b
-    JOIN movrate m ON b.id = m.barangay
+    LEFT JOIN movrate m ON b.id = m.barangay
     WHERE b.municipality_id = :municipality_id
-      AND YEAR(m.year) = :selectedYear  -- use 'daterate' instead of 'date'
-    ORDER BY m.total DESC";
+    GROUP BY b.id
+    HAVING average_total > 0
+    ORDER BY average_total DESC";
 $stmt = $conn->prepare($query);
 $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
-$stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
 $stmt->execute();
 $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
