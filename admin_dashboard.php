@@ -40,21 +40,9 @@ if ($action_submitted) {
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
-  <style>
-    .searchInput {
-      display: flex;
-      align-items: center;
-    }
+  <!-- delete later -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    .searchInput input[type="text"] {
-      flex: 1;
-    }
-
-    .searchInput input[type="submit"] {
-      margin-left: 5px;
-      /* Adjust the margin as needed */
-    }
-  </style>
 
 </head>
 
@@ -83,10 +71,14 @@ if ($action_submitted) {
           <b>
             <br>
 
-            <form method="GET" action="" class="searchInput">
+            <input type="search" id="searchAny" class="form-control" placeholder="Search Barangay">
+
+            <br>
+
+            <!-- <form method="GET" action="" class="searchInput">
               <input type="text" class="form-control" name="search" id="search" placeholder="Search by Name or Barangay Name" required>
               <input type="submit" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 ml-2 rounded-md text-white" value="Search">
-            </form>
+            </form> -->
 
 
             <?php // Your code before the table structure
@@ -103,14 +95,15 @@ if ($action_submitted) {
 
 
             <table class="table table-striped">
-              <thead class="thead-dark">
+              <thead>
                 <tr>
-                  <th>Username</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Contact No.</th>
-                  <th>Barangay Name</th>
-                  <th>Actions</th>
+                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Username</th>
+                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Name</th>
+                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Email</th>
+                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Contact No#</th>
+                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Barangay Name</th>
+                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Lock</th>
+                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">View Report</th>
                 </tr>
               </thead>
 
@@ -237,6 +230,22 @@ if ($action_submitted) {
     </div>
 
   </div>
+
+  <script>
+  document.getElementById("searchAny").addEventListener("keyup", function () {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(row => {
+      let temp = row.cells[0].textContent.toLowerCase();
+      if (temp.includes(filter)) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  });
+</script>
 
 </body>
 

@@ -126,7 +126,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="rounded-lg mt-16">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title mb-9 fw-semibold">User Activity Logs</h5>
 
           <form id="formUserLog">
 
@@ -136,11 +135,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
           </form>
 
+          <br>
+
           <table class="table table-striped">
-            <thead class="thead-dark">
+            <thead>
               <tr>
-                <th>Timestamp</th>
-                <th>Activity</th>
+                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;">Timestamp</th>
+                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;">Activity</th>
               </tr>
             </thead>
             <tbody>

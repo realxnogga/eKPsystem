@@ -67,14 +67,7 @@ if (isset($_POST['search'])) {
           <b>
             <br>
 
-            <form method="GET" action="" class="searchInput">
-              <div style="display: flex; align-items: center;">
-                <input type="text" name="municipality" class="form-control" placeholder="Search Municipality" value="<?php echo $searchedMunicipality; ?>">
-                <br><button type="submit" class="bg-gray-800 ml-2 hover:bg-gray-700 px-3 py-2 rounded-md text-white" name="search">Search
-                </button>
-                <input type="submit" class="bg-white border-1 ml-2 border-black text-black px-3 py-2 rounded-md " name="clear" value="Clear" formnovalidate>
-              </div>
-            </form>
+            <input type="search" id="searchAny" class="form-control" placeholder="Search Municipality">
 
             <br>
 
@@ -82,11 +75,11 @@ if (isset($_POST['search'])) {
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th class="municipality-column" style="padding: 8px; background-color: #d3d3d3;">Municipality</th>
-                  <th class="admin-column" style="padding: 8px; background-color: #d3d3d3;">Admin</th>
-                  <th class="contact-column" style="padding: 8px; background-color: #d3d3d3;">Contact Number</th>
-                  <th class="email-column" style="padding: 8px; background-color: #d3d3d3;">Email</th>
-                  <th class="actions-column" style="padding: 8px; background-color: #d3d3d3;">Action</th>
+                  <th class="municipality-column" style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;">Municipality</th>
+                  <th class="admin-column" style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;">Admin</th>
+                  <th class="contact-column" style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;">Contact No#</th>
+                  <th class="email-column" style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;">Email</th>
+                  <th class="actions-column" style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,6 +104,23 @@ if (isset($_POST['search'])) {
       </div>
     </div>
   </div>
+
+  <script>
+  document.getElementById("searchAny").addEventListener("keyup", function () {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(row => {
+      let temp = row.cells[0].textContent.toLowerCase();
+      if (temp.includes(filter)) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  });
+</script>
+
 
 </body>
 

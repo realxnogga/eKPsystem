@@ -143,21 +143,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="card">
         <div class="card-body">
 
-          <h5 class="card-title mb-9 fw-semibold">Barangay Complaint Archives</h5>
-
           <input type="text" class="form-control" name="search" id="searchUnarchive" placeholder="Search by Case No., Title, Complainants, or Respondents" onkeyup="searchTable()" class="searchInput" style="flex: 1; margin-right: 5px;">
 
 
           <br>
           <table id="UnarchiveTable" class="table table-striped w-full">
-            <thead class="thead-dark">
+            <thead>
               <tr class="flex w-full text-sm">
-                <th class="flex-1 px-2">No.</th>
-                <th class="flex-1 px-2">Title</th>
-                <th class="flex-1 px-2">Complainants</th>
-                <th class="flex-1 px-2">Respondents</th>
-                <th class="flex-1 px-2">Date</th>
-                <th class="flex-1 px-2">Unarchive</th>
+                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">No.</th>
+                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">Title</th>
+                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">Complainants</th>
+                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">Respondents</th>
+                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">Date</th>
+                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">Unarchive</th>
               </tr>
             </thead>
             <tbody class="flex flex-col max-h-[28rem] overflow-y-scroll">

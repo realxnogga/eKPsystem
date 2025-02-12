@@ -65,10 +65,14 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                     <b>
                         <br>
 
-                        <form method="GET" action="" class="searchInput" style="display: flex; align-items: center;">
+                        <input type="search" id="searchAny" class="form-control" placeholder="Search Account">
+
+                        <br>
+
+                        <!-- <form method="GET" action="" class="searchInput" style="display: flex; align-items: center;">
                             <input type="text" class="form-control" name="search" id="search" placeholder="Search by Name or Barangay Name" class="searchInput" required>
                             <input type="submit" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 ml-2 rounded-md text-white" value="Search" class="refresh-button">
-                        </form>
+                        </form> -->
 
 
                         <?php
@@ -77,7 +81,16 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
 
                         if (!empty($accountRequests)) {
                             echo '<table class="table table-striped">';
-                            echo '<thead class="thead-dark"><tr><th>Username</th><th>Name</th><th>Department</th><th>Email</th><th>Contact No.</th><th>Actions</th></tr></thead>';
+                            echo '<thead>
+                            <tr>
+                                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Username</th>
+                                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Name</th>
+                                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Department</th>
+                                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Email</th>
+                                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Contact No#</th>
+                                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Actions</th>
+                            </tr>
+                          </thead>';
                             echo '<tbody>';
 
                             foreach ($accountRequests as $user) {
@@ -126,6 +139,23 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
+
+    <script>
+    document.getElementById("searchAny").addEventListener("keyup", function() {
+      let filter = this.value.toLowerCase();
+      let rows = document.querySelectorAll("tbody tr");
+
+      rows.forEach(row => {
+        let temp = row.cells[0].textContent.toLowerCase();
+        if (temp.includes(filter)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    });
+  </script>
+
 </body>
 
 </html>
