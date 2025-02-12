@@ -33,14 +33,8 @@ $municipalityStmt->execute();
 $municipalityName = $municipalityStmt->fetchColumn();
 
 // Fetch available years for the dropdown
-$yearQuery = "SELECT DISTINCT year FROM average 
-              WHERE barangay IN (
-                  SELECT id FROM barangays 
-                  WHERE municipality_id = :municipality_id
-              ) 
-              ORDER BY year DESC";
+$yearQuery = "SELECT DISTINCT year FROM movrate ORDER BY year DESC";
 $yearStmt = $conn->prepare($yearQuery);
-$yearStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $yearStmt->execute();
 $years = $yearStmt->fetchAll(PDO::FETCH_COLUMN);
 
@@ -51,10 +45,11 @@ if (!in_array($currentYear, $years)) {
 
 // Fetch barangays and average scores for the selected year
 $query = "
-SELECT b.barangay_name, COALESCE(a.avg, 0) AS total 
+SELECT b.barangay_name, AVG(COALESCE(m.total, 0)) AS average_total 
 FROM barangays b 
-LEFT JOIN average a ON b.id = a.barangay AND a.year = :year
+LEFT JOIN movrate m ON b.id = m.barangay AND m.year = :year
 WHERE b.municipality_id = :municipality_id
+GROUP BY b.barangay_name
 ";
 
 $stmt = $conn->prepare($query);
@@ -67,7 +62,7 @@ $totals = [];
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $barangays[] = $row['barangay_name'];
-    $totals[] = $row['total'];
+    $totals[] = $row['average_total'];
 }
 
 // Fetch assessor_type data for the same municipality
@@ -80,6 +75,17 @@ $assessorStmt = $conn->prepare($assessorQuery);
 $assessorStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $assessorStmt->execute();
 $assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch admin data for the same municipality
+$adminQuery = "
+SELECT u.first_name, u.last_name
+FROM users u
+WHERE u.municipality_id = :municipality_id AND u.user_type = 'admin'
+";
+$adminStmt = $conn->prepare($adminQuery);
+$adminStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$adminStmt->execute();
+$admin = $adminStmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html lang="en">
@@ -138,13 +144,22 @@ $assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
   <div id="chart-container" class="w-1/2">
     <canvas id="barangayChart"></canvas>
   </div>
-  <div id="additional-info" class="w-1/2 p-4 bg-white rounded-lg shadow-md ml-4">
+  <div id="additional-info" class="w-1/2 p-4 bg-white rounded-lg shadow-md ml-4" style="font-size: 16px;">
     <!-- Add your additional content here -->
     <h2 class="text-lg font-bold mb-4">Members Committee of <span id="details-municipality-type"></span> of <?php echo strtoupper(htmlspecialchars($municipalityName)); ?></h2>
+    <?php if (!empty($admin)): ?>
+      <div class="flex items-center mt-4">
+        <h3 class="text-lg font-bold" id="admin-title">Admin:</h3>
+        <p class="ml-2"><?php echo htmlspecialchars($admin['first_name'] . ' ' . $admin['last_name']); ?></p>
+      </div>
+    <?php else: ?>
+      <p>No admin found for this municipality.</p>
+      <hr>
+    <?php endif; ?>
     <?php if (!empty($assessors)): ?>
       <ul>
         <?php foreach ($assessors as $assessor): ?>
-          <li><strong><?php echo htmlspecialchars($assessor['assessor_type']); ?></strong>: <?php echo htmlspecialchars($assessor['first_name'] . ' ' . $assessor['last_name']); ?></li>
+          <li><strong h3 class="text-lg font-bold"><?php echo htmlspecialchars($assessor['assessor_type']); ?></strong>: <?php echo htmlspecialchars($assessor['first_name'] . ' ' . $assessor['last_name']); ?></li>
         <?php endforeach; ?>
       </ul>
     <?php else: ?>
@@ -176,13 +191,14 @@ $assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
       $municipality_row = $stmt->fetch(PDO::FETCH_ASSOC);
       $municipality_name = $municipality_row ? strtoupper($municipality_row['municipality_name']) : 'No municipality found';
 
-      // Step 3: Fetch barangays and their total ratings from movrate, sorted by total in descending order
+      // Step 3: Fetch barangays and their total ratings from movrate, grouped by barangay and calculate the average
       $query = "
-          SELECT b.barangay_name AS barangay, m.total 
+          SELECT b.barangay_name AS barangay, AVG(m.total) AS average_total
           FROM barangays b
           JOIN movrate m ON b.id = m.barangay
           WHERE b.municipality_id = :municipality_id
-          ORDER BY m.total DESC";
+          GROUP BY b.barangay_name
+          ORDER BY average_total DESC";
 
       $stmt = $conn->prepare($query);
       $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
@@ -229,12 +245,13 @@ $assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
 
   // Filter dataset by selected year
   $query = "
-      SELECT b.barangay_name AS barangay, m.total 
+      SELECT b.barangay_name AS barangay, AVG(m.total) AS average_total
       FROM barangays b
       JOIN movrate m ON b.id = m.barangay
       WHERE b.municipality_id = :municipality_id
         AND YEAR(m.year) = :selectedYear  -- use 'year' instead of 'date'
-      ORDER BY m.total DESC";
+      GROUP BY b.barangay_name
+      ORDER BY average_total DESC";
   $stmt = $conn->prepare($query);
   $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
   $stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
@@ -260,8 +277,8 @@ $assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($barangay_ratings as $row): ?>
           <tr>
             <td class="px-4 py-2"><?php echo $num++; ?>. <span class="spacingtabs"><?php echo htmlspecialchars($row['barangay']); ?></span></td>
-            <td class="px-4 py-2"><?php echo htmlspecialchars($row['total']); ?></td>
-            <td class="px-4 py-2"><?php echo getAdjectivalRating($row['total']); ?></td>
+            <td class="px-4 py-2"><?php echo htmlspecialchars($row['average_total']); ?></td>
+            <td class="px-4 py-2"><?php echo getAdjectivalRating($row['average_total']); ?></td>
             <td class="px-4 py-2"><?php echo $rank++; ?></td>
           </tr>
         <?php endforeach; ?>
@@ -288,7 +305,7 @@ const barangayChart = new Chart(ctx, {
   data: {
     labels: barangays,
     datasets: [{
-      label: 'Total Score Average',
+      label: 'Average Total Score',
       data: totals,
       backgroundColor: totals.map(total => 
         total >= 100 ? 'rgba(0, 51, 102, 0.6)' : 'rgba(0, 51, 102, 0.6)'), 
@@ -305,7 +322,7 @@ const barangayChart = new Chart(ctx, {
         max: 100,
         title: {
           display: true,
-          text: 'Total Score'
+          text: 'Average Total Score'
         }
       }
     },
@@ -375,6 +392,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Update header and details with the classification
     document.getElementById("details-municipality-type").textContent = classification;
+
+    // Update admin title based on classification
+    const adminTitle = document.getElementById("admin-title");
+    if (classification === "Municipality") {
+        adminTitle.textContent = "MLGOO:";
+    } else if (classification === "City") {
+        adminTitle.textContent = "CLGOO:";
+    }
 });
 </script>
 
