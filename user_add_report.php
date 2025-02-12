@@ -2,8 +2,6 @@
 session_start();
 include 'connection.php';
 
-
-
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
@@ -12,9 +10,17 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 $userID = $_SESSION['user_id'] ?? '';
 $barangay_id = $_SESSION['barangay_id'] ?? '';
 
-// Check if there's a delete message to display
-$delete_message = isset($_SESSION['delete_message']) ? $_SESSION['delete_message'] : "";
-unset($_SESSION['delete_message']); // Clear the delete message after displaying it
+
+// $delete_message = isset($_SESSION['delete_message']) ? $_SESSION['delete_message'] : "";
+// unset($_SESSION['delete_message']); 
+
+if (!empty($_SESSION['delete_message'])) {
+  $message = urlencode($_SESSION['delete_message']);
+  unset($_SESSION['delete_message']);
+  header("Location: user_add_report.php?delete_userreport_message=$message");
+  exit();
+}
+
 
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
@@ -56,7 +62,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
 
   if ($existing_report) {
     // Report already exists for the specified month and year
-    $message = "A report already exists for " . date('F Y', strtotime($report_date));
+    // $message = "A report already exists for " . date('F Y', strtotime($report_date));
+
+    header("Location: user_add_report.php?&add_userreport_message=reportalreadyexist");
+    exit();
   } else {
 
     // Insert new row into the reports table
@@ -93,9 +102,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
     $stmt->bindParam(':outsideBrgy', $outsideBrgy);
 
     if ($stmt->execute()) {
-      $message = "Report added successfully";
+
+      header("Location: user_add_report.php?&add_userreport_message=reportsuccessadd");
+      exit();
     } else {
-      $message = "Failed to add report";
+
+      header("Location: user_add_report.php?&add_userreport_message=reportfailedadd");
+      exit();
     }
   }
 }
@@ -110,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reports</title>
   <link rel="shortcut icon" type="image/png" href="assets/images/logos/favicon.png" />
-  
+
   <style>
     .card {
       box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
@@ -143,11 +156,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                   <br>
 
                   <h5 class="card-title mb-9 fw-semibold">Add Existing Report </h5>
-                  <h6 class="text-success"> <?php if (isset($message)) {
-                                              echo $message;
-                                            } elseif (!empty($delete_message)) {
-                                              echo '<div class="alert alert-danger" role="alert">' . $delete_message . '</div>';
-                                            } ?></h6>
+
+                  <?php
+                  if (isset($_GET['add_userreport_message'])) {
+                    if ($_GET['add_userreport_message'] === 'reportalreadyexist') {
+                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Report already exists for the specified month and year.</div>";
+                    }
+                    if ($_GET['add_userreport_message'] === 'reportsuccessadd') {
+                      echo "<div id='alertMessage' class='alert alert-success' role='alert'>Report added successfully.</div>";
+                    }
+                    if ($_GET['add_userreport_message'] === 'reportfailedadd') {
+                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Report Failed to add.</div>";
+                    }
+                  }
+                  ?>
+
 
                   <div style="display: flex; align-items: center;">
 
@@ -228,6 +251,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
                 <div class="card-body p-4">
 
                   Existing Reports:
+
+                 
+                  <?php
+                  if (isset($_GET['delete_userreport_message'])) {
+                    if ($_GET['delete_userreport_message'] === 'Report Deleted Successfully') {
+                      echo "<div id='alertMessage' class='alert alert-success' role='alert'>Report deleted successfully.</div>";
+                    } else {
+                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Report failed to delete.</div>";
+                    }
+                  }
+                  ?>
+                  
+
                   <table class="table">
                     <thead>
                       <tr>
@@ -270,6 +306,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
       </div>
     </div>
   </div>
+
+  <script src="hide_toast.js"></script>
 </body>
 <!-- Add a JavaScript function to display a confirmation dialog -->
 <script>

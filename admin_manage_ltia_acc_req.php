@@ -72,10 +72,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $updateStmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
 
   if ($updateStmt->execute()) {
-    // Redirect back to the admin dashboard after successful update
+   
+    header("Location: admin_manage_ltia_acc_req.php?user_id=" . urlencode($userId) . "&manage_assessor_message=success");
+    exit();
+
   } else {
-    // Handle the case where the update fails
-    $error = "Update failed. Please try again.";
+  
+    header("Location: admin_manage_ltia_acc_req.php?user_id=" . urlencode($userId) . "&manage_assessor_message=error");
+    exit();
+
   }
 }
 ?>
@@ -112,11 +117,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
           <h5 class="card-title mb-9 fw-semibold">User Manage Account</h5>
           <hr>
+          <br>
           <b>
 
-            <?php if (isset($error)) { ?>
-              <p class="text-danger"><?php echo $error; ?></p>
-            <?php } ?>
+          <?php
+            if (isset($_GET['manage_assessor_message'])) {
+              if ($_GET['manage_assessor_message'] === 'success') {
+                echo "<div id='alertMessage' class='alert alert-success' role='alert'>Security answer updated successfully.</div>";
+              }
+              if ($_GET['manage_assessor_message'] === 'error') {
+                echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Security answer added successfully.</div>";
+              }
+            }
+            ?>
+
+
             <form method="post">
               <div class="form-group">
                 <label for="municipality_name">Municipality Name:</label>
@@ -149,6 +164,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </div>
+
+  <script src="hide_toast.js"></script>
 </body>
 
 </html>

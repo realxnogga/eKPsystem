@@ -177,9 +177,6 @@ $stmt_munireport_query = "SELECT
                               SUM(CASE WHEN municipality = :sanpedro THEN budget ELSE 0 END) AS sanpedro_budget_count,
                               SUM(CASE WHEN municipality = :starosa THEN budget ELSE 0 END) AS starosa_budget_count
 
-
-
-
                           FROM reports
                           WHERE municipality IN (:alaminos, :bay, :binan, :cabuyao, :calamba, :calauan, :losbanos, :sanpablo, :sanpedro, :starosa) AND YEAR(report_date) = YEAR(NOW())";
 
@@ -425,12 +422,6 @@ $budgetCountArray = [
 ];
 
 ?>
-
-
-
-
-
-
 
 
 <!DOCTYPE html>

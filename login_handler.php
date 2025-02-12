@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (isset($_SESSION['barangay_id']) && $_SESSION['status'] === 'loggedin') {
                     if ($_SESSION['barangay_id'] === $user['barangay_id']) {
                         // Another user from the same barangay is already logged in, prevent login
-                        header("Location: login.php?error=account_already_open");
+                        header("Location: login.php?login_message=account_already_open");
                         exit;
                     }
                 }
@@ -75,17 +75,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 } else {
                     // Invalid credentials, redirect back to the login page with an error message
-                    header("Location: login.php?error=invalid_credentials");
+                    header("Location: login.php?login_message=invalid_credentials");
                     exit;
                 }
             } else {
                 // User is not verified, redirect back to login with an error message
-                header("Location: login.php?error=not_verified");
+                header("Location: login.php?login_message=not_verified");
                 exit;
             }
         } else {
             // Invalid credentials, redirect back to the login page with an error message
-            header("Location: login.php?error=invalid_credentials");
+            header("Location: login.php?login_message=invalid_credentials");
             exit;
         }
     } catch (PDOException $e) {

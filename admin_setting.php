@@ -76,13 +76,13 @@ if ($securityQuestions) {
 
                     if (isset($_GET['update_account_message'])) {
                       if ($_GET['update_account_message'] === 'success') {
-                        echo "<div class='alert alert-success' role='alert'>Updated successfully.</div>";
+                        echo "<div id='alertMessage' class='alert alert-success' role='alert'>Updated successfully.</div>";
                       }
                       if ($_GET['update_account_message'] === 'emailalreadyinuse') {
-                        echo "<div class='alert alert-danger' role='alert'>Email already in use.</div>";
+                        echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Email already in use.</div>";
                       }
                       if ($_GET['update_account_message'] === 'passwordeightlong') {
-                        echo "<div class='alert alert-danger' role='alert'>Password should be at least 8 characters long.</div>";
+                        echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Password should be at least 8 characters long.</div>";
                       }
                     }
 
@@ -141,16 +141,16 @@ if ($securityQuestions) {
                           <?php
                           if (isset($_GET['update_securityquestion_message'])) {
                             if ($_GET['update_securityquestion_message'] === 'SQupdatedsuccessfully') {
-                              echo "<div class='alert alert-success' role='alert'>Security answer updated successfully.</div>";
+                              echo "<div id='alertMessage' class='alert alert-success' role='alert'>Security answer updated successfully.</div>";
                             }
                             if ($_GET['update_securityquestion_message'] === 'SQaddedsuccessfully') {
-                              echo "<div class='alert alert-success' role='alert'>Security answer added successfully.</div>";
+                              echo "<div id='alertMessage' class='alert alert-success' role='alert'>Security answer added successfully.</div>";
                             }
                             if ($_GET['update_securityquestion_message'] === 'SQupdatederror') {
-                              echo "<div class='alert alert-danger' role='alert'>Updating security answer failed.</div>";
+                              echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Updating security answer failed.</div>";
                             }
                             if ($_GET['update_securityquestion_message'] === 'SQaddederror') {
-                              echo "<div class='alert alert-danger' role='alert'>Adding security answer failed.</div>";
+                              echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Adding security answer failed.</div>";
                             }
                           }
                           ?>
@@ -278,6 +278,7 @@ if ($securityQuestions) {
     </div>
   </div>
 
+  <script src="hide_toast.js"></script>
 </body>
 
 </html>
