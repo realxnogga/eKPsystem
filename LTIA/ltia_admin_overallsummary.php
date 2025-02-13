@@ -146,7 +146,7 @@ $admin = $adminStmt->fetch(PDO::FETCH_ASSOC);
   </div>
   <div id="additional-info" class="w-1/2 p-4 bg-white rounded-lg shadow-md ml-4" style="font-size: 16px;">
     <!-- Add your additional content here -->
-    <h2 class="text-lg font-bold mb-4">Members Committee of <span id="details-municipality-type"></span> of <?php echo strtoupper(htmlspecialchars($municipalityName)); ?></h2>
+    <h2 class="text-lg font-bold mb-4">Members Committee of <span id="details-municipality-type"></span> of <?php echo (htmlspecialchars($municipalityName)); ?></h2>
     <?php if (!empty($admin)): ?>
       <div class="flex items-center mt-4">
         <h3 class="text-lg font-bold" id="admin-title">Admin:</h3>
