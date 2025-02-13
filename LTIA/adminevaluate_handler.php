@@ -56,7 +56,12 @@ try {
 
     $rate_data = [];
     foreach ($rate_fields as $field) {
-        $rate_data[$field] = $_POST[$field] ?? '0';
+        // Check if the field exists and is not empty
+        if (isset($_POST[$field]) && $_POST[$field] !== '') {
+            $rate_data[$field] = $_POST[$field];
+        } else {
+            $rate_data[$field] = null;
+        }
     }
 
     if ($existing_rate) {
