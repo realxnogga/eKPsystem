@@ -144,7 +144,7 @@ function traverseDirectory()
 
       <li>
         <a href="<?php echo traverseDirectory(); ?>admin_ltia_assessor_req.php" class="<?php echo isActive('admin_ltia_assessor_req.php') . ' ' . isActive('admin_manage_ltia_acc_req.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-          <i class="ti ti-certificate-2 text-2xl"></i>
+          <i class="ti ti-user-exclamation text-2xl"></i>
           <span>LTIA assesor request</span>
         </a>
       </li>
