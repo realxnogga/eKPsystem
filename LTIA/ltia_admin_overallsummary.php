@@ -145,27 +145,32 @@ $admin = $adminStmt->fetch(PDO::FETCH_ASSOC);
     <canvas id="barangayChart"></canvas>
   </div>
   <div id="additional-info" class="w-1/2 p-4 bg-white rounded-lg shadow-md ml-4" style="font-size: 16px;">
-    <!-- Add your additional content here -->
-    <h2 class="text-lg font-bold mb-4">Members Committee of <span id="details-municipality-type"></span> of <?php echo (htmlspecialchars($municipalityName)); ?></h2>
+    <h2 class="text-lg font-bold mb-4">Members Committee of <span id="details-municipality-type"></span> of <?php echo htmlspecialchars($municipalityName); ?></h2>
+    
     <?php if (!empty($admin)): ?>
       <div class="flex items-center mt-4">
         <h3 class="text-lg font-bold" id="admin-title">Admin:</h3>
         <p class="ml-2"><?php echo htmlspecialchars($admin['first_name'] . ' ' . $admin['last_name']); ?></p>
       </div>
+      <hr class="my-2">
     <?php else: ?>
-      <p>No admin found for this municipality.</p>
-      <hr>
+      <p class="text-red-500">No admin found for this municipality.</p>
+      <hr class="my-2">
     <?php endif; ?>
+    
     <?php if (!empty($assessors)): ?>
-      <ul>
+      <ul class="list-disc pl-5">
         <?php foreach ($assessors as $assessor): ?>
-          <li><strong h3 class="text-lg font-bold"><?php echo htmlspecialchars($assessor['assessor_type']); ?></strong>: <?php echo htmlspecialchars($assessor['first_name'] . ' ' . $assessor['last_name']); ?></li>
+          <li class="mb-2">
+            <strong class="text-lg font-bold"><?php echo htmlspecialchars($assessor['assessor_type']); ?></strong>: <?php echo htmlspecialchars($assessor['first_name'] . ' ' . $assessor['last_name']); ?>
+          </li>
+          <hr class="my-2">
         <?php endforeach; ?>
       </ul>
     <?php else: ?>
-      <p>No assessors found for this municipality.</p>
+      <p class="text-red-500">No assessors found for this municipality.</p>
     <?php endif; ?>
-  </div>
+</div>
 </div>
 
 <div class="w-full p-4 bg-white rounded-lg shadow-md mt-4">
