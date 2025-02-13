@@ -93,15 +93,70 @@ $remark_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT
 $remark_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
 $remark_stmt->execute();
 $remark_rows = $remark_stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all rows
+  
+// Fetch assessor names and admin data for the same municipality
+$municipality_id = $_SESSION['municipality_id'];
 
 // Fetch assessor names
-$assessor_sql = "SELECT id, assessor_type FROM users WHERE user_type = 'assessor'";
+$assessor_sql = "
+SELECT u.id, u.assessor_type, u.first_name, u.last_name
+FROM users u
+WHERE u.municipality_id = :municipality_id AND u.user_type = 'assessor'
+";
 $assessor_stmt = $conn->prepare($assessor_sql);
+$assessor_stmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $assessor_stmt->execute();
 $assessors = $assessor_stmt->fetchAll(PDO::FETCH_ASSOC);
 $assessor_names = [];
 foreach ($assessors as $assessor) {
     $assessor_names[$assessor['id']] = $assessor['assessor_type'];
+}
+
+// Fetch admin data
+$admin_sql = "
+SELECT u.id, u.first_name, u.last_name
+FROM users u
+WHERE u.municipality_id = :municipality_id AND u.user_type = 'admin'
+";
+$admin_stmt = $conn->prepare($admin_sql);
+$admin_stmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$admin_stmt->execute();
+$admin = $admin_stmt->fetch(PDO::FETCH_ASSOC);
+
+// Fetch municipality name
+$municipalityQuery = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
+$municipalityStmt = $conn->prepare($municipalityQuery);
+$municipalityStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$municipalityStmt->execute();
+$municipalityName = $municipalityStmt->fetchColumn();
+
+// Classify municipality as city or municipality
+$cities = ["Calamba", "Biñan", "San Pedro", "Sta Rosa", "Cabuyao", "San Pablo"];
+$municipalities = ["Bay", "Alaminos", "Calauan", "Los Baños"];
+
+function normalizeName($name) {
+    return strtolower(str_replace(' ', '', $name));
+}
+
+function classifyMunicipality($municipalityName, $cities, $municipalities) {
+    $normalized = normalizeName($municipalityName);
+    $normalizedCities = array_map('normalizeName', $cities);
+    $normalizedMunicipalities = array_map('normalizeName', $municipalities);
+
+    if (in_array($normalized, $normalizedCities)) {
+        return "City";
+    } elseif (in_array($normalized, $normalizedMunicipalities)) {
+        return "Municipality";
+    } else {
+        return "Unknown";
+    }
+}
+
+$classification = classifyMunicipality($municipalityName, $cities, $municipalities);
+
+if ($admin) {
+    $adminTitle = $classification === "City" ? "CLGOO" : "MLGOO";
+    $assessor_names[$admin['id']] = $adminTitle;
 }
 
 $file_changed = false; // Flag to track if any files have changed
@@ -1710,7 +1765,7 @@ input[type="file"] {
                 style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
           <button type="button" id="cancel34" onclick="clearInput('threepeoplesorg_pdf_File', 'submit34', 'cancel34')" 
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
-    </td>   
+          </td>   
           </tr>
               <tr>
                 <th>Total Average</th>
