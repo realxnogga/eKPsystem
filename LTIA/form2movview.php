@@ -70,8 +70,8 @@ foreach ($rate_rows as $rate_row) {
                 $rate_sums[$key] = 0;
                 $rate_counts[$key] = 0;
             }
-            $rate_sums[$key] += $value;
-            $rate_counts[$key]++;
+            $rate_sums[$key] += $value; // Sum the ratings
+            $rate_counts[$key]++; // Count the number of ratings
         }
     }
 }
@@ -79,10 +79,86 @@ foreach ($rate_rows as $rate_row) {
 // Calculate averages
 $rate_averages = [];
 foreach ($rate_sums as $key => $sum) {
-    if ($rate_counts[$key] > 0) {
-        $rate_averages[$key] = round($sum / $rate_counts[$key], 2);
+    // Calculate average only if there are ratings
+    if (isset($rate_counts[$key]) && $rate_counts[$key] > 0) {
+        $rate_averages[$key] = round($sum / $rate_counts[$key], 2); // Calculate average
     } else {
-        $rate_averages[$key] = 'Not rated';
+        $rate_averages[$key] = 'Not rated'; // Indicate not rated if no assessors rated
+    }
+}// Calculate average rates
+$rate_sums = [];
+$rate_counts = [];
+foreach ($rate_rows as $rate_row) {
+    foreach ($rate_row as $key => $value) {
+        if (strpos($key, '_rate') !== false && $value !== null) {
+            if (!isset($rate_sums[$key])) {
+                $rate_sums[$key] = 0;
+                $rate_counts[$key] = 0;
+            }
+            $rate_sums[$key] += $value; // Sum the ratings
+            $rate_counts[$key]++; // Count the number of ratings
+        }
+    }
+}
+
+// Calculate averages
+$rate_averages = [];
+foreach ($rate_sums as $key => $sum) {
+    // Calculate average only if there are ratings
+    if (isset($rate_counts[$key]) && $rate_counts[$key] > 0) {
+        $rate_averages[$key] = round($sum / $rate_counts[$key], 2); // Calculate average
+    } else {
+        $rate_averages[$key] = 'Not rated'; // Indicate not rated if no assessors rated
+    }
+}// Calculate average rates
+$rate_sums = [];
+$rate_counts = [];
+foreach ($rate_rows as $rate_row) {
+    foreach ($rate_row as $key => $value) {
+        if (strpos($key, '_rate') !== false && $value !== null) {
+            if (!isset($rate_sums[$key])) {
+                $rate_sums[$key] = 0;
+                $rate_counts[$key] = 0;
+            }
+            $rate_sums[$key] += $value; // Sum the ratings
+            $rate_counts[$key]++; // Count the number of ratings
+        }
+    }
+}
+
+// Calculate averages
+$rate_averages = [];
+foreach ($rate_sums as $key => $sum) {
+    // Calculate average only if there are ratings
+    if (isset($rate_counts[$key]) && $rate_counts[$key] > 0) {
+        $rate_averages[$key] = round($sum / $rate_counts[$key], 2); // Calculate average
+    } else {
+        $rate_averages[$key] = 'Not rated'; // Indicate not rated if no assessors rated
+    }
+}// Calculate average rates
+$rate_sums = [];
+$rate_counts = [];
+foreach ($rate_rows as $rate_row) {
+    foreach ($rate_row as $key => $value) {
+        if (strpos($key, '_rate') !== false && $value !== null) {
+            if (!isset($rate_sums[$key])) {
+                $rate_sums[$key] = 0;
+                $rate_counts[$key] = 0;
+            }
+            $rate_sums[$key] += $value; // Sum the ratings
+            $rate_counts[$key]++; // Count the number of ratings
+        }
+    }
+}
+
+// Calculate averages
+$rate_averages = [];
+foreach ($rate_sums as $key => $sum) {
+    // Calculate average only if there are ratings
+    if (isset($rate_counts[$key]) && $rate_counts[$key] > 0) {
+        $rate_averages[$key] = round($sum / $rate_counts[$key], 2); // Calculate average
+    } else {
+        $rate_averages[$key] = 'Not rated'; // Indicate not rated if no assessors rated
     }
 }
 
