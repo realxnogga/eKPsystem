@@ -41,6 +41,22 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
+  <link rel="stylesheet" href="hide_show_icon.css">
+  <!-- delete later -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+        table {
+            width: 100%;
+            table-layout: fixed; /* Ensures all columns have equal width */
+        }
+        th, td {
+        
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+
 
 </head>
 
@@ -68,7 +84,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
           <b>
             <br>
 
-            <input type="search" id="searchAny" class="form-control" placeholder="Search Account">
+            <input type="search" id="searchAny" class="form-control" placeholder="search">
 
             <br>
 
@@ -104,16 +120,27 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                 echo '<td>' . $user['contact_number'] . '</td>';
                 echo '<td>' . $user['barangay_name'] . '</td>';
 
-                echo '<td>';
+                echo '<td class="flex items-center flex-col">';
 
                 if (!isset($user['verified']) || !$user['verified']) {
-                  echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
+                  echo '<form class="flex items-center flex-col" method="post" action="' . $_SERVER['PHP_SELF'] . '">';
 
                   echo '<input type="hidden" name="user_id" value="' . $user['id'] . '">';
 
-                  echo '<button class="btn btn-success m-1 bg-green-500" type="submit" name="action" value="verify">Unlock</button>';
+                  echo '<button class="w-fit btn btn-success m-1 bg-green-500" type="submit" name="action" value="verify">
+                    <span>
+                      <i class="ti ti-lock-open-2 text-lg show-icon"></i>
+                      <p class="hide-icon hidden">Unlock</p>
+                  </span>   
+                  </button>';
 
-                  echo '<button class="btn btn-danger m-1 bg-red-500" type="submit" name="action" value="deny">Deny</button>';
+                  echo '<button class="w-fit btn btn-danger m-1 bg-red-500" type="submit" name="action" value="deny">    
+                   <span>
+                      <i class="ti ti-circle-off text-lg show-icon"></i>
+                      <p class="hide-icon hidden">Deny</p>
+                   </span>  
+                  </button>';
+
                   echo '</form>';
                 } else {
                   echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
@@ -121,7 +148,12 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                   echo '<button class="btn btn-danger m-1" type="submit" name="action" value="unverify">Unverify</button>';
                   echo '</form>';
                 }
-                echo '<a href="admin_manage_acc_req.php?user_id=' . $user['id'] . '" class="btn btn-light m-1">Manage</a>';
+                echo '<button class="w-fit btn btn-light m-1 bg-gray-300" onclick="window.location.href=\'admin_manage_acc_req.php?user_id=' . $user['id'] . '\'">
+                <span>
+                      <i class="ti ti-user-cog text-lg show-icon"></i>
+                      <p class="hide-icon hidden">Manage</p>
+                   </span>  
+                </button>';
 
                 echo '</td>';
                 echo '</tr>';

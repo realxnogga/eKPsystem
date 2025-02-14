@@ -82,6 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <script src="https://cdn.tailwindcss.com"></script>
 
 
+
   <style>
     /* Style for the background color */
     body {
@@ -153,6 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       align-items: flex-start;
     }
   </style>
+
 </head>
 
 <body class="bg-[#E8E8E7]">

@@ -42,8 +42,22 @@ if ($action_submitted) {
 
   <!-- delete later -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
+  <link rel="stylesheet" href="hide_show_icon.css">
 
+  <style>
+        table {
+            width: 100%;
+            table-layout: fixed; /* Ensures all columns have equal width */
+        }
+        th, td {
+        
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+    
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -71,7 +85,7 @@ if ($action_submitted) {
           <b>
             <br>
 
-            <input type="search" id="searchAny" class="form-control" placeholder="Search Barangay">
+            <input type="search" id="searchAny" class="form-control" placeholder="search">
 
             <br>
 
@@ -102,14 +116,14 @@ if ($action_submitted) {
                   <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Email</th>
                   <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Contact No#</th>
                   <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Barangay Name</th>
-                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Lock</th>
-                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">View Report</th>
+                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Action</th>
+
                 </tr>
               </thead>
 
               <?php
               echo '<tbody>';
-
+            
               if ($action_submitted) {
                 while ($verifiedUser = $searchUsersStatement->fetch(PDO::FETCH_ASSOC)) {
                   // Fetch barangay name for the current user if the key exists
@@ -123,22 +137,26 @@ if ($action_submitted) {
 
                   // Displaying table rows for search results
                   echo '<tr>';
-                  echo '<td>' . $verifiedUser['username'] . '</td>';
+                  echo '<td class="max-w-[10ch]">' . $verifiedUser['username'] . '</td>';
                   echo '<td>' . $verifiedUser['first_name'] . ' ' . $verifiedUser['last_name'] . '</td>';
                   echo '<td>' . $verifiedUser['email'] . '</td>';
                   echo '<td>' . $verifiedUser['contact_number'] . '</td>';
                   echo '<td>' . $barangayName . '</td>';
-                  echo '<td>';
+                  echo '<td class="flex flex-col gap-y-2">';
                   // Your actions/buttons for search results
                   echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
                   echo '<input type="hidden"  name="user_id" value="' . $verifiedUser['id'] . '">';
                   // echo '<button class="bg-green-500 hover:bg-green-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">1Lock</button>';
-
-                  echo '<button class="bg-red-500 hover:bg-red-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">Lock</button>';
+                
+                  echo '<button class="bg-red-500 hover:bg-red-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">
+                  <span>
+                  <i class="ti ti-lock text-lg show-icon"></i>
+                  <p class="whitespace-nowrap hide-icon hidden">Lock</p>
+                  </span>    
+                  </button>';
 
                   echo '</form>';
-                  echo '</td>';
-                  echo '<td>';
+                 
                   // Your actions/buttons for search results
                   echo '<form method="post" action="admin_viewreport.php">';
                   echo '<input type="hidden" name="user_id" value="' . $verifiedUser['id'] . '">';
@@ -150,7 +168,12 @@ if ($action_submitted) {
                   echo '<input type="hidden" name="barangay_id" value="' . $barangayId . '">';
                   // echo '<button class="btn btn-success m-1" type="submit" name="viewreport">View Report</button>';
 
-                  echo '<button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="viewreport">View Report</button>';
+                  echo '<button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="viewreport">
+                  <span>
+                      <i class="ti ti-report-search text-lg show-icon"></i>
+                      <p class="whitespace-nowrap hide-icon hidden hide-icon">View Report</p>
+                      </span>
+                  </button>';
 
                   echo '</form>';
                   echo '</td>';
@@ -174,14 +197,23 @@ if ($action_submitted) {
                   echo '<td>' . $verifiedUser['email'] . '</td>';
                   echo '<td>' . $verifiedUser['contact_number'] . '</td>';
                   echo '<td>' . ($barangayName === '' ? '(NA)assessor' : $barangayName) . '</td>';
-                  echo '<td>';
+                  echo '<td class="flex flex-col gap-y-2">';
                   // Your actions/buttons for verified users
                   echo '<form method="post"  action="' . $_SERVER['PHP_SELF'] . '">';
                   echo '<input type="hidden" name="user_id" value="' . $verifiedUser['id'] . '">';
-                  echo '<button class="bg-red-500 hover:bg-red-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">Lock</button>';
+
+                  echo '<button class="bg-red-500 hover:bg-red-400 w-fit px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">
+  <span>
+    <i class="ti ti-lock text-lg show-icon"></i>
+    <p class="whitespace-nowrap hide-icon hidden">Lock</p>
+  </span>
+  
+</button>
+';
+
                   echo '</form>';
-                  echo '</td>';
-                  echo '<td>';
+                
+                
                   // Your actions/buttons for verified users
                   echo '<form method="post"  action="admin_viewreport.php">';
                   echo '<input type="hidden" name="user_id" value="' . $verifiedUser['id'] . '">';
@@ -204,7 +236,10 @@ if ($action_submitted) {
                     name="viewreport" 
                     formaction="admin_viewreport.php?user_id=' . $verifiedUser['id'] . '&barangay_id=' . $barangayId . '" 
                     ' . ($verifiedUser['user_type'] === 'assessor' ? 'disabled' : '') . '>
-                    View Report 
+                      <span>
+                      <i class="ti ti-report-search text-lg show-icon"></i>
+                      <p class="whitespace-nowrap hide-icon hidden hide-icon">View Report</p>
+                      </span>
                   </button>';
                   }
                   echo '<input type="hidden" name="barangay_id" value="' . $barangayId . '">';

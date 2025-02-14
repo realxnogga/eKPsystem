@@ -41,6 +41,24 @@ if (isset($_POST['search'])) {
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
   <link rel="stylesheet" href="assets/css/styles.min.css" />
 
+
+  <link rel="stylesheet" href="hide_show_icon.css">
+
+  <style>
+    table {
+      width: 100%;
+      table-layout: fixed;
+      /* Ensures all columns have equal width */
+    }
+
+    th,
+    td {
+
+      padding: 8px;
+      text-align: center;
+    }
+  </style>
+
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -90,10 +108,15 @@ if (isset($_POST['search'])) {
                     <td><?php echo $row['contact_number']; ?></td>
                     <td><?php echo $row['email']; ?></td>
                     <td>
-                    
-                      <a href="sa_manageregisteredmuni.php?admin_id=<?php echo $row['id']; ?>" class="btn btn-primary m1">
-                        <i class="fas fa-cog"></i> Manage
-                      </a>
+
+
+                    <button class="w-fit btn btn-info m-1 bg-blue-500" onclick="window.location.href='sa_manageregisteredmuni.php?admin_id=<?php echo $row['id']; ?>'">
+                    <span>
+                     <i class="ti ti-user-cog text-lg show-icon text-white"></i>
+                     <p class="hide-icon hidden">Manage</p>
+                    </span>
+                    </button>
+
                     </td>
                   </tr>
                 <?php } ?>
@@ -106,20 +129,20 @@ if (isset($_POST['search'])) {
   </div>
 
   <script>
-  document.getElementById("searchAny").addEventListener("keyup", function () {
-    let filter = this.value.toLowerCase();
-    let rows = document.querySelectorAll("tbody tr");
+    document.getElementById("searchAny").addEventListener("keyup", function() {
+      let filter = this.value.toLowerCase();
+      let rows = document.querySelectorAll("tbody tr");
 
-    rows.forEach(row => {
-      let temp = row.cells[0].textContent.toLowerCase();
-      if (temp.includes(filter)) {
-        row.style.display = "";
-      } else {
-        row.style.display = "none";
-      }
+      rows.forEach(row => {
+        let temp = row.cells[0].textContent.toLowerCase();
+        if (temp.includes(filter)) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
     });
-  });
-</script>
+  </script>
 
 
 </body>

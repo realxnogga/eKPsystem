@@ -1,0 +1,29 @@
+
+/* By default, show the lock icon */
+.show-icon {
+display: inline-block;
+}
+
+/* Hide the unlock icon by default */
+.hide-icon {
+display: none;
+}
+
+/* When hovered, hide the lock icon and show the unlock icon */
+button:hover .show-icon {
+display: none;
+}
+
+button:hover .hide-icon {
+display: inline-block;
+}
+
+/* When hovered, hide the lock icon and show the unlock icon */
+a:hover .show-icon {
+    display: none;
+}
+    
+a:hover .hide-icon {
+    display: inline-block;
+}
+
