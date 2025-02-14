@@ -437,7 +437,7 @@ $(document).ready(function () {
     }
 
     // Add event listeners for rate inputs and remark textareas
-    $('input[type="number"].score-input, textarea[placeholder="Remarks"]').on('change', function() {
+    $('input[type="number"].score-input, textarea[placeholder="Remarks"]').on('change input', function(event) {
         // Check if a barangay is selected
         var selectedBarangay = $('#barangay_select').val();
         if (!selectedBarangay) {
@@ -452,48 +452,107 @@ $(document).ready(function () {
             var max = parseFloat($(this).attr('max'));
             var value = parseFloat($(this).val());
             
-            if (value < min || value > max) {
-                showModal(`Please enter a number between ${min} and ${max}`);
-                $(this).val(''); // Clear invalid input
+            if (isNaN(value) || value < min || value > max) {
+                showModal('Please enter a number between ' + min + ' and ' + max);
+                $(this).val('');
                 return;
             }
         }
-        
-        // Automatically submit the form
-        $('form').submit();
-        
-        if ($(this).val() !== '') {
-            $(this).css('background-color', ''); // Reset background
-            $(this).css('border-color', ''); // Reset border
-        } else {
-            $(this).css('background-color', '#ffebee'); // Light red background
-            $(this).css('border-color', '#ef5350'); // Red border
+
+        // For remarks, only submit if it's a change event (not input)
+        if ($(this).is('textarea') && event.type === 'input') {
+            // Just enable the submit button for textarea input
+            $('input[type="submit"]').prop('disabled', false).css({
+                'opacity': '1',
+                'cursor': 'pointer',
+                'background-color': '#000033'
+            });
+            return;
         }
+
+        // Remove any existing messages
+        $('.save-success, .save-error').remove();
+
+        // Automatically submit the form
+        var form = $(this).closest('form');
+        var formData = new FormData(form[0]);
+        
+        $.ajax({
+            url: 'adminevaluate_handler.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log('Raw Response:', response);
+                
+                // Parse response if it's a string
+                if (typeof response === 'string') {
+                    try {
+                        response = JSON.parse(response);
+                    } catch (e) {
+                        console.log('Failed to parse response:', e);
+                    }
+                }
+                
+                if (response && response.status === 'success') {
+                    // Show success message next to the changed input
+                    var successMsg = $(`
+                        <div class="save-success" style="
+                            position: absolute;
+                            background-color: #90EE90;
+                            padding: 4px 8px;
+                            border-radius: 4px;
+                            font-size: 12px;
+                            margin-left: 10px;
+                            display: inline-block;
+                            z-index: 1000;">
+                            <span style="color: #006400;">✓</span> Saved
+                        </div>
+                    `);
+                    $(event.target).after(successMsg);
+                    setTimeout(function() {
+                        successMsg.fadeOut(function() {
+                            $(this).remove();
+                        });
+                    }, 2000);
+
+                    if ($(event.target).val() !== '') {
+                        $(event.target).css({
+                            'background-color': '',
+                            'border-color': ''
+                        });
+                    } else {
+                        $(event.target).css({
+                            'background-color': '#ffebee',
+                            'border-color': '#ef5350'
+                        });
+                    }
+                } else {
+                    showModal('Error saving changes');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('Error:', error);
+                showModal('Error saving changes');
+            }
+        });
     });
 
     // Add form submission handler
     $('form').on('submit', function(e) {
         e.preventDefault();
+        var form = this;
         
-        // Validate all number inputs before submission
-        var isValid = true;
-        $('input[type="number"].score-input').each(function() {
-            var min = parseFloat($(this).attr('min'));
-            var max = parseFloat($(this).attr('max'));
-            var value = parseFloat($(this).val());
-            
-            if (value !== '' && (value < min || value > max)) {
-                showModal(`Please ensure all ratings are between their specified minimum and maximum values`);
-                isValid = false;
-                return false;
-            }
-        });
-        
-        if (!isValid) {
-            return false;
+        // Get the last modified input
+        var lastModifiedInput = $('input[type="number"]:focus');
+        if (!lastModifiedInput.length) {
+            lastModifiedInput = $('input[type="number"]').filter(function() {
+                return $(this).val() !== '';
+            }).last();
         }
         
-        // Create FormData object
+        // Collect form data
         var formData = new FormData(this);
         
         // Submit form via AJAX
@@ -504,24 +563,75 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function(response) {
-                // Only attempt to parse and show errors if response is not empty
-                if (response && response.trim() !== '') {
+                console.log('Raw Response:', response);
+                
+                // Parse response if it's a string
+                if (typeof response === 'string') {
                     try {
-                        var result = JSON.parse(response);
-                        if (result.status === 'error') {
-                            $('#modalMessage').text(result.message);
-                            $('#responseModal').modal('show');
-                        }
+                        response = JSON.parse(response);
                     } catch (e) {
-                        // Do nothing on parse error - assume success
+                        console.log('Failed to parse response:', e);
+                    }
+                }
+                
+                console.log('Parsed Response:', response);
+                
+                // Remove any existing messages
+                $('.save-success, .save-error').remove();
+                
+                if (response && response.status === 'success') {
+                    var successMsg = $(`
+                        <div class="save-success" style="
+                            position: absolute;
+                            background-color: #90EE90;
+                            padding: 4px 8px;
+                            border-radius: 4px;
+                            font-size: 12px;
+                            margin-left: 10px;
+                            display: inline-block;
+                            z-index: 1000;">
+                            <span style="color: #006400;">✓</span> Saved
+                        </div>`);
+                    
+                    if (lastModifiedInput.length) {
+                        successMsg.insertAfter(lastModifiedInput);
+                        setTimeout(function() {
+                            successMsg.fadeOut(200, function() {
+                                $(this).remove();
+                            });
+                        }, 1000);
                     }
                 }
             },
             error: function(xhr, status, error) {
-                // Only show modal for actual AJAX errors
-                if (error) {
-                    $('#modalMessage').text('Error saving changes');
-                    $('#responseModal').modal('show');
+                console.log('Error:', error);
+                console.log('Status:', status);
+                console.log('Response:', xhr.responseText);
+                
+                // Remove any existing messages
+                $('.save-success, .save-error').remove();
+                
+                var errorMsg = $(`
+                    <div class="save-error" style="
+                        position: absolute;
+                        background-color: #ffebee;
+                        padding: 4px 8px;
+                        border-radius: 4px;
+                        font-size: 12px;
+                        margin-left: 10px;
+                        display: inline-block;
+                        color: #c62828;
+                        z-index: 1000;">
+                        Failed to save changes
+                    </div>`);
+                
+                if (lastModifiedInput.length) {
+                    errorMsg.insertAfter(lastModifiedInput);
+                    setTimeout(function() {
+                        errorMsg.fadeOut(200, function() {
+                            $(this).remove();
+                        });
+                    }, 1000);
                 }
             }
         });
@@ -552,7 +662,7 @@ $(document).ready(function () {
 </script>
 </head>
 <body class="bg-[#E8E8E7]">
-  <<?php include "../assessor_sidebar_header.php"; ?>
+  <?php include "../assessor_sidebar_header.php"; ?>
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
     <div class="card">
@@ -924,28 +1034,28 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-                <details>
-                <summary><b>1. To the Court: Submitted/presented copies of settlement agreement to the Court</b></summary>
-                <p><br>
-                  <b>Criteria Description:</b> <br>
-                  Copies of the settlement agreement must be submitted to the Court within the following periods: 
-                  <ul>
-                    <li>After the lapse of the ten-day period repudiating the mediation/conciliation settlement agreement</li>
-                    <li>Or within five (5) calendar days from the date of the arbitration award</li>
-                  </ul>
-                  <br>
-                  
-                  <b>Scoring Details:</b> <br><br>
-                  <b>5.0 points</b> - 80%-100% of the settlement agreements were submitted on time.<br>
-                  <b>4.0 points</b> - 60%-79% of the settlement agreements were submitted on time.<br>
-                  <b>3.0 points</b> - 40%-59% of the settlement agreements were submitted on time.<br>
-                  <b>2.0 points</b> - 20%-39% of the settlement agreements were submitted on time.<br>
-                  <b>1.0 point</b> - 1%-19% of the settlement agreements were submitted on time.<br>
-                  <b>0 points</b> - 0% of the reports were submitted on time.<br><br>
+              <details>
+            <summary><b>1. To the Court: Submitted/presented copies of settlement agreement to the Court</b></summary>
+              <p><br>
+                <b>Criteria Description:</b> <br>
+                Copies of the settlement agreement must be submitted to the Court within the following periods: 
+                <ul>
+                  <li>After the lapse of the ten-day period repudiating the mediation/conciliation settlement agreement</li>
+                  <li>Or within five (5) calendar days from the date of the arbitration award</li>
+                </ul>
+                <br>
+                
+                <b>Scoring Details:</b> <br><br>
+                <b>5.0 points</b> - 80%-100% of the settlement agreements were submitted on time.<br>
+                <b>4.0 points</b> - 60%-79% of the settlement agreements were submitted on time.<br>
+                <b>3.0 points</b> - 40%-59% of the settlement agreements were submitted on time.<br>
+                <b>2.0 points</b> - 20%-39% of the settlement agreements were submitted on time.<br>
+                <b>1.0 point</b> - 1%-19% of the settlement agreements were submitted on time.<br>
+                <b>0 points</b> - 0% of the reports were submitted on time.<br><br>
 
-                  <b>Note:</b> Timeliness is critical. Submission is considered on time only if it adheres strictly to the ten-day period after mediation/conciliation or five (5) days post-arbitration award.
-                </p>
-               </details>
+                <b>Note:</b> Timeliness is critical. Submission is considered on time only if it adheres strictly to the ten-day period after mediation/conciliation or five (5) days post-arbitration award.
+              </p>
+             </details>
                 </td>
                 <td>5</td>
                 <td class="file-column" data-type="IC_1">
@@ -956,13 +1066,13 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td><details>
-                <summary><b>2. To the DILG (Monthly): Submission of required report to the DILG</b></summary>
-                <p><br>
-                  2 points - Submitted/presented the required report to the DILG within the prescribed period<br>
-                  1 point - Submitted/presented a partial report to the DILG within the prescribed period<br>
-                  0 point - The required report to the DILG was not submitted or was submitted beyond the prescribed period
-                </p>
-              </details>
+              <summary><b>2. To the DILG (Monthly): Submission of required report to the DILG</b></summary>
+              <p><br>
+                2 points - Submitted/presented the required report to the DILG within the prescribed period<br>
+                1 point - Submitted/presented a partial report to the DILG within the prescribed period<br>
+                0 point - The required report to the DILG was not submitted or was submitted beyond the prescribed period
+              </p>
+            </details>
               </td>
                 <td>2</td>
                 <td class="file-column" data-type="IC_2">
@@ -972,22 +1082,16 @@ if (classification === "City") {
             <td><textarea name="IC_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <th>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-              </tr>
-              <tr>
                 <td>
-                <details>
-              <summary><b>Notice of Meeting</b></summary>
-              <p><br>
-                <b>2.0 points</b> - Minimum of 12 meetings with KP-related matters, complete details, each Lupon member must sign (indicating their name, date, and time of receipt) when receiving notices of the meeting.<br>
-                <b>1.0 point</b> - Anything beyond the compliance document, with incomplete details.<br>
-                <b>0 point</b> - No data presented.
-              </p>
-            </details>
+              <details>
+            <summary><b>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</b></summary>
+            <p><br>
+              <b>Notice of Meeting</b><br><br>
+              <b>2.0 points</b> - Minimum of 12 meetings with KP-related matters, complete details, each Lupon member must sign (indicating their name, date, and time of receipt) when receiving notices of the meeting.<br>
+              <b>1.0 point</b> - Anything beyond the compliance document, with incomplete details.<br>
+              <b>0 point</b> - No data presented.
+            </p>
+          </details>
                     </td>
                 <td>2</td>
                 <td class="file-column" data-type="ID_1">
@@ -998,18 +1102,18 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-                <details>
-                <summary><b>Minutes of the Meeting</b></summary>
-                <p><br>
-                  <b>Number of months with KP-related meetings with minutes and attendance sheets conducted:</b><br><br>
-                  <b>8.0 points</b> - 12 months.<br>
-                  <b>6.0 points</b> - 9-11 months.<br>
-                  <b>4.0 points</b> - 6-8 months.<br>
-                  <b>2.0 points</b> - 3-5 months.<br>
-                  <b>1.0 point</b> - 1-2 months.<br>
-                  <b>0 point</b> - No meeting.
-                </p>
-              </details>
+              <details>
+            <summary><b>Minutes of the Meeting</b></summary>
+            <p><br>
+              <b>Number of months with KP-related meetings with minutes and attendance sheets conducted:</b><br><br>
+              <b>8.0 points</b> - 12 months.<br>
+              <b>6.0 points</b> - 9-11 months.<br>
+              <b>4.0 points</b> - 6-8 months.<br>
+              <b>2.0 points</b> - 3-5 months.<br>
+              <b>1.0 point</b> - 1-2 months.<br>
+              <b>0 point</b> - No meeting.
+            </p>
+          </details>
 
                 </td>
                 <td>8</td>
@@ -1028,18 +1132,18 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-                <details>
-                <summary><b>A. Quantity of settled cases against filed</b></summary>
-                <p><br>
-                  <b>With a minimum of 10 cases settled, the percentage of cases received by the Lupon resulting in settlement:</b><br><br>
-                  <b>10.0 points</b> - 100%.<br>
-                  <b>8.0 points</b> - 80%-99%.<br>
-                  <b>6.0 points</b> - 60%-79%.<br>
-                  <b>4.0 points</b> - 40%-59%.<br>
-                  <b>2.0 points</b> - 1%-39%.<br>
-                  <b>0 point</b> - 0%.
-                </p>
-              </details>
+              <details>
+            <summary><b>A. Quantity of settled cases against filed</b></summary>
+            <p><br>
+              <b>With a minimum of 10 cases settled, the percentage of cases received by the Lupon resulting in settlement:</b><br><br>
+              <b>10.0 points</b> - 100%.<br>
+              <b>8.0 points</b> - 80%-99%.<br>
+              <b>6.0 points</b> - 60%-79%.<br>
+              <b>4.0 points</b> - 40%-59%.<br>
+              <b>2.0 points</b> - 1%-39%.<br>
+              <b>0 point</b> - 0%.
+            </p>
+          </details>
                     </td>
                 <td>10</td>
                 <td class="file-column" data-type="IIA">
@@ -1050,13 +1154,13 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-                <details>
-                <summary><b>B. Quality of Settlement of Cases</b></summary>
-                <p><br>
-                  <b>1 point</b> - for non-recurrence and zero cases repudiated (out of the total number of settled cases).<br>
-                  <b>0 point</b> - at least one (1) case repudiated (out of the total number of settled cases).
-                </p>
-              </details>
+              <details>
+            <summary><b>B. Quality of Settlement of Cases</b></summary>
+            <p><br>
+              <b>1 point</b> - for non-recurrence and zero cases repudiated (out of the total number of settled cases).<br>
+              <b>0 point</b> - at least one (1) case repudiated (out of the total number of settled cases).
+            </p>
+          </details>
                 </td>
                 <td></td>
                 <td></td>
@@ -1083,16 +1187,16 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-                <details>
-              <summary><b>C. At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
-              <p><br>
-                <b>8 points</b> - 80%-100% compliance with the terms of settlement or award.<br>
-                <b>6 points</b> - 70%-79% compliance with the terms of settlement or award.<br>
-                <b>4 points</b> - 60%-69% compliance with the terms of settlement or award.<br>
-                <b>2 points</b> - 50%-51% compliance with the terms of settlement or award.<br>
-                <b>1 point</b> - 49% and below compliance with the terms of settlement or award.
-              </p>
-            </details>
+              <details>
+            <summary><b>C. At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
+            <p><br>
+              <b>8 points</b> - 80%-100% compliance with the terms of settlement or award.<br>
+              <b>6 points</b> - 70%-79% compliance with the terms of settlement or award.<br>
+              <b>4 points</b> - 60%-69% compliance with the terms of settlement or award.<br>
+              <b>2 points</b> - 50%-51% compliance with the terms of settlement or award.<br>
+              <b>1 point</b> - 49% and below compliance with the terms of settlement or award.
+            </p>
+          </details>
                 </td>
                 <td>8</td>
                 <td class="file-column" data-type="IIC">
@@ -1110,18 +1214,18 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-                <details>
-              <summary><b>A. Settlement Technique Utilized by the Lupon</b></summary>
-              <p><br>
-                <b>10 points</b> – Five or more settlement techniques utilized.<br>
-                <b>8 points</b> – At least four settlement techniques utilized.<br>
-                <b>6 points</b> – At least three settlement techniques utilized.<br>
-                <b>4 points</b> – At least two settlement techniques utilized.<br>
-                <b>2 points</b> – At least one settlement technique utilized.<br>
-                <b>0 points</b> – No report submitted.
-              </p>
-              <p><b>Note:</b> Settlement techniques to be considered are those that are within the KP process and procedures.</p>
-            </details>
+              <details>
+            <summary><b>A. Settlement Technique Utilized by the Lupon</b></summary>
+            <p><br>
+              <b>10 points</b> – Five or more settlement techniques utilized.<br>
+              <b>8 points</b> – At least four settlement techniques utilized.<br>
+              <b>6 points</b> – At least three settlement techniques utilized.<br>
+              <b>4 points</b> – At least two settlement techniques utilized.<br>
+              <b>2 points</b> – At least one settlement technique utilized.<br>
+              <b>0 points</b> – No report submitted.
+            </p>
+            <p><b>Note:</b> Settlement techniques to be considered are those that are within the KP process and procedures.</p>
+          </details>
                 </td>
                 <td>10</td>
                 <td class="file-column" data-type="IIIA">
@@ -1132,13 +1236,13 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-                <details>
-                <summary><b>B. Coordination with Concerned Agencies Relating to Disputes Filed</b></summary>
-                <p><br>
-                  <b>5 points</b> – With proof of coordination relative to the filed disputes.<br>
-                  <b>0 points</b> – Without proof of coordination relative to the filed disputes.
-                </p>
-              </details>
+              <details>
+            <summary><b>B. Coordination with Concerned Agencies Relating to Disputes Filed</b></summary>
+            <p><br>
+              <b>5 points</b> – With proof of coordination relative to the filed disputes.<br>
+              <b>0 points</b> – Without proof of coordination relative to the filed disputes.
+            </p>
+          </details>
                 </td>
                 <td>5</td>
                 <td class="file-column" data-type="IIIB">
@@ -1244,23 +1348,24 @@ if (classification === "City") {
             <td><textarea name="IIIC_2formuni3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
-                <td><details>
-              <summary><b>D. KP Training or Seminar Participated Within the Assessment Period</b></summary>
-              <p><br>
-                Organized skills training participated by the Lupong Tagapamayapa. Trainings or seminars should cover the following, and the Lupon should be able to articulate during validation their learnings therefrom:
-                <ul>
-                  <li>1) General/basic orientation or review of the KP system</li>
-                  <li>2) Skills training on conduct of KP proceedings (e.g., relevant ADR systems, KP case management)</li>
-                  <li>3) Advanced knowledge on laws, policies, and standards in relation to the KP system (e.g., gender and human rights, criminal/civil justice)</li>
-                </ul>
-                <b>10 points</b> = At least 6 qualified trainings/seminars.<br>
-                <b>8 points</b> = At least 5 qualified trainings/seminars.<br>
-                <b>6 points</b> = At least 4 qualified trainings/seminars.<br>
-                <b>4 points</b> = At least 3 qualified trainings/seminars.<br>
-                <b>2 points</b> = At least 2 qualified trainings/seminars.<br>
-                <b>0 points</b> = No qualified information on training/seminar.
-              </p>
-            </details>
+                <td>
+              <details>
+            <summary><b>D. KP Training or Seminar Participated Within the Assessment Period</b></summary>
+            <p><br>
+              Organized skills training participated by the Lupong Tagapamayapa. Trainings or seminars should cover the following, and the Lupon should be able to articulate during validation their learnings therefrom:
+              <ul>
+                <li>1) General/basic orientation or review of the KP system</li>
+                <li>2) Skills training on conduct of KP proceedings (e.g., relevant ADR systems, KP case management)</li>
+                <li>3) Advanced knowledge on laws, policies, and standards in relation to the KP system (e.g., gender and human rights, criminal/civil justice)</li>
+              </ul>
+              <b>10 points</b> = At least 6 qualified trainings/seminars.<br>
+              <b>8 points</b> = At least 5 qualified trainings/seminars.<br>
+              <b>6 points</b> = At least 4 qualified trainings/seminars.<br>
+              <b>4 points</b> = At least 3 qualified trainings/seminars.<br>
+              <b>2 points</b> = At least 2 qualified trainings/seminars.<br>
+              <b>0 points</b> = No qualified information on training/seminar.
+            </p>
+          </details>
             </td>
                 <td>10</td>
                 <td class="file-column" data-type="IIID">
@@ -1385,24 +1490,35 @@ document.addEventListener("DOMContentLoaded", function() {
     </div>
 </div>
 <!-- Modal structure -->
-<div id="alertModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Notification</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p id="alertMessage"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+<div id="alertModal" class="modal fade" tabindex="-1" role="dialog" style="position: fixed; bottom: 20px; right: 20px; width: auto; margin: 0; background: none;">
+    <div class="modal-dialog" style="margin: 0; width: auto;">
+        <div class="modal-content" style="border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1); background: none;">
+            <div class="modal-body" style="padding: 0;">
+                <p id="alertMessage" style="margin: 0;"></p>
             </div>
         </div>
     </div>
 </div>
+<style>
+/* Remove modal backdrop */
+.modal-backdrop {
+    display: none;
+}
+
+/* Ensure modal is always on top */
+#alertModal {
+    z-index: 9999;
+}
+
+/* Remove default modal animation */
+.modal.fade {
+    opacity: 1;
+}
+
+.modal.fade .modal-dialog {
+    transform: none;
+}
+</style>
 </body>
 </html>
 <?php

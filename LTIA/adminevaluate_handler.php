@@ -3,7 +3,9 @@ session_start();
 
 include '../connection.php';
 
+// Set headers for JSON response
 header('Content-Type: application/json');
+header('Cache-Control: no-cache, must-revalidate');
 
 if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_type'], ['admin', 'assessor'])) {
     echo json_encode(['status' => 'error', 'message' => 'Unauthorized access']);
@@ -11,17 +13,23 @@ if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_type'], ['admin', 
 }
 
 try {
+    // Debug: Log the POST data
+    error_log('POST data: ' . print_r($_POST, true));
+    
     // Validate required fields
     $required_fields = ['mov_id', 'barangay_id'];
     foreach ($required_fields as $field) {
         if (!isset($_POST[$field]) || empty($_POST[$field])) {
-            echo json_encode(['status' => 'error', 'message' => 'Missing required values: ' . $field]);
+            echo json_encode(['status' => 'error', 'message' => 'Missing required field: ' . $field]);
             exit;
         }
     }
 
+    // Debug: Log the values we're using
     $mov_id = $_POST['mov_id'];
     $barangay_id = $_POST['barangay_id'];
+    error_log('Using mov_id: ' . $mov_id);
+    error_log('Using barangay_id: ' . $barangay_id);
     $user_id = $_SESSION['user_id'];
     $user_type = $_SESSION['user_type'];
     $current_date = date('Y-m-d H:i:s');
@@ -166,10 +174,12 @@ try {
     $stmt->execute();
 
     $conn->commit();
-    echo json_encode(['status' => 'success', 'message' => 'Changes saved successfully']);
+    echo json_encode(['status' => 'success']);
+    exit;
 
 } catch (Exception $e) {
     $conn->rollBack();
     echo json_encode(['status' => 'error', 'message' => 'Failed to save changes: ' . $e->getMessage()]);
+    exit;
 }
 ?>
