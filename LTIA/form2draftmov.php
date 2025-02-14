@@ -369,7 +369,7 @@ if (!empty($municipalityID)) {
             <?php endif; ?>
             </td>
               </tr>
-              <tr>
+              <tr id="municipality-row">
                 <td>b. Digital Record Filing</td>
                 <td><input type="file" id="IB_1bformuni_pdf_File" name="IB_1bformuni_pdf_File" accept=".pdf" onchange="validateFileType(this)" />
                 <input type="hidden" name="IB_1bformuni_pdf_File" id="IB_1bformuni_pdf_File" value="<?php echo $row['IB_1bformuni_pdf_File']; ?>">
@@ -729,8 +729,8 @@ if (!empty($municipalityID)) {
             <?php endif; ?>
             </td>
             </tr>
-              <tr>
-                <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
+            <tr id="municipality-row">
+            <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
                 <td><input type="file" id="IV_muni_pdf_File" name="IV_muni_pdf_File" accept=".pdf" onchange="validateFileType(this)" />
                 <input type="hidden" name="IV_muni_pdf_File" id="IV_muni_pdf_File" value="<?php echo $row['IV_muni_pdf_File']; ?>">
             </td>
