@@ -71,6 +71,7 @@ if ($securityQuestions) {
 
                   <h5 class="card-title mb-9 fw-semibold">Account Settings</h5>
                   <hr>
+                  <br>
                   <b>
                     <?php
 
@@ -132,6 +133,7 @@ if ($securityQuestions) {
                 <div class="card-body p-4">
                   <h5 class="card-title mb-9 fw-semibold">Update Security Settings</h5>
                   <hr>
+                  <br>
 
                   <form id="securityForm" method="post" action="security_handler.php">
                     <div class="tab-pane fade <?php echo !isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-security">
