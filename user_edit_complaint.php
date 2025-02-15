@@ -102,8 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //     $seen = " seen = 0,";
     //     $removenotif = " removenotif = 0,";
     // }
-}
-
+  }
 
   // Update the complaint in the 'complaints' table using an UPDATE query
   $query = "UPDATE complaints SET CNum = :caseNum, ForTitle = :forTitle, CNames = :complainants, RspndtNames = :respondents, CDesc = :complaintDesc, Petition = :petition, Mdate = :madeDate, RDate = :receivedDate, Pangkat = :pangkat, CType = :caseType, CStatus = :cStatus, CMethod = :cMethod, CAddress = :complainantAddress, RAddress = :respondentAddress,";

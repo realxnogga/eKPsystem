@@ -7,26 +7,26 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   exit;
 }
 
-// Retrieve the search input from the form
-$searchInput = isset($_GET['search']) ? $_GET['search'] : '';
-
-// Retrieve user-specific complaints from the database
 $userID = $_SESSION['user_id'];
 
-// Initial query for all complaints sorted by Mdate in descending order
-$query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 0";
+$result = '';
 
-// Modify your SQL query to filter out archived complaints if a search is performed
-if (!empty($searchInput)) {
-  // Add conditions to filter based on the search input
-  $query .= " AND (CNum LIKE '%$searchInput%' OR ForTitle LIKE '%$searchInput%' OR CNames LIKE '%$searchInput%' OR RspndtNames LIKE '%$searchInput%')";
+function getComplaintData($conn, $userID, $whatCol)
+{
+  $query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 0 ORDER BY $whatCol DESC";
+  return $conn->query($query);
+ 
 }
 
-$query .= " ORDER BY MDate DESC";
+$result = getComplaintData($conn, $userID, "complaint_created_date");
 
-$result = $conn->query($query);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-$query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 0 AND FileID IS NOT NULL";
+  if (isset($_POST['seeUpdateRecently'])) {
+    $result = getComplaintData($conn, $userID, "complaint_updated_date");
+  }
+}
+
 
 // Function to get the ordinal suffix
 function getOrdinalSuffix($number)
@@ -46,50 +46,14 @@ function getOrdinalSuffix($number)
   }
 }
 
+// $totalCountQuery = "SELECT COUNT(*) as total FROM complaints WHERE UserID = '$userID' AND IsArchived = 0";
+// if (!empty($searchInput)) {
+//   $totalCountQuery .= " AND (CNum LIKE '%$searchInput%' OR ForTitle LIKE '%$searchInput%' OR CNames LIKE '%$searchInput%' OR RspndtNames LIKE '%$searchInput%')";
+// }
 
-// shakii pa-add lang sa php mo, from here
-
-// Retrieve the search input from the form
-$searchInput = isset($_GET['search']) ? $_GET['search'] : '';
-
-// Retrieve user-specific complaints from the database
-$userID = $_SESSION['user_id'];
-
-// Set default values for $page and $complaintsPerPage
-// $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-// $complaintsPerPage = 5;
-
-// // Get the current page from the URL parameter
-// $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-
-// // Calculate the offset for the SQL query
-// $offset = ($page - 1) * $complaintsPerPage;
-
-// Initial query for all complaints sorted by Mdate in descending order
-$query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 0";
-
-// Modify your SQL query to filter out archived complaints if a search is performed
-if (!empty($searchInput)) {
-  // Add conditions to filter based on the search input
-  $query .= " AND (CNum LIKE '%$searchInput%' OR ForTitle LIKE '%$searchInput%' OR CNames LIKE '%$searchInput%' OR RspndtNames LIKE '%$searchInput%')";
-}
-
-$query .= " ORDER BY MDate DESC";
-
-// Modify your SQL query to include LIMIT and OFFSET
-// $query .= " LIMIT $complaintsPerPage OFFSET $offset";
-
-$result = $conn->query($query);
-
-
-$totalCountQuery = "SELECT COUNT(*) as total FROM complaints WHERE UserID = '$userID' AND IsArchived = 0";
-if (!empty($searchInput)) {
-  $totalCountQuery .= " AND (CNum LIKE '%$searchInput%' OR ForTitle LIKE '%$searchInput%' OR CNames LIKE '%$searchInput%' OR RspndtNames LIKE '%$searchInput%')";
-}
-
-$totalCountResult = $conn->query($totalCountQuery);
-$totalCountRow = $totalCountResult->fetch(PDO::FETCH_ASSOC);
-$totalCount = $totalCountRow['total'];
+// $totalCountResult = $conn->query($totalCountQuery);
+// $totalCountRow = $totalCountResult->fetch(PDO::FETCH_ASSOC);
+// $totalCount = $totalCountRow['total'];
 
 ?>
 
@@ -210,6 +174,8 @@ $totalCount = $totalCountRow['total'];
     }
   </style> -->
 
+  <link rel="stylesheet" href="hide_show_icon.css">
+
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -221,8 +187,8 @@ $totalCount = $totalCountRow['total'];
 
   <link rel="icon" type="image/x-icon" href="img/favicon.icon">
 
-   <!-- delete later -->
-   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- delete later -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <link rel="stylesheet" href="hide_show_icon.css">
 
@@ -262,6 +228,9 @@ $totalCount = $totalCountRow['total'];
       <div class="card">
         <div class="card-body">
 
+          <section>
+
+          </section>
           <details>
             <summary>Color Legend</summary>
             <br>
@@ -285,161 +254,168 @@ $totalCount = $totalCountRow['total'];
           <br>
 
           <b>
-            <form method="GET" action="" class="searchInput">
-              <div style="display: flex; align-items: center;">
-                <!-- search complaint -->
-                <input type="text" class="form-control" name="search" id="search" placeholder="Search by Case No., Title, Complainants, or Respondents" class="searchInput" style="flex: 1; margin-right: 5px;" onkeyup="liveSearch()">
-                <!-- add complaint button -->
-                <input type="button"
-                  class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white"
-                  value="Add complaint"
-                  onclick="checkOnlineStatus()"
-                  class="complaint-button"
-                  style="margin-left: 0;">
-                <script>
-                  function checkOnlineStatus() {
-                    if (navigator.onLine) {
-                      // If online, redirect to the regular add complaint page
-                      location.href = 'user_add_complaint.php';
-                    } else {
-                      // If offline, redirect to the offline add complaint page
-                      location.href = 'user_offline_add_complaint.php';
-                    }
-                  }
-                </script>
 
+            <div class="flex gap-x-3">
+              <input id="searchComplaintButton" onkeyup="searchTable()" type="search" class="form-control" placeholder="search">
 
-              </div>
+              <button type="button" class="btn btn-primary bg-blue-500" value="Add complaint" onclick="location.href='user_add_complaint.php';">
+                <span>
+                  <i class="ti ti-plus text-lg show-icon"></i>
+                  <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p>
+                </span>
+              </button>
+
+            </div>
+
+            <form method="POST" action="" class="py-2">
+              <input type="submit" name="seeUpdateRecently" value="see recent update">
             </form>
 
-            <br>
- 
             <div class="max-h-[30rem] overflow-y-scroll">
-            <table class="table">
-              <thead class="sticky top-0">
-                <tr>
-                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">No.</th>
-                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Title</th>
-                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Complainants</th>
-                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Respondents</th>
-                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Date</th>
-                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Status</th>
-                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Hearing</th>
-                  <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)): ?>
-                  <?php
-                  // Determine if the case is settled based on its method
-                  $isSettled = in_array($row['CMethod'], ['Mediation', 'Conciliation', 'Arbitration']);
-
-                  // Determine if the case is unsettled based on its status
-                  $isUnsettled = in_array($row['CMethod'], ['Pending', 'Repudiated', 'Dismissed', 'Certified to file action in court', 'Dropped/Withdrawn']);
-
-                  // Calculate the elapsed days since the complaint was added
-                  $dateAdded = strtotime($row['Mdate']);
-                  $currentDate = strtotime(date('Y-m-d'));
-                  $elapsedDays = ($currentDate - $dateAdded) / (60 * 60 * 24);
-
-      
-
-                  // Check if the complaint is settled, pending, or unsettled
-                  if ($isSettled) {
-                    $borderColor = 'bg-green-200'; // Light green for settled cases
-                  } elseif ($elapsedDays >= 10 && $elapsedDays <= 13) {
-                    $borderColor = 'bg-yellow-200'; // Light yellow for cases between 10 and 13 days
-                  } elseif ($elapsedDays >= 14 && $elapsedDays <= 30 && !$isSettled) {
-                    $borderColor = 'bg-red-200'; // Light red for cases between 14 and 30 days that are not settled
-                  } else {
-                    // Default case for 1-9 days or cases over 30 days, no color
-                    $borderColor = 'border-none';
-                  }
-                  ?>
-
-                   
-                  <tr class="<?= $borderColor; ?>">
-                    <td><?= str_pad($row['CNum'], 11, '0', STR_PAD_LEFT) ?></td>
-                    <td><?= $row['ForTitle'] ?></td>
-                    <td><?= $row['CNames'] ?></td>
-                    <td><?= $row['RspndtNames'] ?></td>
-                    <td><?= date('Y-m-d', strtotime($row['Mdate'])) ?></td>
-                    <td><?= $row['CMethod'] ?></td>
-
-                    <!-- for hearing column table -->
-                    <?php
-                    $complaintId = $row['id'];
-                    $caseProgressQuery = "SELECT current_hearing FROM case_progress WHERE complaint_id = $complaintId";
-                    $caseProgressResult = $conn->query($caseProgressQuery);
-                    $caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
-                    ?>
-                    <td>
-                      <?php if ($caseProgressRow): ?>
-                        <?php $currentHearing = $caseProgressRow['current_hearing']; ?>
-                        <?php if ($currentHearing === '0'): ?>
-                          Not Set
-                        <?php else: ?>
-                          <?php $ordinalHearing = str_replace('th', getOrdinalSuffix((int)$currentHearing), $currentHearing); ?>
-                          <?= $ordinalHearing ?> Hearing
-                        <?php endif; ?>
-                      <?php else: ?>
-                        Not Set
-                      <?php endif; ?>
-                    </td>
-                    <!-- ----------------------------------- -->
-
-                    <td class="flex flex-col items-center h-full border-none">
-                      <a
-                        href="user_edit_complaint.php?id=<?= $row['id'] ?>"
-                        class="btn btn-sm btn-secondary"
-                        title="Edit"
-                        data-placement="top"
-                        style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
-                        <i class="fas fa-edit" style="margin-right: 5px;"></i>
-                        Edit
-                      </a>
-
-                      <a
-                        href="archive_complaint.php?id=<?= $row['id'] ?>"
-                        class="btn btn-sm btn-danger"
-                        title="Archive"
-                        data-placement="top"
-                        style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
-                        <i class="fas fa-archive" style="margin-right: 5px;"></i>
-                        Archive
-                      </a>
-
-                      <a
-                        href="user_manage_case.php?id=<?= $row['id'] ?>"
-                        class="btn btn-sm btn-warning"
-                        title="Manage"
-                        data-placement="top"
-                        style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
-                        <i class="fas fa-folder" style="margin-right: 5px;"></i>
-                        Manage
-                      </a>
-
-                      <!-- <a
-                      href="user_uploadfile_complaint.php?id=<?= $row['id'] ?>&page=<?= $page ?>"
-                      class="btn btn-sm btn-primary"
-                      title="Upload"
-                      data-placement="top"
-                      style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
-                      <i class="fas fa-upload" style="margin-right: 5px;"></i>
-                      Upload
-                    </a> -->
-
-                    </td>
+              <table id="complaintTable" class="table">
+                <thead class="sticky top-0">
+                  <tr>
+                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">No.</th>
+                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Title</th>
+                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Complainants</th>
+                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Respondents</th>
+                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Date</th>
+                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Status</th>
+                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Hearing</th>
+                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Actions</th>
                   </tr>
-                <?php endwhile; ?>      
-              </tbody>
-            </table>
-            </div>    
+                </thead>
+
+                <tbody>
+                  <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)): ?>
+                    <?php
+                    // Determine if the case is settled based on its method
+                    $isSettled = in_array($row['CMethod'], ['Mediation', 'Conciliation', 'Arbitration']);
+
+                    // Determine if the case is unsettled based on its status
+                    $isUnsettled = in_array($row['CMethod'], ['Pending', 'Repudiated', 'Dismissed', 'Certified to file action in court', 'Dropped/Withdrawn']);
+
+                    // Calculate the elapsed days since the complaint was added
+                    $dateAdded = strtotime($row['Mdate']);
+                    $currentDate = strtotime(date('Y-m-d'));
+                    $elapsedDays = ($currentDate - $dateAdded) / (60 * 60 * 24);
+
+
+
+                    // Check if the complaint is settled, pending, or unsettled
+                    if ($isSettled) {
+                      $borderColor = 'bg-green-200'; // Light green for settled cases
+                    } elseif ($elapsedDays >= 10 && $elapsedDays <= 13) {
+                      $borderColor = 'bg-yellow-200'; // Light yellow for cases between 10 and 13 days
+                    } elseif ($elapsedDays >= 14 && $elapsedDays <= 30 && !$isSettled) {
+                      $borderColor = 'bg-red-200'; // Light red for cases between 14 and 30 days that are not settled
+                    } else {
+                      // Default case for 1-9 days or cases over 30 days, no color
+                      $borderColor = 'border-none';
+                    }
+                    ?>
+
+
+                    <tr class="<?= $borderColor; ?>">
+                      <td><?= str_pad($row['CNum'], 11, '0', STR_PAD_LEFT) ?></td>
+                      <td><?= $row['ForTitle'] ?></td>
+                      <td><?= $row['CNames'] ?></td>
+                      <td><?= $row['RspndtNames'] ?></td>
+                      <td><?= date('Y-m-d', strtotime($row['Mdate'])) ?></td>
+                      <td><?= $row['CMethod'] ?></td>
+
+                      <!-- for hearing column table -->
+                      <?php
+                      $complaintId = $row['id'];
+                      $caseProgressQuery = "SELECT current_hearing FROM case_progress WHERE complaint_id = $complaintId";
+                      $caseProgressResult = $conn->query($caseProgressQuery);
+                      $caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
+                      ?>
+                      <td>
+                        <?php if ($caseProgressRow): ?>
+                          <?php $currentHearing = $caseProgressRow['current_hearing']; ?>
+                          <?php if ($currentHearing === '0'): ?>
+                            Not Set
+                          <?php else: ?>
+                            <?php $ordinalHearing = str_replace('th', getOrdinalSuffix((int)$currentHearing), $currentHearing); ?>
+                            <?= $ordinalHearing ?> Hearing
+                          <?php endif; ?>
+                        <?php else: ?>
+                          Not Set
+                        <?php endif; ?>
+                      </td>
+                      <!-- ----------------------------------- -->
+
+                      <td class="flex flex-col items-center h-full border-none">
+                        <a
+                          href="user_edit_complaint.php?id=<?= $row['id'] ?>"
+                          class="btn btn-sm btn-secondary"
+                          title="Edit"
+                          data-placement="top"
+                          style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                          <i class="fas fa-edit" style="margin-right: 5px;"></i>
+                          Edit
+                        </a>
+
+                        <a
+                          href="archive_complaint.php?id=<?= $row['id'] ?>"
+                          class="btn btn-sm btn-danger"
+                          title="Archive"
+                          data-placement="top"
+                          style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                          <i class="fas fa-archive" style="margin-right: 5px;"></i>
+                          Archive
+                        </a>
+
+                        <a
+                          href="user_manage_case.php?id=<?= $row['id'] ?>"
+                          class="btn btn-sm btn-warning"
+                          title="Manage"
+                          data-placement="top"
+                          style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                          <i class="fas fa-folder" style="margin-right: 5px;"></i>
+                          Manage
+                        </a>
+
+                      </td>
+                    </tr>
+                  <?php endwhile; ?>
+                </tbody>
+              </table>
+            </div>
         </div>
       </div>
     </div>
   </div>
+
+  <script>
+    function searchTable() {
+
+      let input = document.getElementById('searchComplaintButton');
+      let filter = input.value.toLowerCase();
+      let table = document.getElementById('complaintTable');
+      let tr = table.getElementsByTagName('tr');
+
+      // Loop through all table rows, excluding the header
+      for (let i = 1; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName('td');
+        let rowText = '';
+
+        // Concatenate all text content from each cell
+        for (let j = 0; j < td.length - 1; j++) {
+          rowText += td[j].textContent || td[j].innerText;
+        }
+
+        // If the row matches the search term, show it, otherwise hide it
+        if (rowText.toLowerCase().indexOf(filter) > -1) {
+          tr[i].style.display = '';
+        } else {
+          tr[i].style.display = 'none';
+        }
+      }
+    }
+  </script>
+
 </body>
 
 </html>

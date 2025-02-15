@@ -82,7 +82,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
           <b>
             <br>
 
-            <input type="search" id="searchAny" class="form-control" placeholder="search">
+            <input onkeyup="searchTable();" type="search" id="searchAssessorRequestButton" class="form-control" placeholder="search">
 
             <br>
 
@@ -97,7 +97,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
             echo '<div id="account-requests" style="display: block;">';
 
             if (!empty($accountRequests)) {
-              echo '<table class="table table-striped">';
+              echo '<table id="assessorReqTable" class="table table-striped">';
               echo '<thead>
                             <tr>
                                 <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Username</th>
@@ -175,19 +175,31 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
   </div>
 
   <script>
-    document.getElementById("searchAny").addEventListener("keyup", function() {
-      let filter = this.value.toLowerCase();
-      let rows = document.querySelectorAll("tbody tr");
+   function searchTable() {
+    
+    let input = document.getElementById('searchAssessorRequestButton');
+    let filter = input.value.toLowerCase();
+    let table = document.getElementById('assessorReqTable');
+    let tr = table.getElementsByTagName('tr');
 
-      rows.forEach(row => {
-        let temp = row.cells[0].textContent.toLowerCase();
-        if (temp.includes(filter)) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      });
-    });
+    // Loop through all table rows, excluding the header
+    for (let i = 1; i < tr.length; i++) {
+      let td = tr[i].getElementsByTagName('td');
+      let rowText = '';
+
+      // Concatenate all text content from each cell
+      for (let j = 0; j < td.length - 1; j++) {
+        rowText += td[j].textContent || td[j].innerText;
+      }
+
+      // If the row matches the search term, show it, otherwise hide it
+      if (rowText.toLowerCase().indexOf(filter) > -1) {
+        tr[i].style.display = '';
+      } else {
+        tr[i].style.display = 'none';
+      }
+    }
+  }
   </script>
 
 </body>

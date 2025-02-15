@@ -143,7 +143,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="card">
         <div class="card-body">
 
-          <input type="text" class="form-control" name="search" id="searchUnarchive" placeholder="Search by Case No., Title, Complainants, or Respondents" onkeyup="searchTable()" class="searchInput" style="flex: 1; margin-right: 5px;">
+          <input type="text" class="form-control" name="search" id="searchUnarchive" placeholder="search" onkeyup="searchTable()" class="searchInput" style="flex: 1; margin-right: 5px;">
 
 
           <br>
