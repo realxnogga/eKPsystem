@@ -11,19 +11,23 @@ $userID = $_SESSION['user_id'];
 
 $result = '';
 
-function getComplaintData($conn, $userID, $whatCol)
+function getComplaintData($conn, $userID, $whatCol, $condition)
 {
-  $query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 0 ORDER BY $whatCol DESC";
+  $query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 0";
+
+  if (!is_null($condition)) $query .= " AND complaint_updated_date IS NOT NULL";
+
+  $query .= " ORDER BY $whatCol DESC";
+
   return $conn->query($query);
- 
 }
 
-$result = getComplaintData($conn, $userID, "complaint_created_date");
+$result = getComplaintData($conn, $userID, "complaint_created_date", null);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if (isset($_POST['seeUpdateRecently'])) {
-    $result = getComplaintData($conn, $userID, "complaint_updated_date");
+    $result = getComplaintData($conn, $userID, "complaint_updated_date", true);
   }
 }
 
@@ -185,10 +189,10 @@ function getOrdinalSuffix($number)
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
-  <link rel="icon" type="image/x-icon" href="img/favicon.icon">
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
   <!-- delete later -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
   <link rel="stylesheet" href="hide_show_icon.css">
 
@@ -203,6 +207,7 @@ function getOrdinalSuffix($number)
     td {
       padding: 8px;
       text-align: center;
+      place-items: center; /*for actions column */
     }
 
     .legend-color {
@@ -306,9 +311,9 @@ function getOrdinalSuffix($number)
                     if ($isSettled) {
                       $borderColor = 'bg-green-200'; // Light green for settled cases
                     } elseif ($elapsedDays >= 10 && $elapsedDays <= 13) {
-                      $borderColor = 'bg-yellow-200'; // Light yellow for cases between 10 and 13 days
+                      $borderColor = 'bg-yellow-100'; // Light yellow for cases between 10 and 13 days
                     } elseif ($elapsedDays >= 14 && $elapsedDays <= 30 && !$isSettled) {
-                      $borderColor = 'bg-red-200'; // Light red for cases between 14 and 30 days that are not settled
+                      $borderColor = 'bg-red-300'; // Light red for cases between 14 and 30 days that are not settled
                     } else {
                       // Default case for 1-9 days or cases over 30 days, no color
                       $borderColor = 'border-none';
@@ -346,7 +351,7 @@ function getOrdinalSuffix($number)
                       </td>
                       <!-- ----------------------------------- -->
 
-                      <td class="flex flex-col items-center h-full border-none">
+                      <td class="">
                         <a
                           href="user_edit_complaint.php?id=<?= $row['id'] ?>"
                           class="btn btn-sm btn-secondary"

@@ -183,9 +183,6 @@ if (isset($_GET['yearurl']) || isset($_GET['monthurl'])) {
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
-  <!-- delete later -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
   <style>
     .card {
       box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);

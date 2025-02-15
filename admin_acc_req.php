@@ -42,8 +42,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
   <link rel="stylesheet" href="hide_show_icon.css">
-  <!-- delete later -->
-  <script src="https://cdn.tailwindcss.com"></script>
+
 
   <style>
         table {

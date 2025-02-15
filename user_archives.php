@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Archives</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  
+
   <script>
     async function sendData(selectedIds) {
 

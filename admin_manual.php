@@ -17,8 +17,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
-  <!-- delete later -->
-  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-[#E8E8E7]">

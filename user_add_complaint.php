@@ -125,25 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>complaint</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
+  <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
 
   <style>
-    .select2-container--default .select2-selection--single {
-      background-color: #fff;
-      /* Set the background color to match other input types */
-      border: 1px solid #ced4da;
-      /* Set the border color */
-      border-radius: 4px;
-      /* Set border radius if needed */
-      height: calc(2.25rem + 2px);
-      /* Set the height to match other input types */
-    }
-
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
-      top: 5px;
-      /* Adjust the arrow position if needed */
-    }
-
-
     .card {
       box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
       border-radius: 15px;
@@ -330,11 +315,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Set the Case Number input field value -->
                     <input type="text" class="form-control" id="CNum" name="CNum" placeholder="MMYY - Case No." value="<?php echo $caseNum; ?>" onblur="validate(1)">
                   </div>
+                  
                   <div class="form-group col-sm-6 flex-column d-flex">
                     <label class="form-control-label px-3">For:<span class="text-danger">*</span></label>
                     <select class="form-control" id="ForTitle" name="ForTitle" onblur="validate(2)" required>
-                      <option value="">Select Title</option>
-                      <option value="">Others</option>
+                      <option value="" selected disabled></option>
                     </select>
                   </div>
 
@@ -459,7 +444,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "Nuisance (Art. 694 of the Civil Code in the relation to Art. 695, for local ordinance with penal sanctions)",
         "Violation of P.D. No. 1612 or the Anti-Fencing Law",
         "Violation of Republic Act No. 11313 or 'The Safe Spaces Act' Gender-based sexual harassment in streets and public spaces.",
-        "Others",
         "Sample tagalog1",
         "Sample tagalog2",
         "Sample tagalog3",
@@ -467,6 +451,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       // Initialize Select2
       $('#ForTitle').select2({
+        theme: 'bootstrap-5',
         placeholder: 'Select or start typing...',
         data: suggestions.map(function(item) {
           return {
@@ -490,16 +475,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         closeOnSelect: false
       });
 
-      // Add a click event listener to the "Other" option
-      $('#ForTitle').on('select2:select', function(e) {
-        var selectedValue = e.params.data.id;
-        if (selectedValue === 'Other') {
-          // Clear the selected value
-          $(this).val(null).trigger('change');
-          // Enable typing for the "Other" case
-          $(this).select2('open');
-        }
-      });
+      // // Add a click event listener to the "Other" option
+      // $('#ForTitle').on('select2:select', function(e) {
+      //   var selectedValue = e.params.data.id;
+      //   if (selectedValue === 'Other') {
+      //     // Clear the selected value
+      //     $(this).val(null).trigger('change');
+      //     // Enable typing for the "Other" case
+      //     $(this).select2('open');
+      //   }
+      // });
 
       // Handle keyup event to update the input value with the typed text
       $('#ForTitle').on('keyup', function(e) {

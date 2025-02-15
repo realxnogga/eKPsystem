@@ -40,8 +40,6 @@ if ($action_submitted) {
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
-  <!-- delete later -->
-  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
   <link rel="stylesheet" href="hide_show_icon.css">

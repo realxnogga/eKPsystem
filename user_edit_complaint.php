@@ -167,6 +167,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Edit Information</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
+  <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
+
   <style>
     .card {
       box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
@@ -175,8 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </style>
 
   <!-- ############################################################################### -->
-
-  <script src="user_notifjs.js"></script>
 
   <script>
     async function sendData(CNum, ForTitle, CNames, RspndtNames, CDesc, Petition, Mdate, RDate, CAddress, RAddress, Pangkat, CType, CStatus, CMethod) {
@@ -577,11 +578,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "Nuisance (Art. 694 of the Civil Code in the relation to Art. 695, for local ordinance with penal sanctions)",
         "Violation of P.D. No. 1612 or the Anti-Fencing Law",
         "Violation of Republic Act No. 11313 or 'The Safe Spaces Act' Gender-based sexual harassment in streets and public spaces.",
-        "Others..."
       ];
 
       // Initialize Select2
       $('#ForTitle').select2({
+        theme: 'bootstrap-5',
         placeholder: 'Select or start typing...',
         data: suggestions.map(function(item) {
           return {
@@ -605,16 +606,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         closeOnSelect: false
       });
 
-      // Add a click event listener to the "Other" option
-      $('#ForTitle').on('select2:select', function(e) {
-        var selectedValue = e.params.data.id;
-        if (selectedValue === 'Other') {
-          // Clear the selected value
-          $(this).val(null).trigger('change');
-          // Enable typing for the "Other" case
-          $(this).select2('open');
-        }
-      });
+      // // Add a click event listener to the "Other" option
+      // $('#ForTitle').on('select2:select', function(e) {
+      //   var selectedValue = e.params.data.id;
+      //   if (selectedValue === 'Other') {
+      //     // Clear the selected value
+      //     $(this).val(null).trigger('change');
+      //     // Enable typing for the "Other" case
+      //     $(this).select2('open');
+      //   }
+      // });
 
       // Handle keyup event to update the input value with the typed text
       $('#ForTitle').on('keyup', function(e) {
