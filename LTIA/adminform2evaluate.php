@@ -842,6 +842,7 @@ if (classification === "City") {
                 <th>CRITERIA</th>
                 <th>Assigned Points</th>
                 <th>File</th>
+                <th>Verification Actions</th>
                 <th>Rate</th>
                 <th>Remarks</th>
               </tr>
@@ -855,10 +856,12 @@ if (classification === "City") {
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
           </tr>
           <tr>
         <td><b>A. Observance of Settlement Procedure and Settlement Deadlines</b>
         </td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -889,8 +892,8 @@ if (classification === "City") {
             <td class="file-column" data-type="IA_1a">
               <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                </td>
+               <td>button</td>
             <td>  
-            <hr class="my-1">
               <input type="number" value="" name="IA_1a_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
             <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
           </td>
@@ -914,6 +917,7 @@ if (classification === "City") {
             <td class="file-column" data-type="IA_1b">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td>
             <input type="number" value="" name="IA_1b_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
           <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
@@ -939,6 +943,7 @@ if (classification === "City") {
   <td></td>
   <td></td>
   <td></td>
+  <td></td>
 </tr>
                <tr>
                 <td>a) Mediation (within 15 days from initial confrontation with the Lupon Chairman)</td>
@@ -946,6 +951,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2a">
               <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
           </td>
+          <td>button</td>
             <td><input type="number" value="" name="IA_2a_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2a_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -955,6 +961,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2b">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
+            <td>button</td>
             <td><input type="number" value="" name="IA_2b_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2b_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -964,6 +971,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2c">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IA_2c_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2c_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -973,6 +981,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2d">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IA_2d_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2d_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -982,11 +991,13 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2e">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IA_2e_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2e_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td><b>B. Systematic Maintenance of Records</b></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -998,6 +1009,7 @@ if (classification === "City") {
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
               </tr>
               <tr id="city-row" style="display:none;">
               <td>For Cities - computer database with searchable case information</td>
@@ -1005,11 +1017,13 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                 </td>
+                <td>button</td>
             <td><input type="number" value="" name="IB_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td ><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr id="municipality-row" style="display:none;">
               <td>For Municipalities:</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1021,6 +1035,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_1aformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IB_1aformuni_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_1aformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1030,6 +1045,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_1bformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IB_1bformuni_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IB_1bformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1039,6 +1055,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IB_2_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1048,6 +1065,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IB_3_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IB_3_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1057,11 +1075,13 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_4">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IB_4_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_4_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>C. Timely Submissions to the Court and the DILG</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -1096,6 +1116,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IC_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IC_1_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IC_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1113,11 +1134,13 @@ if (classification === "City") {
                 <td class="file-column" data-type="IC_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
+            <td>button</td>
             <td><input type="number" value="" name="IC_2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IC_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -1138,6 +1161,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="ID_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="ID_1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="ID_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1161,11 +1185,13 @@ if (classification === "City") {
                 <td class="file-column" data-type="ID_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="ID_2_pdf_rate" min="0" max="8" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="ID_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>II. EFFECTIVENESS IN SECURING THE SETTLEMENT OF INTERPERSONAL DISPUTE OBJECTIVE OF THE KATARUNGANG PAMBARANGAY</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -1190,6 +1216,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIA">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIA_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1207,6 +1234,7 @@ if (classification === "City") {
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
               </tr>
               <tr>
                 <td>1. Zero cases repudiated</td>
@@ -1214,6 +1242,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIB_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIB_1_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIB_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1223,6 +1252,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIB_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIB_2_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1243,11 +1273,13 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIC">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIC_pdf_rate" min="0" max="8" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIC_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>III. CREATIVITY AND RESOURCEFULNESS OF THE LUPONG TAGAPAMAYAPA</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -1272,6 +1304,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIA">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIIA_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1289,11 +1322,13 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIB">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIIB_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings" ></td>
             <td><textarea name="IIIB_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>C. Sustained information drive to promote Katarungang Pambarangay</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1313,6 +1348,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIIC_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1326,6 +1362,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_1forcities2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIIC_1forcities2_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1339,11 +1376,13 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_1forcities3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIIC_1forcities3_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="municipality-row" style="display:none;">
                 <td>2. For Municipalities</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1359,6 +1398,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_2formuni1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIIC_2formuni1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni1_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1372,6 +1412,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_2formuni2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIIC_2formuni2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1385,6 +1426,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_2formuni3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIIC_2formuni3_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1411,11 +1453,13 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIID">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IIID_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIID_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -1427,6 +1471,7 @@ if (classification === "City") {
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
               </tr>
               <tr id="city-row" style="display:none;">
                 <td>For Cities - the office or space should be exclusive for KP matters</td>
@@ -1434,6 +1479,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IV_forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IV_forcities_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IV_forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1443,6 +1489,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IV_muni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IV_muni_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IV_muni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1450,6 +1497,7 @@ if (classification === "City") {
                 <th>V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
                 <th></th>
                 <th></th>
+                <td></td>
                 <th></th>
                 <th></th>
               </tr>
@@ -1459,6 +1507,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="V_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="V_1_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="V_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1468,6 +1517,7 @@ if (classification === "City") {
               <td class="file-column" data-type="threepeoplesorg">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="threepeoplesorg_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="threepeoplesorg_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1497,7 +1547,7 @@ if (classification === "City") {
                 <p id="modalMessage"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" style="color: blue;" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary"  style="color: blue;" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
@@ -1567,7 +1617,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <p id="alertMessage"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                <button type="button" style="background-color: #000033;" class="btn btn-primary" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
