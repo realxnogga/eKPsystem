@@ -34,6 +34,32 @@ function traverseDirectory()
   return containsWord(getFullUrl(), 'LTIA') ? '../' : '';
 }
 
+
+$currentMunicipalityID = $_SESSION['municipality_id'] ?? null;
+
+function countAccountRequests($conn, $currentMunicipalityID, $userType)
+{
+  $accountRequestsQuery = "
+  SELECT COUNT(*) as total 
+  FROM users u 
+  LEFT JOIN barangays b ON u.barangay_id = b.id 
+  WHERE u.verified = 0 
+  AND u.municipality_id = :municipality_id 
+  AND u.user_type = '$userType'
+  AND (u.first_name LIKE :searchTerm OR u.last_name LIKE :searchTerm OR b.barangay_name LIKE :searchTerm)
+  ";
+
+  // Execute the query with the bound parameters
+  $statement = $conn->prepare($accountRequestsQuery);
+  $statement->execute([
+    ':municipality_id' => $currentMunicipalityID,
+    ':searchTerm' => '%'
+  ]);
+
+  return $statement->fetchColumn();
+}
+
+
 ?>
 
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>assets/css/styles.min.css" />
@@ -48,6 +74,9 @@ function traverseDirectory()
 <!-- tabler icon -->
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
+<!-- delete later -->
+<script src="https://cdn.tailwindcss.com"></script>
+
 <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">
     <div class="flex items-center justify-between">
@@ -60,7 +89,7 @@ function traverseDirectory()
           </svg>
         </button>
 
-        <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="flex ms-2 md:me-24">
+        <a href="<?php echo traverseDirectory(); ?>admin_dashboard.php" class="flex ms-2 md:me-24">
           <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
             EKPsys
           </p>
@@ -128,9 +157,13 @@ function traverseDirectory()
         </a>
       </li>
       <li>
-        <a href="<?php echo traverseDirectory(); ?>admin_acc_req.php" class="<?php echo isActive('admin_acc_req.php') . ' ' . isActive('admin_manage_acc_req.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>admin_acc_req.php" class="<?php echo isActive('admin_acc_req.php') . ' ' . isActive('admin_manage_acc_req.php'); ?> relative flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-user text-2xl"></i>
           <span>Account Requests</span>
+          <?php $tempBrgy = countAccountRequests($conn, $currentMunicipalityID, 'user'); ?>
+          <div class="<?php echo $tempBrgy == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-1 -right-1 rounded-[25px] flex items-center justify-center">
+            <p class="text-white text-xs px-[.3rem]"><?php echo $tempBrgy; ?></p>
+          </div>
         </a>
       </li>
 
@@ -143,12 +176,20 @@ function traverseDirectory()
       </li>
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>admin_ltia_assessor_req.php" class="<?php echo isActive('admin_ltia_assessor_req.php') . ' ' . isActive('admin_manage_ltia_acc_req.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>admin_ltia_assessor_req.php" class="<?php echo isActive('admin_ltia_assessor_req.php') . ' ' . isActive('admin_manage_ltia_acc_req.php'); ?> relative flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-user-exclamation text-2xl"></i>
           <span>LTIA assesor request</span>
+          <p class="absolute top-1 right-2">
+            <?php $tempAssessor = countAccountRequests($conn, $currentMunicipalityID, 'assessor'); ?>
+            <div class="<?php echo $tempAssessor == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-1 -right-1 rounded-[25px] flex items-center justify-center">
+              <p class="text-white text-xs px-[.3rem]"><?php echo $tempAssessor; ?></p>
+            </div>
+          </p>
         </a>
       </li>
       <hr class="my-1">
+
+
 
       <li>
         <a href="<?php echo traverseDirectory(); ?>admin_setting.php" class="<?php echo isActive('admin_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">

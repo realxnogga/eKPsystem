@@ -54,56 +54,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) 
         $insertSecurityStmt->bindParam(':answer3', password_hash($answer3, PASSWORD_BCRYPT), PDO::PARAM_STR);
 
 
-        function changeTextFunc($arg) {
-            if ($arg === 'user') return 'user';          
-            if ($arg=== 'superadmin') return 'sa';            
-            if ($arg === 'admin') return'admin';   
+        function changeTextFunc($arg)
+        {
+            if ($arg === 'user') return 'user';
+            if ($arg === 'superadmin') return 'sa';
+            if ($arg === 'admin') return 'admin';
             if ($arg === 'assessor') return 'assessor';
         }
         $temp = changeTextFunc($user_type);
 
         if ($insertSecurityStmt->execute()) {
 
-            if ($existingSecurity) {
-            
+            if ($isFirstTimeToAddSecurity) {
+
+                header("Location: {$temp}_dashboard.php");
+                exit();
+
+            } else {
+                
                 header("Location: {$temp}_setting.php?update_securityquestion_message=SQupdatedsuccessfully");
                 exit();
-                
-            }elseif (!$existingSecurity) {
-
-                header("Location: {$temp}_setting.php?update_securityquestion_message=SQaddedsuccessfully");
-                exit();
-
             }
+
         } else {
-
-            if ($existingSecurity) {
-
-                header("Location: {$temp}_setting.php?update_securityquestion_message=SQupdatederror");
-                exit();
-
-            }elseif (!$existingSecurity) {
-
-                header("Location: {$temp}_setting.php?update_securityquestion_message=SQaddederror");
-                exit();
-
-            }
+            header("Location: {$temp}_setting.php?update_securityquestion_message=SQupdatederror");
+            exit();
         }
-    }
-
-    switch ($usertype) {
-        case "user":
-            $isFirstTimeToAddSecurity ? header('Location: user_dashboard.php') : header('Location: user_setting.php');
-            break;
-        case "superadmin":
-            $isFirstTimeToAddSecurity ? header('Location: sa_dashboard.php') : header('Location: sa_setting.php');
-            break;
-        case "admin":
-            $isFirstTimeToAddSecurity ? header('Location: admin_dashboard.php') : header('Location: admin_setting.php');
-            break;
-        case "assessor":
-            $isFirstTimeToAddSecurity ? header('Location: LTIA/assessor_ltia_admin_dashboard.php') : header('Location: assessor_setting.php');
-            break;
     }
 
     exit();

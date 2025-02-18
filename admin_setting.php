@@ -145,15 +145,9 @@ if ($securityQuestions) {
                             if ($_GET['update_securityquestion_message'] === 'SQupdatedsuccessfully') {
                               echo "<div id='alertMessage' class='alert alert-success' role='alert'>Security answer updated successfully.</div>";
                             }
-                            if ($_GET['update_securityquestion_message'] === 'SQaddedsuccessfully') {
-                              echo "<div id='alertMessage' class='alert alert-success' role='alert'>Security answer added successfully.</div>";
-                            }
                             if ($_GET['update_securityquestion_message'] === 'SQupdatederror') {
                               echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Updating security answer failed.</div>";
-                            }
-                            if ($_GET['update_securityquestion_message'] === 'SQaddederror') {
-                              echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Adding security answer failed.</div>";
-                            }
+                            }       
                           }
                           ?>
 

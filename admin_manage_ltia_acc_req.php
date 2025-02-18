@@ -123,10 +123,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <?php
             if (isset($_GET['manage_assessor_message'])) {
               if ($_GET['manage_assessor_message'] === 'success') {
-                echo "<div id='alertMessage' class='alert alert-success' role='alert'>Security answer updated successfully.</div>";
+                echo "<div id='alertMessage' class='alert alert-success' role='alert'>Updated successfully.</div>";
               }
               if ($_GET['manage_assessor_message'] === 'error') {
-                echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Security answer added successfully.</div>";
+                echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Failed to update.</div>";
               }
             }
             ?>

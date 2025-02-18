@@ -58,7 +58,7 @@ function traverseDirectory()
           </svg>
         </button>
 
-        <a href="<?php echo traverseDirectory(); ?>user__dashboard.php" class="flex ms-2 md:me-24">
+        <a href="<?php echo traverseDirectory(); ?>sa_dashboard.php" class="flex ms-2 md:me-24">
           <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
             EKPsys
           </p>

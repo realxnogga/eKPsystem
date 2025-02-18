@@ -175,10 +175,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php
             if (isset($_GET['update_muni_message'])) {
               if ($_GET['update_muni_message'] === 'success') {
-                echo '<div id="alertMessage" class="alert alert-success" role="alert">Update success.</div>';
+                echo '<div id="alertMessage" class="alert alert-success" role="alert">Updated successfully.</div>';
               }
               if ($_GET['update_muni_message'] === 'error') {
-                echo '<div id="alertMessage" class="alert alert-danger" role="alert">Update failed.</div>';
+                echo '<div id="alertMessage" class="alert alert-danger" role="alert">Failed to update.</div>';
               }
             }
             ?>

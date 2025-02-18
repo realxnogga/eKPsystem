@@ -33,7 +33,7 @@ if (isset($_POST['register'])) {
     $utype = $_POST['utype'] ?? '';
     $utype = filter_var($utype, FILTER_SANITIZE_STRING);
 
-    $assessorType = $_POST['assessor'] ?? '';
+    $assessorType = $_POST['ForAssessor'] ?? '';
     $assessorType = filter_var($assessorType, FILTER_SANITIZE_STRING);
 
     $brgy_name = $_POST['barangay_name'] ?? '';
