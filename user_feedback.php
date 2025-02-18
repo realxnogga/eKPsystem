@@ -94,12 +94,12 @@ $questionTemp = $conn->query("SELECT * FROM feedback_questions ORDER BY fq_creat
                   <table style="table-layout: fixed;" class="w-full">
 
                     <tr class="border-b">
-                      <th class="py-2 text-start text-xs w-50">Questions</th>
-                      <th class="py-2 text-center text-xs">Very Satisfied</th>
-                      <th class="py-2 text-center text-xs">Satisfied</th>
-                      <th class="py-2 text-center text-xs">Neutral</th>
-                      <th class="py-2 text-center text-xs">Dissatisfied</th>
-                      <th class="py-2 text-center text-xs">Very Dissatisfied</th>
+                      <th class="py-2 text-start text-xs w-1/3">Questions</th>
+                      <th class="py-2 text-center text-xs">(5)Very Satisfied</th>
+                      <th class="py-2 text-center text-xs">(4)Satisfied</th>
+                      <th class="py-2 text-center text-xs">(3)Neutral</th>
+                      <th class="py-2 text-center text-xs">(2)Dissatisfied</th>
+                      <th class="py-2 text-center text-xs">(1)Very Dissatisfied</th>
                     </tr>
 
                     <tr>

@@ -162,78 +162,79 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
         }
         ?>
 
-     
-          <section>
-            <?php foreach ($questionTemp as $row) { ?>
 
-              <div class="w-50 flex justify-between items-center mt-4">
-                <h3 class='text-lg font-bold'><?php echo $row["feedback_title"]; ?></h3>
-                <p>Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
+        <section>
+          <?php foreach ($questionTemp as $row) { ?>
+
+            <div class="w-50 flex justify-between items-center mt-4">
+              <h3 class='text-lg font-bold'><?php echo $row["feedback_title"]; ?></h3>
+              <p>Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
+            </div>
+
+            <form method="POST" action="" class="flex flex-col gap-y-1 w-100 border-2 border-gray-200 rounded-lg p-2">
+
+              <div class="flex justify-between items-center">
+                <input value="<?php echo $row['fq1']; ?>" required name="editfq1" type="text" placeholder="Edit question 1" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                <p><?php echo getFeedbackDataFunc($conn, "fa1", "feedback_answers", $row['fq_id']); ?></p>
               </div>
 
-              <form method="POST" action="" class="flex flex-col gap-y-1 w-100 border-2 border-gray-200 rounded-lg p-2">
+              <div class="flex justify-between items-center">
+                <input value="<?php echo $row['fq2']; ?>" required name="editfq2" type="text" placeholder="Edit question 2" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                <p><?php echo getFeedbackDataFunc($conn, "fa2", "feedback_answers", $row['fq_id']); ?></p>
+              </div>
 
-                <div class="flex justify-between items-center">
-                  <input value="<?php echo $row['fq1']; ?>" required name="editfq1" type="text" placeholder="Edit question 1" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                  <p><?php echo getFeedbackDataFunc($conn, "fa1", "feedback_answers", $row['fq_id']); ?></p>
-                </div>
+              <div class="flex justify-between items-center">
+                <input value="<?php echo $row['fq3']; ?>" required name="editfq3" type="text" placeholder="Edit question 3" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                <p><?php echo getFeedbackDataFunc($conn, "fa3", "feedback_answers", $row['fq_id']); ?></p>
+              </div>
 
-                <div class="flex justify-between items-center">
-                  <input value="<?php echo $row['fq2']; ?>" required name="editfq2" type="text" placeholder="Edit question 2" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                  <p><?php echo getFeedbackDataFunc($conn, "fa2", "feedback_answers", $row['fq_id']); ?></p>
-                </div>
+              <div class="flex justify-between items-center">
+                <input value="<?php echo $row['fq4']; ?>" required name="editfq4" type="text" placeholder="Edit question 4" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                <p><?php echo getFeedbackDataFunc($conn, "fa4", "feedback_answers", $row['fq_id']); ?></p>
+              </div>
 
-                <div class="flex justify-between items-center">
-                  <input value="<?php echo $row['fq3']; ?>" required name="editfq3" type="text" placeholder="Edit question 3" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                  <p><?php echo getFeedbackDataFunc($conn, "fa3", "feedback_answers", $row['fq_id']); ?></p>
-                </div>
-
-                <div class="flex justify-between items-center">
-                  <input value="<?php echo $row['fq4']; ?>" required name="editfq4" type="text" placeholder="Edit question 4" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                  <p><?php echo getFeedbackDataFunc($conn, "fa4", "feedback_answers", $row['fq_id']); ?></p>
-                </div>
-
-                <div class="flex justify-between items-center">
-                  <input value="<?php echo $row['fq5']; ?>" required name="editfq5" type="text" placeholder="Edit question 5" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                  <p><?php echo getFeedbackDataFunc($conn, "fa5", "feedback_answers", $row['fq_id']); ?></p>
-                </div>
+              <div class="flex justify-between items-center">
+                <input value="<?php echo $row['fq5']; ?>" required name="editfq5" type="text" placeholder="Edit question 5" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                <p><?php echo getFeedbackDataFunc($conn, "fa5", "feedback_answers", $row['fq_id']); ?></p>
+              </div>
 
 
-                <input hidden value="<?php echo $row['fq_id']; ?>" required name="editfq_id" type="number">
+              <input hidden value="<?php echo $row['fq_id']; ?>" required name="editfq_id" type="number">
 
-                <section class="flex justify-between items-end">
-                  <button name="submitEditFeedbackQuestion<?php echo $row['fq_id']; ?>" type="submit" class="py-2 px-3 text-white rounded-md bg-blue-500 w-fit">
-                    Update
-                  </button>
-                  <div>
-                    <p><?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . ''); ?> / <?php echo countResponseFunc($conn, "barangays"); ?> <?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . '') > 1 ? "responses" : "response"; ?></p>
-                  </div>
-                </section>
+              <section class="flex justify-between items-end">
+                <button name="submitEditFeedbackQuestion<?php echo $row['fq_id']; ?>" type="submit" class="py-2 px-3 text-white rounded-md bg-blue-500 w-fit">
+                  Update
+                </button>   
+
+                <a class="" href="sa_feedback_view.php?fq_id_url=<?php echo $row['fq_id']; ?>">
+                  <p><?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . ''); ?> / <?php echo countResponseFunc($conn, "barangays"); ?> <?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . '') > 1 ? "responses" : "response"; ?></p>
+                </a>
+
+              </section>
 
 
-              </form>
-            <?php } ?>
-          </section>
-      
+            </form>
+          <?php } ?>
+        </section>
+
       </section>
     </div>
   </div>
 
   <script>
-
     function showmodalFunc() {
       document.getElementById('feedbackModal').classList.remove('hidden');
 
       document.getElementsByTagName('body')[0].classList.add('overflow-hidden');
       document.getElementsByTagName('body')[0].classList.remove('overflow-scroll');
     }
+
     function hidemodalFunc() {
       document.getElementById('feedbackModal').classList.add('hidden');
 
       document.getElementsByTagName('body')[0].classList.remove('overflow-hidden');
       document.getElementsByTagName('body')[0].classList.add('overflow-scroll');
     }
-   
   </script>
 
   <script src="hide_toast.js"></script>
