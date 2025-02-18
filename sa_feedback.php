@@ -117,16 +117,17 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
 
       <section class="p-4 bg-white rounded-xl h-fit">
         <section class="flex justify-end">
-          <button data-modal-target="default-modal" data-modal-toggle="default-modal" type="button" class="btn btn-primary bg-blue-500">
+          <button onclick="showmodalFunc();" id="showModalBtn" type="button" class="btn btn-primary bg-blue-500">
             <span>
               <i class="ti ti-plus text-lg show-icon"></i>
-              <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p>
+              <!-- <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p> -->
             </span>
           </button>
         </section>
 
-        <div class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-          <div class="p-4 md:p-5 space-y-4 bg-blue-200 w-fit">
+        <div id="feedbackModal" class="hidden h-screen w-screen absolute inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
+
+          <div class="p-4 md:p-5 space-y-4 bg-white w-fit rounded-xl">
             <h3 class="text-lg font-bold">Create Feedback questions for barangays.</h3>
 
             <form method="POST" action="" class="space-y-2 max-w-lg mx-auto my-3">
@@ -142,8 +143,7 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
                 Submit
               </button>
 
-              <button type="button" class="py-2 px-3 mt-4 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600" data-modal-hide="default-modal">
-
+              <button onclick="hidemodalFunc();" type="button" class="py-2 px-3 mt-4 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600" data-modal-hide="default-modal">
                 <span>Cancel</span>
               </button>
 
@@ -158,16 +158,15 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
           }
           if ($_GET['feedback_inserted_message'] === 'failed') {
             echo '<div id="alertMessage" class="alert alert-danger" role="alert">Failed to insert feedback questions.</div>';
-            echo '<br>';
           }
         }
         ?>
 
-        <section>
+     
           <section>
             <?php foreach ($questionTemp as $row) { ?>
 
-              <div class="w-50 flex justify-between items-center">
+              <div class="w-50 flex justify-between items-center mt-4">
                 <h3 class='text-lg font-bold'><?php echo $row["feedback_title"]; ?></h3>
                 <p>Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
               </div>
@@ -215,10 +214,27 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
               </form>
             <?php } ?>
           </section>
-        </section>
+      
       </section>
     </div>
   </div>
+
+  <script>
+
+    function showmodalFunc() {
+      document.getElementById('feedbackModal').classList.remove('hidden');
+
+      document.getElementsByTagName('body')[0].classList.add('overflow-hidden');
+      document.getElementsByTagName('body')[0].classList.remove('overflow-scroll');
+    }
+    function hidemodalFunc() {
+      document.getElementById('feedbackModal').classList.add('hidden');
+
+      document.getElementsByTagName('body')[0].classList.remove('overflow-hidden');
+      document.getElementsByTagName('body')[0].classList.add('overflow-scroll');
+    }
+   
+  </script>
 
   <script src="hide_toast.js"></script>
 </body>

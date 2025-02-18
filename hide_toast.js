@@ -16,10 +16,6 @@ function turnToDefaultMessageInURLFunc() {
     if (window.history.replaceState) {
         const url = new URL(window.location);
 
-        if (url.searchParams.has("feedback_inserted_message")) {
-            url.searchParams.set("feedback_inserted_message", "default");
-        }
-        
         if (url.searchParams.has("login_message")) {
             url.searchParams.set("login_message", "default");
         }
@@ -50,6 +46,9 @@ function turnToDefaultMessageInURLFunc() {
         }
         if (url.searchParams.has("edit_userreport_message")) {
             url.searchParams.set("edit_userreport_message", "default");
+        }
+        if (url.searchParams.has("feedback_inserted_message")) {
+            url.searchParams.set("feedback_inserted_message", "default");
         }
         
         window.history.replaceState({}, document.title, url);
