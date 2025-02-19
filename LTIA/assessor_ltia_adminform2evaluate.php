@@ -552,8 +552,50 @@ $(document).ready(function () {
             }).last();
         }
         
+        // Get required IDs
+        var movId = $('#mov_id').val();
+        var barangayId = $('#barangay_id').val();
+        
+        // Debug: Log the values
+        console.log('MOV ID:', movId);
+        console.log('Barangay ID:', barangayId);
+        
+        // Validate required fields
+        if (!movId || !barangayId) {
+            var errorMsg = $(`
+                <div class="save-error" style="
+                    position: absolute;
+                    background-color: #ffebee;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                    margin-left: 10px;
+                    display: inline-block;
+                    color: #c62828;
+                    z-index: 1000;">
+                    Please select a barangay first
+                </div>`);
+            
+            // Show error next to barangay select
+            $('.save-error').remove();
+            errorMsg.insertAfter('#barangay_select');
+            
+            setTimeout(function() {
+                errorMsg.fadeOut(200, function() {
+                    $(this).remove();
+                });
+            }, 1000);
+            
+            return;
+        }
+        
         // Collect form data
-        var formData = new FormData(this);
+        var formData = new FormData(form);
+        
+        // Debug: Log form data
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
         
         // Submit form via AJAX
         $.ajax({
@@ -637,6 +679,7 @@ $(document).ready(function () {
         });
     });
 });
+
     // Handle PDF viewing inside the modal
     $(document).on('click', '.view-pdf', function () {
         var file = $(this).data('file'); // Get the file URL
@@ -662,7 +705,7 @@ $(document).ready(function () {
 </script>
 </head>
 <body class="bg-[#E8E8E7]">
-  <?php include "../assessor_sidebar_header.php"; ?>
+<?php include "../assessor_sidebar_header.php"; ?>
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
     <div class="card">
@@ -687,14 +730,8 @@ $(document).ready(function () {
 
             <div class="menu">
               <ul class="flex space-x-4">
-              <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessorForm3summary.php';" style="margin-left: 0;">
-                  <i class="ti ti-file-analytics mr-2">  </i>
-                      Summary
-                  </button>
-                </li>
                 <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessor_ltia_admin_dashboard.php';" style="margin-left: 0;">
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='ltia_admin_dashboard.php';" style="margin-left: 0;">
                   <i class="ti ti-building-community mr-2"> </i> 
                       Back
                   </button>
@@ -781,6 +818,7 @@ if (classification === "City") {
 }
 });
 </script>
+
             <h2 class="text-left text-2xl font-semibold" id="mov_year" hidden></h2>
           <div class="form-group mt-4">
                     <label for="barangay_select" class="block text-lg font-medium text-gray-700">Select Barangay</label>
@@ -794,11 +832,9 @@ if (classification === "City") {
                         </select>
                     </div>
     <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
-    <input type="hidden" id="selected_barangay" name="selected_barangay" value="" /><br><br>
-    <!-- Example form input for mov_id -->
-    <input type="hidden" id="mov_id" name="mov_id" readonly> <!-- Display fetched mov_id -->
-    <input type="hidden" id="barangay_id" name="barangay_id" readonly> <!-- I want the barangay_id fetch here -->
-    <!-- mov_id is fetched here -->
+    <input type="hidden" id="selected_barangay" name="selected_barangay" value="" />
+    <input type="hidden" id="mov_id" name="mov_id" value="" />
+    <input type="hidden" id="barangay_id" name="barangay_id" value="" />
     <h2 class="text-left text-2xl font-semibold" id="status_rate" hidden></h2>
     <table class="table table-bordered">
             <thead>
@@ -806,7 +842,7 @@ if (classification === "City") {
                 <th>CRITERIA</th>
                 <th>Assigned Points</th>
                 <th>File</th>
-                <th>Verifications Actions</th>
+                <th>Verification Actions</th>
                 <th>Rate</th>
                 <th>Remarks</th>
               </tr>
@@ -858,7 +894,7 @@ if (classification === "City") {
                </td>
                <td>button</td>
             <td>  
-            <input type="number" value="" name="IA_1a_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings">
+              <input type="number" value="" name="IA_1a_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
             <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
           </td>
             <td><textarea name="IA_1a_pdf_remark" placeholder="Remarks"></textarea></td>
@@ -960,12 +996,12 @@ if (classification === "City") {
             <td><textarea name="IA_2e_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <th>B. Systematic Maintenance of Records</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <td><b>B. Systematic Maintenance of Records</b></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
               </tr>
               <tr>
                 <td><b>1. Record of Cases </b></td>
@@ -999,7 +1035,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_1aformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-          <td>button</td>
+    <td>button</td>
             <td><input type="number" value="" name="IB_1aformuni_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_1aformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1053,8 +1089,8 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-              <details>
-            <summary><b>1. To the Court: Submitted/presented copies of settlement agreement to the Court</b></summary>
+                <details>
+              <summary><b>1. To the Court: Submitted/presented copies of settlement agreement to the Court</b></summary>
               <p><br>
                 <b>Criteria Description:</b> <br>
                 Copies of the settlement agreement must be submitted to the Court within the following periods: 
@@ -1086,33 +1122,40 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td><details>
-              <summary><b>2. To the DILG (Monthly): Submission of required report to the DILG</b></summary>
-              <p><br>
-                2 points - Submitted/presented the required report to the DILG within the prescribed period<br>
-                1 point - Submitted/presented a partial report to the DILG within the prescribed period<br>
-                0 point - The required report to the DILG was not submitted or was submitted beyond the prescribed period
-              </p>
-            </details>
+                <summary><b>2. To the DILG (Monthly): Submission of required report to the DILG</b></summary>
+                <p><br>
+                  2 points - Submitted/presented the required report to the DILG within the prescribed period<br>
+                  1 point - Submitted/presented a partial report to the DILG within the prescribed period<br>
+                  0 point - The required report to the DILG was not submitted or was submitted beyond the prescribed period
+                </p>
+              </details>
               </td>
                 <td>2</td>
                 <td class="file-column" data-type="IC_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
-      <td>button</td>
+            <td>button</td>
             <td><input type="number" value="" name="IC_2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IC_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
+                <th>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+              <tr>
                 <td>
-              <details>
-            <summary><b>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</b></summary>
-            <p><br>
-              <b>Notice of Meeting</b><br><br>
-              <b>2.0 points</b> - Minimum of 12 meetings with KP-related matters, complete details, each Lupon member must sign (indicating their name, date, and time of receipt) when receiving notices of the meeting.<br>
-              <b>1.0 point</b> - Anything beyond the compliance document, with incomplete details.<br>
-              <b>0 point</b> - No data presented.
-            </p>
-          </details>
+                <details>
+              <summary><b>Notice of Meeting</b></summary>
+              <p><br>
+                <b>2.0 points</b> - Minimum of 12 meetings with KP-related matters, complete details, each Lupon member must sign (indicating their name, date, and time of receipt) when receiving notices of the meeting.<br>
+                <b>1.0 point</b> - Anything beyond the compliance document, with incomplete details.<br>
+                <b>0 point</b> - No data presented.
+              </p>
+            </details>
                     </td>
                 <td>2</td>
                 <td class="file-column" data-type="ID_1">
@@ -1124,18 +1167,19 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-              <details>
-            <summary><b>Minutes of the Meeting</b></summary>
-            <p><br>
-              <b>Number of months with KP-related meetings with minutes and attendance sheets conducted:</b><br><br>
-              <b>8.0 points</b> - 12 months.<br>
-              <b>6.0 points</b> - 9-11 months.<br>
-              <b>4.0 points</b> - 6-8 months.<br>
-              <b>2.0 points</b> - 3-5 months.<br>
-              <b>1.0 point</b> - 1-2 months.<br>
-              <b>0 point</b> - No meeting.
-            </p>
-          </details>
+                <details>
+                <summary><b>Minutes of the Meeting</b></summary>
+                <p><br>
+                  <b>Number of months with KP-related meetings with minutes and attendance sheets conducted:</b><br><br>
+                  <b>8.0 points</b> - 12 months.<br>
+                  <b>6.0 points</b> - 9-11 months.<br>
+                  <b>4.0 points</b> - 6-8 months.<br>
+                  <b>2.0 points</b> - 3-5 months.<br>
+                  <b>1.0 point</b> - 1-2 months.<br>
+                  <b>0 point</b> - No meeting.
+                </p>
+              </details>
+
                 </td>
                 <td>8</td>
                 <td class="file-column" data-type="ID_2">
@@ -1155,18 +1199,18 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-              <details>
-            <summary><b>A. Quantity of settled cases against filed</b></summary>
-            <p><br>
-              <b>With a minimum of 10 cases settled, the percentage of cases received by the Lupon resulting in settlement:</b><br><br>
-              <b>10.0 points</b> - 100%.<br>
-              <b>8.0 points</b> - 80%-99%.<br>
-              <b>6.0 points</b> - 60%-79%.<br>
-              <b>4.0 points</b> - 40%-59%.<br>
-              <b>2.0 points</b> - 1%-39%.<br>
-              <b>0 point</b> - 0%.
-            </p>
-          </details>
+                <details>
+              <summary><b>A. Quantity of settled cases against filed</b></summary>
+              <p><br>
+                <b>With a minimum of 10 cases settled, the percentage of cases received by the Lupon resulting in settlement:</b><br><br>
+                <b>10.0 points</b> - 100%.<br>
+                <b>8.0 points</b> - 80%-99%.<br>
+                <b>6.0 points</b> - 60%-79%.<br>
+                <b>4.0 points</b> - 40%-59%.<br>
+                <b>2.0 points</b> - 1%-39%.<br>
+                <b>0 point</b> - 0%.
+              </p>
+            </details>
                     </td>
                 <td>10</td>
                 <td class="file-column" data-type="IIA">
@@ -1178,13 +1222,13 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-              <details>
-            <summary><b>B. Quality of Settlement of Cases</b></summary>
-            <p><br>
-              <b>1 point</b> - for non-recurrence and zero cases repudiated (out of the total number of settled cases).<br>
-              <b>0 point</b> - at least one (1) case repudiated (out of the total number of settled cases).
-            </p>
-          </details>
+                <details>
+              <summary><b>B. Quality of Settlement of Cases</b></summary>
+              <p><br>
+                <b>1 point</b> - for non-recurrence and zero cases repudiated (out of the total number of settled cases).<br>
+                <b>0 point</b> - at least one (1) case repudiated (out of the total number of settled cases).
+              </p>
+              </details>
                 </td>
                 <td></td>
                 <td></td>
@@ -1214,16 +1258,16 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-              <details>
-            <summary><b>C. At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
-            <p><br>
-              <b>8 points</b> - 80%-100% compliance with the terms of settlement or award.<br>
-              <b>6 points</b> - 70%-79% compliance with the terms of settlement or award.<br>
-              <b>4 points</b> - 60%-69% compliance with the terms of settlement or award.<br>
-              <b>2 points</b> - 50%-51% compliance with the terms of settlement or award.<br>
-              <b>1 point</b> - 49% and below compliance with the terms of settlement or award.
-            </p>
-          </details>
+                <details>
+              <summary><b>C. At least 80% compliance with the terms of settlement or award after the cases have been settled </b></summary>
+              <p><br>
+                <b>8 points</b> - 80%-100% compliance with the terms of settlement or award.<br>
+                <b>6 points</b> - 70%-79% compliance with the terms of settlement or award.<br>
+                <b>4 points</b> - 60%-69% compliance with the terms of settlement or award.<br>
+                <b>2 points</b> - 50%-51% compliance with the terms of settlement or award.<br>
+                <b>1 point</b> - 49% and below compliance with the terms of settlement or award.
+              </p>
+            </details>
                 </td>
                 <td>8</td>
                 <td class="file-column" data-type="IIC">
@@ -1243,18 +1287,18 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-              <details>
-            <summary><b>A. Settlement Technique Utilized by the Lupon</b></summary>
-            <p><br>
-              <b>10 points</b> – Five or more settlement techniques utilized.<br>
-              <b>8 points</b> – At least four settlement techniques utilized.<br>
-              <b>6 points</b> – At least three settlement techniques utilized.<br>
-              <b>4 points</b> – At least two settlement techniques utilized.<br>
-              <b>2 points</b> – At least one settlement technique utilized.<br>
-              <b>0 points</b> – No report submitted.
-            </p>
-            <p><b>Note:</b> Settlement techniques to be considered are those that are within the KP process and procedures.</p>
-          </details>
+                <details>
+              <summary><b>A. Settlement Technique Utilized by the Lupon</b></summary>
+              <p><br>
+                <b>10 points</b> – Five or more settlement techniques utilized.<br>
+                <b>8 points</b> – At least four settlement techniques utilized.<br>
+                <b>6 points</b> – At least three settlement techniques utilized.<br>
+                <b>4 points</b> – At least two settlement techniques utilized.<br>
+                <b>2 points</b> – At least one settlement technique utilized.<br>
+                <b>0 points</b> – No report submitted.
+              </p>
+              <p><b>Note:</b> Settlement techniques to be considered are those that are within the KP process and procedures.</p>
+            </details>
                 </td>
                 <td>10</td>
                 <td class="file-column" data-type="IIIA">
@@ -1266,13 +1310,13 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td>
-              <details>
-            <summary><b>B. Coordination with Concerned Agencies Relating to Disputes Filed</b></summary>
-            <p><br>
-              <b>5 points</b> – With proof of coordination relative to the filed disputes.<br>
-              <b>0 points</b> – Without proof of coordination relative to the filed disputes.
-            </p>
-          </details>
+                <details>
+                <summary><b>B. Coordination with Concerned Agencies Relating to Disputes Filed</b></summary>
+                <p><br>
+                  <b>5 points</b> – With proof of coordination relative to the filed disputes.<br>
+                  <b>0 points</b> – Without proof of coordination relative to the filed disputes.
+                </p>
+              </details>
                 </td>
                 <td>5</td>
                 <td class="file-column" data-type="IIIB">
@@ -1387,24 +1431,23 @@ if (classification === "City") {
             <td><textarea name="IIIC_2formuni3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
-                <td>
-              <details>
-            <summary><b>D. KP Training or Seminar Participated Within the Assessment Period</b></summary>
-            <p><br>
-              Organized skills training participated by the Lupong Tagapamayapa. Trainings or seminars should cover the following, and the Lupon should be able to articulate during validation their learnings therefrom:
-              <ul>
-                <li>1) General/basic orientation or review of the KP system</li>
-                <li>2) Skills training on conduct of KP proceedings (e.g., relevant ADR systems, KP case management)</li>
-                <li>3) Advanced knowledge on laws, policies, and standards in relation to the KP system (e.g., gender and human rights, criminal/civil justice)</li>
-              </ul>
-              <b>10 points</b> = At least 6 qualified trainings/seminars.<br>
-              <b>8 points</b> = At least 5 qualified trainings/seminars.<br>
-              <b>6 points</b> = At least 4 qualified trainings/seminars.<br>
-              <b>4 points</b> = At least 3 qualified trainings/seminars.<br>
-              <b>2 points</b> = At least 2 qualified trainings/seminars.<br>
-              <b>0 points</b> = No qualified information on training/seminar.
-            </p>
-          </details>
+                <td><details>
+              <summary><b>D. KP Training or Seminar Participated Within the Assessment Period</b></summary>
+              <p><br>
+                Organized skills training participated by the Lupong Tagapamayapa. Trainings or seminars should cover the following, and the Lupon should be able to articulate during validation their learnings therefrom:
+                <ul>
+                  <li>1) General/basic orientation or review of the KP system</li>
+                  <li>2) Skills training on conduct of KP proceedings (e.g., relevant ADR systems, KP case management)</li>
+                  <li>3) Advanced knowledge on laws, policies, and standards in relation to the KP system (e.g., gender and human rights, criminal/civil justice)</li>
+                </ul>
+                <b>10 points</b> = At least 6 qualified trainings/seminars.<br>
+                <b>8 points</b> = At least 5 qualified trainings/seminars.<br>
+                <b>6 points</b> = At least 4 qualified trainings/seminars.<br>
+                <b>4 points</b> = At least 3 qualified trainings/seminars.<br>
+                <b>2 points</b> = At least 2 qualified trainings/seminars.<br>
+                <b>0 points</b> = No qualified information on training/seminar.
+              </p>
+            </details>
             </td>
                 <td>10</td>
                 <td class="file-column" data-type="IIID">
@@ -1446,6 +1489,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IV_muni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+    <td>button</td>
             <td><input type="number" value="" name="IV_muni_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IV_muni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1453,7 +1497,7 @@ if (classification === "City") {
                 <th>V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
                 <th></th>
                 <th></th>
-                <th></th>
+                <td></td>
                 <th></th>
                 <th></th>
               </tr>
@@ -1485,7 +1529,31 @@ if (classification === "City") {
       </div> 
     </div>
   </div>
-  <script>
+
+  <!-- Modal structure -->
+<div id="responseModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Notification</h5>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="large-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary"  style="color: blue;" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
   // Close the modal when the close button is clicked
 //   $(document).mouseup(function (e) {
 //     var modalContent = $(".relative.bg-white.shadow.rounded-lg.h-full"); // Adjust selector as necessary
@@ -1536,35 +1604,23 @@ document.addEventListener("DOMContentLoaded", function() {
     </div>
 </div>
 <!-- Modal structure -->
-<div id="alertModal" class="modal fade" tabindex="-1" role="dialog" style="position: fixed; bottom: 20px; right: 20px; width: auto; margin: 0; background: none;">
-    <div class="modal-dialog" style="margin: 0; width: auto;">
-        <div class="modal-content" style="border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1); background: none;">
-            <div class="modal-body" style="padding: 0;">
-                <p id="alertMessage" style="margin: 0;"></p>
+<div id="alertModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Notification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="alertMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="background-color: #000033;" class="btn btn-primary" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
 </div>
-<style>
-/* Remove modal backdrop */
-.modal-backdrop {
-    display: none;
-}
-
-/* Ensure modal is always on top */
-#alertModal {
-    z-index: 9999;
-}
-
-/* Remove default modal animation */
-.modal.fade {
-    opacity: 1;
-}
-
-.modal.fade .modal-dialog {
-    transform: none;
-}
-</style>
 </body>
 </html>
-<?php
