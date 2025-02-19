@@ -165,8 +165,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && $already_uploaded == 0) {
         move_uploaded_file($fileTMP, $fileDestination);
       }
     }
-    echo "<script>alert('Saved!'); 
-    window.location.href='form2draftmov.php';</script>";
+    $_SESSION['submission_success'] = true;
+    header("Location: form2draftmov.php");
     exit();
   } else {
     echo "<script>alert('Error inserting into database.');</script>";

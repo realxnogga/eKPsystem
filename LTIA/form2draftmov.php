@@ -7,6 +7,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     header("Location: ../login.php");
     exit;
 }
+
+// Check for submission success
+$submissionSuccess = false;
+if (isset($_SESSION['submission_success'])) {
+    $submissionSuccess = true;
+    unset($_SESSION['submission_success']);
+}
+
 // Define allowed file columns
 $allowed_columns = [
     'IA_1a_pdf_File', 'IA_1b_pdf_File', 'IA_2a_pdf_File', 'IA_2b_pdf_File',
@@ -30,70 +38,6 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC) ?: []; // Initialize $row as an empty arra
 
 $file_changed = false; // Flag to track if any files have changed
 
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $upload_dir = 'movfolder/';
-
-//     foreach ($allowed_columns as $column) {
-//         if (isset($_FILES[$column]) && $_FILES[$column]['error'] === UPLOAD_ERR_OK) {
-//             $file_name = time() . '_' . basename($_FILES[$column]['name']);
-//             $file_path = $upload_dir . $file_name;
-
-//             if (move_uploaded_file($_FILES[$column]['tmp_name'], $file_path)) {
-//                 // New file uploaded, use the new file name
-//                 $row[$column] = $file_name;
-//                 $file_changed = true; // Mark file as changed
-//             }
-//         } else {
-//             // No new file uploaded, retain the old file
-//             if (isset($_POST[$column . '_hidden'])) {
-//                 $row[$column] = $_POST[$column . '_hidden'];
-//             }
-//         }
-//     }
-//  separated ang file nato "movdraftUpadate.php sya
-//     // Prepare SQL for updating the file paths
-//     $update_sql = "UPDATE movdraft_file SET ";
-//     foreach ($allowed_columns as $column) {
-//         $update_sql .= "$column = :$column, ";
-//     }
-//     $update_sql = rtrim($update_sql, ', ') . " WHERE user_id = :user_id AND barangay_id = :barangay_id";
-
-//     $update_stmt = $conn->prepare($update_sql);
-
-//     // Bind the updated or retained file paths
-//     foreach ($allowed_columns as $column) {
-//         $update_stmt->bindParam(":$column", $row[$column], PDO::PARAM_STR);
-//     }
-//     $update_stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-//     $update_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
-
-//     // Execute the statement and provide feedback
-//     if ($update_stmt->execute()) {
-//       if ($file_changed) {
-//           echo "<script>
-//               document.getElementById('feedbackMessage').innerHTML = 'Files updated successfully!';
-//               var feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
-//               feedbackModal.show();
-//           </script>";
-//       } else {
-//           echo "<script>
-//               document.getElementById('feedbackMessage').innerHTML = 'No file changes detected.';
-//               var feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
-//               feedbackModal.show();
-//           </script>";
-//       }
-//   } else {
-//       echo "<script>
-//           document.getElementById('feedbackMessage').innerHTML = 'Error updating files. Please try again.';
-//           var feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
-//           feedbackModal.show();
-//       </script>";
-//       error_log(print_r($update_stmt->errorInfo(), true));
-//       }
-//       // Redirect to prevent form resubmission
-// header("Location: " . $_SERVER['REQUEST_URI']);
-// exit;
-// }
 // Define user and barangay ID from session
 $userID = $_SESSION['user_id'];
 $barangayID = $_SESSION['barangay_id'] ?? '';
@@ -183,6 +127,12 @@ if (!empty($municipalityID)) {
         document.querySelectorAll('#city-row').forEach(row => row.style.display = 'none');
         document.querySelectorAll('#municipality-row').forEach(row => row.style.display = '');
       }
+
+      // Show success modal if submission was successful
+      <?php if ($submissionSuccess): ?>
+        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+      <?php endif; ?>
     });
   </script>
 </head>
@@ -808,12 +758,24 @@ if (!empty($municipalityID)) {
                 return; // Stop form submission if no valid inputs are provided
             }
 
-            $('#confirmModal').modal('show');
-            document.getElementById('confirmSubmit').onclick = function () {
-                const form = document.getElementById('uploadForm');
-                form.action = action;
-                form.submit();
-            };
+            // AJAX call to check if the user has already submitted for the current year
+            $.ajax({
+                url: 'checkmov.php',
+                type: 'POST',
+                data: { user_id: <?php echo $_SESSION['user_id']; ?>, barangay_id: <?php echo $_SESSION['barangay_id']; ?> },
+                success: function(response) {
+                    if (response === 'exists') {
+                        $('#alreadySubmittedModal').modal('show');
+                    } else {
+                        $('#confirmModal').modal('show');
+                        document.getElementById('confirmSubmit').onclick = function () {
+                            const form = document.getElementById('uploadForm');
+                            form.action = action;
+                            form.submit();
+                        };
+                    }
+                }
+            });
         } else {
             const form = document.getElementById('uploadForm');
             form.action = action;
@@ -956,5 +918,23 @@ document.getElementById('confirmSubmit').addEventListener('click', function () {
         });
     });
   </script>
+
+<!-- Already Submitted Modal -->
+<div class="modal fade" id="alreadySubmittedModal" tabindex="-1" aria-labelledby="alreadySubmittedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning" id="alreadySubmittedModalLabel">Already Submitted</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <p>You have already submitted for the current year.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button class="btn btn-dark" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
