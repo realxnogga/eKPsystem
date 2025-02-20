@@ -213,6 +213,13 @@ function traverseDirectory()
       </li>
 
       <li>
+        <a href="<?php echo traverseDirectory(); ?>user_feedback.php" class="<?php echo isActive('user_feedback.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <i class="ti ti-message text-2xl"></i>
+          <span>Feedback</span>
+        </a>
+      </li>
+
+      <li>
         <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
