@@ -15,9 +15,9 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 function isActive($path)
 {
-    $currentPage = basename($_SERVER['SCRIPT_NAME']);
-    $targetPage = basename($path);
-    return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
+  $currentPage = basename($_SERVER['SCRIPT_NAME']);
+  $targetPage = basename($path);
+  return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
 }
 
 
@@ -110,8 +110,7 @@ function traverseDirectory()
           <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
             <div class="px-4 py-3" role="none">
               <p class="text-sm text-gray-900 dark:text-white" role="none">
-                <?php echo $user['first_name'];
-                echo $user['last_name']; ?>
+                <?php echo $user['first_name'] . ' ' . $user['last_name']; ?>
               </p>
               <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
                 <?php echo $user['email']; ?>
@@ -221,10 +220,35 @@ function traverseDirectory()
 
       <li>
         <a href="<?php echo traverseDirectory(); ?>user_feedback.php" class="<?php echo isActive('user_feedback.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-message text-2xl"></i>
+          <i class="ti ti-message text-2xl"></i>
           <span>Feedback</span>
         </a>
       </li>
+
+      <?php
+
+      $latestTimestamp = '';
+
+      if (isset($_POST['assignTimestamp'])) {
+        $latestTimestamp = date('Y-m-d H:i:s');
+      }
+
+      $latestTimestamp = $conn->query("SELECT timestamp FROM user_logs WHERE user_id = '$userId' ORDER BY log_id DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+
+      $latestFeedbackDate = $conn->query("SELECT fq_creation_date FROM feedback_questions ORDER BY fq_id DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+
+      if ($latestFeedbackDate['fq_creation_date'] > $latestTimestamp['timestamp']) {
+      ?>
+        <form method="post" action="">
+          <button type="submit" name="assignTimestamp">Show This</button>
+        </form>
+
+
+      <?php
+      }
+      ?>
+
+
 
     </ul>
   </div>
