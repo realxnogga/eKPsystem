@@ -11,12 +11,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
 }
 
 
-$id = isset($_GET['fq_id_url']) ? $_GET['fq_id_url'] : null;
+$fq_id_url = isset($_GET['fq_id_url']) ? $_GET['fq_id_url'] : null;
 
 
-$questionTemp = $conn->query("SELECT * FROM feedback_answers WHERE fa_id = $id")->fetchAll(PDO::FETCH_ASSOC);
+$answerTemp = $conn->query("SELECT * FROM feedback_answers WHERE fa_id = $fq_id_url")->fetchAll(PDO::FETCH_ASSOC);
 
-$answerTemp = $conn->query("SELECT * FROM feedback_questions WHERE fq_id = $id")->fetchAll(PDO::FETCH_ASSOC);
+$questionTemp = $conn->query("SELECT * FROM feedback_questions WHERE fq_id = $fq_id_url")->fetchAll(PDO::FETCH_ASSOC);
 
 function getAFunc($conn, $whatTable, $condition)
 {
@@ -62,16 +62,10 @@ function getAnyFunc($conn, $whatTable, $condition)
       <section class="p-4 bg-white rounded-xl h-fit">
 
 
-        <section>
+      <p class="text-center text-lg"><?php echo empty($answerTemp) ? 'No Response Yet!' : ''; ?></p>
+       
 
-
-          <?php
-
-          foreach ($questionTemp as $row) {
-
-          ?>
-
-
+          <?php foreach ($answerTemp as $row) { ?>
 
             <p class="font-bold text-lg"><?php echo getAnyFunc($conn, 'barangays', 'id = ' . $row['barangay_id']); ?></p>
 
@@ -82,7 +76,7 @@ function getAnyFunc($conn, $whatTable, $condition)
                 <th class="bg-primary text-white">Answer</th>
                 <th class="bg-primary text-white">Comment</th>
               </tr>
-              <?php foreach ($answerTemp as $t) { ?>
+              <?php foreach ($questionTemp as $t) { ?>
                 <tr>
                   <td><?php echo $t['fq1']; ?></td>
                   <td><?php echo $row['fa1']; ?></td>
@@ -111,13 +105,11 @@ function getAnyFunc($conn, $whatTable, $condition)
               <?php } ?>
             </table>
 
-            <hr class="my-3 <?php echo count($questionTemp) === 1 ? 'hidden' : ''; ?>">
+            <hr class="my-3 <?php echo count($answerTemp) === 1 ? 'hidden' : ''; ?>">
 
           <?php } ?>
 
         </section>
-
-      </section>
     </div>
   </div>
 

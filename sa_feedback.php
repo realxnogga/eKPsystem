@@ -128,7 +128,7 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
         <div id="feedbackModal" class="hidden h-screen w-screen absolute inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
 
           <div class="p-4 md:p-5 space-y-4 bg-white w-fit rounded-xl">
-            <h3 class="text-lg font-bold">Create Feedback questions for barangays.</h3>
+            <h3 class="text-lg font-bold">Create feedback questions for barangays.</h3>
 
             <form method="POST" action="" class="space-y-2 max-w-lg mx-auto my-3">
               <input required name="feedbackTitle" type="text" placeholder="Enter title" class="text-sm w-full py-2 border border-gray-300 rounded-md border !border-gray-300">
@@ -208,11 +208,11 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
                   Update
                 </button>
 
-                <a data-tooltip-target="tooltip-light" data-tooltip-style="light" class="" href="sa_feedback_view.php?fq_id_url=<?php echo $row['fq_id']; ?>">
+                <a data-tooltip-target="tooltip-light<?php echo $row['fq_id']; ?>" data-tooltip-style="light" class="" href="sa_feedback_view.php?fq_id_url=<?php echo $row['fq_id']; ?>">
                   <p><?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . ''); ?> / <?php echo countResponseFunc($conn, "barangays"); ?> <?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . '') > 1 ? "responses" : "response"; ?></p>
                 </a>
 
-                <div id="tooltip-light" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip">
+                <div id="tooltip-light<?php echo $row['fq_id']; ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip">
                   view more
                   <div class="tooltip-arrow" data-popper-arrow></div>
                 </div>

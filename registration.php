@@ -107,8 +107,11 @@ include 'registration_handler.php';
                       echo "<div class='alert alert-danger' role='alert'>User registration failed. Please try again later.</div>";
                     }
                     if (strpos($errors, 'User registration successful') !== false) {
-                      echo "<div class='alert alert-success' role='alert'>User registration successful. Proceed to Login.</div>";
+                      echo "<div class='alert alert-success' role='alert'>User registration successful. The Ekp_Login_Credential_" . date("Ymd_His") . ".text file successfully created in your device's desktop directory. You can now proceed to login.</div>";
                     }
+                    if (strpos($errors, 'Unable to create or open the file') !== false) {
+                      echo "<div class='alert alert-danger' role='alert'>Unable to create or open the file.</div>";
+                    }    
 
                   }
                   ?>
