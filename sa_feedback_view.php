@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
 }
 
 
-$id = isset($_GET['fq_id_url']);
+$id = isset($_GET['fq_id_url']) ? $_GET['fq_id_url'] : null;
 
 
 $questionTemp = $conn->query("SELECT * FROM feedback_answers WHERE fa_id = $id")->fetchAll(PDO::FETCH_ASSOC);
@@ -43,6 +43,13 @@ function getAnyFunc($conn, $whatTable, $condition)
 
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <style>
+    tr,
+    td {
+      border-color: white;
+    }
+  </style>
+
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -56,35 +63,58 @@ function getAnyFunc($conn, $whatTable, $condition)
 
 
         <section>
-          <?php foreach ($questionTemp as $row) { ?>
 
 
-           
+          <?php
+
+          foreach ($questionTemp as $row) {
+
+          ?>
+
+
+
             <p class="font-bold text-lg"><?php echo getAnyFunc($conn, 'barangays', 'id = ' . $row['barangay_id']); ?></p>
 
 
-            <div class="w-50 flex justify-between items-center">
+            <table class="w-full table table-sm" style="table-layout: fixed;">
+              <tr>
+                <th class="bg-primary text-white">Question</th>
+                <th class="bg-primary text-white">Answer</th>
+                <th class="bg-primary text-white">Comment</th>
+              </tr>
+              <?php foreach ($answerTemp as $t) { ?>
+                <tr>
+                  <td><?php echo $t['fq1']; ?></td>
+                  <td><?php echo $row['fa1']; ?></td>
+                  <td rowspan="5"><?php echo $row['comment']; ?></td>
+                </tr>
+                <tr>
+                  <td><?php echo $t['fq2']; ?></td>
+                  <td><?php echo $row['fa2']; ?></td>
 
-              <div class="flex flex-col mb-5">
-              <p><?php echo $row['fq1']; ?></p>
-              </div>
+                </tr>
+                <tr>
+                  <td><?php echo $t['fq3']; ?></td>
+                  <td><?php echo $row['fa3']; ?></td>
 
+                </tr>
+                <tr>
+                  <td><?php echo $t['fq4']; ?></td>
+                  <td><?php echo $row['fa4']; ?></td>
 
+                </tr>
+                <tr>
+                  <td><?php echo $t['fq5']; ?></td>
+                  <td><?php echo $row['fa5']; ?></td>
 
-              <div class="flex flex-col mb-5">
-                <p><?php echo $row['fa1']; ?></p>
-                <p><?php echo $row['fa2']; ?></p>
-                <p><?php echo $row['fa3']; ?></p>
-                <p><?php echo $row['fa4']; ?></p>
-                <p><?php echo $row['fa5']; ?></p>
-                <p><?php echo $row['comment']; ?></p>
-              </div>
+                </tr>
+              <?php } ?>
+            </table>
 
-
-            </div>
-
+            <hr class="my-3 <?php echo count($questionTemp) === 1 ? 'hidden' : ''; ?>">
 
           <?php } ?>
+
         </section>
 
       </section>
