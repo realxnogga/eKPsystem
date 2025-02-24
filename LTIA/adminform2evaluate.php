@@ -120,12 +120,6 @@ try {
 
  <script>
 $(document).ready(function () {
-    // Function to show modal with message
-    function showModal(message) {
-        $('#alertMessage').text(message);
-        $('#alertModal').modal('show');
-    }
-
     // Function to highlight empty rating inputs only
     function highlightEmptyInputs() {
         $('input[type="number"].score-input').each(function() {
@@ -151,7 +145,7 @@ $(document).ready(function () {
         // Check if a barangay is selected
         var selectedBarangay = $('#barangay_select').val();
         if (!selectedBarangay) {
-            showModal('Please select a barangay first');
+            alert('Please select a barangay first');
             $(this).val(''); // Clear the input
             $(this).css({
                 'background-color': '#ffebee',
@@ -166,7 +160,7 @@ $(document).ready(function () {
         var value = parseFloat($(this).val());
         
         if (value < min || value > max) {
-            showModal(`Please enter a number between ${min} and ${max}`);
+            alert(`Please enter a number between ${min} and ${max}`);
             $(this).val(''); // Clear invalid input
             $(this).css({
                 'background-color': '#ffebee',
@@ -196,7 +190,7 @@ $(document).ready(function () {
     $('textarea[placeholder="Remarks"]').on('change', function() {
         var selectedBarangay = $('#barangay_select').val();
         if (!selectedBarangay) {
-            showModal('Please select a barangay first');
+            alert('Please select a barangay first');
             $(this).val(''); // Clear the input
             return;
         }
@@ -207,8 +201,7 @@ $(document).ready(function () {
 
     // Update clearRates function
     function clearRates() {
-        // Clear all rate inputs
-        $('input[type="number"].score-input').val('');
+        // ... existing clearRates code ...
         
         // After clearing rates, highlight empty inputs
         highlightEmptyInputs();
@@ -236,11 +229,12 @@ $(document).ready(function () {
 
                     // Check for an error response
                     if (data.error) {
-                        showModal(data.error); // Display the error message
+                        alert(data.error); // Display the error message
                         resetAllFields(); // Clear fields if an error occurs
                         $('#mov_year').text(' '); // Reset the year display
                         return;
                     }
+
 
                     // Extract and set barangay_id and mov_id
                     $('#barangay_id').val(data.barangay_id || '');
@@ -252,10 +246,6 @@ $(document).ready(function () {
                         $('#mov_year').text(''); // Reset the year display
                     }
 
-                    if (!data.mov_id) {
-                        resetAllFields(); // Clear fields if no mov_id is found
-                        return;
-                    }
 
                     // Handle each PDF file from the returned data
                     var fileTypes = [
@@ -286,40 +276,40 @@ $(document).ready(function () {
 
                     // Handle rates
                     if (data.rates) {
-                        $('input[name="IA_1a_pdf_rate"]').val(data.rates.IA_1a_pdf_rate || '');
-                        $('input[name="IA_1b_pdf_rate"]').val(data.rates.IA_1b_pdf_rate || '');
-                        $('input[name="IA_2a_pdf_rate"]').val(data.rates.IA_2a_pdf_rate || '');
-                        $('input[name="IA_2b_pdf_rate"]').val(data.rates.IA_2b_pdf_rate || '');
-                        $('input[name="IA_2c_pdf_rate"]').val(data.rates.IA_2c_pdf_rate || '');
-                        $('input[name="IA_2d_pdf_rate"]').val(data.rates.IA_2d_pdf_rate || '');
-                        $('input[name="IA_2e_pdf_rate"]').val(data.rates.IA_2e_pdf_rate || '');
-                        $('input[name="IB_1forcities_pdf_rate"]').val(data.rates.IB_1forcities_pdf_rate || '');
-                        $('input[name="IB_1aformuni_pdf_rate"]').val(data.rates.IB_1aformuni_pdf_rate || '');
-                        $('input[name="IB_1bformuni_pdf_rate"]').val(data.rates.IB_1bformuni_pdf_rate || '');
-                        $('input[name="IB_2_pdf_rate"]').val(data.rates.IB_2_pdf_rate || '');
-                        $('input[name="IB_3_pdf_rate"]').val(data.rates.IB_3_pdf_rate || '');
-                        $('input[name="IB_4_pdf_rate"]').val(data.rates.IB_4_pdf_rate || '');
-                        $('input[name="IC_1_pdf_rate"]').val(data.rates.IC_1_pdf_rate || '');
-                        $('input[name="IC_2_pdf_rate"]').val(data.rates.IC_2_pdf_rate || '');
-                        $('input[name="ID_1_pdf_rate"]').val(data.rates.ID_1_pdf_rate || '');
-                        $('input[name="ID_2_pdf_rate"]').val(data.rates.ID_2_pdf_rate || '');
-                        $('input[name="IIA_pdf_rate"]').val(data.rates.IIA_pdf_rate || '');
-                        $('input[name="IIB_1_pdf_rate"]').val(data.rates.IIB_1_pdf_rate || '');
-                        $('input[name="IIB_2_pdf_rate"]').val(data.rates.IIB_2_pdf_rate || '');
-                        $('input[name="IIC_pdf_rate"]').val(data.rates.IIC_pdf_rate || '');
-                        $('input[name="IIIA_pdf_rate"]').val(data.rates.IIIA_pdf_rate || '');
-                        $('input[name="IIIB_pdf_rate"]').val(data.rates.IIIB_pdf_rate || '');
-                        $('input[name="IIIC_1forcities_pdf_rate"]').val(data.rates.IIIC_1forcities_pdf_rate || '');
-                        $('input[name="IIIC_1forcities2_pdf_rate"]').val(data.rates.IIIC_1forcities2_pdf_rate || '');
-                        $('input[name="IIIC_1forcities3_pdf_rate"]').val(data.rates.IIIC_1forcities3_pdf_rate || '');
-                        $('input[name="IIIC_2formuni1_pdf_rate"]').val(data.rates.IIIC_2formuni1_pdf_rate || '');
-                        $('input[name="IIIC_2formuni2_pdf_rate"]').val(data.rates.IIIC_2formuni2_pdf_rate || '');
-                        $('input[name="IIIC_2formuni3_pdf_rate"]').val(data.rates.IIIC_2formuni3_pdf_rate || '');
-                        $('input[name="IIID_pdf_rate"]').val(data.rates.IIID_pdf_rate || '');
-                        $('input[name="IV_forcities_pdf_rate"]').val(data.rates.IV_forcities_pdf_rate || '');
-                        $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate || '');
-                        $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || '');
-                        $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || '');
+                        $('input[name="IA_1a_pdf_rate"]').val(data.rates.IA_1a_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_1b_pdf_rate"]').val(data.rates.IA_1b_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_2a_pdf_rate"]').val(data.rates.IA_2a_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_2b_pdf_rate"]').val(data.rates.IA_2b_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_2c_pdf_rate"]').val(data.rates.IA_2c_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_2d_pdf_rate"]').val(data.rates.IA_2d_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IA_2e_pdf_rate"]').val(data.rates.IA_2e_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_1forcities_pdf_rate"]').val(data.rates.IB_1forcities_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_1aformuni_pdf_rate"]').val(data.rates.IB_1aformuni_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_1bformuni_pdf_rate"]').val(data.rates.IB_1bformuni_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_2_pdf_rate"]').val(data.rates.IB_2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_3_pdf_rate"]').val(data.rates.IB_3_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IB_4_pdf_rate"]').val(data.rates.IB_4_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IC_1_pdf_rate"]').val(data.rates.IC_1_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IC_2_pdf_rate"]').val(data.rates.IC_2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="ID_1_pdf_rate"]').val(data.rates.ID_1_pdf_rate || 'No ratings available at this time');
+                        $('input[name="ID_2_pdf_rate"]').val(data.rates.ID_2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIA_pdf_rate"]').val(data.rates.IIA_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIB_1_pdf_rate"]').val(data.rates.IIB_1_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIB_2_pdf_rate"]').val(data.rates.IIB_2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIC_pdf_rate"]').val(data.rates.IIC_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIA_pdf_rate"]').val(data.rates.IIIA_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIB_pdf_rate"]').val(data.rates.IIIB_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_1forcities_pdf_rate"]').val(data.rates.IIIC_1forcities_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_1forcities2_pdf_rate"]').val(data.rates.IIIC_1forcities2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_1forcities3_pdf_rate"]').val(data.rates.IIIC_1forcities3_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_2formuni1_pdf_rate"]').val(data.rates.IIIC_2formuni1_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_2formuni2_pdf_rate"]').val(data.rates.IIIC_2formuni2_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIIC_2formuni3_pdf_rate"]').val(data.rates.IIIC_2formuni3_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IIID_pdf_rate"]').val(data.rates.IIID_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IV_forcities_pdf_rate"]').val(data.rates.IV_forcities_pdf_rate || 'No ratings available at this time');
+                        $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate || 'No ratings available at this time');
+                        $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || 'No ratings available at this time');
+                        $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || 'No ratings available at this time');
                         $('#status_rate').text(data.rates.status_rate || 'Rate Status: Pending');
                         
                         // After setting all the rates, check for empty ones and highlight them
@@ -437,11 +427,11 @@ $(document).ready(function () {
     }
 
     // Add event listeners for rate inputs and remark textareas
-    $('input[type="number"].score-input, textarea[placeholder="Remarks"]').on('change input', function(event) {
+    $('input[type="number"].score-input, textarea[placeholder="Remarks"]').on('change', function() {
         // Check if a barangay is selected
         var selectedBarangay = $('#barangay_select').val();
         if (!selectedBarangay) {
-            showModal('Please select a barangay first');
+            alert('Please select a barangay first');
             $(this).val(''); // Clear the input
             return;
         }
@@ -452,150 +442,49 @@ $(document).ready(function () {
             var max = parseFloat($(this).attr('max'));
             var value = parseFloat($(this).val());
             
-            if (isNaN(value) || value < min || value > max) {
-                showModal('Please enter a number between ' + min + ' and ' + max);
-                $(this).val('');
+            if (value < min || value > max) {
+                alert(`Please enter a number between ${min} and ${max}`);
+                $(this).val(''); // Clear invalid input
                 return;
             }
         }
-
-        // For remarks, only submit if it's a change event (not input)
-        if ($(this).is('textarea') && event.type === 'input') {
-            // Just enable the submit button for textarea input
-            $('input[type="submit"]').prop('disabled', false).css({
-                'opacity': '1',
-                'cursor': 'pointer',
-                'background-color': '#000033'
-            });
-            return;
-        }
-
-        // Remove any existing messages
-        $('.save-success, .save-error').remove();
-
-        // Automatically submit the form
-        var form = $(this).closest('form');
-        var formData = new FormData(form[0]);
         
-        $.ajax({
-            url: 'adminevaluate_handler.php',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                console.log('Raw Response:', response);
-                
-                // Parse response if it's a string
-                if (typeof response === 'string') {
-                    try {
-                        response = JSON.parse(response);
-                    } catch (e) {
-                        console.log('Failed to parse response:', e);
-                    }
-                }
-                
-                if (response && response.status === 'success') {
-                    // Show success message next to the changed input
-                    var successMsg = $(`
-                        <div class="save-success" style="
-                            position: absolute;
-                            background-color: #90EE90;
-                            padding: 4px 8px;
-                            border-radius: 4px;
-                            font-size: 12px;
-                            margin-left: 10px;
-                            display: inline-block;
-                            z-index: 1000;">
-                            <span style="color: #006400;">✓</span> Saved
-                        </div>
-                    `);
-                    $(event.target).after(successMsg);
-                    setTimeout(function() {
-                        successMsg.fadeOut(function() {
-                            $(this).remove();
-                        });
-                    }, 2000);
-
-                    if ($(event.target).val() !== '') {
-                        $(event.target).css({
-                            'background-color': '',
-                            'border-color': ''
-                        });
-                    } else {
-                        $(event.target).css({
-                            'background-color': '#ffebee',
-                            'border-color': '#ef5350'
-                        });
-                    }
-                } else {
-                    showModal('Error saving changes');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.log('Error:', error);
-                showModal('Error saving changes');
-            }
-        });
+        // Automatically submit the form
+        $('form').submit();
+        
+        if ($(this).val() !== '') {
+            $(this).css('background-color', ''); // Reset background
+            $(this).css('border-color', ''); // Reset border
+        } else {
+            $(this).css('background-color', '#ffebee'); // Light red background
+            $(this).css('border-color', '#ef5350'); // Red border
+        }
     });
 
     // Add form submission handler
     $('form').on('submit', function(e) {
         e.preventDefault();
-        var form = this;
         
-        // Get the last modified input
-        var lastModifiedInput = $('input[type="number"]:focus');
-        if (!lastModifiedInput.length) {
-            lastModifiedInput = $('input[type="number"]').filter(function() {
-                return $(this).val() !== '';
-            }).last();
+        // Validate all number inputs before submission
+        var isValid = true;
+        $('input[type="number"].score-input').each(function() {
+            var min = parseFloat($(this).attr('min'));
+            var max = parseFloat($(this).attr('max'));
+            var value = parseFloat($(this).val());
+            
+            if (value !== '' && (value < min || value > max)) {
+                alert(`Please ensure all ratings are between their specified minimum and maximum values`);
+                isValid = false;
+                return false;
+            }
+        });
+        
+        if (!isValid) {
+            return false;
         }
         
-        // Get required IDs
-        var movId = $('#mov_id').val();
-        var barangayId = $('#barangay_id').val();
-        
-        // Debug: Log the values
-        console.log('MOV ID:', movId);
-        console.log('Barangay ID:', barangayId);
-        
-        // Validate required fields
-        if (!movId || !barangayId) {
-            var errorMsg = $(`
-                <div class="save-error" style="
-                    position: absolute;
-                    background-color: #ffebee;
-                    padding: 4px 8px;
-                    border-radius: 4px;
-                    font-size: 12px;
-                    margin-left: 10px;
-                    display: inline-block;
-                    color: #c62828;
-                    z-index: 1000;">
-                    Please select a barangay first
-                </div>`);
-            
-            // Show error next to barangay select
-            $('.save-error').remove();
-            errorMsg.insertAfter('#barangay_select');
-            
-            setTimeout(function() {
-                errorMsg.fadeOut(200, function() {
-                    $(this).remove();
-                });
-            }, 1000);
-            
-            return;
-        }
-        
-        // Collect form data
-        var formData = new FormData(form);
-        
-        // Debug: Log form data
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
+        // Create FormData object
+        var formData = new FormData(this);
         
         // Submit form via AJAX
         $.ajax({
@@ -605,75 +494,24 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function(response) {
-                console.log('Raw Response:', response);
-                
-                // Parse response if it's a string
-                if (typeof response === 'string') {
+                // Only attempt to parse and show errors if response is not empty
+                if (response && response.trim() !== '') {
                     try {
-                        response = JSON.parse(response);
+                        var result = JSON.parse(response);
+                        if (result.status === 'error') {
+                            $('#modalMessage').text(result.message);
+                            $('#responseModal').modal('show');
+                        }
                     } catch (e) {
-                        console.log('Failed to parse response:', e);
-                    }
-                }
-                
-                console.log('Parsed Response:', response);
-                
-                // Remove any existing messages
-                $('.save-success, .save-error').remove();
-                
-                if (response && response.status === 'success') {
-                    var successMsg = $(`
-                        <div class="save-success" style="
-                            position: absolute;
-                            background-color: #90EE90;
-                            padding: 4px 8px;
-                            border-radius: 4px;
-                            font-size: 12px;
-                            margin-left: 10px;
-                            display: inline-block;
-                            z-index: 1000;">
-                            <span style="color: #006400;">✓</span> Saved
-                        </div>`);
-                    
-                    if (lastModifiedInput.length) {
-                        successMsg.insertAfter(lastModifiedInput);
-                        setTimeout(function() {
-                            successMsg.fadeOut(200, function() {
-                                $(this).remove();
-                            });
-                        }, 1000);
+                        // Do nothing on parse error - assume success
                     }
                 }
             },
             error: function(xhr, status, error) {
-                console.log('Error:', error);
-                console.log('Status:', status);
-                console.log('Response:', xhr.responseText);
-                
-                // Remove any existing messages
-                $('.save-success, .save-error').remove();
-                
-                var errorMsg = $(`
-                    <div class="save-error" style="
-                        position: absolute;
-                        background-color: #ffebee;
-                        padding: 4px 8px;
-                        border-radius: 4px;
-                        font-size: 12px;
-                        margin-left: 10px;
-                        display: inline-block;
-                        color: #c62828;
-                        z-index: 1000;">
-                        Failed to save changes
-                    </div>`);
-                
-                if (lastModifiedInput.length) {
-                    errorMsg.insertAfter(lastModifiedInput);
-                    setTimeout(function() {
-                        errorMsg.fadeOut(200, function() {
-                            $(this).remove();
-                        });
-                    }, 1000);
+                // Only show modal for actual AJAX errors
+                if (error) {
+                    $('#modalMessage').text('Error saving changes');
+                    $('#responseModal').modal('show');
                 }
             }
         });
@@ -832,9 +670,11 @@ if (classification === "City") {
                         </select>
                     </div>
     <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
-    <input type="hidden" id="selected_barangay" name="selected_barangay" value="" />
-    <input type="hidden" id="mov_id" name="mov_id" value="" />
-    <input type="hidden" id="barangay_id" name="barangay_id" value="" />
+    <input type="hidden" id="selected_barangay" name="selected_barangay" value="" /><br><br>
+    <!-- Example form input for mov_id -->
+    <input type="hidden" id="mov_id" name="mov_id" readonly> <!-- Display fetched mov_id -->
+    <input type="hidden" id="barangay_id" name="barangay_id" readonly> <!-- I want the barangay_id fetch here -->
+    <!-- mov_id is fetched here -->
     <h2 class="text-left text-2xl font-semibold" id="status_rate" hidden></h2>
     <table class="table table-bordered">
             <thead>
@@ -842,7 +682,6 @@ if (classification === "City") {
                 <th>CRITERIA</th>
                 <th>Assigned Points</th>
                 <th>File</th>
-                <th>Verification Actions</th>
                 <th>Rate</th>
                 <th>Remarks</th>
               </tr>
@@ -856,12 +695,10 @@ if (classification === "City") {
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
           </tr>
           <tr>
         <td><b>A. Observance of Settlement Procedure and Settlement Deadlines</b>
         </td>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -892,8 +729,8 @@ if (classification === "City") {
             <td class="file-column" data-type="IA_1a">
               <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                </td>
-               <td>button</td>
             <td>  
+            <hr class="my-1">
               <input type="number" value="" name="IA_1a_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
             <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
           </td>
@@ -917,7 +754,6 @@ if (classification === "City") {
             <td class="file-column" data-type="IA_1b">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td>
             <input type="number" value="" name="IA_1b_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
           <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
@@ -943,7 +779,6 @@ if (classification === "City") {
   <td></td>
   <td></td>
   <td></td>
-  <td></td>
 </tr>
                <tr>
                 <td>a) Mediation (within 15 days from initial confrontation with the Lupon Chairman)</td>
@@ -951,7 +786,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2a">
               <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
           </td>
-          <td>button</td>
             <td><input type="number" value="" name="IA_2a_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2a_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -961,7 +795,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2b">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
-            <td>button</td>
             <td><input type="number" value="" name="IA_2b_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2b_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -971,7 +804,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2c">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IA_2c_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2c_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -981,7 +813,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2d">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IA_2d_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2d_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -991,21 +822,18 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2e">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IA_2e_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2e_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <td><b>B. Systematic Maintenance of Records</b></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <th>B. Systematic Maintenance of Records</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
               </tr>
               <tr>
                 <td><b>1. Record of Cases </b></td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1017,13 +845,11 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                 </td>
-                <td>button</td>
             <td><input type="number" value="" name="IB_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td ><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr id="municipality-row" style="display:none;">
               <td>For Municipalities:</td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1035,7 +861,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_1aformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IB_1aformuni_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_1aformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1045,7 +870,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_1bformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IB_1bformuni_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IB_1bformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1055,7 +879,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IB_2_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1065,7 +888,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IB_3_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IB_3_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1075,7 +897,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_4">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IB_4_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_4_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1085,38 +906,36 @@ if (classification === "City") {
                 <th></th>
                 <th></th>
                 <th></th>
-                <th></th>
               </tr>
               <tr>
                 <td>
                 <details>
-              <summary><b>1. To the Court: Submitted/presented copies of settlement agreement to the Court</b></summary>
-              <p><br>
-                <b>Criteria Description:</b> <br>
-                Copies of the settlement agreement must be submitted to the Court within the following periods: 
-                <ul>
-                  <li>After the lapse of the ten-day period repudiating the mediation/conciliation settlement agreement</li>
-                  <li>Or within five (5) calendar days from the date of the arbitration award</li>
-                </ul>
-                <br>
-                
-                <b>Scoring Details:</b> <br><br>
-                <b>5.0 points</b> - 80%-100% of the settlement agreements were submitted on time.<br>
-                <b>4.0 points</b> - 60%-79% of the settlement agreements were submitted on time.<br>
-                <b>3.0 points</b> - 40%-59% of the settlement agreements were submitted on time.<br>
-                <b>2.0 points</b> - 20%-39% of the settlement agreements were submitted on time.<br>
-                <b>1.0 point</b> - 1%-19% of the settlement agreements were submitted on time.<br>
-                <b>0 points</b> - 0% of the reports were submitted on time.<br><br>
+                <summary><b>1. To the Court: Submitted/presented copies of settlement agreement to the Court</b></summary>
+                <p><br>
+                  <b>Criteria Description:</b> <br>
+                  Copies of the settlement agreement must be submitted to the Court within the following periods: 
+                  <ul>
+                    <li>After the lapse of the ten-day period repudiating the mediation/conciliation settlement agreement</li>
+                    <li>Or within five (5) calendar days from the date of the arbitration award</li>
+                  </ul>
+                  <br>
+                  
+                  <b>Scoring Details:</b> <br><br>
+                  <b>5.0 points</b> - 80%-100% of the settlement agreements were submitted on time.<br>
+                  <b>4.0 points</b> - 60%-79% of the settlement agreements were submitted on time.<br>
+                  <b>3.0 points</b> - 40%-59% of the settlement agreements were submitted on time.<br>
+                  <b>2.0 points</b> - 20%-39% of the settlement agreements were submitted on time.<br>
+                  <b>1.0 point</b> - 1%-19% of the settlement agreements were submitted on time.<br>
+                  <b>0 points</b> - 0% of the reports were submitted on time.<br><br>
 
-                <b>Note:</b> Timeliness is critical. Submission is considered on time only if it adheres strictly to the ten-day period after mediation/conciliation or five (5) days post-arbitration award.
-              </p>
-             </details>
+                  <b>Note:</b> Timeliness is critical. Submission is considered on time only if it adheres strictly to the ten-day period after mediation/conciliation or five (5) days post-arbitration award.
+                </p>
+               </details>
                 </td>
                 <td>5</td>
                 <td class="file-column" data-type="IC_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IC_1_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IC_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1134,13 +953,11 @@ if (classification === "City") {
                 <td class="file-column" data-type="IC_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
-            <td>button</td>
             <td><input type="number" value="" name="IC_2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IC_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -1161,7 +978,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="ID_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="ID_1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="ID_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1185,7 +1001,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="ID_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="ID_2_pdf_rate" min="0" max="8" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="ID_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1195,42 +1010,39 @@ if (classification === "City") {
                 <th></th>
                 <th></th>
                 <th></th>
-                <th></th>
               </tr>
               <tr>
                 <td>
                 <details>
-              <summary><b>A. Quantity of settled cases against filed</b></summary>
-              <p><br>
-                <b>With a minimum of 10 cases settled, the percentage of cases received by the Lupon resulting in settlement:</b><br><br>
-                <b>10.0 points</b> - 100%.<br>
-                <b>8.0 points</b> - 80%-99%.<br>
-                <b>6.0 points</b> - 60%-79%.<br>
-                <b>4.0 points</b> - 40%-59%.<br>
-                <b>2.0 points</b> - 1%-39%.<br>
-                <b>0 point</b> - 0%.
-              </p>
-            </details>
+                <summary><b>A. Quantity of settled cases against filed</b></summary>
+                <p><br>
+                  <b>With a minimum of 10 cases settled, the percentage of cases received by the Lupon resulting in settlement:</b><br><br>
+                  <b>10.0 points</b> - 100%.<br>
+                  <b>8.0 points</b> - 80%-99%.<br>
+                  <b>6.0 points</b> - 60%-79%.<br>
+                  <b>4.0 points</b> - 40%-59%.<br>
+                  <b>2.0 points</b> - 1%-39%.<br>
+                  <b>0 point</b> - 0%.
+                </p>
+              </details>
                     </td>
                 <td>10</td>
                 <td class="file-column" data-type="IIA">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIA_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>
                 <details>
-              <summary><b>B. Quality of Settlement of Cases</b></summary>
-              <p><br>
-                <b>1 point</b> - for non-recurrence and zero cases repudiated (out of the total number of settled cases).<br>
-                <b>0 point</b> - at least one (1) case repudiated (out of the total number of settled cases).
-              </p>
+                <summary><b>B. Quality of Settlement of Cases</b></summary>
+                <p><br>
+                  <b>1 point</b> - for non-recurrence and zero cases repudiated (out of the total number of settled cases).<br>
+                  <b>0 point</b> - at least one (1) case repudiated (out of the total number of settled cases).
+                </p>
               </details>
                 </td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1242,7 +1054,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIB_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIB_1_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIB_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1252,7 +1063,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIB_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIB_2_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1273,13 +1083,11 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIC">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIC_pdf_rate" min="0" max="8" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIC_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>III. CREATIVITY AND RESOURCEFULNESS OF THE LUPONG TAGAPAMAYAPA</th>
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -1304,7 +1112,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIA">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIIA_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1322,13 +1129,11 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIB">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIIB_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings" ></td>
             <td><textarea name="IIIB_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td>C. Sustained information drive to promote Katarungang Pambarangay</td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1348,7 +1153,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIIC_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1362,7 +1166,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_1forcities2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIIC_1forcities2_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1376,13 +1179,11 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_1forcities3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIIC_1forcities3_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="municipality-row" style="display:none;">
                 <td>2. For Municipalities</td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1398,7 +1199,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_2formuni1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIIC_2formuni1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni1_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1412,7 +1212,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_2formuni2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIIC_2formuni2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1426,7 +1225,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_2formuni3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIIC_2formuni3_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1453,13 +1251,11 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIID">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IIID_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIID_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <th>IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
-                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -1471,7 +1267,6 @@ if (classification === "City") {
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
               </tr>
               <tr id="city-row" style="display:none;">
                 <td>For Cities - the office or space should be exclusive for KP matters</td>
@@ -1479,8 +1274,7 @@ if (classification === "City") {
                 <td class="file-column" data-type="IV_forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
-            <td><input type="number" value="" name="IV_forcities_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings"></td>
+            <td><input type="number" value="" name="IV_forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IV_forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="municipality-row" style="display:none;">
@@ -1489,7 +1283,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="IV_muni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="IV_muni_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IV_muni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1497,7 +1290,6 @@ if (classification === "City") {
                 <th>V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
                 <th></th>
                 <th></th>
-                <td></td>
                 <th></th>
                 <th></th>
               </tr>
@@ -1507,7 +1299,6 @@ if (classification === "City") {
                 <td class="file-column" data-type="V_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="V_1_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="V_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1517,7 +1308,6 @@ if (classification === "City") {
               <td class="file-column" data-type="threepeoplesorg">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
-    <td>button</td>
             <td><input type="number" value="" name="threepeoplesorg_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="threepeoplesorg_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1537,22 +1327,22 @@ if (classification === "City") {
             <div class="modal-header">
                 <h5 class="modal-title">Notification</h5>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="large-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-            </div>
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+            </svg>
+            <span class="sr-only">Close modal</span>
+        </button>
+
+                    </div>
             <div class="modal-body">
                 <p id="modalMessage"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary"  style="color: blue;" data-dismiss="modal">OK</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
 </div>
-
 <script>
   // Close the modal when the close button is clicked
 //   $(document).mouseup(function (e) {
@@ -1603,24 +1393,8 @@ document.addEventListener("DOMContentLoaded", function() {
         </div>
     </div>
 </div>
-<!-- Modal structure -->
-<div id="alertModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Notification</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p id="alertMessage"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" style="background-color: #000033;" class="btn btn-primary" data-dismiss="modal">OK</button>
-            </div>
-        </div>
     </div>
-</div>
+  </div>
+
 </body>
 </html>
