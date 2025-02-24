@@ -93,6 +93,17 @@ try {
   <title>LTIA</title>
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
 <style>
+  .verify-btn {
+    min-width: 80px;
+}
+.verify-btn.btn-primary {
+    background-color: #ff0000;
+    color: white;
+}
+.verify-btn.btn-success {
+    background-color: #28a745;
+    color: white;
+}
 /* CSS to ensure alerts fit well within the table cells */
 .alert {
     display: flex;           /* Use flex to center content */
@@ -366,6 +377,11 @@ $(document).ready(function () {
                     } else {
                         clearRemarks();
                     }
+
+                    // Update verification buttons
+                    if (data.verifications) {
+                        updateVerificationButtons(data.verifications);
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.log('Error fetching files:', xhr.responseText);
@@ -518,6 +534,75 @@ $(document).ready(function () {
     });
 });
 
+    // Function to update verification button states
+    function updateVerificationButtons(verifications) {
+        if (!verifications) return;
+        
+        // Loop through all verify buttons
+        $('.verify-btn').each(function() {
+            var field = $(this).data('field');
+            if (field && verifications[field] !== undefined) {
+                var isVerified = verifications[field] === 1;
+                $(this)
+                    .text(isVerified ? 'Verified' : 'Verify')
+                    .removeClass('btn-primary btn-success')
+                    .addClass(isVerified ? 'btn-success' : 'btn-primary');
+            }
+        });
+    }
+
+    // Add click handler for verify buttons
+    $(document).on('click', '.verify-btn', function() {
+        var btn = $(this);
+        var field = btn.data('field');
+        var movId = $('#mov_id').val();
+        var barangayId = $('#barangay_id').val();
+
+        if (!field || !movId || !barangayId) {
+            showModal('Missing required data for verification');
+            return;
+        }
+
+        $.ajax({
+            url: 'verify_mov_handler.php',
+            method: 'POST',
+            data: {
+                field: field,
+                mov_id: movId,
+                barangay_id: barangayId
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Update the button state immediately
+                    btn.text(response.verified ? 'Verified' : 'Verify')
+                       .removeClass('btn-primary btn-success')
+                       .addClass(response.verified ? 'btn-success' : 'btn-primary');
+                    
+                    // Also refresh the verification data
+                    var selectedBarangay = $('#barangay_select').val();
+                    if (selectedBarangay) {
+                        $.ajax({
+                            url: 'fetch_files.php',
+                            method: 'POST',
+                            data: { barangay_name: selectedBarangay },
+                            dataType: 'json',
+                            success: function(data) {
+                                if (data.verifications) {
+                                    updateVerificationButtons(data.verifications);
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    showModal('Failed to update verification status');
+                }
+            },
+            error: function() {
+                showModal('Error occurred while updating verification status');
+            }
+        });
+    });
+
     // Handle PDF viewing inside the modal
     $(document).on('click', '.view-pdf', function () {
         var file = $(this).data('file'); // Get the file URL
@@ -540,6 +625,45 @@ $(document).ready(function () {
         $('#pdfViewer').attr('src', ''); // Clear the iframe src when modal is closed
     });
 
+$(document).on('click', '.verify-btn', function() {
+    const fieldName = $(this).data('field');
+    const movId = $('#mov_id').val();
+    // Add verification button click handler
+    // $(document).on('click', '.verify-btn', function() {
+    //     const fieldName = $(this).data('field');
+    //     const movId = $('#mov_id').val();
+        // const barangayId = $('#barangay_id').val();
+        
+        if (!movId || !barangayId) {
+            showModal('Please select a barangay first');
+            return;
+        }
+
+        $.ajax({
+            url: 'verify_mov_handler.php',
+            type: 'POST',
+            data: {
+                field: fieldName,
+                mov_id: movId,
+                barangay_id: barangayId,
+                action: 'verify'
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Update button appearance
+                    const btn = $(`.verify-btn[data-field="${fieldName}"]`);
+                    btn.removeClass('btn-primary').addClass('btn-success');
+                    btn.html('Verified');
+                    showModal('Successfully verified ' + fieldName);
+                } else {
+                    showModal('Error: ' + response.message);
+                }
+            },
+            error: function() {
+                showModal('Error occurred while verifying');
+            }
+        });
+    });
 </script>
 </head>
 <body class="bg-[#E8E8E7]">
@@ -669,12 +793,19 @@ if (classification === "City") {
                             <?php endforeach; ?>
                         </select>
                     </div>
+<<<<<<< HEAD
     <form method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
     <input type="hidden" id="selected_barangay" name="selected_barangay" value="" /><br><br>
     <!-- Example form input for mov_id -->
     <input type="hidden" id="mov_id" name="mov_id" readonly> <!-- Display fetched mov_id -->
     <input type="hidden" id="barangay_id" name="barangay_id" readonly> <!-- I want the barangay_id fetch here -->
     <!-- mov_id is fetched here -->
+=======
+    <form id="evaluationForm" method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
+    <input type="hidden" id="selected_barangay" name="selected_barangay" value="" />
+    <input type="hidden" id="mov_id" name="mov_id" value="" />
+    <input type="hidden" id="barangay_id" name="barangay_id" value="" />
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
     <h2 class="text-left text-2xl font-semibold" id="status_rate" hidden></h2>
     <table class="table table-bordered">
             <thead>
@@ -729,6 +860,14 @@ if (classification === "City") {
             <td class="file-column" data-type="IA_1a">
               <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                </td>
+<<<<<<< HEAD
+=======
+               <td>
+                <button type="button" class="btn btn-sm verify-btn" data-field="IA_1a_pdf_verify">
+                    Verify
+                </button>
+               </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td>  
             <hr class="my-1">
               <input type="number" value="" name="IA_1a_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
@@ -754,6 +893,14 @@ if (classification === "City") {
             <td class="file-column" data-type="IA_1b">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IA_1b_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td>
             <input type="number" value="" name="IA_1b_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
           <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
@@ -786,6 +933,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2a">
               <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
           </td>
+<<<<<<< HEAD
+=======
+          <td>
+            <button type="button" class="btn btn-sm verify-btn" data-field="IA_2a_pdf_verify">
+                Verify
+            </button>
+          </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IA_2a_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2a_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -795,6 +950,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2b">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
+<<<<<<< HEAD
+=======
+            <td>
+            <button type="button" class="btn btn-sm verify-btn" data-field="IA_2b_pdf_verify">
+                Verify
+            </button>
+            </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IA_2b_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2b_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -804,6 +967,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2c">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IA_2c_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IA_2c_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2c_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -813,6 +984,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2d">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IA_2d_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IA_2d_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IA_2d_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -822,7 +1001,16 @@ if (classification === "City") {
                 <td class="file-column" data-type="IA_2e">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
             <td><input type="number" value="" name="IA_2e_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IA_2e_pdf_verify">
+            Verify
+        </button>
+    </td>
+            <td><input type="number" value="" name="IA_2e_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><textarea name="IA_2e_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -845,6 +1033,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
                 </td>
+<<<<<<< HEAD
+=======
+                <td>
+                <button type="button" class="btn btn-sm verify-btn" data-field="IB_1forcities_pdf_verify">
+                    Verify
+                </button>
+                </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IB_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td ><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -861,6 +1057,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_1aformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IB_1aformuni_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IB_1aformuni_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_1aformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -870,6 +1074,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_1bformuni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IB_1bformuni_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IB_1bformuni_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IB_1bformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -879,6 +1091,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IB_2_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IB_2_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -888,6 +1108,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IB_3_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IB_3_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IB_3_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -897,6 +1125,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IB_4">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IB_4_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IB_4_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IB_4_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -936,6 +1172,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IC_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IC_1_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IC_1_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IC_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -953,6 +1197,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IC_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
             </td>
+<<<<<<< HEAD
+=======
+            <td>
+                <button type="button" class="btn btn-sm verify-btn" data-field="IC_2_pdf_verify">
+                    Verify
+                </button>
+            </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IC_2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IC_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -978,6 +1230,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="ID_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="ID_1_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="ID_1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="ID_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1001,6 +1261,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="ID_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="ID_2_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="ID_2_pdf_rate" min="0" max="8" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="ID_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1030,6 +1298,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIA">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIA_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIA_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1054,6 +1330,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIB_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIB_1_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIB_1_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIB_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1063,6 +1347,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIB_2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIB_2_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIB_2_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1083,6 +1375,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIC">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIC_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIC_pdf_rate" min="0" max="8" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIC_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1112,6 +1412,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIA">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIIA_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIIA_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1129,6 +1437,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIB">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIIB_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIIB_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings" ></td>
             <td><textarea name="IIIB_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1153,6 +1469,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIIC_1forcities_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIIC_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1166,6 +1490,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_1forcities2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIIC_1forcities2_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIIC_1forcities2_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1179,6 +1511,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_1forcities3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIIC_1forcities3_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIIC_1forcities3_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_1forcities3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1199,6 +1539,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_2formuni1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIIC_2formuni1_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIIC_2formuni1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni1_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1212,6 +1560,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_2formuni2">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIIC_2formuni2_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIIC_2formuni2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1225,6 +1581,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIIC_2formuni3">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIIC_2formuni3_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIIC_2formuni3_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IIIC_2formuni3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
@@ -1251,6 +1615,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IIID">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IIID_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IIID_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="IIID_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1274,7 +1646,16 @@ if (classification === "City") {
                 <td class="file-column" data-type="IV_forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
             <td><input type="number" value="" name="IV_forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IV_forcities_pdf_verify">
+            Verify
+        </button>
+    </td>
+            <td><input type="number" value="" name="IV_forcities_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings"></td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><textarea name="IV_forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="municipality-row" style="display:none;">
@@ -1283,6 +1664,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="IV_muni">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="IV_muni_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="IV_muni_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
             <td><textarea name="IV_muni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1299,6 +1688,14 @@ if (classification === "City") {
                 <td class="file-column" data-type="V_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="V_1_pdf_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="V_1_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="V_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1308,6 +1705,14 @@ if (classification === "City") {
               <td class="file-column" data-type="threepeoplesorg">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
     </td>
+<<<<<<< HEAD
+=======
+    <td>
+        <button type="button" class="btn btn-sm verify-btn" data-field="threepeoplesorg_verify">
+            Verify
+        </button>
+    </td>
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
             <td><input type="number" value="" name="threepeoplesorg_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
             <td><textarea name="threepeoplesorg_remark" placeholder="Remarks"></textarea></td>
               </tr>
@@ -1344,31 +1749,48 @@ if (classification === "City") {
     </div>
 </div>
 <script>
-  // Close the modal when the close button is clicked
-//   $(document).mouseup(function (e) {
-//     var modalContent = $(".relative.bg-white.shadow.rounded-lg.h-full"); // Adjust selector as necessary
-//     if (!modalContent.is(e.target) && modalContent.has(e.target).length === 0) {
-//         closeModal(); // Close modal when clicking outside of content
-//     }
-// });
+  // Add this inside your existing $(document).ready(function() { ... });
+$(document).on('click', '.verify-btn', function() {
+    const fieldName = $(this).data('field');
+    const movId = $('#mov_id').val();
+    // Add verification button click handler
+    // $(document).on('click', '.verify-btn', function() {
+    //     const fieldName = $(this).data('field');
+    //     const movId = $('#mov_id').val();
+        // const barangayId = $('#barangay_id').val();
+        
+        if (!movId || !barangayId) {
+            showModal('Please select a barangay first');
+            return;
+        }
 
-  // Close the modal when the close button is clicked
-$(document).on('click', '[data-modal-hide="large-modal"]', function () {
-    $('#large-modal').addClass('hidden'); // Hide the modal
-    $('#pdfViewer').attr('src', ''); // Clear the iframe src when modal is closed
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const status = urlParams.get('status');
-    const message = urlParams.get('message');
-    
-    if (status && message) {
-        document.getElementById('modalMessage').innerText = decodeURIComponent(message);
-        $('#responseModal').modal('show');
-    }
-});
+        $.ajax({
+            url: 'verify_mov_handler.php',
+            type: 'POST',
+            data: {
+                field: fieldName,
+                mov_id: movId,
+                barangay_id: barangayId,
+                action: 'verify'
+            },
+            success: function(response) {
+                if (response.status === 'success') {
+                    // Update button appearance
+                    const btn = $(`.verify-btn[data-field="${fieldName}"]`);
+                    btn.removeClass('btn-primary').addClass('btn-success');
+                    btn.html('Verified');
+                    showModal('Successfully verified ' + fieldName);
+                } else {
+                    showModal('Error: ' + response.message);
+                }
+            },
+            error: function() {
+                showModal('Error occurred while verifying');
+            }
+        });
+    });
 </script>
+<<<<<<< HEAD
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- Main modal for PDF viewing -->
@@ -1396,5 +1818,7 @@ document.addEventListener("DOMContentLoaded", function() {
     </div>
   </div>
 
+=======
+>>>>>>> f3fb2e932201a2ab79eb89178c8908f2ddc21f61
 </body>
 </html>
