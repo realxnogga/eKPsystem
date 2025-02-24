@@ -56,6 +56,22 @@ try {
         }
     }
 
+    // Get verification statuses
+    $verifyQuery = "SELECT * FROM movverify 
+                    WHERE mov_id = :mov_id 
+                    AND barangay_id = :barangay_id";
+    $stmt = $conn->prepare($verifyQuery);
+    $stmt->bindParam(':mov_id', $mov['id'], PDO::PARAM_INT);
+    $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $verifications = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($verifications) {
+        $response['verifications'] = $verifications;
+    } else {
+        $response['verifications'] = null;
+    }
+
     if ($user_type === 'assessor') {
         // Get assessor's own rates for current year and specific MOV
         $rateQuery = "SELECT * FROM movrate 
