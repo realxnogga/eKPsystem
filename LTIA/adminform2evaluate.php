@@ -955,6 +955,7 @@ if (classification === "City") {
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <br>
     <form id="evaluationForm" method="post" action="adminevaluate_handler.php" enctype="multipart/form-data">
     <input type="hidden" id="selected_barangay" name="selected_barangay" value="" />
     <input type="hidden" id="mov_id" name="mov_id" value="" />
@@ -1164,7 +1165,19 @@ if (classification === "City") {
                 <td></td>
               </tr>
               <tr id="city-row" style="display:none;">
-              <td>For Cities - computer database with searchable case information</td>
+              <td>
+              <details>
+        <summary><b>For Cities - computer database with searchable case information</b></summary>
+        <p><br>
+          <b>Scoring Details:</b> <br><br>
+          <b>2 points</b> - if presented photos of the computer database with searchable engine. During onsite, to check the actual database and try the search engine
+          <br>
+          <b>Note:</b> To check the actual document during onsite validation<br>
+            To check the quality of the file management - Record of dockets cases should be arranged in chronological order, folders properly labelled.
+
+        </p>
+      </details>
+              </td>
                 <td>2</td>
                 <td class="file-column" data-type="IB_1forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
@@ -1178,7 +1191,19 @@ if (classification === "City") {
             <td ><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr id="municipality-row" style="display:none;">
-              <td>For Municipalities:</td>
+              <td>For Municipalities:
+              <details>
+        <summary><b>For Municipalities:</b></summary>
+        <p><br>
+          <b>Scoring Details:</b> <br><br>
+          <b>1 point</b> - if presented copy/photo of the manual record.          <br>
+          <b>1 point</b> - if presented digital record filing          <br>
+          <b>Note:</b> To check the actual document during onsite validation <br>
+            To check the quality of the file management - Record of dockets cases should be arranged in chronological order, folders properly labelled.
+        </p>
+      </details>
+
+              </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1551,7 +1576,18 @@ if (classification === "City") {
                 <td></td>
               </tr>
               <tr id="city-row" style="display:none;">
-                <td>1. For Cities</td>
+                <td>
+                <details>
+        <summary><b>1. For Cities</b></summary>
+        <p><br>
+          <b>Scoring Details:</b> <br><br>
+          <b>2 points</b> - IEC materials produced <br>
+          <b>1 points</b> - IEC activities conducted<br>
+          <b>2 points</b> - Innovative Campaign Strategy
+          <br>
+        </p>
+      </details>
+                </td>
                 <td></td>
               </tr>
               <tr id="city-row" style="display:none;">
@@ -1609,7 +1645,18 @@ if (classification === "City") {
             <td><textarea name="IIIC_1forcities3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="municipality-row" style="display:none;">
-                <td>2. For Municipalities</td>
+                <td>
+                <details>
+        <summary><b>2. For Municipalities</b></summary>
+        <p><br>
+          <b>Scoring Details:</b> <br><br>
+          <b>2 points</b> - IEC materials produced          <br>
+          <b>2 points</b> - IEC activities conducted<br>
+          <b>1 points</b> - Innovative Campaign Strategy
+          <br>
+        </p>
+      </details>
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1718,7 +1765,17 @@ if (classification === "City") {
                 <td></td>
               </tr>
               <tr id="city-row" style="display:none;">
-                <td>For Cities - the office or space should be exclusive for KP matters</td>
+                <td>
+                <details>
+        <summary><b>For Cities - the office or space should be exclusive for KP matters</b></summary>
+        <p><br>
+          <b>Scoring Details:</b> <br><br>
+          <b>5 points</b> - office or room for exclusive use during KP proceedings with tables, chairs and other furniture and necessary equipment          <br>
+          <b>2 points</b> - office or room for shared use during KP proceedings with tables, chairs and other furniture and necessary equipment
+          <br>
+        </p>
+      </details>
+                </td>
                 <td>5</td>
                 <td class="file-column" data-type="IV_forcities">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
@@ -1754,7 +1811,20 @@ if (classification === "City") {
                 <th></th>
               </tr>
               <tr >
-                <td>1. From City, Municipal, Provincial or NGAs</td>
+                <td>
+                <details>
+        <summary><b>1. From City, Municipal, Provincial or NGAs</b></summary>
+        <p><br>
+          <b>Scoring Details:</b> <br><br>
+          <b>2 points</b> - received support from the both National &   Local Government<br>
+          <b>1.5 points</b> - received support from the either National & Local Government          <br>
+          <b>0 points</b> - no support <br>
+          <b>Note:</b> 1. Excluding the regular appropriations for the barangay and incentives from the DILG programs<br>
+          2. Acknowledgement receipt should be signed by both the donor and recipient. <br>
+          3. Additional honoraria or support from the Lupon on top of the mandatory allocations
+        </p>
+      </details>
+                </td>
                 <td>2</td>
                 <td class="file-column" data-type="V_1">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
@@ -1768,7 +1838,17 @@ if (classification === "City") {
             <td><textarea name="V_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
-                <td>3 From People's Organizations, NGOs or Private Sector</td>
+                <td>
+                <details>
+        <summary><b>3 From People's Organizations, NGOs or Private Sector</b></summary>
+        <p><br>
+          <b>Scoring Details:</b> <br><br>
+          <b>1 points</b> -  received support from either the organization or individual<br>
+          <b>0 points</b> - no support received from either the organization or individual
+          <br>
+        </p>
+      </details>
+                </td>
               <td>1</td>
               <td class="file-column" data-type="threepeoplesorg">
         <span class="alert alert-info">Select barangay</span> <!-- Default message if no barangay selected -->
@@ -1783,7 +1863,7 @@ if (classification === "City") {
               </tr>
             </tbody>
           </table>
-      <input type="submit" value="Save" style="background-color: #000033;"  class="btn btn-dark mt-3" />
+      <input type="submit" value="Save" hidden style="background-color: #000033;"  class="btn btn-dark mt-3" />
     </form>
         </div>
       </div> 
