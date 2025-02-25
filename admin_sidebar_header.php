@@ -90,7 +90,7 @@ function countAccountRequests($conn, $currentMunicipalityID, $userType)
         </button>
 
         <a href="<?php echo traverseDirectory(); ?>admin_dashboard.php" class="flex ms-2 md:me-24">
-          <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+          <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">
             EKPsys
           </p>
         </a>
@@ -120,15 +120,15 @@ function countAccountRequests($conn, $currentMunicipalityID, $userType)
             </div>
             <ul class="py-1" role="none">
               <li>
-                <a href="<?php echo traverseDirectory(); ?>admin_manual.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Admin Manual</a>
+                <a href="<?php echo traverseDirectory(); ?>admin_manual.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-blue" role="menuitem">Admin Manual</a>
               </li>
 
               <li>
-                <a href="<?php echo traverseDirectory(); ?>admin_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
+                <a href="<?php echo traverseDirectory(); ?>admin_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-blue" role="menuitem">Settings</a>
               </li>
 
               <li>
-                <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-blue" role="menuitem">Sign out</a>
               </li>
             </ul>
           </div>

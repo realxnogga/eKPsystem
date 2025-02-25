@@ -47,7 +47,7 @@ if (isset($_POST['register'])) {
 
     // --------------------
     if ($utype === 'assessor') {
-      
+
         if ($pass !== $cpass) {
             $errors = "Password does not match";
             $pass = '';
@@ -163,6 +163,50 @@ if (isset($_POST['register'])) {
         $stmt->bindParam(':last_name', $lname, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
+
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                // Windows environment
+                $homeDrive = getenv('HOMEDRIVE');
+                $homePath = getenv('HOMEPATH');
+                $desktopPath = $homeDrive . $homePath . "\\Desktop\\";
+            } else {
+                // Non-Windows environment (e.g., macOS, Linux)
+                $homePath = getenv('HOME');
+                $desktopPath = $homePath . "/Desktop/";
+            }
+
+            $fileName = $desktopPath . "Ekp_Login_Credential_" . date("Ymd_His") . ".txt";
+
+            $file = fopen($fileName, "w");
+
+            function whatTypeFunc($utype, $brgy_name, $munic_name)
+            {
+                if ($utype === 'user') {
+                    return 'For user of barangay ' . $brgy_name . '         ' . 'Created on ' . date("M d Y H:i:s");
+                }
+                if ($utype === 'admin') {
+                    return 'For admin of ' . $munic_name . '         ' . 'Created on ' . date("M d Y H:i:s");
+                }
+                if ($utype === 'assessor') { 
+                    return 'For assessor of ' . $munic_name . '         ' . 'Created on ' . date("M d Y H:i:s");
+                }
+            }
+
+            $StringTemp = whatTypeFunc($utype, $brgy_name, $munic_name);
+
+            if ($file) {
+                $text = "$StringTemp\n\nEmail: $email\nPassword: $pass";
+
+                fwrite($file, $text);
+
+                fclose($file);
+ 
+            } else {
+                $errors = "Unable to create or open the file";
+            }
+
+
+            // make it last
             $errors  = "User registration successful";
             $username = $munic_name = $email = $cont_num = $pass = $cpass = $utype = $brgy_name = $fname = $lname = '';
         } else {

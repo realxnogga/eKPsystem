@@ -191,7 +191,7 @@ function getOrdinalSuffix($number)
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
-  <!-- delete later -->
+
   <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 
   <link rel="stylesheet" href="hide_show_icon.css">

@@ -36,7 +36,7 @@ function traverseDirectory()
 
 ?>
 
-<link href="<?php echo traverseDirectory(); ?>output.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 
 <script src="<?php echo traverseDirectory(); ?>node_modules/jquery/dist/jquery.min.js"></script>
 
@@ -59,7 +59,7 @@ function traverseDirectory()
         </button>
 
         <a href="<?php echo traverseDirectory(); ?>sa_dashboard.php" class="flex ms-2 md:me-24">
-          <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+          <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">
             EKPsys
           </p>
         </a>
@@ -90,11 +90,11 @@ function traverseDirectory()
             <ul class="py-1" role="none">
 
               <li>
-                <a href="<?php echo traverseDirectory(); ?>sa_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
+                <a href="<?php echo traverseDirectory(); ?>sa_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-blue" role="menuitem">Settings</a>
               </li>
 
               <li>
-                <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-blue" role="menuitem">Sign out</a>
               </li>
             </ul>
           </div>

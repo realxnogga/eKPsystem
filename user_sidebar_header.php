@@ -15,9 +15,9 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 function isActive($path)
 {
-    $currentPage = basename($_SERVER['SCRIPT_NAME']);
-    $targetPage = basename($path);
-    return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
+  $currentPage = basename($_SERVER['SCRIPT_NAME']);
+  $targetPage = basename($path);
+  return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
 }
 
 
@@ -45,8 +45,8 @@ function traverseDirectory()
 
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>assets/css/styles.min.css" />
 
-<!-- tailwind -->
-<link href="<?php echo traverseDirectory(); ?>output.css" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
 
 <!-- jquery -->
 <script src="<?php echo traverseDirectory(); ?>node_modules/jquery/dist/jquery.min.js"></script>
@@ -63,7 +63,7 @@ function traverseDirectory()
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
 
-<nav class="fixed top-0 z-40 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
   <div class="px-3 py-3 lg:px-5 lg:pl-3">
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-start rtl:justify-end">
@@ -76,7 +76,7 @@ function traverseDirectory()
         </button>
 
         <a href="<?php echo traverseDirectory(); ?>user_dashboard.php" class="flex ms-2 md:me-24">
-          <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">
+          <p class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap">
             EKPsys
           </p>
         </a>
@@ -110,8 +110,7 @@ function traverseDirectory()
           <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
             <div class="px-4 py-3" role="none">
               <p class="text-sm text-gray-900 dark:text-white" role="none">
-                <?php echo $user['first_name'];
-                echo $user['last_name']; ?>
+                <?php echo $user['first_name'] . ' ' . $user['last_name']; ?>
               </p>
               <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
                 <?php echo $user['email']; ?>
@@ -120,19 +119,19 @@ function traverseDirectory()
             <ul class="py-1" role="none">
 
               <li>
-                <a href="<?php echo traverseDirectory(); ?>user_logs.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">User Logs</a>
+                <a href="<?php echo traverseDirectory(); ?>user_logs.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-blue" role="menuitem">User Logs</a>
               </li>
 
               <li>
-                <a href="<?php echo traverseDirectory(); ?>user_manual.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">User Manual</a>
+                <a href="<?php echo traverseDirectory(); ?>user_manual.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-blue" role="menuitem">User Manual</a>
               </li>
 
               <li>
-                <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Settings</a>
+                <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-blue" role="menuitem">Settings</a>
               </li>
 
               <li>
-                <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">Sign out</a>
+                <a href="<?php echo traverseDirectory(); ?>logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-blue" role="menuitem">Sign out</a>
               </li>
             </ul>
           </div>
@@ -142,7 +141,7 @@ function traverseDirectory()
   </div>
 </nav>
 
-<aside id="logo-sidebar" class="fixed top-0 left-0 z-30 w-44 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0" aria-label="Sidebar">
+<aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-44 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0" aria-label="Sidebar">
 
   <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
 
@@ -213,18 +212,44 @@ function traverseDirectory()
       </li>
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>user_feedback.php" class="<?php echo isActive('user_feedback.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-message text-2xl"></i>
-          <span>Feedback</span>
-        </a>
-      </li>
-
-      <li>
         <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="<?php echo isActive('user_setting.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-settings text-2xl"></i>
           <span>Settings</span>
         </a>
       </li>
+
+      <li>
+        <a href="<?php echo traverseDirectory(); ?>user_feedback.php" class="<?php echo isActive('user_feedback.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+          <i class="ti ti-message text-2xl"></i>
+          <span>Feedback</span>
+        </a>
+      </li>
+
+      <?php
+
+      $latestTimestamp = '';
+
+      if (isset($_POST['assignTimestamp'])) {
+        $latestTimestamp = date('Y-m-d H:i:s');
+      }
+
+      $latestTimestamp = $conn->query("SELECT timestamp FROM user_logs WHERE user_id = '$userId' ORDER BY log_id DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+
+      $latestFeedbackDate = $conn->query("SELECT fq_creation_date FROM feedback_questions ORDER BY fq_id DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+
+      if ($latestFeedbackDate['fq_creation_date'] > $latestTimestamp['timestamp']) {
+      ?>
+        <form method="post" action="">
+          <button type="submit" name="assignTimestamp">Show This</button>
+        </form>
+
+
+      <?php
+      }
+      ?>
+
+
+
     </ul>
   </div>
 </aside>

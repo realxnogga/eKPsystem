@@ -10,13 +10,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
   exit;
 }
 
+$fq_id_url = isset($_GET['fq_id_url']) ? $_GET['fq_id_url'] : null;
 
-$id = isset($_GET['fq_id_url']) ? $_GET['fq_id_url'] : null;
-
-
-$questionTemp = $conn->query("SELECT * FROM feedback_answers WHERE fa_id = $id")->fetchAll(PDO::FETCH_ASSOC);
-
-$answerTemp = $conn->query("SELECT * FROM feedback_questions WHERE fq_id = $id")->fetchAll(PDO::FETCH_ASSOC);
+$answerTemp = $conn->query("SELECT * FROM feedback_answers WHERE fa_id = $fq_id_url")->fetchAll(PDO::FETCH_ASSOC);
+$questionTemp = $conn->query("SELECT * FROM feedback_questions WHERE fq_id = $fq_id_url")->fetchAll(PDO::FETCH_ASSOC);
 
 function getAFunc($conn, $whatTable, $condition)
 {
@@ -27,8 +24,6 @@ function getAnyFunc($conn, $whatTable, $condition)
 {
   return $conn->query("SELECT * FROM $whatTable WHERE $condition")->fetchColumn(PDO::FETCH_ASSOC);
 }
-
-
 ?>
 
 <!doctype html>
@@ -59,22 +54,19 @@ function getAnyFunc($conn, $whatTable, $condition)
   <div class="p-4 sm:ml-44">
     <div class="rounded-lg mt-16">
 
-      <section class="p-4 bg-white rounded-xl h-fit">
+      <section id="feedbackContainer" class="p-4 bg-white rounded-xl h-fit">
 
+        <input onkeyup="searchFeedback();" type="search" id="searchFeedbackButton" class="form-control" placeholder="Search by barangay name">
 
-        <section>
+        <br>
 
+        <p class="text-center text-lg"><?php echo empty($answerTemp) ? 'No Response Yet!' : ''; ?></p>
 
-          <?php
+        <?php foreach ($answerTemp as $row) { ?>
 
-          foreach ($questionTemp as $row) {
-
-          ?>
-
-
+          <section class="feedback-item">
 
             <p class="font-bold text-lg"><?php echo getAnyFunc($conn, 'barangays', 'id = ' . $row['barangay_id']); ?></p>
-
 
             <table class="w-full table table-sm" style="table-layout: fixed;">
               <tr>
@@ -82,7 +74,7 @@ function getAnyFunc($conn, $whatTable, $condition)
                 <th class="bg-primary text-white">Answer</th>
                 <th class="bg-primary text-white">Comment</th>
               </tr>
-              <?php foreach ($answerTemp as $t) { ?>
+              <?php foreach ($questionTemp as $t) { ?>
                 <tr>
                   <td><?php echo $t['fq1']; ?></td>
                   <td><?php echo $row['fa1']; ?></td>
@@ -91,35 +83,50 @@ function getAnyFunc($conn, $whatTable, $condition)
                 <tr>
                   <td><?php echo $t['fq2']; ?></td>
                   <td><?php echo $row['fa2']; ?></td>
-
                 </tr>
                 <tr>
                   <td><?php echo $t['fq3']; ?></td>
                   <td><?php echo $row['fa3']; ?></td>
-
                 </tr>
                 <tr>
                   <td><?php echo $t['fq4']; ?></td>
                   <td><?php echo $row['fa4']; ?></td>
-
                 </tr>
                 <tr>
                   <td><?php echo $t['fq5']; ?></td>
                   <td><?php echo $row['fa5']; ?></td>
-
                 </tr>
               <?php } ?>
             </table>
 
-            <hr class="my-3 <?php echo count($questionTemp) === 1 ? 'hidden' : ''; ?>">
+            <hr class="my-3 <?php echo count($answerTemp) === 1 ? 'hidden' : ''; ?>">
+          </section>
 
-          <?php } ?>
-
-        </section>
+        <?php } ?>
 
       </section>
     </div>
   </div>
+
+  <!-- ------------------------------- -->
+  <script>
+    function searchFeedback() {
+      let input = document.getElementById('searchFeedbackButton');
+      let filter = input.value.toLowerCase();
+      let feedbackItems = document.getElementsByClassName('feedback-item');
+
+      for (let i = 0; i < feedbackItems.length; i++) {
+        let item = feedbackItems[i];
+        let barangayName = item.getElementsByTagName('p')[0].textContent || item.getElementsByTagName('p')[0].innerText;
+
+        if (barangayName.toLowerCase().indexOf(filter) > -1) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      }
+    }
+  </script>
 
   <script src="hide_toast.js"></script>
 </body>

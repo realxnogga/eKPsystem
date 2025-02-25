@@ -59,83 +59,76 @@ if ($securityQuestions) {
         <div class="col-lg-4 d-flex align-items-strech">
           <div class="card w-100">
             <div class="card-body">
-              <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                <div class="mb-3 mb-sm-0">
+              <div class="mb-3 mb-sm-0">
 
-                  <div class="d-flex align-items-center" class="prof-container">
-                    <img src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
-                    <input type="file" id="fileInput" name="profile_pic" style="display: none;">
-                    <!--<h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>-->
-                    <button type="button" id="uploadButton" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">Upload a picture</button>
-
-
-                    <div>
-
-                    </div>
-                  </div>
-                  <br>
-
-                  <h5 class="card-title mb-9 fw-semibold">Account Settings</h5>
-                  <hr>
-                  <br>
-                  <b>
-
-                    <?php
-
-                    if (isset($_GET['update_account_message'])) {
-                      if ($_GET['update_account_message'] === 'success') {
-                        echo "<div id='alertMessage' class='alert alert-success' role='alert'>Updated successfully.</div>";
-                      }
-                      if ($_GET['update_account_message'] === 'failed') {
-                        echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Updated failed.</div>";
-                      }
-                      if ($_GET['update_account_message'] === 'emailalreadyinuse') {
-                        echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Email already in use.</div>";
-                      }
-                      if ($_GET['update_account_message'] === 'passwordeightlong') {
-                        echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Password should be at least 8 characters long.</div>";
-                      }
-                    }
-
-                    ?>
-
-                    <form id="userSettingsForm" method="post" action="general_handler.php">
-                      <div class="form-group">
-                        <label for="first_name">Username:</label>
-                        <input required type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="first_name">First Name:</label>
-                        <input required type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="last_name">Last Name:</label>
-                        <input required type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="contact_number">Contact Number:</label>
-                        <input required type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input required type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="new_password">New Password (Leave empty to keep current password):</label>
-                        <input type="password" class="form-control" title="Password must be at least 8 characters long" id="new_password" name="new_password" placeholder="">
-                      </div> <input type="hidden" name="active_tab" value="general"><br>
-                      <button type="submit" name="general_settings" class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white">Save Changes</button>
-                    </form>
-
-
-
+                <div class="d-flex align-items-center" class="prof-container">
+                  <img src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+                  <input type="file" id="fileInput" name="profile_pic" style="display: none;">
+                  <!--<h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>-->
+                  <button type="button" id="uploadButton" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">Upload a picture</button>
                 </div>
-              </div>
+                <br>
 
+                <h5 class="card-title mb-9 fw-semibold">Account Settings</h5>
+                <hr>
+                <br>
+
+
+                <?php
+
+                if (isset($_GET['update_account_message'])) {
+                  if ($_GET['update_account_message'] === 'success') {
+                    echo "<div id='alertMessage' class='alert alert-success' role='alert'>Updated successfully.</div>";
+                  }
+                  if ($_GET['update_account_message'] === 'failed') {
+                    echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Updated failed.</div>";
+                  }
+                  if ($_GET['update_account_message'] === 'emailalreadyinuse') {
+                    echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Email already in use.</div>";
+                  }
+                  if ($_GET['update_account_message'] === 'passwordeightlong') {
+                    echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Password should be at least 8 characters long.</div>";
+                  }
+                }
+
+                ?>
+
+                <form id="userSettingsForm" method="post" action="general_handler.php">
+                  <div class="form-group">
+                    <label for="first_name">Username:</label>
+                    <input required type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="first_name">First Name:</label>
+                    <input required type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>">
+                  </div>
+                  <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input required type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>">
+                  </div>
+                  <div class="form-group">
+                    <label for="contact_number">Contact Number:</label>
+                    <input required type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>">
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input required type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="new_password">New Password (Leave empty to keep current password):</label>
+                    <input type="password" class="form-control" title="Password must be at least 8 characters long" id="new_password" name="new_password" placeholder="">
+                  </div>
+
+                  <input type="hidden" name="active_tab" value="general"><br>
+                  <button type="submit" name="general_settings" class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white">Save Changes</button>
+
+                </form>
+              </div>
             </div>
           </div>
-        </div></b>
+        </div>
 
         <div class="col-lg-4">
           <div class="row">
@@ -161,7 +154,6 @@ if ($securityQuestions) {
                             if ($_GET['update_securityquestion_message'] === 'SQupdatederror') {
                               echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Updating security answer failed.</div>";
                             }
-              
                           }
 
                           ?>
@@ -219,8 +211,8 @@ if ($securityQuestions) {
             </div>
           </div>
         </div>
-      </div>
 
+      </div>
 
       <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -291,6 +283,7 @@ if ($securityQuestions) {
     </div>
 
   </div>
+
 
   <script src="hide_toast.js"></script>
 </body>

@@ -123,7 +123,7 @@ function get_time_ago($time)
   <script src="node_modules/flowbite/dist/flowbite.min.css"></script>
 
   <!-- tailwind link -->
-  <link href="output.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- tabler icon link -->
   <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">

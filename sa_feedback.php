@@ -116,19 +116,34 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
     <div class="rounded-lg mt-16">
 
       <section class="p-4 bg-white rounded-xl h-fit">
-        <section class="flex justify-end">
+
+        <section class="flex justify-between gap-x-4">
+
+          <input onkeyup="searchFeedback();" type="search" id="searchFeedbackButton" class="form-control" placeholder="Search by feedback title">
+
           <button onclick="showmodalFunc();" id="showModalBtn" type="button" class="btn btn-primary bg-blue-500">
             <span>
               <i class="ti ti-plus text-lg show-icon"></i>
               <!-- <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p> -->
             </span>
           </button>
+
+          <select id="year" name="year">
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+          </select>
+
+
         </section>
 
         <div id="feedbackModal" class="hidden h-screen w-screen absolute inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
 
           <div class="p-4 md:p-5 space-y-4 bg-white w-fit rounded-xl">
-            <h3 class="text-lg font-bold">Create Feedback questions for barangays.</h3>
+            <h3 class="text-lg font-bold">Create feedback questions for barangays.</h3>
 
             <form method="POST" action="" class="space-y-2 max-w-lg mx-auto my-3">
               <input required name="feedbackTitle" type="text" placeholder="Enter title" class="text-sm w-full py-2 border border-gray-300 rounded-md border !border-gray-300">
@@ -165,62 +180,66 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
         ?>
 
 
-        <section>
+        <section id="feedbackContainer">
           <?php foreach ($questionTemp as $row) { ?>
 
-            <div class="w-50 flex justify-between items-center mt-4">
-              <h3 class='text-lg font-bold'><?php echo $row["feedback_title"]; ?></h3>
-              <p>Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
-            </div>
+            <section class="feedback-item">
 
-            <form method="POST" action="" class="flex flex-col gap-y-1 w-100 border-2 border-gray-200 rounded-lg p-2">
-
-              <div class="flex justify-between items-center">
-                <input value="<?php echo $row['fq1']; ?>" required name="editfq1" type="text" placeholder="Edit question 1" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                <p><?php echo getFeedbackDataFunc($conn, "fa1", "feedback_answers", $row['fq_id']); ?></p>
+              <div class="w-50 flex justify-between items-center mt-4">
+                <h3 class='text-lg font-bold'><?php echo $row["feedback_title"]; ?></h3>
+                <p>Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
               </div>
 
-              <div class="flex justify-between items-center">
-                <input value="<?php echo $row['fq2']; ?>" required name="editfq2" type="text" placeholder="Edit question 2" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                <p><?php echo getFeedbackDataFunc($conn, "fa2", "feedback_answers", $row['fq_id']); ?></p>
-              </div>
+              <form method="POST" action="" class="flex flex-col gap-y-1 w-100 border-2 border-gray-200 rounded-lg p-2">
 
-              <div class="flex justify-between items-center">
-                <input value="<?php echo $row['fq3']; ?>" required name="editfq3" type="text" placeholder="Edit question 3" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                <p><?php echo getFeedbackDataFunc($conn, "fa3", "feedback_answers", $row['fq_id']); ?></p>
-              </div>
-
-              <div class="flex justify-between items-center">
-                <input value="<?php echo $row['fq4']; ?>" required name="editfq4" type="text" placeholder="Edit question 4" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                <p><?php echo getFeedbackDataFunc($conn, "fa4", "feedback_answers", $row['fq_id']); ?></p>
-              </div>
-
-              <div class="flex justify-between items-center">
-                <input value="<?php echo $row['fq5']; ?>" required name="editfq5" type="text" placeholder="Edit question 5" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                <p><?php echo getFeedbackDataFunc($conn, "fa5", "feedback_answers", $row['fq_id']); ?></p>
-              </div>
-
-
-              <input hidden value="<?php echo $row['fq_id']; ?>" required name="editfq_id" type="number">
-
-              <section class="flex justify-between items-end">
-                <button name="submitEditFeedbackQuestion<?php echo $row['fq_id']; ?>" type="submit" class="py-2 px-3 text-white rounded-md bg-blue-500 w-fit">
-                  Update
-                </button>
-
-                <a data-tooltip-target="tooltip-light" data-tooltip-style="light" class="" href="sa_feedback_view.php?fq_id_url=<?php echo $row['fq_id']; ?>">
-                  <p><?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . ''); ?> / <?php echo countResponseFunc($conn, "barangays"); ?> <?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . '') > 1 ? "responses" : "response"; ?></p>
-                </a>
-
-                <div id="tooltip-light" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip">
-                  view more
-                  <div class="tooltip-arrow" data-popper-arrow></div>
+                <div class="flex justify-between items-center">
+                  <input value="<?php echo $row['fq1']; ?>" required name="editfq1" type="text" placeholder="Edit question 1" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                  <p><?php echo getFeedbackDataFunc($conn, "fa1", "feedback_answers", $row['fq_id']); ?></p>
                 </div>
 
-              </section>
+                <div class="flex justify-between items-center">
+                  <input value="<?php echo $row['fq2']; ?>" required name="editfq2" type="text" placeholder="Edit question 2" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                  <p><?php echo getFeedbackDataFunc($conn, "fa2", "feedback_answers", $row['fq_id']); ?></p>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <input value="<?php echo $row['fq3']; ?>" required name="editfq3" type="text" placeholder="Edit question 3" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                  <p><?php echo getFeedbackDataFunc($conn, "fa3", "feedback_answers", $row['fq_id']); ?></p>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <input value="<?php echo $row['fq4']; ?>" required name="editfq4" type="text" placeholder="Edit question 4" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                  <p><?php echo getFeedbackDataFunc($conn, "fa4", "feedback_answers", $row['fq_id']); ?></p>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <input value="<?php echo $row['fq5']; ?>" required name="editfq5" type="text" placeholder="Edit question 5" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                  <p><?php echo getFeedbackDataFunc($conn, "fa5", "feedback_answers", $row['fq_id']); ?></p>
+                </div>
 
 
-            </form>
+                <input hidden value="<?php echo $row['fq_id']; ?>" required name="editfq_id" type="number">
+
+                <section class="flex justify-between items-end">
+                  <button name="submitEditFeedbackQuestion<?php echo $row['fq_id']; ?>" type="submit" class="py-2 px-3 text-white rounded-md bg-blue-500 w-fit">
+                    Update
+                  </button>
+
+                  <a data-tooltip-target="tooltip-light<?php echo $row['fq_id']; ?>" data-tooltip-style="light" class="" href="sa_feedback_view.php?fq_id_url=<?php echo $row['fq_id']; ?>">
+                    <p><?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . ''); ?> / <?php echo countResponseFunc($conn, "barangays"); ?> <?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . '') > 1 ? "responses" : "response"; ?></p>
+                  </a>
+
+                  <div id="tooltip-light<?php echo $row['fq_id']; ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip">
+                    view more
+                    <div class="tooltip-arrow" data-popper-arrow></div>
+                  </div>
+
+                </section>
+
+
+              </form>
+
+            </section>
           <?php } ?>
         </section>
 
@@ -241,6 +260,26 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
 
       document.getElementsByTagName('body')[0].classList.remove('overflow-hidden');
       document.getElementsByTagName('body')[0].classList.add('overflow-scroll');
+    }
+  </script>
+
+  <!-- ------------------------------- -->
+  <script>
+    function searchFeedback() {
+      let input = document.getElementById('searchFeedbackButton');
+      let filter = input.value.toLowerCase();
+      let feedbackItems = document.getElementsByClassName('feedback-item');
+
+      for (let i = 0; i < feedbackItems.length; i++) {
+        let item = feedbackItems[i];
+        let textContent = item.textContent || item.innerText;
+
+        if (textContent.toLowerCase().indexOf(filter) > -1) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      }
     }
   </script>
 

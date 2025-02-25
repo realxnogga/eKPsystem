@@ -7,8 +7,7 @@
     "startCommand": "npm start"
   },
   "devDependencies": {
-    "sass": "^1.54.8",
-    "tailwindcss": "^3.4.13"
+    "sass": "^1.54.8"
   },
   "dependencies": {
     "@tabler/icons-webfont": "^3.21.0",

@@ -38,7 +38,7 @@ function traverseDirectory()
 
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>assets/css/styles.min.css" />
 
-<link href="<?php echo traverseDirectory(); ?>output.css" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
 
 <script src="<?php echo traverseDirectory(); ?>node_modules/jquery/dist/jquery.min.js"></script>
 

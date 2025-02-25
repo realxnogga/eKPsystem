@@ -50,6 +50,10 @@ function turnToDefaultMessageInURLFunc() {
         if (url.searchParams.has("feedback_inserted_message")) {
             url.searchParams.set("feedback_inserted_message", "default");
         }
+        if (url.searchParams.has("generate_file_message")) {
+            url.searchParams.set("generate_file_message", "default");
+        }
+        
         
         window.history.replaceState({}, document.title, url);
     }
