@@ -6,6 +6,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
   header("Location: login.php");
   exit;
 }
+$municipality_id = $_SESSION['municipality_id']; 
+// Fetch municipality name
+$municipalityQuery = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
+$municipalityStmt = $conn->prepare($municipalityQuery);
+$municipalityStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$municipalityStmt->execute();
+$municipalityName = $municipalityStmt->fetchColumn();
 
 if (isset($_GET['municipality_id'])) {
     $municipality_id = intval($_GET['municipality_id']); // Sanitize the input
@@ -118,6 +125,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_averages'])) {
     }
 }
 
+// Fetch assessor_type data for the same municipality
+$assessorQuery = "
+SELECT u.first_name, u.last_name, u.assessor_type
+FROM users u
+WHERE u.municipality_id = :municipality_id AND u.user_type = 'assessor'
+";
+$assessorStmt = $conn->prepare($assessorQuery);
+$assessorStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$assessorStmt->execute();
+$assessors = $assessorStmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch admin data for the same municipality
+$adminQuery = "
+SELECT u.first_name, u.last_name
+FROM users u
+WHERE u.municipality_id = :municipality_id AND u.user_type = 'admin'
+";
+$adminStmt = $conn->prepare($adminQuery);
+$adminStmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
+$adminStmt->execute();
+$admin = $adminStmt->fetch(PDO::FETCH_ASSOC);
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -172,6 +201,58 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("details-municipality-type").textContent = classification;
     document.getElementById("municipality-category").textContent = classification.toUpperCase();
 });
+
+
+// Wait for the DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+    // Lists of cities and municipalities
+    const cities = ["Calamba", "Biñan", "San Pedro", "Sta Rosa", "Cabuyao", "San Pablo"];
+    const municipalities = ["Bay", "Alaminos", "Calauan", "Los Baños"];
+
+    /**
+     * Normalize names for consistent comparison
+     * @param {string} name - Name to normalize
+     * @returns {string} Normalized name
+     */
+    function normalizeName(name) {
+        return name.toLowerCase().replace(/\s+/g, "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    /**
+     * Classify a municipality name as "City" or "Municipality"
+     * @param {string} municipalityName - Name to classify
+     * @returns {string} "City", "Municipality", or "Unknown"
+     */
+    function classifyMunicipality(municipalityName) {
+        const normalized = normalizeName(municipalityName);
+        const normalizedCities = cities.map(normalizeName);
+        const normalizedMunicipalities = municipalities.map(normalizeName);
+
+        if (normalizedCities.includes(normalized)) {
+            return "City";
+        } else if (normalizedMunicipalities.includes(normalized)) {
+            return "Municipality";
+        } else {
+            return "Unknown";
+        }
+    }
+
+    // Get municipality name from PHP and classify
+    const municipalityName = <?php echo json_encode($municipalityName); ?>;
+    const classification = classifyMunicipality(municipalityName);
+
+    // Update header and details with the classification
+    document.getElementById("details-municipality-type").textContent = classification;
+
+    // Update admin title based on classification
+    const adminTitle = document.getElementById("admin-title");
+    if (classification === "Municipality") {
+        adminTitle.textContent = "MLGOO:";
+    } else if (classification === "City") {
+        adminTitle.textContent = "CLGOO:";
+    }
+});
+</script>
 </script>
 </head>
 <body class="bg-[#E8E8E7]">
@@ -271,30 +352,48 @@ document.addEventListener('DOMContentLoaded', function () {
                           Save Averages
                       </button>
                   </form>
-              </div>
           <br>
-                    <b> C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION </b><br><br>
-                    <div class="certification-section text-center">
-                    <input type="text" name="chairperson" placeholder="Enter Name"><br>
-                    Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
 
-                    <input type="text" name="member1" placeholder="Enter Name"><br>
-                    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+          <div class="certification-section text-center">
+          <h3 class="text-xl font-bold mb-4">C. WE CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION</h3>
 
-                    <input type="text" name="member2" placeholder="Enter Name"><br>
-                    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+<?php if (!empty($admin)): ?>
+    <div class="pb-2 mb-4">
+        <h4 class="text-lg font-semibold">Admin</h4>
+        <p class="text-gray-700"><?php echo htmlspecialchars($admin['first_name'] . ' ' . $admin['last_name']); ?></p>
+        <hr class="thin-hr">
+    </div>
+<?php else: ?>
+    <p class="text-red-500 font-semibold">No admin found for this municipality.</p>
+<?php endif; ?>
 
-                    <input type="text" name="member3" placeholder="Enter Name"><br>
-                    Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
-                
-                </div>
-                <br><br>
-                <b>D. DATE ACCOMPLISHED<b><br>
-                <span class="spacingtabs"> <?php echo date("F j, Y"); ?>
+<?php if (!empty($assessors)): ?>
+    <div class="mt-4">
+        <h4 class="text-lg font-semibold mb-2">Assessors</h4>
+        <ul class="space-y-2">
+            <?php foreach ($assessors as $assessor): ?>
+                <li class="pb-2">
+                    <span class="font-semibold"><?php echo htmlspecialchars($assessor['assessor_type']); ?></span>:
+                    <?php echo htmlspecialchars($assessor['first_name'] . ' ' . $assessor['last_name']); ?> - 
+                    <span class="italic text-gray-600">Members Committee</span>
+                    <hr class="thin-hr">
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php else: ?>
+    <p class="text-red-500 font-semibold mt-2">No assessors found for this municipality.</p>
+<?php endif; ?>
+</div>
 
-                <br>
-                <br>
-                <div class="text-center mt-4">
+<br><br>
+
+<b>D. DATE ACCOMPLISHED</b><br>
+<span class="spacingtabs"><?php echo date("F j, Y"); ?></span>
+
+<br><br>
+
+<div class="text-center mt-4"></div>
           </div>
         </div>
       </div>
@@ -302,6 +401,13 @@ document.addEventListener('DOMContentLoaded', function () {
   </div>
 </body>
 <style>
+     .thin-hr {
+        border: none;
+        height: 1px;
+        background-color: black;
+        width: 100%;
+        margin: 4px 0;
+    }
 .spacingtabs {
     padding-left: 2em; /* Adjust as needed for spacing */
 }.spacingtabs2 {
