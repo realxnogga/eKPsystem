@@ -60,22 +60,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
     }
   }
-}
+
+  // -----------------------------------------------------------------------------------
+  if (isset($_POST['yearfilter'])) {
+    $selectedYear = $_POST['yearfilter'];
+    $_SESSION['fy_feedback'] = $selectedYear; 
+    $questionTemp = fetchFeedbackQuestionFunc($conn, $selectedYear);
+  }
+} 
+  
+  $selectedYear = isset($_SESSION['fy_feedback']) ? $_SESSION['fy_feedback'] : date('Y');
+  $questionTemp = fetchFeedbackQuestionFunc($conn, $selectedYear);
 
 // Fetch feedback questions
-$questionTemp = $conn->query("SELECT * FROM feedback_questions ORDER BY fq_creation_date DESC")->fetchAll(PDO::FETCH_ASSOC);
+function fetchFeedbackQuestionFunc($conn, $whatYear)
+{
+  $sql = "SELECT * FROM feedback_questions WHERE YEAR(fq_creation_date) = :year ORDER BY fq_creation_date DESC";
+  $stmt = $conn->prepare($sql);
+  $stmt->bindParam(':year', $whatYear, PDO::PARAM_INT);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+  // -----------------------------------------------------------------------------------
 
 
 function countResponseFunc($conn, $whatTable, $condition = null)
 {
-
   $sql = "SELECT COUNT(*) FROM $whatTable";
-
-
   if ($condition !== null) {
     $sql .= " WHERE $condition";
   }
-
   $stmt = $conn->prepare($sql);
   $stmt->execute();
   return $stmt->fetchColumn();
@@ -83,15 +97,12 @@ function countResponseFunc($conn, $whatTable, $condition = null)
 
 function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
 {
-
   $stmt = $conn->prepare("SELECT AVG($whatCol) FROM $whatTable WHERE fa_id = :id");
   $stmt->bindParam(':id', $id, PDO::PARAM_INT);
   $stmt->execute();
-
   $temp = $stmt->fetchColumn();
   return number_format($temp, 1) === '0.0' ? '' : number_format($temp, 1);
 }
-
 ?>
 
 <!doctype html>
@@ -105,6 +116,8 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
   <link rel="stylesheet" href="assets/css/styles.min.css" />
 
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="hide_show_icon.css">
 
 </head>
 
@@ -121,23 +134,26 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
 
           <input onkeyup="searchFeedback();" type="search" id="searchFeedbackButton" class="form-control" placeholder="Search by feedback title">
 
+          <form method="POST" action="">
+            <select id="yearfilter" name="yearfilter" onchange="this.form.submit()">
+              <?php
+              $currentYear = date('Y');
+              $startYear = $currentYear - 5; // Start 5 years before the current year
+
+              // Loop to generate options from startYear to endYear
+              for ($year = $startYear; $year <= $currentYear; $year++) {
+                echo "<option value='$year'" . ($year == $selectedYear ? " selected" : "") . ">$year</option>";
+              }
+              ?>
+            </select>
+          </form>
+
           <button onclick="showmodalFunc();" id="showModalBtn" type="button" class="btn btn-primary bg-blue-500">
             <span>
               <i class="ti ti-plus text-lg show-icon"></i>
-              <!-- <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p> -->
+              <p style="white-space: nowrap;" class="hide-icon hidden">Add feedback</p>
             </span>
           </button>
-
-          <select id="year" name="year">
-            <option value="2020">2020</option>
-            <option value="2021">2021</option>
-            <option value="2022">2022</option>
-            <option value="2023">2023</option>
-            <option value="2024">2024</option>
-            <option value="2025">2025</option>
-          </select>
-
-
         </section>
 
         <div id="feedbackModal" class="hidden h-screen w-screen absolute inset-0 z-50 flex justify-center items-center bg-black bg-opacity-75">
@@ -169,18 +185,20 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
         <?php
         if (isset($_GET['feedback_inserted_message'])) {
           if ($_GET['feedback_inserted_message'] === 'success') {
-
             echo '<div id="alertMessage" class="alert alert-success my-3" role="alert">Feedback questions inserted successfully.</div>';
           }
           if ($_GET['feedback_inserted_message'] === 'failed') {
-
             echo '<div id="alertMessage" class="alert alert-danger my-3" role="alert">Failed to insert feedback questions.</div>';
           }
         }
         ?>
 
-
         <section id="feedbackContainer">
+
+          <p class="text-center text-lg mt-4">
+            <?php echo empty($questionTemp) ? 'No data for this year' : ''; ?>
+          </p>
+
           <?php foreach ($questionTemp as $row) { ?>
 
             <section class="feedback-item">
@@ -217,7 +235,6 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
                   <p><?php echo getFeedbackDataFunc($conn, "fa5", "feedback_answers", $row['fq_id']); ?></p>
                 </div>
 
-
                 <input hidden value="<?php echo $row['fq_id']; ?>" required name="editfq_id" type="number">
 
                 <section class="flex justify-between items-end">
@@ -236,7 +253,6 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
 
                 </section>
 
-
               </form>
 
             </section>
@@ -250,14 +266,12 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
   <script>
     function showmodalFunc() {
       document.getElementById('feedbackModal').classList.remove('hidden');
-
       document.getElementsByTagName('body')[0].classList.add('overflow-hidden');
       document.getElementsByTagName('body')[0].classList.remove('overflow-scroll');
     }
 
     function hidemodalFunc() {
       document.getElementById('feedbackModal').classList.add('hidden');
-
       document.getElementsByTagName('body')[0].classList.remove('overflow-hidden');
       document.getElementsByTagName('body')[0].classList.add('overflow-scroll');
     }

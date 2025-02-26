@@ -12,7 +12,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'superadmin') {
 
 $fq_id_url = isset($_GET['fq_id_url']) ? $_GET['fq_id_url'] : null;
 
-$answerTemp = $conn->query("SELECT * FROM feedback_answers WHERE fa_id = $fq_id_url")->fetchAll(PDO::FETCH_ASSOC);
 $questionTemp = $conn->query("SELECT * FROM feedback_questions WHERE fq_id = $fq_id_url")->fetchAll(PDO::FETCH_ASSOC);
 
 function getAFunc($conn, $whatTable, $condition)
@@ -24,6 +23,30 @@ function getAnyFunc($conn, $whatTable, $condition)
 {
   return $conn->query("SELECT * FROM $whatTable WHERE $condition")->fetchColumn(PDO::FETCH_ASSOC);
 }
+
+// ------------------------------------------------------------------------------
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (isset($_POST['yearfilter'])) {
+    $selectedYear = $_POST['yearfilter'];
+    $_SESSION['fy_viewfeedback'] = $selectedYear;
+    $answerTemp = fetchFeedbackAnswerFunc($conn, $selectedYear);
+  }
+}
+$selectedYear = isset($_SESSION['fy_viewfeedback']) ? $_SESSION['fy_viewfeedback'] : date('Y');
+$answerTemp = fetchFeedbackAnswerFunc($conn, $selectedYear);
+
+function fetchFeedbackAnswerFunc($conn, $whatYear)
+{
+    $sql = "SELECT * FROM feedback_answers WHERE YEAR(fa_creation_date) = :year AND fa_id = :fq_id";
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bindParam(':year', $whatYear, PDO::PARAM_INT);
+    $stmt->bindParam(':fq_id', $_GET['fq_id_url'], PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+// ------------------------------------------------------------------------------
+
 ?>
 
 <!doctype html>
@@ -56,11 +79,25 @@ function getAnyFunc($conn, $whatTable, $condition)
 
       <section id="feedbackContainer" class="p-4 bg-white rounded-xl h-fit">
 
-        <input onkeyup="searchFeedback();" type="search" id="searchFeedbackButton" class="form-control" placeholder="Search by barangay name">
+        <section class="flex justify-between gap-x-4">
+          <input onkeyup="searchFeedback();" type="search" id="searchFeedbackButton" class="form-control" placeholder="Search by barangay name">
 
-        <br>
+          <form method="POST" action="">
+            <select id="yearfilter" name="yearfilter" onchange="this.form.submit()">
+              <?php
+              $currentYear = date('Y');
+              $startYear = $currentYear - 5; // Start 5 years before the current year
 
-        <p class="text-center text-lg"><?php echo empty($answerTemp) ? 'No Response Yet!' : ''; ?></p>
+              // Loop to generate options from startYear to endYear
+              for ($year = $startYear; $year <= $currentYear; $year++) {
+                echo "<option value='$year'" . ($year == $selectedYear ? " selected" : "") . ">$year</option>";
+              }
+              ?>
+            </select>
+          </form>
+        </section>
+
+        <p class="text-center text-lg mt-4"><?php echo empty($answerTemp) ? 'No Response Yet!' : ''; ?></p>
 
         <?php foreach ($answerTemp as $row) { ?>
 

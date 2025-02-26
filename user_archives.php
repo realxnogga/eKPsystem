@@ -19,8 +19,6 @@ function getAllUnarchive($conn, $userID)
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-# always get unarchive cases when the page is rendered
-$result = getAllUnarchive($conn, $userID);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $inputData = json_decode(file_get_contents('php://input'), true);
@@ -38,6 +36,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       exit;
     }
   }
+  // -----------------------------------------------------------------------------------
+  if (isset($_POST['yearfilter'])) {
+    $selectedYear = $_POST['yearfilter'];
+    
+    $_SESSION['ay_archiveyear'] = $selectedYear;
+    $result = fetchArchiveFunc($conn,$userID, $selectedYear);
+  }
+}
+
+$selectedYear = isset($_SESSION['ay_archiveyear']) ? $_SESSION['ay_archiveyear'] : date('Y');
+$result = fetchArchiveFunc($conn, $userID, $selectedYear);
+
+function fetchArchiveFunc($conn, $userID, $whatYear)
+{
+  $query = "SELECT * FROM complaints WHERE UserID = :userID AND YEAR(Mdate) = :year AND IsArchived = 1";
+  $stmt = $conn->prepare($query);
+  $stmt->bindParam(':userID', $userID);
+  $stmt->bindParam(':year', $whatYear, PDO::PARAM_INT);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 
@@ -143,11 +161,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="card">
         <div class="card-body">
 
-          <input type="text" class="form-control" name="search" id="searchUnarchive" placeholder="search" onkeyup="searchTable()" class="searchInput" style="flex: 1; margin-right: 5px;">
+          <section class="flex justify-between gap-x-4">
+
+            <input type="text" class="form-control" name="search" id="searchUnarchive" placeholder="search" onkeyup="searchTable()" class="searchInput" style="flex: 1; margin-right: 5px;">
+
+            <form method="POST" action="">
+              <select id="yearfilter" name="yearfilter" onchange="this.form.submit()">
+                <?php
+                $currentYear = date('Y');
+                $startYear = $currentYear - 5; // Start 5 years before the current year
+
+                // Loop to generate options from startYear to endYear
+                for ($year = $startYear; $year <= $currentYear; $year++) {
+                  echo "<option value='$year'" . ($year == $selectedYear ? " selected" : "") . ">$year</option>";
+                }
+                ?>
+              </select>
+            </form>
+
+          </section>
 
 
           <br>
-          <table id="UnarchiveTable" class="table table-striped w-full">
+          <table id="UnarchiveTable" class="<?php echo empty($result) ? 'hidden' : ''; ?> table table-striped w-full">
             <thead>
               <tr class="flex w-full text-sm">
                 <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">No.</th>
@@ -159,7 +195,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               </tr>
             </thead>
             <tbody class="flex flex-col max-h-[28rem] overflow-y-scroll">
-
               <?php foreach ($result as $row) { ?>
                 <tr class="flex w-full text-sm border">
                   <td class="flex-1 px-2"><?php echo $row['CNum']; ?></td>
@@ -174,7 +209,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </tbody>
           </table>
 
-          <section id="unarchiveButtonSection" class="w-full flex justify-end">
+          <p class="text-center text-lg mt-4">
+            <?php echo empty($result) ? 'No data available' : ''; ?>
+          </p>
+
+          <section id="unarchiveButtonSection" class="<?php echo empty($result) ? 'hidden' : ''; ?> w-full flex justify-end">
             <button id="unarchiveSelected" class="p-2 bg-red-400 text-white rounded-md">Unarchive</button>
           </section>
 

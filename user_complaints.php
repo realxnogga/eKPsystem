@@ -9,28 +9,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 
 $userID = $_SESSION['user_id'];
 
-$result = '';
-
-function getComplaintData($conn, $userID, $whatCol, $condition)
-{
-  $query = "SELECT * FROM complaints WHERE UserID = '$userID' AND IsArchived = 0";
-
-  if (!is_null($condition)) $query .= " AND complaint_updated_date IS NOT NULL";
-
-  $query .= " ORDER BY $whatCol DESC";
-
-  return $conn->query($query);
-}
-
-$result = getComplaintData($conn, $userID, "complaint_created_date", null);
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-  if (isset($_POST['seeUpdateRecently'])) {
-    $result = getComplaintData($conn, $userID, "complaint_updated_date", true);
-  }
-}
-
 
 // Function to get the ordinal suffix
 function getOrdinalSuffix($number)
@@ -50,14 +28,37 @@ function getOrdinalSuffix($number)
   }
 }
 
-// $totalCountQuery = "SELECT COUNT(*) as total FROM complaints WHERE UserID = '$userID' AND IsArchived = 0";
-// if (!empty($searchInput)) {
-//   $totalCountQuery .= " AND (CNum LIKE '%$searchInput%' OR ForTitle LIKE '%$searchInput%' OR CNames LIKE '%$searchInput%' OR RspndtNames LIKE '%$searchInput%')";
-// }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-// $totalCountResult = $conn->query($totalCountQuery);
-// $totalCountRow = $totalCountResult->fetch(PDO::FETCH_ASSOC);
-// $totalCount = $totalCountRow['total'];
+  if (isset($_POST['seeUpdateRecently'])) {
+
+    $selectedYear = isset($_SESSION['cy_complaintyear']) ? $_SESSION['cy_complaintyear'] : date('Y');
+
+    $result = getComplaintData($conn, $userID, "complaint_updated_date", true, $selectedYear);
+  }
+
+  if (isset($_POST['yearfilter'])) {
+    $selectedYear = $_POST['yearfilter'];
+    $_SESSION['cy_complaintyear'] = $selectedYear;
+    $result = getComplaintData($conn, $userID, "complaint_created_date", null, $selectedYear);
+  }
+}
+
+$selectedYear = isset($_SESSION['cy_complaintyear']) ? $_SESSION['cy_complaintyear'] : date('Y');
+
+$result = getComplaintData($conn, $userID, "complaint_created_date", null, $selectedYear);
+
+
+function getComplaintData($conn, $userID, $whatCol, $condition, $whatYear)
+{
+  $query = "SELECT * FROM complaints WHERE UserID = $userID AND IsArchived = 0 AND YEAR(Mdate) = $whatYear";
+
+  if (!is_null($condition)) $query .= " AND complaint_updated_date IS NOT NULL";
+
+  $query .= " ORDER BY $whatCol DESC";
+
+  return $conn->prepare($query);
+}
 
 ?>
 
@@ -65,118 +66,6 @@ function getOrdinalSuffix($number)
 <html lang="en">
 
 <head>
-  <!-- <style>
-    .table {
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    .table thead th {
-      text-align: center;
-    }
-
-    .table tbody td {
-      text-align: center;
-    }
-
-    .card {
-      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
-      border-radius: 15px;
-    }
-
-    .case-number {
-      width: 120px;
-      font-family: 'Arial', sans-serif;
-    }
-
-    .date-column {
-      width: 120px;
-      font-family: 'Arial', sans-serif;
-    }
-
-    .complainants-column,
-    .respondents-column {
-      max-width: 150px;
-      /* Set a maximum width */
-      font-family: 'Arial', sans-serif;
-      white-space: nowrap;
-      /* Prevent wrapping */
-      overflow: hidden;
-      /* Hide overflowed content */
-      text-overflow: ellipsis;
-      /* Display ellipsis for overflowed content */
-    }
-
-
-    .title-column {
-      width: 200px;
-      font-family: 'Arial', sans-serif;
-    }
-
-    .table-bordered th,
-    .table-bordered td {
-      border-bottom: 2px solid #dee2e6;
-    }
-
-    .actions-column {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-    }
-
-    .status-column,
-    .hearing-column {
-      width: 100px;
-      font-family: 'Arial', sans-serif;
-    }
-
-    .btn {
-      font-size: 13px;
-      margin-right: 4px;
-    }
-
-    .btn:last-child {
-      margin-right: 0;
-    }
-
-    .btn-dark,
-    .btn-success {
-      height: 38px;
-    }
-
-    .actions-column a.btn {
-      margin-left: 27;
-      padding: 0;
-    }
-
-    .actions-column a.btn {
-      box-sizing: border-box;
-    }
-
-    .legend {
-      margin-top: 20px;
-    }
-
-    .legend h6 {
-      margin-bottom: 5px;
-    }
-
-    .legend ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .legend li {
-      margin-bottom: 5px;
-    }
-
-    .legend-color {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      margin-right: 5px;
-      border-radius: 50%;
-    }
-  </style> -->
 
   <link rel="stylesheet" href="hide_show_icon.css">
 
@@ -207,7 +96,8 @@ function getOrdinalSuffix($number)
     td {
       padding: 8px;
       text-align: center;
-      place-items: center; /*for actions column */
+      place-items: center;
+      /*for actions column */
     }
 
     .legend-color {
@@ -269,6 +159,20 @@ function getOrdinalSuffix($number)
                   <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p>
                 </span>
               </button>
+
+              <form method="POST" action="">
+                <select id="yearfilter" name="yearfilter" onchange="this.form.submit()">
+                  <?php
+                  $currentYear = date('Y');
+                  $startYear = $currentYear - 5; // Start 5 years before the current year
+
+                  // Loop to generate options from startYear to endYear
+                  for ($year = $startYear; $year <= $currentYear; $year++) {
+                    echo "<option value='$year'" . ($year == $selectedYear ? " selected" : "") . ">$year</option>";
+                  }
+                  ?>
+                </select>
+              </form>
 
             </div>
 

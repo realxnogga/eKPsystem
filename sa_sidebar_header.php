@@ -124,7 +124,7 @@ function traverseDirectory()
       </li>
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>sa_registeredmuni.php" class="<?php echo isActive('sa_registeredmuni.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+        <a href="<?php echo traverseDirectory(); ?>sa_registeredmuni.php" class="<?php echo isActive('sa_registeredmuni.php') . ' ' . isActive('sa_manageregisteredmuni.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-archive text-2xl"></i>
           <span>Registered Municipalities</span>
         </a>
