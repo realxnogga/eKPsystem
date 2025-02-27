@@ -42,12 +42,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['cy_complaintyear'] = $selectedYear;
     $result = getComplaintData($conn, $userID, "complaint_created_date", null, $selectedYear);
   }
+} else {
+  $selectedYear = isset($_SESSION['cy_complaintyear']) ? $_SESSION['cy_complaintyear'] : date('Y');
+  $result = getComplaintData($conn, $userID, "complaint_created_date", null, $selectedYear);
 }
-
-$selectedYear = isset($_SESSION['cy_complaintyear']) ? $_SESSION['cy_complaintyear'] : date('Y');
-
-$result = getComplaintData($conn, $userID, "complaint_created_date", null, $selectedYear);
-
 
 function getComplaintData($conn, $userID, $whatCol, $condition, $whatYear)
 {
@@ -57,7 +55,7 @@ function getComplaintData($conn, $userID, $whatCol, $condition, $whatYear)
 
   $query .= " ORDER BY $whatCol DESC";
 
-  return $conn->prepare($query);
+  return $conn->query($query);
 }
 
 ?>
@@ -174,11 +172,19 @@ function getComplaintData($conn, $userID, $whatCol, $condition, $whatYear)
                 </select>
               </form>
 
+
+              <form method="POST" action="" class="flex">
+
+                <button type="submit" name="seeUpdateRecently">
+                  <i class="ti ti-clock-24 text-[2rem]"></i>
+                </button>
+
+              </form>
+
             </div>
 
-            <form method="POST" action="" class="py-2">
-              <input type="submit" name="seeUpdateRecently" value="see recent update">
-            </form>
+            <br>
+
 
             <div class="max-h-[30rem] overflow-y-scroll">
               <table id="complaintTable" class="table">
@@ -255,38 +261,33 @@ function getComplaintData($conn, $userID, $whatCol, $condition, $whatYear)
                       </td>
                       <!-- ----------------------------------- -->
 
-                      <td class="">
-                        <a
-                          href="user_edit_complaint.php?id=<?= $row['id'] ?>"
-                          class="btn btn-sm btn-secondary"
-                          title="Edit"
-                          data-placement="top"
-                          style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
-                          <i class="fas fa-edit" style="margin-right: 5px;"></i>
-                          Edit
-                        </a>
+                      <td>
+                        <form action="user_edit_complaint.php" method="get" style="display: inline;">
+                          <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                          <button type="submit" class="btn btn-sm btn-secondary bg-blue-500 h-7" title="Edit" data-placement="top" style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                            <i class="fas fa-edit show-icon"></i>
+                            <p class="hide-icon">Edit</p>
+                          </button>
+                        </form>
 
-                        <a
-                          href="archive_complaint.php?id=<?= $row['id'] ?>"
-                          class="btn btn-sm btn-danger"
-                          title="Archive"
-                          data-placement="top"
-                          style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
-                          <i class="fas fa-archive" style="margin-right: 5px;"></i>
-                          Archive
-                        </a>
+                        <form action="archive_complaint.php" method="get" style="display: inline;">
+                          <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                          <button type="submit" class="btn btn-sm btn-danger bg-red-500 h-7" title="Archive" data-placement="top" style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                            <i class="fas fa-archive show-icon"></i> 
+                            <p class="hide-icon">Archive</p>
+                          </button>
+                        </form>
 
-                        <a
-                          href="user_manage_case.php?id=<?= $row['id'] ?>"
-                          class="btn btn-sm btn-warning"
-                          title="Manage"
-                          data-placement="top"
-                          style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
-                          <i class="fas fa-folder" style="margin-right: 5px;"></i>
-                          Manage
-                        </a>
-
+                        <form action="user_manage_case.php" method="get" style="display: inline;">
+                          <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                          <button type="submit" class="btn btn-sm btn-warning bg-yellow-400 h-7" title="Manage" data-placement="top" style="width: 70px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
+                            <i class="fas fa-folder show-icon"></i> 
+                            <p class="hide-icon">Manage</p>
+                          </button>
+                        </form>
                       </td>
+
+
                     </tr>
                   <?php endwhile; ?>
                 </tbody>

@@ -10,14 +10,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 $userID = $_SESSION['user_id'];
 
 # function to get all unarchived cases from the database
-function getAllUnarchive($conn, $userID)
-{
-  $query = "SELECT * FROM complaints WHERE UserID = :userID AND IsArchived = 1";
-  $stmt = $conn->prepare($query);
-  $stmt->bindParam(':userID', $userID);
-  $stmt->execute();
-  return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+// function getAllUnarchive($conn, $userID)
+// {
+//   $query = "SELECT * FROM complaints WHERE UserID = :userID AND IsArchived = 1";
+//   $stmt = $conn->prepare($query);
+//   $stmt->bindParam(':userID', $userID);
+//   $stmt->execute();
+//   return $stmt->fetchAll(PDO::FETCH_ASSOC);
+// }
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -31,7 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($unarchiveQuery);
 
     if ($stmt->execute()) {
-      $updatedResult = getAllUnarchive($conn, $userID);  // Fetch updated data
+      $selectedYear = isset($_SESSION['ay_archiveyear']) ? $_SESSION['ay_archiveyear'] : date('Y');
+      $updatedResult = fetchArchiveFunc($conn, $userID, $selectedYear);  // Fetch updated data
       echo json_encode($updatedResult);  // Return updated data in JSON
       exit;
     }
