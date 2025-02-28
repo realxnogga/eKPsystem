@@ -286,12 +286,24 @@ $(document).ready(function () {
                     fileTypes.forEach(function (type) {
                         var fileColumn = $('.file-column[data-type="' + type + '"]');
                         var fileKey = type + '_pdf_File';
+                        var verifyBtn = $('button[data-field="' + type + '_pdf_verify"]');
+                        
                         if (data[fileKey]) {
                             var filePath = 'movfolder/' + data[fileKey];
                             $('.view-pdf[data-type="' + type + '"]').attr('data-file', filePath).show();
                             fileColumn.html('<button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-type="' + type + '" data-file="' + filePath + '">View</button>');
+                            // Enable verify button when file exists
+                            verifyBtn
+                                .prop('disabled', false)
+                                .css('cursor', 'pointer')
+                                .attr('title', '');
                         } else {
                             fileColumn.html('<div class="alert alert-warning mb-0">No uploaded file</div>');
+                            // Disable verify button and add tooltip when no file
+                            verifyBtn
+                                .prop('disabled', true)
+                                .css('cursor', 'not-allowed')
+                                .attr('title', 'Cannot verify - No file uploaded');
                         }
                     });
 
@@ -705,20 +717,69 @@ $(document).ready(function () {
             var field = $(this).data('field');
             if (field && verifications[field] !== undefined) {
                 var isVerified = verifications[field] === 1;
+                var $row = $(this).closest('tr');
+                
+                // Update button appearance
                 $(this)
                     .text(isVerified ? 'Verified' : 'Verify')
                     .removeClass('btn-primary btn-success')
                     .addClass(isVerified ? 'btn-success' : 'btn-primary');
+                
+                // Get the corresponding rate input and remark textarea
+                var baseFieldName = field.replace('_verify', '');
+                var $rateInput = $row.find(`input[name="${baseFieldName}_rate"]`);
+                var $remarkTextarea = $row.find(`textarea[name="${baseFieldName}_remark"]`);
+                
+                // Enable/disable based on verification status
+                if (!isVerified) {
+                    $rateInput
+                        .prop('disabled', true)
+                        .css({
+                            'background-color': '#e9ecef',
+                            'cursor': 'not-allowed'
+                        });
+                    $remarkTextarea
+                        .prop('disabled', true)
+                        .css({
+                            'background-color': '#e9ecef',
+                            'cursor': 'not-allowed'
+                        });
+                } else {
+                    $rateInput
+                        .prop('disabled', false)
+                        .css({
+                            'background-color': '',
+                            'cursor': ''
+                        });
+                    $remarkTextarea
+                        .prop('disabled', false)
+                        .css({
+                            'background-color': '',
+                            'cursor': ''
+                        });
+                }
             }
         });
     }
 
     // Add click handler for verify buttons
     $(document).on('click', '.verify-btn', function() {
+        if ($(this).prop('disabled')) {
+            return; // Exit if button is disabled
+        }
+        
         var btn = $(this);
         var field = btn.data('field');
         var movId = $('#mov_id').val();
         var barangayId = $('#barangay_id').val();
+        var $row = btn.closest('tr');
+        var fileColumn = $row.find('.file-column');
+
+        // Check if there's a file uploaded
+        if (fileColumn.find('.alert-warning').length > 0) {
+            showModal('Cannot verify - No file uploaded');
+            return;
+        }
 
         if (!field || !movId || !barangayId) {
             showModal('Missing required data for verification');
@@ -735,12 +796,11 @@ $(document).ready(function () {
             },
             success: function(response) {
                 if (response.status === 'success') {
-                    // Update the button state immediately
                     btn.text(response.verified ? 'Verified' : 'Verify')
                        .removeClass('btn-primary btn-success')
                        .addClass(response.verified ? 'btn-success' : 'btn-primary');
                     
-                    // Also refresh the verification data
+                    // Refresh verification data
                     var selectedBarangay = $('#barangay_select').val();
                     if (selectedBarangay) {
                         $.ajax({
@@ -752,6 +812,9 @@ $(document).ready(function () {
                                 if (data.verifications) {
                                     updateVerificationButtons(data.verifications);
                                 }
+                            },
+                            error: function() {
+                                console.error('Error fetching verification data');
                             }
                         });
                     }
