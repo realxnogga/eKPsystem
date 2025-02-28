@@ -209,9 +209,7 @@ if (!empty($municipalityID)) {
             </td>
           </tr>
           <tr>
-                <td>2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
-                <td> </td>
-                <td> </td>
+                <td colspan="3">2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
               </tr>
                <tr>
                 <td>a) Mediation (within 15 days from initial confrontation with the Lupon Chairman)</td>
@@ -279,14 +277,10 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr>
-                <th>B. Systematic Maintenance of Records</th>
-                <th></th>
-                <th></th>
+                <th colspan="3">B. Systematic Maintenance of Records</th>
               </tr>
               <tr>
-                <td><b>1. Record of Cases </b></td>
-                <td></td>
-                <td></td>
+                <td colspan="3"><b>1. Record of Cases </b></td>
               </tr>
               <tr id="city-row">
                 <td>For Cities - computer database with searchable case information</td>
@@ -302,9 +296,7 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr id="municipality-row">
-                <td>For Municipalities:</td>
-                <td></td>
-                <td></td>
+                <td colspan="2">For Municipalities:</td>
               </tr>
               <tr id="municipality-row">
                 <td>a. Manual Records</td>
@@ -372,9 +364,7 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr>
-                <th>C. Timely Submissions to the Court and the DILG</th>
-                <th></th>
-                <th></th>
+                <th colspan="3">C. Timely Submissions to the Court and the DILG</th>
               </tr>
               <tr>
                 <td>1. <b>To the Court:</b> Submitted/ presented copies of settlement agreement to the Court from the lapse of the ten-day period repudiating the mediation/ conciliation settlement agreement, or within five (5) calendar days from the date of the arbitration award</td>
@@ -403,9 +393,7 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr>
-                <th>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
-                <th></th>
-                <th></th>
+                <th colspan="3">D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
               </tr>
               <tr>
                 <td>1. Notice of Meeting</td>
@@ -434,9 +422,7 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr>
-                <th>II. EFFECTIVENESS IN SECURING THE SETTLEMENT OF INTERPERSONAL DISPUTE OBJECTIVE OF THE KATARUNGANG PAMBARANGAY</th>
-                <th></th>
-                <th></th>
+                <th colspan="3">II. EFFECTIVENESS IN SECURING THE SETTLEMENT OF INTERPERSONAL DISPUTE OBJECTIVE OF THE KATARUNGANG PAMBARANGAY</th>
               </tr>
               <tr>
                 <td>A. Quantity of settled cases against filed</td>
@@ -452,9 +438,7 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr>
-                <td>B. Quality of Settlement of Cases</td>
-                <td></td>
-                <td></td>
+                <td colspan="3">B. Quality of Settlement of Cases</td>
               </tr>
               <tr>
                 <td>1. Zero cases repudiated</td>
@@ -496,9 +480,7 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr>
-                <th>III. CREATIVITY AND RESOURCEFULNESS OF THE LUPONG TAGAPAMAYAPA</th>
-                <th></th>
-                <th></th>
+                <th colspan="3">III. CREATIVITY AND RESOURCEFULNESS OF THE LUPONG TAGAPAMAYAPA</th>
               </tr>
               <tr>
                 <td>A. Settlement Technique utilized by the Lupon</td>
@@ -527,9 +509,7 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr>
-                <td>C. Sustained information drive to promote Katarungang Pambarangay</td>
-                <td></td>
-                <td></td>
+                <td colspan="3">C. Sustained information drive to promote Katarungang Pambarangay</td>
               </tr>
               <tr id="city-row">
                 <td>1. For Cities</td>
@@ -657,14 +637,10 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr>
-                <th>IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
-                <th></th>
-                <th></th>
+                <th colspan="3">IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
               </tr>
               <tr>
-                <td><b>Building structure or space:</b></td>
-                <td></td>
-                <td></td>
+                <td colspan="3"><b>Building structure or space:</b></td>
               </tr>
               <tr id = "city-row">
                 <td>For Cities - the office or space should be exclusive for KP matters</td>
@@ -693,9 +669,7 @@ if (!empty($municipalityID)) {
             </td>
               </tr>
               <tr>
-                <th>V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
-                <th></th>
-                <th></th>
+                <th colspan="3">V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
               </tr>
               <tr>
                 <td>1. From City, Municipal, Provincial or NGAs</td>
