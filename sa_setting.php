@@ -66,7 +66,17 @@ if ($securityQuestions) {
                   <input type="file" id="fileInput" name="profile_pic" style="display: none;">
                   <!--<h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>-->
                   <button type="button" id="uploadButton" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">Upload a picture</button>
+
+                  <a href="sample.php">crop</a>
                 </div>
+
+                
+
+                <!-- ------------------------------------------------------------- -->
+              
+                <!-- ------------------------------------------------------------- -->
+
+
                 <br>
 
                 <h5 class="card-title mb-9 fw-semibold">Account Settings</h5>
@@ -283,7 +293,6 @@ if ($securityQuestions) {
     </div>
 
   </div>
-
 
   <script src="hide_toast.js"></script>
 </body>
