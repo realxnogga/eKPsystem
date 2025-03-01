@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (password_verify($password, $user['password'])) {
                     // Start the session and store user information in session variables
                     $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['password'] = $password; // not hashed
                     $_SESSION['email'] = $user['email'];
                     $_SESSION['user_type'] = $user['user_type'];
                     $_SESSION['assessor_type'] = $user['assessor_type'];

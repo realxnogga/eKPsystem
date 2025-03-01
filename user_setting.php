@@ -284,39 +284,6 @@ function uploadFile($file, $directory)
 
         <div class="col-lg-4">
 
-          <div class="card relative">
-
-
-
-            <i id="toggleButton" class="ti ti-info-circle text-xl hover:text-blue-500 absolute top-2 right-2"></i>
-
-            <div class="card-body">
-              <h5 class="card-title mb-9 fw-semibold">Create a.text file containing your login information.</h5>
-              <hr>
-              <br>
-
-              <div id="info_message" class="alert alert-info hidden">
-                <p>Create a text file in the desktop directory of your device called EKP_login_credentials that contains your email address and password.</p>
-              </div>
-
-              <?php
-              if (isset($_GET['generate_file_message'])) {
-                if ($_GET['generate_file_message'] === 'success') {
-                  echo "<div id='alertMessage' class='alert alert-success' role='alert'>Text file generated successfully.</div>";
-                }
-                if ($_GET['generate_file_message'] === 'failed') {
-                  echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Failed to generate text file.</div>";
-                }
-              }
-              ?>
-
-              <form action="generate_textfile_w_login_credentials.php" method="POST">
-                <button class="btn btn-primary bg-blue-500" type="submit" name="generatetextfile">Generate text file</button>
-              </form>
-
-            </div>
-          </div>
-
           <form id="lgulogoForm" enctype="multipart/form-data" action="user_setting.php" method="POST">
             <div class="card">
               <div class="card-body">
