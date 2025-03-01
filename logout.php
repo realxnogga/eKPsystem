@@ -1,12 +1,15 @@
 <?php
-// Start or resume the session
 session_start();
+include 'connection.php';
 
-// Destroy the session and unset all session variables
-session_destroy();
-session_unset();
+$sql = 'UPDATE users SET is_loggedin = 0 WHERE id = :id';
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':id', $_SESSION['user_id'], PDO::PARAM_INT);
 
-// Redirect the user to the login page after logout
-header("Location: login.php");
-exit;
-?>
+if ($stmt->execute()) {
+    session_destroy();
+    session_unset();
+
+    header("Location: login.php");
+    exit;
+}

@@ -164,13 +164,23 @@ if (isset($_POST['register'])) {
 
         if ($stmt->execute()) {
 
-            $homeDrive = getenv('HOMEDRIVE');
-            $homePath = getenv('HOMEPATH');
-            $desktopPath = $homeDrive . $homePath . "\\Desktop\\";
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                // Windows environment
+                $homeDrive = getenv('HOMEDRIVE');
+                $homePath = getenv('HOMEPATH');
+
+                $desktopPath = $homeDrive . $homePath . "\\Desktop\\";
+            } else {
+                // Non-Windows environment (e.g., macOS, Linux)
+                $homePath = getenv('HOME');
+                $desktopPath = $homePath . "/Desktop/";
+            }
 
             $fileName = $desktopPath . "Ekp_Login_Credential_" . date("Ymd_His") . ".txt";
 
+           
             $file = fopen($fileName, "w");
+         
 
             function whatTypeFunc($utype, $brgy_name, $munic_name)
             {
@@ -180,7 +190,7 @@ if (isset($_POST['register'])) {
                 if ($utype === 'admin') {
                     return 'For admin of ' . $munic_name . '         ' . 'Created on ' . date("M d Y H:i:s");
                 }
-                if ($utype === 'assessor') { 
+                if ($utype === 'assessor') {
                     return 'For assessor of ' . $munic_name . '         ' . 'Created on ' . date("M d Y H:i:s");
                 }
             }
@@ -193,7 +203,6 @@ if (isset($_POST['register'])) {
                 fwrite($file, $text);
 
                 fclose($file);
- 
             } else {
                 $errors = "Unable to create or open the file";
             }

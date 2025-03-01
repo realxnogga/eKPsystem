@@ -60,22 +60,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
     }
   }
-}
+
+  // -----------------------------------------------------------------------------------
+  if (isset($_POST['yearfilter'])) {
+    $selectedYear = $_POST['yearfilter'];
+    $_SESSION['fy_feedback'] = $selectedYear; 
+    $questionTemp = fetchFeedbackQuestionFunc($conn, $selectedYear);
+  }
+} 
+  
+  $selectedYear = isset($_SESSION['fy_feedback']) ? $_SESSION['fy_feedback'] : date('Y');
+  $questionTemp = fetchFeedbackQuestionFunc($conn, $selectedYear);
 
 // Fetch feedback questions
-$questionTemp = $conn->query("SELECT * FROM feedback_questions ORDER BY fq_creation_date DESC")->fetchAll(PDO::FETCH_ASSOC);
+function fetchFeedbackQuestionFunc($conn, $whatYear)
+{
+  $sql = "SELECT * FROM feedback_questions WHERE YEAR(fq_creation_date) = :year ORDER BY fq_creation_date DESC";
+  $stmt = $conn->prepare($sql);
+  $stmt->bindParam(':year', $whatYear, PDO::PARAM_INT);
+  $stmt->execute();
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+  // -----------------------------------------------------------------------------------
 
 
 function countResponseFunc($conn, $whatTable, $condition = null)
 {
-
   $sql = "SELECT COUNT(*) FROM $whatTable";
-
-
   if ($condition !== null) {
     $sql .= " WHERE $condition";
   }
-
   $stmt = $conn->prepare($sql);
   $stmt->execute();
   return $stmt->fetchColumn();
@@ -83,15 +97,12 @@ function countResponseFunc($conn, $whatTable, $condition = null)
 
 function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
 {
-
   $stmt = $conn->prepare("SELECT AVG($whatCol) FROM $whatTable WHERE fa_id = :id");
   $stmt->bindParam(':id', $id, PDO::PARAM_INT);
   $stmt->execute();
-
   $temp = $stmt->fetchColumn();
   return number_format($temp, 1) === '0.0' ? '' : number_format($temp, 1);
 }
-
 ?>
 
 <!doctype html>
@@ -106,6 +117,8 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
 
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <link rel="stylesheet" href="hide_show_icon.css">
+
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -116,11 +129,29 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
     <div class="rounded-lg mt-16">
 
       <section class="p-4 bg-white rounded-xl h-fit">
-        <section class="flex justify-end">
+
+        <section class="flex justify-between gap-x-4">
+
+          <input onkeyup="searchFeedback();" type="search" id="searchFeedbackButton" class="form-control" placeholder="Search by feedback title">
+
+          <form method="POST" action="">
+            <select id="yearfilter" name="yearfilter" onchange="this.form.submit()">
+              <?php
+              $currentYear = date('Y');
+              $startYear = $currentYear - 5; // Start 5 years before the current year
+
+              // Loop to generate options from startYear to endYear
+              for ($year = $startYear; $year <= $currentYear; $year++) {
+                echo "<option value='$year'" . ($year == $selectedYear ? " selected" : "") . ">$year</option>";
+              }
+              ?>
+            </select>
+          </form>
+
           <button onclick="showmodalFunc();" id="showModalBtn" type="button" class="btn btn-primary bg-blue-500">
             <span>
               <i class="ti ti-plus text-lg show-icon"></i>
-              <!-- <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p> -->
+              <p style="white-space: nowrap;" class="hide-icon hidden">Add feedback</p>
             </span>
           </button>
         </section>
@@ -154,73 +185,77 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
         <?php
         if (isset($_GET['feedback_inserted_message'])) {
           if ($_GET['feedback_inserted_message'] === 'success') {
-
             echo '<div id="alertMessage" class="alert alert-success my-3" role="alert">Feedback questions inserted successfully.</div>';
           }
           if ($_GET['feedback_inserted_message'] === 'failed') {
-
             echo '<div id="alertMessage" class="alert alert-danger my-3" role="alert">Failed to insert feedback questions.</div>';
           }
         }
         ?>
 
+        <section id="feedbackContainer">
 
-        <section>
+          <p class="text-center text-lg mt-4">
+            <?php echo empty($questionTemp) ? 'No data for this year' : ''; ?>
+          </p>
+
           <?php foreach ($questionTemp as $row) { ?>
 
-            <div class="w-50 flex justify-between items-center mt-4">
-              <h3 class='text-lg font-bold'><?php echo $row["feedback_title"]; ?></h3>
-              <p>Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
-            </div>
+            <section class="feedback-item">
 
-            <form method="POST" action="" class="flex flex-col gap-y-1 w-100 border-2 border-gray-200 rounded-lg p-2">
-
-              <div class="flex justify-between items-center">
-                <input value="<?php echo $row['fq1']; ?>" required name="editfq1" type="text" placeholder="Edit question 1" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                <p><?php echo getFeedbackDataFunc($conn, "fa1", "feedback_answers", $row['fq_id']); ?></p>
+              <div class="w-50 flex justify-between items-center mt-4">
+                <h3 class='text-lg font-bold'><?php echo $row["feedback_title"]; ?></h3>
+                <p>Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
               </div>
 
-              <div class="flex justify-between items-center">
-                <input value="<?php echo $row['fq2']; ?>" required name="editfq2" type="text" placeholder="Edit question 2" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                <p><?php echo getFeedbackDataFunc($conn, "fa2", "feedback_answers", $row['fq_id']); ?></p>
-              </div>
+              <form method="POST" action="" class="flex flex-col gap-y-1 w-100 border-2 border-gray-200 rounded-lg p-2">
 
-              <div class="flex justify-between items-center">
-                <input value="<?php echo $row['fq3']; ?>" required name="editfq3" type="text" placeholder="Edit question 3" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                <p><?php echo getFeedbackDataFunc($conn, "fa3", "feedback_answers", $row['fq_id']); ?></p>
-              </div>
-
-              <div class="flex justify-between items-center">
-                <input value="<?php echo $row['fq4']; ?>" required name="editfq4" type="text" placeholder="Edit question 4" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                <p><?php echo getFeedbackDataFunc($conn, "fa4", "feedback_answers", $row['fq_id']); ?></p>
-              </div>
-
-              <div class="flex justify-between items-center">
-                <input value="<?php echo $row['fq5']; ?>" required name="editfq5" type="text" placeholder="Edit question 5" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
-                <p><?php echo getFeedbackDataFunc($conn, "fa5", "feedback_answers", $row['fq_id']); ?></p>
-              </div>
-
-
-              <input hidden value="<?php echo $row['fq_id']; ?>" required name="editfq_id" type="number">
-
-              <section class="flex justify-between items-end">
-                <button name="submitEditFeedbackQuestion<?php echo $row['fq_id']; ?>" type="submit" class="py-2 px-3 text-white rounded-md bg-blue-500 w-fit">
-                  Update
-                </button>
-
-                <a data-tooltip-target="tooltip-light<?php echo $row['fq_id']; ?>" data-tooltip-style="light" class="" href="sa_feedback_view.php?fq_id_url=<?php echo $row['fq_id']; ?>">
-                  <p><?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . ''); ?> / <?php echo countResponseFunc($conn, "barangays"); ?> <?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . '') > 1 ? "responses" : "response"; ?></p>
-                </a>
-
-                <div id="tooltip-light<?php echo $row['fq_id']; ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip">
-                  view more
-                  <div class="tooltip-arrow" data-popper-arrow></div>
+                <div class="flex justify-between items-center">
+                  <input value="<?php echo $row['fq1']; ?>" required name="editfq1" type="text" placeholder="Edit question 1" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                  <p><?php echo getFeedbackDataFunc($conn, "fa1", "feedback_answers", $row['fq_id']); ?></p>
                 </div>
 
-              </section>
+                <div class="flex justify-between items-center">
+                  <input value="<?php echo $row['fq2']; ?>" required name="editfq2" type="text" placeholder="Edit question 2" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                  <p><?php echo getFeedbackDataFunc($conn, "fa2", "feedback_answers", $row['fq_id']); ?></p>
+                </div>
 
+                <div class="flex justify-between items-center">
+                  <input value="<?php echo $row['fq3']; ?>" required name="editfq3" type="text" placeholder="Edit question 3" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                  <p><?php echo getFeedbackDataFunc($conn, "fa3", "feedback_answers", $row['fq_id']); ?></p>
+                </div>
 
-            </form>
+                <div class="flex justify-between items-center">
+                  <input value="<?php echo $row['fq4']; ?>" required name="editfq4" type="text" placeholder="Edit question 4" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                  <p><?php echo getFeedbackDataFunc($conn, "fa4", "feedback_answers", $row['fq_id']); ?></p>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <input value="<?php echo $row['fq5']; ?>" required name="editfq5" type="text" placeholder="Edit question 5" class="text-sm w-50 py-2 border !border-gray-300 rounded-md ">
+                  <p><?php echo getFeedbackDataFunc($conn, "fa5", "feedback_answers", $row['fq_id']); ?></p>
+                </div>
+
+                <input hidden value="<?php echo $row['fq_id']; ?>" required name="editfq_id" type="number">
+
+                <section class="flex justify-between items-end">
+                  <button name="submitEditFeedbackQuestion<?php echo $row['fq_id']; ?>" type="submit" class="py-2 px-3 text-white rounded-md bg-blue-500 w-fit">
+                    Update
+                  </button>
+
+                  <a data-tooltip-target="tooltip-light<?php echo $row['fq_id']; ?>" data-tooltip-style="light" class="" href="sa_feedback_view.php?fq_id_url=<?php echo $row['fq_id']; ?>">
+                    <p><?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . ''); ?> / <?php echo countResponseFunc($conn, "barangays"); ?> <?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . '') > 1 ? "responses" : "response"; ?></p>
+                  </a>
+
+                  <div id="tooltip-light<?php echo $row['fq_id']; ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip">
+                    view more
+                    <div class="tooltip-arrow" data-popper-arrow></div>
+                  </div>
+
+                </section>
+
+              </form>
+
+            </section>
           <?php } ?>
         </section>
 
@@ -231,16 +266,34 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
   <script>
     function showmodalFunc() {
       document.getElementById('feedbackModal').classList.remove('hidden');
-
       document.getElementsByTagName('body')[0].classList.add('overflow-hidden');
       document.getElementsByTagName('body')[0].classList.remove('overflow-scroll');
     }
 
     function hidemodalFunc() {
       document.getElementById('feedbackModal').classList.add('hidden');
-
       document.getElementsByTagName('body')[0].classList.remove('overflow-hidden');
       document.getElementsByTagName('body')[0].classList.add('overflow-scroll');
+    }
+  </script>
+
+  <!-- ------------------------------- -->
+  <script>
+    function searchFeedback() {
+      let input = document.getElementById('searchFeedbackButton');
+      let filter = input.value.toLowerCase();
+      let feedbackItems = document.getElementsByClassName('feedback-item');
+
+      for (let i = 0; i < feedbackItems.length; i++) {
+        let item = feedbackItems[i];
+        let textContent = item.textContent || item.innerText;
+
+        if (textContent.toLowerCase().indexOf(filter) > -1) {
+          item.style.display = '';
+        } else {
+          item.style.display = 'none';
+        }
+      }
     }
   </script>
 

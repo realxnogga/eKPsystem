@@ -283,7 +283,6 @@ function uploadFile($file, $directory)
         </div>
 
         <div class="col-lg-4">
-
           <form id="lgulogoForm" enctype="multipart/form-data" action="user_setting.php" method="POST">
             <div class="card">
               <div class="card-body">

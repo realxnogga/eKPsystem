@@ -1,5 +1,8 @@
-<?php 
+<?php
 // Initialize the linkedNames array
+
+$_SESSION['test'] = $_SESSION;
+
 $linkedNames = array();
 
 // Get the current year
@@ -65,41 +68,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bindParam(':lupon_chairman', $luponChairman, PDO::PARAM_STR);
 
         $stmt->execute();
-
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
     if (isset($_POST['appoint'])) {
         // Get the values of "Punong Barangay" and "Lupon Chairman" from POST
-    $punongBarangay = $_POST['punong_barangay'];
-    $luponChairman = $_POST['lupon_chairman'];
+        $punongBarangay = $_POST['punong_barangay'];
+        $luponChairman = $_POST['lupon_chairman'];
 
-   $checkAppointQuery = "SELECT COUNT(*) FROM lupons WHERE user_id = :user_id AND YEAR(created_at) = YEAR(NOW()) AND appoint = 1";
-            $checkAppointStmt = $conn->prepare($checkAppointQuery);
-            $checkAppointStmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
-            $checkAppointStmt->execute();
-            $rowCount = $checkAppointStmt->fetchColumn();
+        $checkAppointQuery = "SELECT COUNT(*) FROM lupons WHERE user_id = :user_id AND YEAR(created_at) = YEAR(NOW()) AND appoint = 1";
+        $checkAppointStmt = $conn->prepare($checkAppointQuery);
+        $checkAppointStmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
+        $checkAppointStmt->execute();
+        $rowCount = $checkAppointStmt->fetchColumn();
 
-    if ($rowCount === 0) {
-    
-         $createAppointQuery1 = "INSERT INTO lupons (user_id, appoint, name1, name2, name3, name4, name5, name6, name7, name8, name9, name10, name11, name12, name13, name14, name15, name16, name17, name18, name19, name20, punong_barangay, lupon_chairman) VALUES (:user_id, 1, :name1, :name2, :name3, :name4, :name5, :name6, :name7, :name8, :name9, :name10, :name11, :name12, :name13, :name14, :name15, :name16, :name17, :name18, :name19, :name20, :punong_barangay, :lupon_chairman)";
-                $createAppointStmt1 = $conn->prepare($createAppointQuery1);
-                $createAppointStmt1->bindParam(':user_id', $userID, PDO::PARAM_INT);
-                $createAppointStmt1->bindParam(':lupon_chairman', $luponChairman, PDO::PARAM_INT);
-                $createAppointStmt1->bindParam(':punong_barangay', $punongBarangay, PDO::PARAM_INT);
+        if ($rowCount === 0) {
+
+            $createAppointQuery1 = "INSERT INTO lupons (user_id, appoint, name1, name2, name3, name4, name5, name6, name7, name8, name9, name10, name11, name12, name13, name14, name15, name16, name17, name18, name19, name20, punong_barangay, lupon_chairman) VALUES (:user_id, 1, :name1, :name2, :name3, :name4, :name5, :name6, :name7, :name8, :name9, :name10, :name11, :name12, :name13, :name14, :name15, :name16, :name17, :name18, :name19, :name20, :punong_barangay, :lupon_chairman)";
+            $createAppointStmt1 = $conn->prepare($createAppointQuery1);
+            $createAppointStmt1->bindParam(':user_id', $userID, PDO::PARAM_INT);
+            $createAppointStmt1->bindParam(':lupon_chairman', $luponChairman, PDO::PARAM_INT);
+            $createAppointStmt1->bindParam(':punong_barangay', $punongBarangay, PDO::PARAM_INT);
 
 
-        // Assuming you have the names in an array named $linkedNames
-        for ($i = 0; $i < count($linkedNames); $i++) {
-            $paramName = ":name" . ($i + 1);
-            $createAppointStmt1->bindParam($paramName, $linkedNames[$i], PDO::PARAM_STR);
-        }
+            // Assuming you have the names in an array named $linkedNames
+            for ($i = 0; $i < count($linkedNames); $i++) {
+                $paramName = ":name" . ($i + 1);
+                $createAppointStmt1->bindParam($paramName, $linkedNames[$i], PDO::PARAM_STR);
+            }
 
-        // Execute both prepared statements to add rows with 'appoint' = 0 and 'appoint' = 1
-        $createAppointStmt1->execute();
+            // Execute both prepared statements to add rows with 'appoint' = 0 and 'appoint' = 1
+            $createAppointStmt1->execute();
+        } else {
 
-    } else {
-        
             $updateAppointQuery = $conn->prepare("UPDATE lupons SET 
                                 name1 = :name1, name2 = :name2, name3 = :name3, name4 = :name4, name5 = :name5, 
                                 name6 = :name6, name7 = :name7, name8 = :name8, name9 = :name9, name10 = :name10,
@@ -119,9 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $updateAppointQuery->execute();
-            }
-}
-
+        }
+    }
 }
 
 
@@ -155,5 +155,3 @@ $apptNames = $appointedStmt->fetch(PDO::FETCH_ASSOC);
 
 // Set these values in sessions
 $_SESSION['apptNames'] = $apptNames;
-
-?>

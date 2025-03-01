@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2024 at 09:10 AM
+-- Generation Time: Feb 25, 2025 at 10:13 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -62,9 +62,10 @@ INSERT INTO `barangays` (`id`, `municipality_id`, `barangay_name`) VALUES
 (96, 42, 'Anos'),
 (97, 42, 'Maahas'),
 (98, 42, 'Timugan'),
-(99, 45, 'Banadero'),
-(100, 45, 'Bagong Kalsada'),
-(101, 45, 'Burol');
+(99, 45, 'Paciano Rizal'),
+(100, 45, 'Bubuyan'),
+(102, 47, 'San Isidro(Bay)'),
+(103, 42, 'Lalakay');
 
 -- --------------------------------------------------------
 
@@ -209,7 +210,18 @@ INSERT INTO `case_progress` (`id`, `complaint_id`, `current_hearing`, `latest_he
 (237, 275, '0', ''),
 (239, 277, '0', ''),
 (241, 279, '0', ''),
-(242, 280, '0', '');
+(242, 280, '0', ''),
+(249, 287, '0', ''),
+(293, 331, '0', ''),
+(294, 332, '0', ''),
+(295, 333, '0', ''),
+(296, 334, '0', ''),
+(297, 335, '0', ''),
+(298, 336, '0', ''),
+(299, 337, '0', ''),
+(300, 338, '0', ''),
+(301, 339, '0', ''),
+(302, 340, '0', '');
 
 -- --------------------------------------------------------
 
@@ -224,7 +236,9 @@ CREATE TABLE `complaints` (
   `CNum` varchar(50) DEFAULT NULL,
   `CAddress` varchar(255) DEFAULT NULL,
   `RAddress` varchar(255) DEFAULT NULL,
-  `Mdate` date DEFAULT NULL,
+  `complaint_created_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `complaint_updated_date` datetime DEFAULT NULL,
+  `Mdate` datetime DEFAULT NULL,
   `RDate` date DEFAULT NULL,
   `CNames` varchar(255) DEFAULT NULL,
   `RspndtNames` varchar(255) DEFAULT NULL,
@@ -236,144 +250,283 @@ CREATE TABLE `complaints` (
   `CStatus` varchar(50) DEFAULT NULL,
   `CMethod` varchar(50) DEFAULT NULL,
   `IsArchived` tinyint(1) DEFAULT 0,
-  `seen` tinyint(1) NOT NULL DEFAULT 0
+  `seen` tinyint(1) NOT NULL DEFAULT 0,
+  `removenotif` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `complaints`
 --
 
-INSERT INTO `complaints` (`id`, `UserID`, `BarangayID`, `CNum`, `CAddress`, `RAddress`, `Mdate`, `RDate`, `CNames`, `RspndtNames`, `CDesc`, `Petition`, `ForTitle`, `Pangkat`, `CType`, `CStatus`, `CMethod`, `IsArchived`, `seen`) VALUES
-(103, 109, 74, '001-227-0124', NULL, NULL, '2024-01-05', '2024-01-10', 'Aileen Bagui', 'Chloe Joy Baris', ' Hindi pag babayad ng utang', ' Gusto ko po makausap ang aking inirereklamopara malaman ko kung papano sya makakabayad ng nahiram nyang pera', 'collectionofmoney', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(105, 110, 76, '2024-2-11', NULL, NULL, '2024-03-10', '2024-01-23', 'Anabel Aquino', 'Cristina M. Talamo', 'Ako po si Anabel Aquino na inirereklamo si Cristina M. Talamo ng hindi pagbabayad ng utang.', 'Mabayaran niya ang kanyang utang', 'HindiPagbabayadSaUtang', '', 'Others', 'Settled', 'Mediation', 0, 0),
-(107, 110, 76, '2024-1-01', '12746 O.B. Purok 1, Mayondon Los BaÃ±os, Laguna', 'O.B. Purok 1, Batong Malake, Los BaÃ±os, Laguna', '2023-12-26', '2023-12-26', 'Gerald Allan Raminto, Gernaldo V. Raminto, Gerardo V. Raminto', 'Jayvee Belencio', ' Ako si Gernaldo V. Raminto natungo sa tanggapan ng Barangay Batong Malake upang ireklamo si Jayvee Belencio dahil sa pagpukpok niya ng bangko sa ulo ng kapatid ko na si Gerald Allan Raminto noong December 25, 2023 mga bandang 1:30 ng umaga. Ang Kapatid k', ' Gusto namin siya makaharap sa tanggapan ng Barangay Batong Malake upang mapagusapan ang nangyaring insidente at sagutin niya ang gastusin sa ospital ng aking kapatid.', 'PinukpokNgBangkoSaUlo', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(108, 110, 76, '2024-1-02', 'Sitio Villegas, Batong Malake, Los BaÃ±os, Laguna', 'Sitio Villegas, Batong Malake, Los BaÃ±os, Laguna', '2023-12-30', '2023-12-30', 'Carlo De Gula Maligalig', 'Nadie Casipong', ' Mga bandang 9:00 ng gabi, December 29, 2023 pumunta ako sa covered court para hanapin ang aking anak, hindi ko alam na party pala at nayakad ako ng isang tauhan at napaupo sa kanilang inuman. Mga bandang 1:30 am ay pinalo ako sa ulo ng bote at hinataw ng', ' Gusto ko na magharap kami sa tanggapan ng Barangay upang pagusapan at sagutin ni Nadie Casipong ang aking magagastos sa aking pag-papagamot.', 'PaghatawNgBoteSaUlo', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(109, 110, 76, '2024-1-03', '0601 Dangka St., Ilaya Bayog, Los BaÃ±os, Laguna', 'Western Union, National Highway, Batong Malake, Los BaÃ±os, Laguna', '2024-01-08', '2024-01-08', 'Leonardo Tamisin Jr.', ' Jose Xavier B. Gonzales, Shirley Bartilez', ' Ako si Leonardo Tamisin Jr. nagtungo sa tanggapan ng Barangay Batong Malake, Los Baï¿½os, Laguna. Nais ko ireklamo ang empleyado ng Western Union dahil sa pekeng pera na naibigay sa akin nung ako ay kumuha ng ayuda para sa Farmers. P5,000.00 ang nareceiv', ' Nais ko siya makaharap sa tanggapan ng Barangay upang makipglinawan sa aking reklamo.', 'PagkuhaNgP5000AyudaParaSaFarmersNaMayNahalongP1000NaPeke', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(111, 110, 76, '2023-1-02', 'Jamila Apartment, Emerald St., Batong Malake, Los Baños, Laguna', 'Sitio Villegas, Batong Malake, Los Baños, Laguna', '2024-03-23', '2023-01-08', 'Patrick John M. Chui', 'Raymond Mahipos / Darwin Mahipos', 'Ako po ay inaya na makipagsuntukan ni Raymond Mahipos bandang 12:00 am ng gabi ng Enero 8, 2023, kasama niya si Darwin Mahipos at mayroon pang isang hindi kilalang lalake na may hawak na patalim. Ako po ay nabugbog at napuruhan ang ulo.', 'Gusto ko siyang makausap upang mapag-usapan ang nangyaring pambubugbog sa akin at siya ay mapanagot.', 'Pambubugbog at Akmang Pananaksak', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(112, 110, 76, '2023-1-03', '8800 Gazal Compound, Batong Malake, Los Baños, Laguna', 'Gazal Compound, Batong Malake, Los Baños, Laguna', '2024-03-23', '2023-01-16', 'Gloria G. De Peralta', 'Mark Anthony G. Melchor', 'Si Mark Anthony Melchor ay nagwala dahil lang sa nakasara ang aming gate sa compound, dahil dito kung ano-ano ang sinabi niya sa akin na masasakit na salita.', 'Dahil dito gusto ko siyang makaharap upang magpaliwanag sya kung bakit ako sinabihan ng mga masasakit na salita.', 'Pagwawala dahil sa nakasarang gate', '', 'Others', 'Settled', 'Mediation', 0, 0),
-(113, 110, 76, '2023-1-04', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', '2024-03-23', '2023-01-18', 'Helen P. Garbanzos', 'Roberto Monterey', 'Nagpunta ako dito upang ipatala si Roberto Monterey dahil pinapahiya niya ako at minumura kahit saan niya ako makita dahil ako ay may utang sa kanya.', 'Gusto ko siyang makausap upang makipaglinawan sa maayos kong pagbabayad at matigil ang pagpapahiya at pagmumura niya sa akin.', 'Panghihiya dahil sa Utang', '', 'Others', 'Settled', 'Mediation', 0, 0),
-(114, 110, 76, '2023-1-05', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', '2024-03-23', '2023-01-18', 'Arrabelle S. Marcos', 'Helen P. Garbanzos', 'SI Helen Garbanzos ay may utang sa akin na halagang Php10,300.00 noon pang taong 2019. Hanggang ngayon ay di pa rin nya ito binabayaran.', 'Dahilan, kaya gusto ko siyang makausap para makipaglinawan kung kailan niya ako mababayaran.', 'Perang Hiniram na hindi Ibinalik', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(115, 110, 76, '2023-1-06', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', '2024-03-24', '2023-01-18', 'Arlene P. Miranda', 'Helen Garbanzos', 'Kaninang umaga, kami ay nagkaroon ng pagtatalo ni Helen Garbanzos na aking kapitbahay dahil ipinagkakalat niya na ako ay pokpok.', 'Dahil dito, gusto ko siyang makaharap at mag paliwanag siya sa akin kung bakit niya ipinagkakalat na pokpok ako.', 'Pagkakalat ng Tsismis', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(116, 110, 76, '2023-1-07', 'Danka, Barangay Bayog, Los Baños, Laguna', 'Jamboree Site, Batong Malake, Los Baños, Laguna', '2024-03-24', '2023-01-23', 'Ronald Tayson / Beverly Garcia', 'Anthony Galla', 'Habang kami ay pauwi na at nakasakay sa aming motor, nagulat kami nang may mabilis na bumangga sa amin mula sa likuran, dahilan upang kami ay tumilapon pati na rin ang aming bitbit. Nangyari ito ngayong araw at kami ay nagpatingin sa center bago pumunta d', 'Guto ko siyang makausap, upang mapagusapan ang nangyari sa amin.', 'Aksidenteng Banggaan', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(119, 110, 76, '2023-3-14', 'Grove St., Barangay Batong Malake, Los Baños, Laguna', '10528 Grove St., Barangay Batong Malake, Los Baños, Laguna', '2023-03-06', '2023-03-06', 'Bryan Morales', 'Cynthia O. Labita', 'Kahapon March 5, 2023, Bandang 9:00 am, si Cynthia Labita ay kung ano ano ang masasamang isinisigaw sa labas ng aming bahay, nag eeskandalo siya at kami ang pinupuntirya niya sinasabihan ko siya na tumigil ngunit tuloy parin siya sa pageeskandalo.', 'Dahil dito, ako po ay lumapit sa inyong tanggapan upang makausap at maipatawag siya.', 'Pag E-eskandalo', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(120, 110, 76, '2023-1-01', '175 Silangan, Barangay Bayog, Los Baños, Laguna', 'Lopez Avenue, Batong Malake, Los Baños, Laguna', '2024-03-25', '2023-01-02', 'Joey D. Mercado', 'Maria Cristina Macario', 'Ang aming inuupahang tindahan ay nabangga ni Maria Cristina Macario. Dahilan para ito ay masira at maperwisyo ang aming mga tinitindang pangkabuhayan. Kami ay sarado mula nang nangyari ang insidente hanggang sa mga oras na ito.', 'Hinihiling namin na panagutan ni Maria Cristina Macario ang aming daily income at kasama na rin ang mga pasweldo namin sa aming manggagawa. simula ng nangyari ang insidente hanggang sa ngayon kami at sarado.', 'Nabanggang Tindahan', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(121, 110, 76, '2023-2-08', '10633 Mint St., Demarces Subd., Batong Malake, Los Baños, Laguna', 'Demarces Subd., Batong Malake, Los Baños, Laguna', '2024-03-25', '2023-01-30', 'Gabby Jesena Lazaro', 'Obet Polintan & Grace Polintan', 'During the recent survey of Bagnes Surveying Office, the surveyor confirmed that their property took advantage of our adjoining property and built their residence as an extension of our building property. This is negligence on their part of civil code of ', 'I want to talk to them so that they know my concern.', 'Restaurant Enhancement of their Residential to our Space Property', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(122, 110, 76, '2023-2-09', '9064 Collado Apt., Batong Malake, Los Baños, Laguna', 'Collado Apt., Batong Malake, Laguna', '2024-03-25', '2023-02-05', 'Erlinda N. Collado ', 'Leni Anilao', 'Inirereklamo ko si Leni Anilao sa hindi niya Pagbabayad ng bill ng tubig, Meralco Bill at renta sa bahay simula noong May 2021 hanggang November 2022.', 'Dahil dito, gusto ko siyang ipatawag at makaharap upang mapag-usapan ang kanyang mga utang.', 'Hindi Pagbabayad sa Renta ng Bahay at Bill ng Tubig at Kuryente', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(123, 110, 76, '2023-02-10', 'Mayondon, Los Baños, Laguna', 'UP Los Baños, Laguna', '2023-02-10', '2023-10-02', 'Michael Nicole Ocon', 'Bryan V. Patio', 'Kaugnay ng insidente sa Tresto Bar noong February 1, 2023 na itinala sa incident report ng batong Malake, ako ay dumulog sa inyong tanggapan upang  pormal na maghain ng reklamo kay Bryan Patio na nanakit sakin habang kami ay nagkakasiyahan sa kanyang pana', 'Gusto siyang ipatawag upang papanagutin sa kanyang ginawa sakin.', 'Pananakit', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(124, 110, 76, '2023-02-11', 'Sta. Mesa, Calamba City', 'Lopez Avenue, Batong Malake, Los Baños, Laguna', '2024-03-25', '2023-11-02', 'Marilyn S. Moniejo', 'Rizalito Revilleza', 'Ako ay nagtungo sa Barangay Batong Malake upang humingi ng tulong upang maiharap si Rizalito Revilleza tungkol sa pamamahala sa Cartas Apt., ayon sa kanya sya  na daw  ang mamahala. Kung itoy totoo nakahanda akong iturn over sa kanya lahat ng matiwasay an', 'Gusto ko siya makausap upang malinawan ang usaping ito.', 'Usapin tungkol sa pamamahala sa carta\'s apartment', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(125, 110, 76, '2023-03-12', '10582 Batong Malake, Los Baños, Laguna', '10108 Batong Malake, Los Baños, Laguna', '2024-03-25', '2023-04-03', 'Cynthia Labita', 'Randy Punzalan', 'Noong March 03, 2023, tumaya si Randy Punzalan sa STL sa akin ng 19x13. Bago ito  isulat, tinanong ko pa siya kung 19x13 at sya ay tumango at umalis na. Noong lumabas ang 9x30 pinagpipilitnan na 9x30 daw ang kanyang tinayaan. kaya minabuti kong pumunta sa', 'Gusto ko siyang makaharap para pakipaglinawan', 'Pakikipaglinawan tungkol sa tumama sa STL', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(126, 110, 76, '2023-03-13', '10108 Batong Malake, Los Baños, Laguna', '10528 Batong Malake, Los Baños, Laguna', '2024-03-25', '2023-03-13', 'Randy Punzalan', 'Cynthia Labita', 'Ako ay tumaya kay Cynthia Labita sa STL kahapon March 3, 2023, bandang 4:40 ng hapon. ang aking taya ay 9x30 pero ang inilagay nya ay 19x13. Noong tumama ang 9x30 wala daw akong taya dahil 19x13 pala ang inilagay niya.', 'Dahilan kaya ako\'y nagtungo na sa barangay Batong Malake upang kami ay magharap upang mapag usapan ang usaping ito.', 'Pakikipaglinawan tungkol sa tumama sa STL', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(127, 110, 76, '2023-03-15', 'Grove, Batong Malake, Los Baños, Laguna ', 'Grove, Batong Malake, Los Baños, Laguna ', '2024-03-25', '2023-03-06', 'Bryan Morales & Grace Morales', 'Careene Del Rosario', 'Irereklamo namin si Careen Del Rosario dahil ayaw nya kami tigilan sa pagkakalat ng kung anu anong maling kwento sa amin. Kinompronta ko na sya tungkol dito ngunit sya pa ang galit. Pati ang aming personal na away mag-asawa ay vinivideo nya at ginagamit p', 'Gusto ko itong matuldukan, kaya naman ay humingi na nang tulong sa tanggapan para mayroong mamagitan sa amin.', 'Paninirang puri ng paulit-ulit', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(128, 110, 76, '2023-03-16', 'Grove, Batong Malake, Los Baños, Laguna ', 'Grove, Batong Malake, Los Baños, Laguna ', '2024-03-25', '2023-03-07', 'Cynthia Labita & Careen Del Rosario', 'Bryan Morales', 'Noong March 5, 2023, kami ay sinigaw sigawan ni Bryan Morales. Hind kami makalaban sa kanya dahil lalaki sya. Ibinalibag din niya ang kanilang pinto ng pagkalakas lakas. Hindi lang ito unang beses nangyari ito, paulit ulit niya kami pinopurwisyo.', 'Dahil dito kami ay dumulog sa inyong tanggapan upang siya ay maipatawag at makausap ng may nanamagitan.', 'Paninigaw', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(129, 110, 76, '2023-03-17', '9255 San Antonio, Los Baï¿½os, Laguna', '10189 Batong Malake, Los Baï¿½os, Laguna', '2024-04-17', '2023-03-09', 'Rowena ValeÃ±a`', 'Maria Teresa Clemeno', 'Ako ay may utang kay Maria Teresa Clemeno ng halagang Php 30, 000 at andami kong naririnig na masasamang salita na sinasabi niya sa ibang tao. Pati ang iba kong utang sa iba sinasama pa sa usapin.', 'Gusto ko siyang makausap tungkol sa mga masamang salita na sinasabi nya.', 'Paninirang puri dahil sa utang', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(130, 110, 76, '2023-03-18', 'Batong Malake, Los Baños, Laguna', 'AD Tech (Contractor)', '2024-03-25', '2023-11-03', 'Marvin Justin V. Gonzales & Mark Jonas V. Gonzales', 'Joseph Siryan', 'Biyernes ng umaga Feb. 17, 2023, may nakita akong white spots sa kotse, nagpaCarwash ako ng mga 11:30am. Hindi natanggal ang mga spots sa harap, gilid at bintana ng sasakyan', 'Dahil dito gusto kong makausapang management ng Robinsons Town Mall Los Baños, dahil sila ang building na nagpipintura. Gustokong makipaglinawan dahil sa nangyari sa kotse.', 'Tulo ng pintura sa kotse', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(131, 110, 76, '2023-03-19', 'Batong Malake, Los Baños, Laguna', 'Batong Malake, Los Baños, Laguna', '2024-03-25', '2023-03-11', 'Leodencio Liag & Lawrence Liag', 'Leticia Garcia', 'Nagpunta kami dito upang pag usapan ang paghahati ng property sa Liag Compound, UPLB, Batong Malake. Bago namin ilapit ang usaping ito sa inyong tanggapan ay sumangayos sina Leticia Garcia.', 'Gusto namin dito sa Barangay Batong Malake Pag usapan ang paghahati ng property para mayroong mamagitan sa amin.', 'Paghahati ng Property', '', 'Others', 'Settled', 'Conciliation', 0, 0),
-(132, 110, 76, '2023-03-20', 'Batong Malake, Los Baños, Laguna', 'Batong Malake, Los Baños, Laguna', '2024-03-25', '2023-03-13', 'Aniflor Minorca & Mylene Jimenez', 'Rojane E. Gatchalian', 'Si Rojane Gatchalian ay may utang sa akin noong taong 2020. Noong una nakakapagbayad naman siya ng maayos ngunit noong huli ay hindi na sya sa amin nagrereply, hindi rin siya nasagot sa tawag may balanse pa sya Php1,500.00', 'Nais namin siyang ipatawag para magkaroon ng linaw kung kailan nya mababayaran ang kanyang balanse.', 'Perang hinihiram na hindi binabayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(133, 110, 76, '2023-4-24', 'SITIO PAGKAKAISA, BARANGAY BATPNG MALAKE, LOS BAÑOS, LAGUNA', 'Collado Compound, Barangay Batong Malake, Los Baños Laguna', '2023-04-01', '2023-04-13', 'REMELLAS P. VENERAYON', 'Daryl L. Biag', 'Bandang 9:00am, ako ay pauwi na galing palengke, dumaan ako sa Collado Compd. dahil ito ay shortcut pauwi sa bahay. naglalakd ako ng bigla ako suntukin ni Daryl Biag. Ako ay natumba nung tatayo ako ay dun na ako gumanti. Hanggang sa inawat na kami. Ako ay', 'Dahil dito gusto ko siyang makaharap at pananagutin sa ginawa niya sa akin.', 'Panununtok sa hindi malaman na dahilan', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(134, 110, 76, '03-2023-21', 'Taal ST. Barangay Batong Malake, Los Baños, Laguna ', ' SITIO PAGKAKAISA, BARANGAY BATONG MALAKE, LOS BAÑOS, LAGUNA', '2023-03-21', '2023-03-21', 'Mylene V. Jimenez  /  Aniflor C. MInorca', 'Mary jane M. Gatchalian', 'Si Mary jane Gatchalian ay mayroong hiniram na pera sa amin na nagkakahalaga ng Php 5,000, ngunit hindi na nya kami binayaran ang oerang hinram nya ay noon  pang taon  6, 2020', 'Dumulong na kami dito sa inyong tanggapan upang maipatawag at makausap namin siya tugkol sa kanyang perang hiniram.', 'Perang hiniram na hindi binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(135, 115, 1, '01-000-0424', 'Masili ', 'Masili', '2024-09-17', '2024-04-01', 'Jayson Cuason', 'Popoy Kaloy', 'Nagkasinitan sa basketball kaya nagkasuntukan', 'Ipagamot at magbayad sa pinsala', 'Nagkasuntukan', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(136, 110, 76, '03-2023-22', 'Sitio Riverside Barangay Batong Malake, Los Baños, Laguna', 'Sitio Riverside Barangay Batong Malake, Los Baños, Laguna', '2023-03-20', '2023-03-20', 'Richard Eduarte  / Frederick Gavanes /  Benjie De Leon /  Gemilliano Ramos Sr.  / Rodrigo Gavanes', 'Orlando Macam', 'Si Orlando Macam ay inerereklamo namin dahil kami ay pinagbabantaan na oras na kami daw ay makita, Kami daw ay papatayin nya. Nagagalit Sya Dahil Hindi Sya napayag sa oras ng bukas at sara ng gate ng UPLB. Kaya sya ay laging nagwawala', 'Dahilan para kami ay pumunta dito sa barangay upang sya ay makaharap at makausap.', 'Paulit ulit na pagwawala at pagbabanta', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(137, 110, 76, '03-2023-23', 'Jamboree site, Batong Malake, Los Baños, Laguna.', 'Jamboree site, Batong Malake, Los Baños, Laguna.', '2023-03-31', '2023-03-31', 'Zenaida M. Cabonce', 'Rhodora P. Talagtag', 'Inirereklamo ko si Rhodora Talagtag sa Kadahilanang sobra na po ang paninira sa akin sa SNSJ groupchat na nababasa ng lahat ng ebidensya nito ay mga screenshots na pinagsasabi nya sa aming groupchat.', 'Dahil dito, Nais ko pong makausap at makaharap si Rhodora dahil sa ginagawa nyang pagkakalat ng tsimis.', 'paninira at pagkakalat ng tsismis', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(138, 110, 76, '04-2023-25', 'Lot 4 Blk 2. Bay Gardens Subdivision, Bay Laguna,', '9001, Batong Malake, Los Baños, Laguna.', '2023-04-23', '2023-04-23', 'Anna T. Mendoza', 'Gino B. Villegas', 'Si Gino Villegas ay Humiram sakin ng PhP. 9,000 noong March 15 2023 at nangakong ibabalik sa katapusan ng March. Noong dumating ang March 31, Humingi po sya ng Palugit na isang Linggo. Pumayag ako Ngunit Dumating ang araw na sinabi nya  hindi pa rin sya n', 'Ako po ay Dumulog sa tanggapan nyo upang sya ay makausap, Para malaman kung bakit hindi na sya nasagot', 'hiniram na pera na hindi ibinalik', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(139, 110, 76, '04-2023-26', 'Bangkal Ext. San Antonio. LBL', 'Sierra Madre st., Batong Malake,', '2023-04-23', '2023-04-23', 'Priyashanta Nuñez', 'Louis Leaño', 'Nagtungo Ako sa Barangay upang ipatalq ang insidenteng nangyari sa akin na ako ay hinaras ni Louis Leaños. Dati ko syang boyfriend at boss din at the same time. Gustp ko na pong matigil ang panghaharas nya sa akin', 'Dahil dito gusto ko syang makausap at makaharap upang matigil na ang panghaharas nya sa akin.', 'Pang haharas', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(140, 110, 76, '2023-5-27', '10804 Sitio Riverside, B.Malake LBL', 'Sitio Riverside, B.Malake LBL', '2023-05-01', '2023-05-01', 'Arabelle S. Marcos ', 'Jenelyn Geronda / Loid Castillo', 'Sina Jenelyn Geronda at Loid Castillo ay nagkaroon ng utang sa akin noong October 30, 2022 ng halagang PhP 12,100 at hanggang ngayon ay hindi pa din nag babayad', 'Dahil dito Dumulog ako sa tanggapan ng Batong Malake upang sila ay maipatawag at magkalinawan kung kailan sila mag babayad.', 'Perang hiniram na hindi ibinalik', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(141, 110, 76, '2023-5-28', 'Calamba Laguna.', 'Market site, Barangay Batong Malake.', '2023-05-07', '2023-05-07', 'Rico L. Monreal', 'Genesis K. Pajo', 'Ako si Rico Monreal na Taga Calamba Laguna ako po ay nagpunta dito sa Brgy. Batong Malake upang isumbong si Genesis Pajo dahil sa Pagbabanta nya sa akin', 'Gusto ko syang ipatawag upang pag pagpaliwanagin kung bakit ako pinagbabantaan.', 'pagbabanta', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(142, 110, 76, '2023-5-29', 'Mary mount, Brgy Anos', 'Market site, Barangay Batong Malake.', '2023-05-09', '2023-05-09', 'Joshua Manggale/Rene Recto', 'Hanna Patricia Galag/Bryle Jhoben Lacbay Lynon Legisma/Timsanates/ Jamir Sombillo', 'Ang aming motor ay nagkaroon ng damage dahil sa isang rumble ng mga grupo ng aming inerereklamo', 'Gusto ko silang makausap upang mapagusapan ang naging damage ng aking motor', 'Nasirang motor dahil sa Away', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(143, 110, 76, '2023-5-30', 'Calauan Laguna', '9238, Barangay Batong Malake.', '2023-05-22', '2023-05-22', 'Rizamae Aguilar', 'Anjo Dela Paz', 'Si Anjo Dela Paz ay pagkakautang sa akin ng PhP 7,000 nais ko syang makaharap at makausap', 'Gusto ko syang maipatawag upang malinawan kung kailan ako babayaran', 'Hiniram na pera na hndi ibinalik', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(144, 110, 76, '2023-5-31', 'Sitio Maligaya, San Antonio Los Baños Laguna', 'Grove st, Barangay Batong Malake.', '2023-05-29', '2023-05-29', 'Carlo Alah', 'Michael Veron', 'Ako si Carlo Alah na taga Sitio Maligaya Barangay San Antonio. Nagtungo ako sa Brgy. Batong Malake, Hingil sa pananakit at panununtok sa akin ni Michael Veron ny, Taga Grove Batong Malake , Sa nangyaring ito ako ay nagpamedical may mga resetang gamot', 'Gusto ko syang makausap upang siya ay panagutin sa kanyang ginawa sa akin', 'Pananakit / Panununtok', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(145, 110, 76, '2023-6-32', '11456 Jamboree site L.B.L.', '10955 kanluran st. UPLB los Baños Laguna', '2023-05-31', '2023-05-31', 'Delia Domdom Tamayo', 'Bianca Alinq P. Saguin', 'Nagtungo ako sa Barangay Batong Malake, Upang Ireklamo si Bianca Saguin, Dahil sa aksidenteng nangyari sa akin', 'Nais kong makaharap si Bianca Saguin upang makausap sya dahil sa aksidente', 'Pakikipag linawan tungkol sa nangyaring Aksidente', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(146, 110, 76, '2023-6-33', 'Anos, Los Baños Laguna', 'Kanluran RD, UPLB Barangay Batong Malake Los Baños ', '2023-06-05', '2023-06-05', 'Ronaldo A. Banaticla', 'Jaime S. Reyes', 'Dumulog ako dito sa barangay Batong malake, Dahil Ako ay hinamon ng suntukan at tinakot ni Jaime Reyes', 'Dahil dito, Gusto ko syang makausap upang ipaliwanag nya kung bakit sya nagagalit sa akin', 'Paghahamon ng suntukan at pananakot', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(147, 110, 76, '2023-6-34', 'Blk.2 Lot 17 Mangga st.  Barangay san antonio Los Baños Laguna.', '10455 Grove st. Lopez Ave Batong malake', '2023-06-05', '2023-06-05', 'Edna N. Vacarizas ', 'Miguel Tecson', 'Si Mr. Miguel Tecson ay aming Boarder Ngunit ayaw na namin sya Irenew at magpatuloy pa sa pag upa sa amin', 'Nais namin sya makausap upang mapayapa syang umalis sa aming Boarding House', 'Mapayapang pagpapaalis sa aming tenant', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(148, 110, 76, '2023-6-35', 'Marymount Brgy. Anos LBL', 'Riverside. Lopez Ave Batong malake', '2023-06-06', '2023-06-06', 'Monina Gazelle Charina B./Carandang, Juan Miguel', 'Ryan Consibido', 'Mga 6:00 pm nakita ko si Ryan Consibido na nasa lobby ng Physci BLDG. Lumapit po sya sa amin. Hinarangan ko po sya at sinabing wag lumapit sinapak po nya ako sa ulo sya po ay tumakbo at sinundan namin nakita po namin  sya sa parking sa aming kotse sinaksa', 'Dahil dito gusto ko syang ipatawag upang makausap at pananagutin sa mga ginawa nya', 'Pananakit at Pambubutas ng kotse', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(149, 110, 76, '2023-6-36', '5123 Pulo, Cabuyao, Laguna', 'Purok 8, Forestry', '2023-06-09', '2023-06-09', 'Meliza R. Santos', 'Jefferson T. Salac', 'Si Jefferson T. Salac ay may pagkakautang sa akin halagang PhP 7,000 hanggang sa ngayon ay hindi pa rin nya ako binabayaran', 'Dahil dito gusto ko syang makaharap upang pag-usqpan kung kailan nya ako babayaran', 'Pakikipag linawan tungkol sa nahiram na  Pera', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(150, 110, 76, '2023-6-37', 'Jamboree site.', 'Jamboree site', '2023-06-19', '2023-06-19', 'Kreslelyn Narvaez', 'Jennifer Gonzales', 'Bandang alas 8:00 pm June 19 2023 Pumasok si Jennifer sa kwarto naming mag asawa at kung anu ano sinabe tungkol sa akin, Around 10pm June 19 nag away po kaming mag asawa at nakialam sya kung anu ano ang sinabe at sinigawan ako sinampal nya ako ng ilang be', 'Gusto ko syang makausap para matigil na ang ginagawa nya sakin', 'Pagsasabi ng masamang salita at pananakit', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(151, 110, 76, '2023-6-38', '9064 Batong Malake', '9060 Batong Malake', '2023-06-21', '2023-06-21', 'Adora Collado', 'Marcial Mupal', 'June 13 ng gabi may inuman sa tindahan nya sinabihan ko sya na hinaan ang videoke at sigawan nila dahil may mga bata at student. Bigla syang sumigaw at nag wala nagmura lumabas sa bahay at nag sisigaw kung anu ano ang sinasbae halos lumuea ang mata sa gal', 'Dahilan nito gusto na namin sya paalisin sa inuupahan upang hindi na maulit ang ganun pangyayare', 'Pag- iingay at Pagwawala', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(152, 110, 76, '2023-7-40', 'Riverside, Batong Malake, LBL', 'Riverside.Batong Malake.', '2023-07-05', '2023-07-05', 'Rebecca G. Licaros ', 'Arlene Perez / Aljur Q. Garbanzos', 'Si Arlene Perez ay kumuha sa akin ng bigas na nagkakahalaga ng PhP 1,200 noong nakaraan May 11, 2023 ngunit hanggang  ngayon ay hindi na nya ito binabayaran ang itinuturo nyang mag babayad ay ang kanyang kinakasamang si aljur Garbanzos', 'Dahil dito Gusto ko  silang makausap at malinawan kung kailan nila ako babayaran', 'Hindi binayaran na bigas', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(153, 110, 76, '2023-7-41', '9797 Jade st.  Batong Malake', 'Revilleza Compound Batong Malake', '2023-07-10', '2023-07-10', 'Aida Biglete ', 'Untoy Patoc', 'Ako ay nagpagawa ng elektrikpan kay untoy patoc ako ay nagbigay ng PhP 1,000 para sa pyesa kasama na rin ang Repair Ngunit hindi nya ako binalikab', 'Gusto ko syang makaharap at maibalik sa akin ang electrikpan na maayos at gumagana ', 'Pakikipaglinawan Tungkol sa Pinagawang ELectric Fan', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(154, 110, 76, '2023-7-42', '716 Purok 7   Brgy. Malinta Los Baños', 'Sitio Pagkakaisa Batong Malake', '2023-07-11', '2023-07-11', 'Nestor Monte Castro Frondoso', 'Marjorie Joy Eroles', 'Si Joy Eroles ay  utang sa akin Halagang PhP 4,300 ngunit mula ng humiram sya sa akin ay hindi na sya nag babayad', 'Gusto ko syang makausap para malaman kung kailan sya mag babayad sa akin', 'Perang Hiniram na hindi Binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(155, 110, 76, '2023-7-39', 'Blk. 3 lot 2 Everlasting St. TS. Las Piñas  city', '9304 -B Mt. Taal St. Umali subd. Barang Batong Malake.', '2023-07-03', '2023-07-03', 'Russel Sabandal', 'Cesar Grajo', 'Ako po ay nagrereklamo ako ay nag rent kay Mr. Grajo nagpa reserve ako noon June 5, 2023 Nag Txt sya na due date ko daw po na hindi pa po ako nakakalipat ang usapan ay ibibigay ko ang 1month sa down payment pag ako ay nakalipat na.', 'Dahil dito gusto ko syang makaharap upang makipaglinawan may Mr. Gajo', 'Pakikipaglinawan Tungkol sa Reservation Fee ng Apartment', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(156, 110, 76, '2023-7-43', 'Bagong Kalsada', 'Jamboree site', '2023-07-11', '2023-07-11', 'Christian N. Navarez/kreslelyn N. Navarez', 'Marina Gonzales', 'Si Marina Gonzales ay binili ang aming Tricycle ngunit may balanse pa itong PhP 5.000 Hanggang ngayon ay hindi pa nya ito nababayaran', 'Nais ko syang makausap upang ako ay kanyang bayaran', 'Usapin tungkol sa Tricycle na ibinenta', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(157, 110, 76, '2023-7-44', 'Faculty village Batong Malake', 'Faculty Village Batong Malake', '2023-07-17', '2023-07-17', 'Armain Doñasales / Patricia Marie Villacetan', 'Ritchee Yee', 'Si Ritchee Yee ay ilang beses na naming sinasabihan na wag mag park sa tapat ng aming bahay dahil ito ay gagamitin na namin kagabi, Nilagyan na namin ito ng no parking na sign ngunit pag uwi namin ito ay sira sira na pati na rin ang aming nga halaman', 'Gusto namin sya makausap at pagpaliwanagin tungkol sa kanyang ginawa', 'Pakikipaglinawan Tungkol sa Parking at Paninira ng SIgnage at Halaman', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(158, 110, 76, '2023-7-45', 'Brgy. Putho Tuntungin Los Baños ', 'Lopez Ave. Brgy Batong Malake ', '2023-07-19', '2023-07-19', 'Isidra Concepcion', 'Maria Belen Quizon', 'Si Maria Belen Quizon ay may pagkakautang sa akin hanggang ngayon ay hindi pa nya ako Binabayaran', 'Gusto ko sya makausap para makipagpalinawan sa kanya kung kailan nya ako babayaran', 'Perang Hiniram na Hindi Binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(159, 110, 76, '2023-8-46', 'Riverside Batong Malake ', 'Riverside Batong Malake ', '2023-08-02', '2023-08-02', 'Rebecca Licaros ', 'Helen Garbansos', 'Si Helen Garbansos ay may pagkakautang sa akin nang  Nagkakahalagang Php 2,533 Hanggang Ngayon ay di pa nya binabayaran', 'Gusto ko syang makausap upang malaman kung kailan nya ako babayaran', 'Perang hiniram na Hindi Binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(160, 110, 76, '2023-8-47', ' Batong Malake , Los Baños Laguna', '10809 Sitio Riverside Batong Malake ', '2023-08-07', '2023-08-07', 'Roland E. Martinez /Maria Clarissa M. Adovas ', 'Jovelyn O. Corda ', ' Nagtungo ako dito sa Barangay Batong Malake Upang humingi ng tulong na makausap si Jovelyn Corda dahil ang aming Dinadaanan patungo sa bahay namin ay pag aari nya ngunit ito ay babakuran nya', 'Dahilan nito ay wala kaming madadaanan kaya gusto ko sya makausap Upang makiusap na baka kami ay mabigyan nya ng kahit kapirasong madadaanan', 'Pakikipag linawan Tungkol sa Itinayong bakod', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(161, 110, 76, '2023-8-48', ' 10809 Sitio Riverside Batong Malake ', ' Batong Malake ', '2023-08-07', '2023-08-07', 'Jovelyn O. Corda', 'Roland E. Martinez / Maria Clarissa', 'Sina Roland Martinez at Maria Clarissa Adouas ay aking inirereklamo dahil sa pagsisiga nila at ang isa pa ay ang kanilang mga aso', 'Gusto ko silang makaharap upang makipaglinawan', 'Pakikipaglinawan tungkol sa aso at uso ng siga', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(162, 110, 76, '2023-8-49', 'Purok 6 Riverside Batong Malake ', 'Riverside  Batong Malake ', '2023-08-09', '2023-08-09', 'Arlene P. Miranda', 'Angelo Garbansos ', 'Si Angelo Garbansos ay nagbanta noong linggo ng gabi August 6, 2023 Hindi na daw bale na makulong sya bastaapatay lang daw ako Hindi ako makauwi sa amin dahil sa pag babanta nya noong uns ako ay minumura lang  nya hanggang sa sya ay nag wala na', 'Dahil dito gusto ko siyang kausapin na itigil na ang ginagawa nya sa akin', 'Pagbabanta', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(163, 110, 76, '2023-8-50', 'Batong Malake', 'Batong Malake', '2023-08-13', '2023-08-13', 'Jessica Caraga', 'Verminda Santos', 'Ako ay nagpunta dito sa Barangay Batong Malake upang Ireklamo si Verminda Santos Dahil sa parking ng kanyang mga Customer', 'Dahil dito gusto ko siyang makausap upang ang parking namin ay hindi na magamit ng kanilang Customer.', 'Usapin tungkol sa Parking', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(164, 110, 76, '2023-9-51', '9172  sitio pagkakaisa  Brgy, Batong Malake', '9172 sitio pagkakaisa ', '2023-08-30', '2023-08-30', 'Reinna M. Salazar', 'Mary Jean Poche/Daria Casale', 'Nag punta ako dito sa brgy upang ipaalam ang hindi pagbabayad ng renta at hindi pagbabayad ng mga bills ni Mary Jean Poche at Daria Casale', 'Dahil dito, Gusto ko sila makausap para maisettle and mga bayarin nila', 'pagpapaalis sa apartment sa maayos na paraan', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(165, 110, 76, '2023-9-52', 'Umali subdivision barangay batong malake ', 'Umali subdivision barangay batong malake ', '2023-09-03', '2023-09-03', 'Abigail Mendoza ', 'Carla delos santos ', 'Ako si abigail Mendoza , nagtungo ako dito sa Brgy, upang ireklamo si carla delos santos dahil sa mali nyang kinikwento sa aming mga kapitbahay.', 'Gusto ko siyang makaharap, para itigil na nya ang mga maling kinikwento nya sa mga kapitbahay.', 'Pagkalat ng tsismis', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(166, 110, 76, '2023-9-53', 'Diamong Ext., Batong malake ', 'Sitio Sipit Barangay Batong malake', '2023-09-10', '2023-09-10', 'Ayo Beth D. Pena / Beth Dumagat / Anne D. Vallejera / Lorna Escobin / Andres Dumagat', 'Carlos Aquino / Dexter Cabahuy', 'Si carlos Aquini at Dexter Cabahug ay gustoilong makausap tungkol sa basura ng sitio sipit Homeowners, Ang barusahan kasi nila ay nasa gilid ngaming bahay ito ay nagdudulot ng mabahong amoy.', 'Dahil dito gusto namin makausap sila para magawaan ng paraan at maging maayos ang basurahan.', 'Pakikipaglinawan Tungkol sa Basura', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(167, 110, 76, '2023-9-55', 'BRGY. bayog Los baños, Laguna', 'Sitio Pagkakaisa, Batong Malake Los Baños, Laguna ', '2023-09-18', '2023-09-18', 'Joshua Angeles / Mary grace Vargas ', 'Jed Jordan Oca / Bernalyn Oca ', 'Ako si Joshua Angeles taga BRGY. Bayog ,nagkakaroon ng aksidenteng Banggaan ,at ako po ay handang makipag- usap sa kanila.', 'dahil sa aksidenteng nangyari gusto kong makaharap sila at makausap.', 'Aksidenteng Banggaan', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(168, 110, 76, '2023-9-56', 'OB Purok , Barangay Batong malake ', 'OB Purok , Barangay Batong malake', '2023-09-23', '2023-09-23', 'Mark Toledo ', 'Kieser Maranan ', 'Ako si Mark Toledo , ako ay pinagbabantaan ni kieser Maranan pinagbabantaan nya ako sa hindi ko malaman na dahilan.', 'Gusto ko siyang makausap para malaman ang dahilan kung bakit nya ako pinagbabantaan.', 'Pagbabanta', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(169, 110, 76, '2023-9-57', 'El Danda ST. Barangay Batong Malake ', 'El Danda ST. Barangay Batong Malake', '2023-09-25', '2023-09-25', 'Rolando Manaig ', 'Kenneth Villegas ', 'Ako si Roalando Manaig ako ay taga El Danda Batong Malake, Ako ay sinuntok ni Kenneth Villegas.', 'Dahil dito gusto ko syang ipatawag at makausap.', 'Panununtok', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(170, 110, 76, '2023-10-59	', 'Batong Malake L.B.L.', 'Batong Malake L.B.L.', '2023-10-01', '2023-10-01', 'Rolando Aguirre ', 'Bessi Alforja', 'Si Bessie Alforja ay mayroong pagkakautang sa akin sya ay may balance pa sa akin hanggang ngayon ay hindi pa rin nya ako binabayaran', 'Gusto ko syang makausap upang pag usapan ang kanyang balance', 'Perang hiniram na hindi Binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(171, 110, 76, '2023-10-60', 'Batong Malake L.B.L', 'FO Santos Batong Malake L.B.L.', '2023-10-01', '2023-10-01', ' Amador  A Cube ', 'Alvin Jocson Cube', 'Si Alvin Jocson Cube ay aking inerereklamo dahil ginamit nya ang pangalan ko sa pagkakabit ng internet.', 'Gusto ko syang makaharap at makausap kung bakit nya ginamit ang pangalan ko.', 'Paggamit ng pangalan sa pagkakabit ng internet', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(172, 110, 76, '2023-10-61', '9588 Sitio sipit Batong Malake L.B.L.', '34 Revilleza CompoundBatong Malake L.B.L.', '2023-10-03', '2023-10-03', 'Violeta A. Casubha', 'Christopher N. Escobin ', 'Si Mr, Christopher Escobin ay umupa sa akin Ngunit nung sya ay umalis Mayroon syang utility bills na hindi nabayaran', 'Gusto ko na ipatawag sya upang pag usapan ang naiwan utang sa mga bills.', 'Pakikipaglinawan sa renta at kontrata', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(173, 110, 76, '2023-10-62	', '9635 Taal Extension Batong Malake L.B.L.', 'Batong Malake L.B.L.', '2023-10-03', '2023-10-03', 'Ma. Laarni Ocampo /Alliyah Louise C. Ocampo / Ericson Salcedo ', 'Alfred Lorenze Ocampo /Giohsua Opulencia/ James Ashley Quinta/ Adrian Llagas', 'Si Alfred Ocampo at ang kanyang mga kaibigan ay bisita ng aking anak, Nang biglang si Alfred ay pang nagwawala na at inaaway ako pati ang aking kinakasama dahilan ng kaguluhan sa party ng aking anak.', 'Dahil dito gusto kong magpaliwanag si Alfred at ang kaniyang mga kaibigan kung bakit nagkaroon ng kaguluhan.', 'Panggulo Pananakit at Pagbabanta', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(174, 110, 76, '2023-10-63', 'Ilag Compound Batong Malake L.B.L.', 'Ilag CompoundBatong Malake L.B.L.', '2023-10-08', '2023-10-08', 'Kyla mae P. Simbajon/Gayle Therese L. Parco/Ma. Jillian L. Parco/Carla S. Redondo', 'Letticia Garcia/Virgilia Conception/ Amilene Pua ', 'Nais naming mabawi ang aming deposit na nagkakahalaga ng Php 8,000 kay Virgilia  Conception dahil yung property ay naibenta na pala', 'Dahil dito gusto naming syang ipatawag upang makaharap at makausap', 'Pag bawi  sa deposit ng apartment', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(175, 110, 76, '2023-10-64', 'Sitio Riverside Batong Malake L.B.L.', 'Sitio Riverside Batong Malake L.B.L.', '2023-10-10', '2023-10-10', 'Irene p. Saguin', 'Arlene Garbanzos ', 'Ako ay bumili ng washing machine kay Arlene Garbanzos at ako ay nakabayad ng buo ngunit gusto nya tong kunin bawiin noong ako ay hindi pumayag dahil gusto kong ibalik din nya ang bayad ko ay sinabihan nya ako ng Burikat', 'Gusto kong linawin ang sinabi nya gusto ko syang makaharap', 'Pakikipaglinaw tungkol sa washing machine', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(176, 110, 76, '2023-10-65', '11145 Angeles AT, Mayondon', 'Bangkal Ext. Batong Malake L.B.L.', '2023-10-10', '2023-10-10', 'Micah M. Santos', 'Sarah Himongala ', 'Si Sarah Himongala ay nagkakalat ng maling impormasyon ako daw ay hatid sundo sa bahay ni John  Michael Mahipos at ito ay ikinagalit ng aking asawa', 'Gusto kong makaharap at makausap si Sarah upang makipaglinawan', 'Pagkakalat ng maling impormasyon', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(177, 110, 76, '2023-10-66	', '158 Barangay Malinta LBL', 'Batong Malake L.B.L.', '2023-10-10', '2023-10-10', 'John Carlo T. Laurel', 'Jomari P. Mula Cruz 	', 'Ako si John Carlo T. Laurel, nagtungo ako dito sa brgy. Upang ipatala ang nangyari sa aking sasakyan nagasgasan ito ni Jomari P. Mula Cruz gusto ko sana sya makausap', 'Gusto ko makaharap upang pagusapan ang nagasgasan kong sasakyan.', 'Nasagasaan na sasakyan', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(178, 110, 76, '2023-10-67', '#57 Dona Aurora Up campus Batong Malake L.B.L.', 'Demarces subd.  Batong Malake L.B.L.', '2023-10-17', '2023-10-17', 'Rydz R Rivera', 'Dennis A.Servañez ', 'Ako si Rydz Rivera taga 57 Doña aurora UPLB. Ako po ay naaksidente sa daan ni dennis Servañez taga demarces subd.	', 'Dahil dito gusto ko syang makausap dahil sa nangyaring aksidente', 'Aksidente sa daan', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(179, 110, 76, '2023-10-68', 'Purok 6 Tuntungin Putho', '10336 lopez ave. Batong Malake L.B.L.', '2023-10-16', '2023-10-16', 'Rubylyn B. Pelagio', 'Einnor Lait ', 'Si Einnor A. Lait ay aking tauhan na taga 10336 Batong Malake Los Baños Laguna ako ay nawalan ng pera sa kaha s halagang 42,000', 'Gusto kong makaharap sa Einor upang makipaglinawan tungkol sa nawawalang pera sa kaha', 'Nawawalang pera sa kaha', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(180, 110, 76, '2023-10-69', 'Malinta Los Baños Laguna', 'Nuñez Compound Batong Malake L.B.L.', '2023-10-20', '2023-10-20', 'Elizamae C. Peligrina/ Prince Bary Peligrina', '	Alvin Montecillio', 'Ako si Elizamae Pelegria nanay ni Prince barry Peligrina ay nagpunta sa brgy hingil sa referee na si Alvin Montecillo Nuñez cmpd. Ayon sa aking anak ay inaabangan nito at pinagsisigawan.', 'Gusto ko makaharap ang referee na si Alvin Montecillo upang ipaliwanag nya bakit nya sinisigawan ang anak ko .', 'Pagaabang at pagtataas ng boses', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(181, 110, 76, '2023-11-70', 'Sitio Villegas  Batong Malake L.B.L.', 'Bungalo F. Dona Aurora UPLB Batong Malake L.B.L.', '2023-11-05', '2023-11-05', 'Rolando Maat', 'Monica Saez ', 'Ang aking motor N Maxiss, Matt black ay naatrasan at natumba ito ay nagkaroon ng mga gasgas at ito ay naatrasan ng kotse na minamaneho ng anak ni allen peter saez	', 'Gusto ko silang makausap upang maipaayos ang aking motor', 'Nasaging motor', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(182, 110, 76, '2023-11-71	', 'Purok 1 OB  Batong Malake L.B.L.', 'Purok 1 OB Batong Malake L.B.L.', '2024-04-02', '2023-11-07', 'Leni Reyes', 'Narciso Manigbas  ', 'Ako si Leni Reyes taga OB purok 1 batong malake ay hindi na matiis ang aso ni Narciso manigbas na taga OB purok 1 dahil sa paghahalukay ng basura ng aso nya at ito ay nagdudulot ng kalat s aming property at dahil dito ako ay pinagmumura nya at pinag banta', 'Gusto ko po syang makausap upang magpaliwanag bakit nya ako pinagmumura at pinagbantaan.', 'Pag mumura at pag babanta', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(183, 110, 76, ' 2023-11-72', '9010 Sitio Ulik Mabcanc Calauan', '11451 kanluran st. UPCO Batong Malake L.B.L.', '2023-11-13', '2023-11-13', 'Steven L. Ballesteros ', 'Abigail M. Natanauan', 'Si Abigail Natanauan ay may pagkakautang sakin sa halagang 4,307 Hanggang ngayon hindi pa sya nagbabayad', 'Dahil dito gusto ko sya makausap at makaharap', 'Peran hiniram na Hindi Binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(184, 110, 76, '2023-11-73', '9324 Lopez Ave.  Batong Malake L.B.L.', 'Manzano Apartments Batong Malake L.B.L.', '2023-11-14', '2023-11-14', 'Ingrid Bianca Manzano/Doris Manzano', 'Rene Paul Manzano ', 'Ako si Ingrid Bianca Manzano at Doris Manzano ay nagpunta sa Brgy upang ipaalam ang nangyari sa aming bakuran ang malimit na pagkakalat ng gamit sa sakop ng aming pwesto nagkakalat at palagi ang pang hahamit ni Rene Paul Manzano', 'Gusto naming syang makaharap at makausap para matigil na ang pagkakalat nito', 'Panghahamit', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(185, 110, 76, '2023-11-74', 'Manzano Apartments Batong Malake L.B.L.', '9324 Lopez Ave.  Batong Malake L.B.L.', '2023-11-14', '2023-11-14', 'Rene Paul Manzano', 'Ingrid Bianca Manzano/Doris Manzano/Marica Manzano/John Derry Manzano', 'Ako po si Rene Paul Manzano nagtungo ako dito sa brgy upang ipaalam ang pagbabanta paninirang puri nila Doris,Ingrid,Monica,John Deryl Manzano pati narin ang panlalait at pagsasalita ng hindi maganda sa akin at trespassing', 'Gusto ko silang makausap at makaharap upang ipaliwanag nila ang kanilang ginawa sa akin', 'Pagbabanta/paninirang puri/   pisikal na pananakit / verbal abuse at trespassing', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(186, 110, 76, '2023-11-75', '10813 sitio riverside.  Batong Malake L.B.L.', 'Sitio riverside  Batong Malake L.B.L.', '2023-11-19', '2023-11-19', 'Jenelyn Mayores Geronda', 'Romulo Dacuya ', 'Ang akin pamangkin ay nakagat ng aso nila Romulo Dacuya at ito ay pinadaka sa albularyo ngunit sabi ng albularyo ay dapat maturukan ang bata ngunit hanggang ngayon ay hindi nakikipag usap ang may ari ng aso', 'Gusto ko siyang makausap upang mapagusapan ang pag babayad sa gastos sap pag papaturok.', 'Nakagat ng aso ng kapitbahay', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(187, 110, 76, '2023-11-76', 'Sn. Antonio Los Baños Laguna', 'Sitio Villegas Batong Malake L.B.L.', '2023-11-21', '2023-11-21', 'Jayson S. Verdana', 'Bonifacio A. Igot Jr/Mariecris Plaza', 'Si Bonifacio Igot dahil sya ay may kulang pa sa akin na nagkakahalaga ng Php 40,550 hanggang ngayon hindi pa sya nakikipagugnayan', 'Dahil dito gusto ko syang makausap upang malaman kung kalian nya ako babayaran.', 'Hiniram nap era na hindi binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(188, 110, 76, '2023-12-77', '9929 katinglad st. villegas  Batong Malake L.B.L.', '0313 katinglad st. villegas  Batong Malake L.B.L.', '2023-12-03', '2023-12-03', 'Lizbeth T. Gonzales/Marianne M. Villanueva', 'Jerome S. Dela Cruz', 'Kami si Marianne Villanueva at Lizbeth Gonzales inerereklamo naming si Dela Cruz dahil sa pambabastos nya sa aming mga larawan ng walang paalam', 'Dahil dito gusto naming makausap si Jerome Dela Cruz upang pagpaliwanagin kung bakit binastos ang aming larawan', 'Pang aasar at Panghahamit', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(189, 110, 76, '2023-12-79', 'Enzos ramen Ruby ST. Batong Malake L.B.L.', 'Lopez Ave. Batong Malake L.B.L.', '2023-12-24', '2023-12-24', 'Emanuel G. Reyes', 'Christopher N. Escobin', 'Gusto kong ireport ang nagyari sa aking sasakyan kahapon nasagi ito ni Karyl Cabonce sya ay walang lisensya sya ay tauhan ni Christoper Escobin nagkaroon ng damage ang akin sasakyan', 'Gusto kong mabayaran nila ang gastos sa pagpapaayos ng aking sasakyan. Dahil hindi lahat ng gastos ay covered ng insurance', 'Sagian ng Sasakyan', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(190, 110, 76, '2023-12-80', 'UPCO. Batong Malake L.B.L.', '3196 Batong Malake L.B.L.', '2023-12-26', '2023-12-26', 'Andrew Esguerra', '	Jerick B. Eusebio', 'Si Jerick Eusebio ay inerereklamo ko siya ay may utang sa akin nagkakahalaga ng Php 1,000 hanggang ngayon ay hindi nya pa ako binabayaran.', 'Gusto ko syang makaharap upang ako ay kanyang mabayaran.', 'Pakikipaglinawan tungkol sa perang hiniram', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(191, 115, 1, '02-000-0424', 'tadlac', 'tadlac', '2024-04-15', '0000-00-00', 'Angel May L. De Guzman', 'Gina Gomez', 'Isang taon na hindi nakakapagbayad sa napagusapan na utang. Noong January 2023 nangutang siya ng limang libo sa akin, ipinangako niya na sa isang linggo pagkarating ng sahpd ng asawa ay magbabayad siya. Subalit ngayon ay taong 2024 na perohindi parin siya', 'magbayad ng utang ayon sa napagkasunduang araw. ', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(192, 115, 1, '03-000-0424', 'tadlac', 'tadlac', '2024-04-11', '0000-00-00', 'Erning Diamonddd', 'Popoy Kaloy', 'Isang taon na hindi nakakapagbayad sa napagusapan na utang. Noong January 2023 nangutang siya ng limang libo sa akin, ipinangako niya na sa isang linggo pagkarating ng sahpd ng asawa ay magbabayad siya. Subalit ngayon ay taong 2024 na perohindi parin siya', 'magbayad ng utang ayon sa napagkasunduang araw, nais kong singilin na may dagdag na tub si Mang Erning sapagkat ang due ng kanyang utang ay lagpas lagpas sa napagkasunduang araw. Ang napagkasunduan na bayad ay 15k ngunit nais ko siyang tubuan pa ng 10k pa', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(193, 115, 1, '03-000-0424', 'tadlac', 'tadlac', '2024-04-11', '0000-00-00', 'Erning Diamonddd', 'Popoy Kaloy', 'Isang taon na hindi nakakapagbayad sa napagusapan na utang. Noong January 2023 nangutang siya ng limang libo sa akin, ipinangako niya na sa isang linggo pagkarating ng sahpd ng asawa ay magbabayad siya. Subalit ngayon ay taong 2024 na perohindi parin siya', 'magbayad ng utang ayon sa napagkasunduang araw, nais kong singilin na may dagdag na tub si Mang Erning sapagkat ang due ng kanyang utang ay lagpas lagpas sa napagkasunduang araw. Ang napagkasunduan na bayad ay 15k ngunit nais ko siyang tubuan pa ng 10k pa', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(194, 115, 1, '03-001-0424', 'Masili ', 'Masili', '2024-08-11', '0000-00-00', 'Angel May L. De Guzman', 'Aaron Banaag', 'Isang taon na hindi nakakapagbayad sa napagusapan na utang. Noong January 2023 nangutang siya ng limang libo sa akin, ipinangako niya na sa isang linggo pagkarating ng sahpd ng asawa ay magbabayad siya. Subalit ngayon ay taong 2024 na perohindi parin siya', 'magbayad ng utang ayon sa napagkasunduang araw', 'Alarms and Scandals (Art.155)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(195, 110, 76, '2023-9-58', 'Umali subdivision barangay batong malake ', 'Sitio Villegas, Batong malake Los Baños , Laguna ', '2023-09-27', '2023-09-27', 'Jayous Neil Tabaquero/ Fe P. Sangre', 'Anthony D. Tagana ', 'Kami si Jayous Neil Tabaguero at Fe P. Sangre , Kami ay dumulog dito sa BRGY upang ireport ang aming nasangkutang aksidente ni MR. Anthony Tagana.', 'Dahil dito gsto ko syang makaharap at makausap upang mapagusapan ang nangyaring aksidente.', 'Aksidenteng Banggaan', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(196, 110, 76, '2023-9-54', '10012 Halcon St. Barangay Batong malake', 'JP Heritage Dormitory , Kitanlad St. Barangay Batong malake ', '2023-09-13', '2023-09-13', 'Yoshiki R. Daranciang ', 'Rose Isip', 'SI Rose Isip ay aking Ininireklamo  dahil sa hindi nya pagtupad sa usapan na ibalik ang downpayment at deposito sakin.', 'Gusto ko syang ipatawag upang makausap at maibalik ang akin pera.', 'Pagbawi sa Deposito at upa sa apartment', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(197, 115, 1, '04-023-0424', 'Purok 6A Bambang Los Banos Laguna', 'Purok 4 Libis Lalakay Los Banos Laguna', '2024-08-16', '2024-04-05', 'Glenndel Paccial', 'Kyle Pamplona', 'I wish to complain about ____ (name of product or service, with serial number or account number) that I purchased on ____ (date and location of transaction). I am complaining because ____ (the reason you are dissatisfied). To resolve this problem I would ', 'A complaint letter format will typically begin with the sender\'s details, followed by stating who it\'s addressed to, the date, and then the letter itself. The opening paragraph should state your reason for writing, and the meat of the text will go into de', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Settled', 'Mediation', 1, 0),
-(198, 115, 1, '03-000-0424', 'Masili ', 'tadlac', '2024-09-17', NULL, 'Sarah', 'Popoy Kaloyube', 'Isang taon na hindi nakakapagbayad sa napagusapan na utang. Noong January 2023 nangutang siya ng limang libo sa akin, ipinangako niya na sa isang linggo pagkarating ng sahpd ng asawa ay magbabayad siya. Subalit ngayon ay taong 2024 na perohindi parin siya', 'magbayad ng utang ayon sa napagkasunduang araw. ', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', '', 'Civil', 'Unsettled', 'Pending', 1, 0);
-INSERT INTO `complaints` (`id`, `UserID`, `BarangayID`, `CNum`, `CAddress`, `RAddress`, `Mdate`, `RDate`, `CNames`, `RspndtNames`, `CDesc`, `Petition`, `ForTitle`, `Pangkat`, `CType`, `CStatus`, `CMethod`, `IsArchived`, `seen`) VALUES
-(199, 110, 76, '2023-12-78', '2479 Tuntungin Putho, Los BaÃ±os, Laguna', 'Ruby St., Umali Subd., Batong Malake, Los BaÃ±os, Laguna', '2023-12-03', '2023-12-03', 'Erlinda M. Obrince', 'Michael Nicdao, Carla NIcdao', 'Gusto kong makausap sina Michael Nicdao at Carla Nicdao upang ipaalis ang kanilang PVC na inilagay sa aking kanal na ipinagawa. Ito ay kanilang inilagay ng walang paalam.', 'Gusto ko silang makausap para itanong bakit hindi sila nagpaalam sa akin bago nila ilagay ang PVC.', 'Pakikipaglinawan Tungkol sa Kanal', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0),
-(200, 115, 1, '04-000-0424', 'tadlac', 'Masili', '2024-08-22', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam orci risus, tincidunt nec felis nec, finibus dapibus augue. Cras id luctus neque. In hac habitasse platea dictumst. Duis convallis ex non lacus facilisis pulvinar. Vivamus tristique risus at', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam orci risus, tincidunt nec felis nec, finibus dapibus augue. Cras id luctus neque. In hac habitasse platea dictumst. Duis convallis ex non lacus facilisis pulvinar. Vivamus tristique risus at', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam orci risus, tincidunt nec felis nec, finibus dapibus augue. Cras id luctus neque. In hac habitasse platea dictumst. Duis convallis ex non lacus facilisis pulvinar. Vivamus tristique risus at', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam orci risus, tincidunt nec felis nec, finibus dapibus augue. Cras id luctus neque. In hac habitasse platea dictumst. Duis convallis ex non lacus facilisis pulvinar. Vivamus tristique risus at', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Unsettled', 'Pending', 1, 0),
-(201, 110, 76, '2024-1-04', '9178 El Danda, Batong Malake, Los BaÃ±os, Laguna', 'El Danda, Batong Malake, Los BaÃ±os, Laguna', '2024-04-17', '2024-01-15', 'Melinda Villarmino', 'Raquel Cabrera Flores, Monica Agtuca Mendoza', 'Ako ay nagtungo sa tanggapan ng Barangay Batong Malake upang ireklamo sina Raquel Cabrera Flores at Monica Agtuca Mendoza dahil sa pagmumura sa akin kanina January 14, 2024, 7:50 ng umaga at paulit-ulit na pagpaparinig sa akin tuwing dadaan ako sa kanila.', 'Gusto ko sila makausap sa barangay upang matigil na ang ginawa nila sa akin.', 'Pagmumura at Pagpaparinig ng Paulit-ulit', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(202, 110, 76, '2024-1-05', '9172 El Danda, Barangay Batong Malake, Los BaÃ±os, Laguna', '9178 El Danda, Batong Malake, Los BaÃ±os, Laguna', '2024-04-17', '2023-01-16', 'Monica A. Mendoza', 'Melinda Garcia Villarmino', 'Ako si Monica A. Mendoza nagtungo sa tanggapan ng Barangay Batong Malake, Los BaÃ±os, Laguna upang ireklamo si Melinda Garcia Villarmino dahil sa pagpapalayas niya sa amin at pamimilit ng pagpapalabas ng Titulo, wala kaming titulo kundi kontrata ang hawak', 'Ang nais namin ay makausap sila at magbigay sila ng patunay na sa kanila ang lupa na inuupahan namin.', 'Pagpapalayas at Pamimilit na Pagpapalabas ng Titulo', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(203, 110, 76, '2024-1-06', '10329 Ruby St., Los BaÃ±os Subd., Batong Malake, Los BaÃ±os, Laguna', 'Batong Malake, Los BaÃ±os, Laguna', '2024-04-17', '2024-01-16', 'Maharlinda S. Asuncion', 'Marlene C. Francia', 'Ako po si Ginang Maharlinda S. Asuncion may-ari ng tuta na si Marta breed pure Chihuahua. Namatay noong January 12, 2024. Sa kadahilanan na kinagat ng aso nina Ginang Marlene Francia sa tapat ng bahay nila noong nabuksan ang gate nila. Kinagat sa ulo at t', 'Gusto ko makaharap ang may-ari ng aso na pumatay kay marta para panagutan yung action at responsibility bilang may ari ng aso na pumatay.', 'Asong Pinatay ng Aso ng Kapit-bahay', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(204, 110, 76, '2024-1-07', 'Barangay Bayog, Los BaÃ±os, Laguna', 'Batong Malake, Los BaÃ±os, Laguna', '2024-04-17', '2024-01-23', 'Rommel Alvarado', 'Harvard Hernani', 'Nagtungo po ako sa tanggapang ng Barangay Batong Malake para ireklamo ang aking contractor na si Harvard Hernani sa hindi pagbabayad sa nagawa naming trabaho.', 'Nais namin siya makausap sa barangay upang makipaglinawan at mabayaran ang ginawa naming proyekto.', 'Hindi Pagbabayad sa Nagawang Kontrata o Proyekto', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(205, 110, 76, '2024-2-08', '6728 Bangkal St., San Antonio, Los BaÃ±os, Laguna', '9624 Taal Ext., Batong Malake, Los BaÃ±os, Laguna', '2024-01-29', '2024-01-29', 'Mario M. De Guia', 'Jayson S. Estiva', 'Ako si Mario M. De Guia na inirereklamo si Jayson S. Estiva dahil sa pagkakabangga niya sa akin kaninang umaga habang tumatawid ako sa pedestrian lane sa tapat ng Jolibee crossing.', 'Gusto ko na mapag-usapan namin ito sa tanggapan ng Barangay Batong Malake upang tulungan niya ako sa gastusin ng aking pagpapagamot.', 'Pagkakabangga', '', 'Criminal', 'Settled', 'Mediation', 0, 0),
-(206, 110, 76, '2024-2-09', 'Mt. Data St., Batong Malake, Los BaÃ±os, Laguna', '10109 Sierra Madre Batong Malake, Los BaÃ±os, Laguna', '2024-02-04', '2024-02-04', 'Amparo Magbanua', 'Mel Tejada', 'Ako ay nagtungo sa tanggapan ng Barangay Batong Malake upang ireklamo si Mel Tejada dahil sa pagbibintang sa akin na hindi daw sa akin ang tuwalyang naiwan ko at mga panty.', 'Gusto ko siyang makaharap sa Barangay upang makipaglinawan at malinis ang aking pangalan.', 'Pakikipaglinawan tungkol sa Nawawalang Gamit', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(207, 110, 76, '2024-2-10', 'Barangay Anos, Los BaÃ±os, Laguna', 'LB Square, Batong Malake, Los BaÃ±os, Laguna', '2024-02-10', '2024-02-10', 'Mary Rose L. Alumbro & Ogie Alumbro Y Delas Armas', 'Jenirey S. Olmidillo', 'Gusto namin ireklamo si Jemrey S. Olmidillo dahil sa kanyang pagkakalat ng maling inpormasyon tungkol sa amin.', 'Nais namin siyang makaharap sa barangay upang matigil na ang kanyang paninira.', 'Pagkakalat ng Maling Inpormasyon', '', 'Civil', 'Settled', 'Mediation', 0, 0),
-(208, 110, 76, '2024-2-12', '9407 Lopez Ave., Los BaÃ±os, Laguna', '9407 Lopez Ave., Los BaÃ±os, Laguna', '2024-02-10', '2024-02-10', 'Ronoel P. Revilleza & Emma O. Revilleza', 'Grace Sityar & Sandy Capili', 'Ako si Emma Revilleza ay nagtungo sa tanggapan ng Barangay Batong Malake upang makausap sina Sandy Capili at Grace Sityar. Sila ay mga caretaker ng rental unit na pagmamay-ari ng aking asawa at kanyang mga kapatid. ', 'Nasa ibang bansa ang mga kapatid ng asawa ko kaya nais namin makipaglinawan sa mga caretaker tungkol sa renta at amilyar.', 'Pakikipaglinawan tungkol sa Amilyar at Renta', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0),
-(209, 110, 76, '2024-2-13', 'Lungsod ng Makati', '8724 Junction St., Batong Malake, Los BaÃ±os, Laguna', '2024-02-12', '2024-02-12', 'Jenny Carreon', 'Ramonato Carreon', 'Nasi ko po ireklamo si Ramonato Carreon dail gusto ko na maging legal ang aming usapan tungkol sa pagtira at pag-alis niya sa bahay ng aking tatay.', 'Nais ko siya makaharap sa barangay upang makipaglinawan at legal ang aming usapan.', 'Pakikipaglinawan sa Upa ng Bahay', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0),
-(210, 110, 76, '01-03-0424', 'Sitio Riverside, Batong Malake, Los BaÃ±os, Laguna', 'Sitio Riverside, Batong Malake, Los BaÃ±os, Laguna', '2024-02-12', '2024-02-12', 'Helen Garbanzos Padilla', 'Antonio Garbanzos Padilla', 'Ako si Helen G. Padilla nagpunta sa tanggapan ng Barangay Batong Malake upang ireklamo ang aking kapatid na si Antonio G. Padilla dahil sa kanyang pagwawala kahapon, February 11, 2024, 5:30 ng hapon dahil siya ay lasing. Ako ay inaway niya at gusto akong ', 'Gusto ko pong makaharap siya sa barangay upang makausap siya at mapalitan ang mga nasira niyang upuan at para hindi na maulit ang pagwawala niya.', 'Pagwawala at Paninira ng Gamit', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0),
-(211, 110, 76, '2024-2-14', 'Sitio Riverside, Batong Malake, Los BaÃ±os, Laguna', 'Sitio Riverside, Batong Malake, Los BaÃ±os, Laguna', '2024-02-12', '2024-02-12', 'Helen Garbanzos Padilla', 'Antonio Garbanzos Padilla', 'Ako si Helen G. Padilla nagpunta sa tanggapan ng Barangay Batong Malake upang ireklamo ang aking kapatid na si Antonio G. Padilla dahil sa kanyang pagwawala kahapon, February 11, 2024, 5:30 ng hapon dahil siya ay lasing. Ako ay inaway niya at gusto akong ', 'Gusto ko pong makaharap siya sa barangay upang makausap siya at mapalitan ang mga nasira niyang upuan at para hindi na maulit ang pagwawala niya.', 'Pagwawala at Paninira ng Gamit', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0),
-(212, 115, 1, '01-000-0824', 'SI', 'SI', '2024-09-17', '2024-08-11', 'escanor', 'netoy', 'nag banatan', 'dk alam', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Settled', 'Arbitration', 1, 0),
-(213, 115, 1, '02-000-0824', 'SI', 'SI', '2024-09-17', '2024-08-11', 'manolo', 'mike', 'away sa lupa', 'wala ', 'Removal, sale or pledge of mortgaged property (Art. 319)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(214, 115, 1, '02-000-0824', 'san isidro', 'san isidro', '2024-09-17', '2024-08-20', 'arin', 'jomel', 'bentahan ng tanso', 'none', 'Light coercions and unjust taxation (Art. 287)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(215, 115, 1, '02-000-0824', 'sies', 'sies', '2024-09-17', '2024-08-19', 'manolo', 'bigote', 'away sa lupa', 'dk alam', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(216, 125, 79, '01-000-0824', 'san isidro', 'san isidro', '2024-08-28', '2024-08-28', 'escanor', 'jomel', 'bentahan ng tanso', 'none', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Unsettled', 'Pending', 0, 0),
-(217, 125, 79, '02-000-0824', 'san isidro', 'san isidro', '2024-08-28', '2024-08-28', 'person1', 'person2', 'nag abando', 'none', 'Abandoning a minor (Art. 276)', '', 'Criminal', 'Unsettled', 'Pending', 0, 0),
-(218, 125, 79, '02-000-0824', 'san isidro', 'san isidro', '2024-08-28', '2024-08-28', 'manolo', 'michael', 'sa kuryente', 'none', 'Malubhang pamimilit (Art. 286)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(219, 125, 79, '02-000-0824', 'san isidro', 'san isidro', '2024-08-28', '2024-08-28', 'fgdfg', 'fdg', 'nag abando', 'none', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', '', 'Civil', 'Unsettled', 'Pending', 1, 0),
-(256, 134, 92, '01-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-10-26', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(257, 134, 92, '02-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-11-01', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', '', 'Others', 'Settled', 'Mediation', 1, 0),
-(258, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-11-01', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Using fictitious names and concealing true names (Art. 178)', '', 'Civil', 'Settled', NULL, 1, 0),
-(259, 134, 92, '04-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-11-01', '2024-10-16', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Using fictitious names and concealing true names (Art. 178)', NULL, 'Others', 'Unsettled', 'Pending', 1, 0),
-(260, 134, 92, '05-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-10-11', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Light threats (Art. 283)', NULL, 'Others', 'Unsettled', 'Pending', 1, 0),
-(261, 135, 93, '01-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-11-01', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Using fictitious names and concealing true names (Art. 178)', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0),
-(263, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-10-11', '2024-10-11', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(264, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-11-01', '2024-10-11', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', '', 'Civil', 'Settled', 'Arbitration', 1, 0),
-(267, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-10-11', '2024-10-11', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(268, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-10-11', '2024-10-11', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(271, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-11-01', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Other forms of swindling (Art. 316)', '', 'Civil', 'Settled', 'Mediation', 1, 0),
-(272, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-11-01', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(273, 134, 92, '03-000-1125', 'Block 12 lot 32', 'Eksplorasyon', '2024-11-01', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0),
-(275, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-10-30', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Removal, sale or pledge of mortgaged property (Art. 319)', NULL, 'Others', 'Unsettled', 'Pending', 1, 0),
-(277, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-10-30', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0),
-(279, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-10-29', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0),
-(280, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2024-10-29', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0);
+INSERT INTO `complaints` (`id`, `UserID`, `BarangayID`, `CNum`, `CAddress`, `RAddress`, `complaint_created_date`, `complaint_updated_date`, `Mdate`, `RDate`, `CNames`, `RspndtNames`, `CDesc`, `Petition`, `ForTitle`, `Pangkat`, `CType`, `CStatus`, `CMethod`, `IsArchived`, `seen`, `removenotif`) VALUES
+(103, 109, 74, '001-227-0124', NULL, NULL, '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-01-05 00:00:00', '2024-01-10', 'Aileen Bagui', 'Chloe Joy Baris', ' Hindi pag babayad ng utang', ' Gusto ko po makausap ang aking inirereklamopara malaman ko kung papano sya makakabayad ng nahiram nyang pera', 'collectionofmoney', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(105, 110, 76, '2024-2-11', NULL, NULL, '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-10 00:00:00', '2024-01-23', 'Anabel Aquino', 'Cristina M. Talamo', 'Ako po si Anabel Aquino na inirereklamo si Cristina M. Talamo ng hindi pagbabayad ng utang.', 'Mabayaran niya ang kanyang utang', 'HindiPagbabayadSaUtang', '', 'Others', 'Settled', 'Mediation', 0, 0, 0),
+(107, 110, 76, '2024-1-01', '12746 O.B. Purok 1, Mayondon Los BaÃ±os, Laguna', 'O.B. Purok 1, Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-12-26 00:00:00', '2023-12-26', 'Gerald Allan Raminto, Gernaldo V. Raminto, Gerardo V. Raminto', 'Jayvee Belencio', ' Ako si Gernaldo V. Raminto natungo sa tanggapan ng Barangay Batong Malake upang ireklamo si Jayvee Belencio dahil sa pagpukpok niya ng bangko sa ulo ng kapatid ko na si Gerald Allan Raminto noong December 25, 2023 mga bandang 1:30 ng umaga. Ang Kapatid k', ' Gusto namin siya makaharap sa tanggapan ng Barangay Batong Malake upang mapagusapan ang nangyaring insidente at sagutin niya ang gastusin sa ospital ng aking kapatid.', 'PinukpokNgBangkoSaUlo', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(108, 110, 76, '2024-1-02', 'Sitio Villegas, Batong Malake, Los BaÃ±os, Laguna', 'Sitio Villegas, Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-12-30 00:00:00', '2023-12-30', 'Carlo De Gula Maligalig', 'Nadie Casipong', ' Mga bandang 9:00 ng gabi, December 29, 2023 pumunta ako sa covered court para hanapin ang aking anak, hindi ko alam na party pala at nayakad ako ng isang tauhan at napaupo sa kanilang inuman. Mga bandang 1:30 am ay pinalo ako sa ulo ng bote at hinataw ng', ' Gusto ko na magharap kami sa tanggapan ng Barangay upang pagusapan at sagutin ni Nadie Casipong ang aking magagastos sa aking pag-papagamot.', 'PaghatawNgBoteSaUlo', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(109, 110, 76, '2024-1-03', '0601 Dangka St., Ilaya Bayog, Los BaÃ±os, Laguna', 'Western Union, National Highway, Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-01-08 00:00:00', '2024-01-08', 'Leonardo Tamisin Jr.', ' Jose Xavier B. Gonzales, Shirley Bartilez', ' Ako si Leonardo Tamisin Jr. nagtungo sa tanggapan ng Barangay Batong Malake, Los Baï¿½os, Laguna. Nais ko ireklamo ang empleyado ng Western Union dahil sa pekeng pera na naibigay sa akin nung ako ay kumuha ng ayuda para sa Farmers. P5,000.00 ang nareceiv', ' Nais ko siya makaharap sa tanggapan ng Barangay upang makipglinawan sa aking reklamo.', 'PagkuhaNgP5000AyudaParaSaFarmersNaMayNahalongP1000NaPeke', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(111, 110, 76, '2023-1-02', 'Jamila Apartment, Emerald St., Batong Malake, Los Baños, Laguna', 'Sitio Villegas, Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-23 00:00:00', '2023-01-08', 'Patrick John M. Chui', 'Raymond Mahipos / Darwin Mahipos', 'Ako po ay inaya na makipagsuntukan ni Raymond Mahipos bandang 12:00 am ng gabi ng Enero 8, 2023, kasama niya si Darwin Mahipos at mayroon pang isang hindi kilalang lalake na may hawak na patalim. Ako po ay nabugbog at napuruhan ang ulo.', 'Gusto ko siyang makausap upang mapag-usapan ang nangyaring pambubugbog sa akin at siya ay mapanagot.', 'Pambubugbog at Akmang Pananaksak', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(112, 110, 76, '2023-1-03', '8800 Gazal Compound, Batong Malake, Los Baños, Laguna', 'Gazal Compound, Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-23 00:00:00', '2023-01-16', 'Gloria G. De Peralta', 'Mark Anthony G. Melchor', 'Si Mark Anthony Melchor ay nagwala dahil lang sa nakasara ang aming gate sa compound, dahil dito kung ano-ano ang sinabi niya sa akin na masasakit na salita.', 'Dahil dito gusto ko siyang makaharap upang magpaliwanag sya kung bakit ako sinabihan ng mga masasakit na salita.', 'Pagwawala dahil sa nakasarang gate', '', 'Others', 'Settled', 'Mediation', 0, 0, 0),
+(113, 110, 76, '2023-1-04', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-23 00:00:00', '2023-01-18', 'Helen P. Garbanzos', 'Roberto Monterey', 'Nagpunta ako dito upang ipatala si Roberto Monterey dahil pinapahiya niya ako at minumura kahit saan niya ako makita dahil ako ay may utang sa kanya.', 'Gusto ko siyang makausap upang makipaglinawan sa maayos kong pagbabayad at matigil ang pagpapahiya at pagmumura niya sa akin.', 'Panghihiya dahil sa Utang', '', 'Others', 'Settled', 'Mediation', 0, 0, 0),
+(114, 110, 76, '2023-1-05', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-23 00:00:00', '2023-01-18', 'Arrabelle S. Marcos', 'Helen P. Garbanzos', 'SI Helen Garbanzos ay may utang sa akin na halagang Php10,300.00 noon pang taong 2019. Hanggang ngayon ay di pa rin nya ito binabayaran.', 'Dahilan, kaya gusto ko siyang makausap para makipaglinawan kung kailan niya ako mababayaran.', 'Perang Hiniram na hindi Ibinalik', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(115, 110, 76, '2023-1-06', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', 'Sitio Riverside, Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-24 00:00:00', '2023-01-18', 'Arlene P. Miranda', 'Helen Garbanzos', 'Kaninang umaga, kami ay nagkaroon ng pagtatalo ni Helen Garbanzos na aking kapitbahay dahil ipinagkakalat niya na ako ay pokpok.', 'Dahil dito, gusto ko siyang makaharap at mag paliwanag siya sa akin kung bakit niya ipinagkakalat na pokpok ako.', 'Pagkakalat ng Tsismis', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(116, 110, 76, '2023-1-07', 'Danka, Barangay Bayog, Los Baños, Laguna', 'Jamboree Site, Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-24 00:00:00', '2023-01-23', 'Ronald Tayson / Beverly Garcia', 'Anthony Galla', 'Habang kami ay pauwi na at nakasakay sa aming motor, nagulat kami nang may mabilis na bumangga sa amin mula sa likuran, dahilan upang kami ay tumilapon pati na rin ang aming bitbit. Nangyari ito ngayong araw at kami ay nagpatingin sa center bago pumunta d', 'Guto ko siyang makausap, upang mapagusapan ang nangyari sa amin.', 'Aksidenteng Banggaan', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(119, 110, 76, '2023-3-14', 'Grove St., Barangay Batong Malake, Los Baños, Laguna', '10528 Grove St., Barangay Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-03-06 00:00:00', '2023-03-06', 'Bryan Morales', 'Cynthia O. Labita', 'Kahapon March 5, 2023, Bandang 9:00 am, si Cynthia Labita ay kung ano ano ang masasamang isinisigaw sa labas ng aming bahay, nag eeskandalo siya at kami ang pinupuntirya niya sinasabihan ko siya na tumigil ngunit tuloy parin siya sa pageeskandalo.', 'Dahil dito, ako po ay lumapit sa inyong tanggapan upang makausap at maipatawag siya.', 'Pag E-eskandalo', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(120, 110, 76, '2023-1-01', '175 Silangan, Barangay Bayog, Los Baños, Laguna', 'Lopez Avenue, Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-01-02', 'Joey D. Mercado', 'Maria Cristina Macario', 'Ang aming inuupahang tindahan ay nabangga ni Maria Cristina Macario. Dahilan para ito ay masira at maperwisyo ang aming mga tinitindang pangkabuhayan. Kami ay sarado mula nang nangyari ang insidente hanggang sa mga oras na ito.', 'Hinihiling namin na panagutan ni Maria Cristina Macario ang aming daily income at kasama na rin ang mga pasweldo namin sa aming manggagawa. simula ng nangyari ang insidente hanggang sa ngayon kami at sarado.', 'Nabanggang Tindahan', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(121, 110, 76, '2023-2-08', '10633 Mint St., Demarces Subd., Batong Malake, Los Baños, Laguna', 'Demarces Subd., Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-01-30', 'Gabby Jesena Lazaro', 'Obet Polintan & Grace Polintan', 'During the recent survey of Bagnes Surveying Office, the surveyor confirmed that their property took advantage of our adjoining property and built their residence as an extension of our building property. This is negligence on their part of civil code of ', 'I want to talk to them so that they know my concern.', 'Restaurant Enhancement of their Residential to our Space Property', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(122, 110, 76, '2023-2-09', '9064 Collado Apt., Batong Malake, Los Baños, Laguna', 'Collado Apt., Batong Malake, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-02-05', 'Erlinda N. Collado ', 'Leni Anilao', 'Inirereklamo ko si Leni Anilao sa hindi niya Pagbabayad ng bill ng tubig, Meralco Bill at renta sa bahay simula noong May 2021 hanggang November 2022.', 'Dahil dito, gusto ko siyang ipatawag at makaharap upang mapag-usapan ang kanyang mga utang.', 'Hindi Pagbabayad sa Renta ng Bahay at Bill ng Tubig at Kuryente', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(123, 110, 76, '2023-02-10', 'Mayondon, Los Baños, Laguna', 'UP Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-02-10 00:00:00', '2023-10-02', 'Michael Nicole Ocon', 'Bryan V. Patio', 'Kaugnay ng insidente sa Tresto Bar noong February 1, 2023 na itinala sa incident report ng batong Malake, ako ay dumulog sa inyong tanggapan upang  pormal na maghain ng reklamo kay Bryan Patio na nanakit sakin habang kami ay nagkakasiyahan sa kanyang pana', 'Gusto siyang ipatawag upang papanagutin sa kanyang ginawa sakin.', 'Pananakit', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(124, 110, 76, '2023-02-11', 'Sta. Mesa, Calamba City', 'Lopez Avenue, Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-11-02', 'Marilyn S. Moniejo', 'Rizalito Revilleza', 'Ako ay nagtungo sa Barangay Batong Malake upang humingi ng tulong upang maiharap si Rizalito Revilleza tungkol sa pamamahala sa Cartas Apt., ayon sa kanya sya  na daw  ang mamahala. Kung itoy totoo nakahanda akong iturn over sa kanya lahat ng matiwasay an', 'Gusto ko siya makausap upang malinawan ang usaping ito.', 'Usapin tungkol sa pamamahala sa carta\'s apartment', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(125, 110, 76, '2023-03-12', '10582 Batong Malake, Los Baños, Laguna', '10108 Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-04-03', 'Cynthia Labita', 'Randy Punzalan', 'Noong March 03, 2023, tumaya si Randy Punzalan sa STL sa akin ng 19x13. Bago ito  isulat, tinanong ko pa siya kung 19x13 at sya ay tumango at umalis na. Noong lumabas ang 9x30 pinagpipilitnan na 9x30 daw ang kanyang tinayaan. kaya minabuti kong pumunta sa', 'Gusto ko siyang makaharap para pakipaglinawan', 'Pakikipaglinawan tungkol sa tumama sa STL', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(126, 110, 76, '2023-03-13', '10108 Batong Malake, Los Baños, Laguna', '10528 Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-03-13', 'Randy Punzalan', 'Cynthia Labita', 'Ako ay tumaya kay Cynthia Labita sa STL kahapon March 3, 2023, bandang 4:40 ng hapon. ang aking taya ay 9x30 pero ang inilagay nya ay 19x13. Noong tumama ang 9x30 wala daw akong taya dahil 19x13 pala ang inilagay niya.', 'Dahilan kaya ako\'y nagtungo na sa barangay Batong Malake upang kami ay magharap upang mapag usapan ang usaping ito.', 'Pakikipaglinawan tungkol sa tumama sa STL', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(127, 110, 76, '2023-03-15', 'Grove, Batong Malake, Los Baños, Laguna ', 'Grove, Batong Malake, Los Baños, Laguna ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-03-06', 'Bryan Morales & Grace Morales', 'Careene Del Rosario', 'Irereklamo namin si Careen Del Rosario dahil ayaw nya kami tigilan sa pagkakalat ng kung anu anong maling kwento sa amin. Kinompronta ko na sya tungkol dito ngunit sya pa ang galit. Pati ang aming personal na away mag-asawa ay vinivideo nya at ginagamit p', 'Gusto ko itong matuldukan, kaya naman ay humingi na nang tulong sa tanggapan para mayroong mamagitan sa amin.', 'Paninirang puri ng paulit-ulit', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(128, 110, 76, '2023-03-16', 'Grove, Batong Malake, Los Baños, Laguna ', 'Grove, Batong Malake, Los Baños, Laguna ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-03-07', 'Cynthia Labita & Careen Del Rosario', 'Bryan Morales', 'Noong March 5, 2023, kami ay sinigaw sigawan ni Bryan Morales. Hind kami makalaban sa kanya dahil lalaki sya. Ibinalibag din niya ang kanilang pinto ng pagkalakas lakas. Hindi lang ito unang beses nangyari ito, paulit ulit niya kami pinopurwisyo.', 'Dahil dito kami ay dumulog sa inyong tanggapan upang siya ay maipatawag at makausap ng may nanamagitan.', 'Paninigaw', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(129, 110, 76, '2023-03-17', '9255 San Antonio, Los Baï¿½os, Laguna', '10189 Batong Malake, Los Baï¿½os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-04-17 00:00:00', '2023-03-09', 'Rowena ValeÃ±a`', 'Maria Teresa Clemeno', 'Ako ay may utang kay Maria Teresa Clemeno ng halagang Php 30, 000 at andami kong naririnig na masasamang salita na sinasabi niya sa ibang tao. Pati ang iba kong utang sa iba sinasama pa sa usapin.', 'Gusto ko siyang makausap tungkol sa mga masamang salita na sinasabi nya.', 'Paninirang puri dahil sa utang', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(130, 110, 76, '2023-03-18', 'Batong Malake, Los Baños, Laguna', 'AD Tech (Contractor)', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-11-03', 'Marvin Justin V. Gonzales & Mark Jonas V. Gonzales', 'Joseph Siryan', 'Biyernes ng umaga Feb. 17, 2023, may nakita akong white spots sa kotse, nagpaCarwash ako ng mga 11:30am. Hindi natanggal ang mga spots sa harap, gilid at bintana ng sasakyan', 'Dahil dito gusto kong makausapang management ng Robinsons Town Mall Los Baños, dahil sila ang building na nagpipintura. Gustokong makipaglinawan dahil sa nangyari sa kotse.', 'Tulo ng pintura sa kotse', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(131, 110, 76, '2023-03-19', 'Batong Malake, Los Baños, Laguna', 'Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-03-11', 'Leodencio Liag & Lawrence Liag', 'Leticia Garcia', 'Nagpunta kami dito upang pag usapan ang paghahati ng property sa Liag Compound, UPLB, Batong Malake. Bago namin ilapit ang usaping ito sa inyong tanggapan ay sumangayos sina Leticia Garcia.', 'Gusto namin dito sa Barangay Batong Malake Pag usapan ang paghahati ng property para mayroong mamagitan sa amin.', 'Paghahati ng Property', '', 'Others', 'Settled', 'Conciliation', 0, 0, 0),
+(132, 110, 76, '2023-03-20', 'Batong Malake, Los Baños, Laguna', 'Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-03-25 00:00:00', '2023-03-13', 'Aniflor Minorca & Mylene Jimenez', 'Rojane E. Gatchalian', 'Si Rojane Gatchalian ay may utang sa akin noong taong 2020. Noong una nakakapagbayad naman siya ng maayos ngunit noong huli ay hindi na sya sa amin nagrereply, hindi rin siya nasagot sa tawag may balanse pa sya Php1,500.00', 'Nais namin siyang ipatawag para magkaroon ng linaw kung kailan nya mababayaran ang kanyang balanse.', 'Perang hinihiram na hindi binabayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(133, 110, 76, '2023-4-24', 'SITIO PAGKAKAISA, BARANGAY BATPNG MALAKE, LOS BAÑOS, LAGUNA', 'Collado Compound, Barangay Batong Malake, Los Baños Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-04-01 00:00:00', '2023-04-13', 'REMELLAS P. VENERAYON', 'Daryl L. Biag', 'Bandang 9:00am, ako ay pauwi na galing palengke, dumaan ako sa Collado Compd. dahil ito ay shortcut pauwi sa bahay. naglalakd ako ng bigla ako suntukin ni Daryl Biag. Ako ay natumba nung tatayo ako ay dun na ako gumanti. Hanggang sa inawat na kami. Ako ay', 'Dahil dito gusto ko siyang makaharap at pananagutin sa ginawa niya sa akin.', 'Panununtok sa hindi malaman na dahilan', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(134, 110, 76, '03-2023-21', 'Taal ST. Barangay Batong Malake, Los Baños, Laguna ', ' SITIO PAGKAKAISA, BARANGAY BATONG MALAKE, LOS BAÑOS, LAGUNA', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-03-21 00:00:00', '2023-03-21', 'Mylene V. Jimenez  /  Aniflor C. MInorca', 'Mary jane M. Gatchalian', 'Si Mary jane Gatchalian ay mayroong hiniram na pera sa amin na nagkakahalaga ng Php 5,000, ngunit hindi na nya kami binayaran ang oerang hinram nya ay noon  pang taon  6, 2020', 'Dumulong na kami dito sa inyong tanggapan upang maipatawag at makausap namin siya tugkol sa kanyang perang hiniram.', 'Perang hiniram na hindi binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(135, 115, 1, '01-000-0424  ', 'Masili ', 'Masili', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-20 00:00:00', '2024-04-01', 'Jayson Cuason', 'Popoy Kaloy', 'Nagkasinitan sa basketball kaya nagkasuntukan', 'Ipagamot at magbayad sa pinsala', 'Nagkasuntukan', '', 'Civil', 'Settled', 'Mediation', 1, 0, 0),
+(136, 110, 76, '03-2023-22', 'Sitio Riverside Barangay Batong Malake, Los Baños, Laguna', 'Sitio Riverside Barangay Batong Malake, Los Baños, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-03-20 00:00:00', '2023-03-20', 'Richard Eduarte  / Frederick Gavanes /  Benjie De Leon /  Gemilliano Ramos Sr.  / Rodrigo Gavanes', 'Orlando Macam', 'Si Orlando Macam ay inerereklamo namin dahil kami ay pinagbabantaan na oras na kami daw ay makita, Kami daw ay papatayin nya. Nagagalit Sya Dahil Hindi Sya napayag sa oras ng bukas at sara ng gate ng UPLB. Kaya sya ay laging nagwawala', 'Dahilan para kami ay pumunta dito sa barangay upang sya ay makaharap at makausap.', 'Paulit ulit na pagwawala at pagbabanta', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(137, 110, 76, '03-2023-23', 'Jamboree site, Batong Malake, Los Baños, Laguna.', 'Jamboree site, Batong Malake, Los Baños, Laguna.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-03-31 00:00:00', '2023-03-31', 'Zenaida M. Cabonce', 'Rhodora P. Talagtag', 'Inirereklamo ko si Rhodora Talagtag sa Kadahilanang sobra na po ang paninira sa akin sa SNSJ groupchat na nababasa ng lahat ng ebidensya nito ay mga screenshots na pinagsasabi nya sa aming groupchat.', 'Dahil dito, Nais ko pong makausap at makaharap si Rhodora dahil sa ginagawa nyang pagkakalat ng tsimis.', 'paninira at pagkakalat ng tsismis', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(138, 110, 76, '04-2023-25', 'Lot 4 Blk 2. Bay Gardens Subdivision, Bay Laguna,', '9001, Batong Malake, Los Baños, Laguna.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-04-23 00:00:00', '2023-04-23', 'Anna T. Mendoza', 'Gino B. Villegas', 'Si Gino Villegas ay Humiram sakin ng PhP. 9,000 noong March 15 2023 at nangakong ibabalik sa katapusan ng March. Noong dumating ang March 31, Humingi po sya ng Palugit na isang Linggo. Pumayag ako Ngunit Dumating ang araw na sinabi nya  hindi pa rin sya n', 'Ako po ay Dumulog sa tanggapan nyo upang sya ay makausap, Para malaman kung bakit hindi na sya nasagot', 'hiniram na pera na hindi ibinalik', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(139, 110, 76, '04-2023-26', 'Bangkal Ext. San Antonio. LBL', 'Sierra Madre st., Batong Malake,', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-04-23 00:00:00', '2023-04-23', 'Priyashanta Nuñez', 'Louis Leaño', 'Nagtungo Ako sa Barangay upang ipatalq ang insidenteng nangyari sa akin na ako ay hinaras ni Louis Leaños. Dati ko syang boyfriend at boss din at the same time. Gustp ko na pong matigil ang panghaharas nya sa akin', 'Dahil dito gusto ko syang makausap at makaharap upang matigil na ang panghaharas nya sa akin.', 'Pang haharas', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(140, 110, 76, '2023-5-27', '10804 Sitio Riverside, B.Malake LBL', 'Sitio Riverside, B.Malake LBL', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-05-01 00:00:00', '2023-05-01', 'Arabelle S. Marcos ', 'Jenelyn Geronda / Loid Castillo', 'Sina Jenelyn Geronda at Loid Castillo ay nagkaroon ng utang sa akin noong October 30, 2022 ng halagang PhP 12,100 at hanggang ngayon ay hindi pa din nag babayad', 'Dahil dito Dumulog ako sa tanggapan ng Batong Malake upang sila ay maipatawag at magkalinawan kung kailan sila mag babayad.', 'Perang hiniram na hindi ibinalik', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(141, 110, 76, '2023-5-28', 'Calamba Laguna.', 'Market site, Barangay Batong Malake.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-05-07 00:00:00', '2023-05-07', 'Rico L. Monreal', 'Genesis K. Pajo', 'Ako si Rico Monreal na Taga Calamba Laguna ako po ay nagpunta dito sa Brgy. Batong Malake upang isumbong si Genesis Pajo dahil sa Pagbabanta nya sa akin', 'Gusto ko syang ipatawag upang pag pagpaliwanagin kung bakit ako pinagbabantaan.', 'pagbabanta', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(142, 110, 76, '2023-5-29', 'Mary mount, Brgy Anos', 'Market site, Barangay Batong Malake.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-05-09 00:00:00', '2023-05-09', 'Joshua Manggale/Rene Recto', 'Hanna Patricia Galag/Bryle Jhoben Lacbay Lynon Legisma/Timsanates/ Jamir Sombillo', 'Ang aming motor ay nagkaroon ng damage dahil sa isang rumble ng mga grupo ng aming inerereklamo', 'Gusto ko silang makausap upang mapagusapan ang naging damage ng aking motor', 'Nasirang motor dahil sa Away', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(143, 110, 76, '2023-5-30', 'Calauan Laguna', '9238, Barangay Batong Malake.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-05-22 00:00:00', '2023-05-22', 'Rizamae Aguilar', 'Anjo Dela Paz', 'Si Anjo Dela Paz ay pagkakautang sa akin ng PhP 7,000 nais ko syang makaharap at makausap', 'Gusto ko syang maipatawag upang malinawan kung kailan ako babayaran', 'Hiniram na pera na hndi ibinalik', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(144, 110, 76, '2023-5-31', 'Sitio Maligaya, San Antonio Los Baños Laguna', 'Grove st, Barangay Batong Malake.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-05-29 00:00:00', '2023-05-29', 'Carlo Alah', 'Michael Veron', 'Ako si Carlo Alah na taga Sitio Maligaya Barangay San Antonio. Nagtungo ako sa Brgy. Batong Malake, Hingil sa pananakit at panununtok sa akin ni Michael Veron ny, Taga Grove Batong Malake , Sa nangyaring ito ako ay nagpamedical may mga resetang gamot', 'Gusto ko syang makausap upang siya ay panagutin sa kanyang ginawa sa akin', 'Pananakit / Panununtok', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(145, 110, 76, '2023-6-32', '11456 Jamboree site L.B.L.', '10955 kanluran st. UPLB los Baños Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-05-31 00:00:00', '2023-05-31', 'Delia Domdom Tamayo', 'Bianca Alinq P. Saguin', 'Nagtungo ako sa Barangay Batong Malake, Upang Ireklamo si Bianca Saguin, Dahil sa aksidenteng nangyari sa akin', 'Nais kong makaharap si Bianca Saguin upang makausap sya dahil sa aksidente', 'Pakikipag linawan tungkol sa nangyaring Aksidente', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(146, 110, 76, '2023-6-33', 'Anos, Los Baños Laguna', 'Kanluran RD, UPLB Barangay Batong Malake Los Baños ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-06-05 00:00:00', '2023-06-05', 'Ronaldo A. Banaticla', 'Jaime S. Reyes', 'Dumulog ako dito sa barangay Batong malake, Dahil Ako ay hinamon ng suntukan at tinakot ni Jaime Reyes', 'Dahil dito, Gusto ko syang makausap upang ipaliwanag nya kung bakit sya nagagalit sa akin', 'Paghahamon ng suntukan at pananakot', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(147, 110, 76, '2023-6-34', 'Blk.2 Lot 17 Mangga st.  Barangay san antonio Los Baños Laguna.', '10455 Grove st. Lopez Ave Batong malake', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-06-05 00:00:00', '2023-06-05', 'Edna N. Vacarizas ', 'Miguel Tecson', 'Si Mr. Miguel Tecson ay aming Boarder Ngunit ayaw na namin sya Irenew at magpatuloy pa sa pag upa sa amin', 'Nais namin sya makausap upang mapayapa syang umalis sa aming Boarding House', 'Mapayapang pagpapaalis sa aming tenant', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(148, 110, 76, '2023-6-35', 'Marymount Brgy. Anos LBL', 'Riverside. Lopez Ave Batong malake', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-06-06 00:00:00', '2023-06-06', 'Monina Gazelle Charina B./Carandang, Juan Miguel', 'Ryan Consibido', 'Mga 6:00 pm nakita ko si Ryan Consibido na nasa lobby ng Physci BLDG. Lumapit po sya sa amin. Hinarangan ko po sya at sinabing wag lumapit sinapak po nya ako sa ulo sya po ay tumakbo at sinundan namin nakita po namin  sya sa parking sa aming kotse sinaksa', 'Dahil dito gusto ko syang ipatawag upang makausap at pananagutin sa mga ginawa nya', 'Pananakit at Pambubutas ng kotse', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(149, 110, 76, '2023-6-36', '5123 Pulo, Cabuyao, Laguna', 'Purok 8, Forestry', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-06-09 00:00:00', '2023-06-09', 'Meliza R. Santos', 'Jefferson T. Salac', 'Si Jefferson T. Salac ay may pagkakautang sa akin halagang PhP 7,000 hanggang sa ngayon ay hindi pa rin nya ako binabayaran', 'Dahil dito gusto ko syang makaharap upang pag-usqpan kung kailan nya ako babayaran', 'Pakikipag linawan tungkol sa nahiram na  Pera', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(150, 110, 76, '2023-6-37', 'Jamboree site.', 'Jamboree site', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-06-19 00:00:00', '2023-06-19', 'Kreslelyn Narvaez', 'Jennifer Gonzales', 'Bandang alas 8:00 pm June 19 2023 Pumasok si Jennifer sa kwarto naming mag asawa at kung anu ano sinabe tungkol sa akin, Around 10pm June 19 nag away po kaming mag asawa at nakialam sya kung anu ano ang sinabe at sinigawan ako sinampal nya ako ng ilang be', 'Gusto ko syang makausap para matigil na ang ginagawa nya sakin', 'Pagsasabi ng masamang salita at pananakit', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(151, 110, 76, '2023-6-38', '9064 Batong Malake', '9060 Batong Malake', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-06-21 00:00:00', '2023-06-21', 'Adora Collado', 'Marcial Mupal', 'June 13 ng gabi may inuman sa tindahan nya sinabihan ko sya na hinaan ang videoke at sigawan nila dahil may mga bata at student. Bigla syang sumigaw at nag wala nagmura lumabas sa bahay at nag sisigaw kung anu ano ang sinasbae halos lumuea ang mata sa gal', 'Dahilan nito gusto na namin sya paalisin sa inuupahan upang hindi na maulit ang ganun pangyayare', 'Pag- iingay at Pagwawala', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(152, 110, 76, '2023-7-40', 'Riverside, Batong Malake, LBL', 'Riverside.Batong Malake.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-07-05 00:00:00', '2023-07-05', 'Rebecca G. Licaros ', 'Arlene Perez / Aljur Q. Garbanzos', 'Si Arlene Perez ay kumuha sa akin ng bigas na nagkakahalaga ng PhP 1,200 noong nakaraan May 11, 2023 ngunit hanggang  ngayon ay hindi na nya ito binabayaran ang itinuturo nyang mag babayad ay ang kanyang kinakasamang si aljur Garbanzos', 'Dahil dito Gusto ko  silang makausap at malinawan kung kailan nila ako babayaran', 'Hindi binayaran na bigas', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(153, 110, 76, '2023-7-41', '9797 Jade st.  Batong Malake', 'Revilleza Compound Batong Malake', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-07-10 00:00:00', '2023-07-10', 'Aida Biglete ', 'Untoy Patoc', 'Ako ay nagpagawa ng elektrikpan kay untoy patoc ako ay nagbigay ng PhP 1,000 para sa pyesa kasama na rin ang Repair Ngunit hindi nya ako binalikab', 'Gusto ko syang makaharap at maibalik sa akin ang electrikpan na maayos at gumagana ', 'Pakikipaglinawan Tungkol sa Pinagawang ELectric Fan', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(154, 110, 76, '2023-7-42', '716 Purok 7   Brgy. Malinta Los Baños', 'Sitio Pagkakaisa Batong Malake', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-07-11 00:00:00', '2023-07-11', 'Nestor Monte Castro Frondoso', 'Marjorie Joy Eroles', 'Si Joy Eroles ay  utang sa akin Halagang PhP 4,300 ngunit mula ng humiram sya sa akin ay hindi na sya nag babayad', 'Gusto ko syang makausap para malaman kung kailan sya mag babayad sa akin', 'Perang Hiniram na hindi Binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(155, 110, 76, '2023-7-39', 'Blk. 3 lot 2 Everlasting St. TS. Las Piñas  city', '9304 -B Mt. Taal St. Umali subd. Barang Batong Malake.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-07-03 00:00:00', '2023-07-03', 'Russel Sabandal', 'Cesar Grajo', 'Ako po ay nagrereklamo ako ay nag rent kay Mr. Grajo nagpa reserve ako noon June 5, 2023 Nag Txt sya na due date ko daw po na hindi pa po ako nakakalipat ang usapan ay ibibigay ko ang 1month sa down payment pag ako ay nakalipat na.', 'Dahil dito gusto ko syang makaharap upang makipaglinawan may Mr. Gajo', 'Pakikipaglinawan Tungkol sa Reservation Fee ng Apartment', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(156, 110, 76, '2023-7-43', 'Bagong Kalsada', 'Jamboree site', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-07-11 00:00:00', '2023-07-11', 'Christian N. Navarez/kreslelyn N. Navarez', 'Marina Gonzales', 'Si Marina Gonzales ay binili ang aming Tricycle ngunit may balanse pa itong PhP 5.000 Hanggang ngayon ay hindi pa nya ito nababayaran', 'Nais ko syang makausap upang ako ay kanyang bayaran', 'Usapin tungkol sa Tricycle na ibinenta', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(157, 110, 76, '2023-7-44', 'Faculty village Batong Malake', 'Faculty Village Batong Malake', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-07-17 00:00:00', '2023-07-17', 'Armain Doñasales / Patricia Marie Villacetan', 'Ritchee Yee', 'Si Ritchee Yee ay ilang beses na naming sinasabihan na wag mag park sa tapat ng aming bahay dahil ito ay gagamitin na namin kagabi, Nilagyan na namin ito ng no parking na sign ngunit pag uwi namin ito ay sira sira na pati na rin ang aming nga halaman', 'Gusto namin sya makausap at pagpaliwanagin tungkol sa kanyang ginawa', 'Pakikipaglinawan Tungkol sa Parking at Paninira ng SIgnage at Halaman', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(158, 110, 76, '2023-7-45', 'Brgy. Putho Tuntungin Los Baños ', 'Lopez Ave. Brgy Batong Malake ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-07-19 00:00:00', '2023-07-19', 'Isidra Concepcion', 'Maria Belen Quizon', 'Si Maria Belen Quizon ay may pagkakautang sa akin hanggang ngayon ay hindi pa nya ako Binabayaran', 'Gusto ko sya makausap para makipagpalinawan sa kanya kung kailan nya ako babayaran', 'Perang Hiniram na Hindi Binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(159, 110, 76, '2023-8-46', 'Riverside Batong Malake ', 'Riverside Batong Malake ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-08-02 00:00:00', '2023-08-02', 'Rebecca Licaros ', 'Helen Garbansos', 'Si Helen Garbansos ay may pagkakautang sa akin nang  Nagkakahalagang Php 2,533 Hanggang Ngayon ay di pa nya binabayaran', 'Gusto ko syang makausap upang malaman kung kailan nya ako babayaran', 'Perang hiniram na Hindi Binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(160, 110, 76, '2023-8-47', ' Batong Malake , Los Baños Laguna', '10809 Sitio Riverside Batong Malake ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-08-07 00:00:00', '2023-08-07', 'Roland E. Martinez /Maria Clarissa M. Adovas ', 'Jovelyn O. Corda ', ' Nagtungo ako dito sa Barangay Batong Malake Upang humingi ng tulong na makausap si Jovelyn Corda dahil ang aming Dinadaanan patungo sa bahay namin ay pag aari nya ngunit ito ay babakuran nya', 'Dahilan nito ay wala kaming madadaanan kaya gusto ko sya makausap Upang makiusap na baka kami ay mabigyan nya ng kahit kapirasong madadaanan', 'Pakikipag linawan Tungkol sa Itinayong bakod', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(161, 110, 76, '2023-8-48', ' 10809 Sitio Riverside Batong Malake ', ' Batong Malake ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-08-07 00:00:00', '2023-08-07', 'Jovelyn O. Corda', 'Roland E. Martinez / Maria Clarissa', 'Sina Roland Martinez at Maria Clarissa Adouas ay aking inirereklamo dahil sa pagsisiga nila at ang isa pa ay ang kanilang mga aso', 'Gusto ko silang makaharap upang makipaglinawan', 'Pakikipaglinawan tungkol sa aso at uso ng siga', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(162, 110, 76, '2023-8-49', 'Purok 6 Riverside Batong Malake ', 'Riverside  Batong Malake ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-08-09 00:00:00', '2023-08-09', 'Arlene P. Miranda', 'Angelo Garbansos ', 'Si Angelo Garbansos ay nagbanta noong linggo ng gabi August 6, 2023 Hindi na daw bale na makulong sya bastaapatay lang daw ako Hindi ako makauwi sa amin dahil sa pag babanta nya noong uns ako ay minumura lang  nya hanggang sa sya ay nag wala na', 'Dahil dito gusto ko siyang kausapin na itigil na ang ginagawa nya sa akin', 'Pagbabanta', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(163, 110, 76, '2023-8-50', 'Batong Malake', 'Batong Malake', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-08-13 00:00:00', '2023-08-13', 'Jessica Caraga', 'Verminda Santos', 'Ako ay nagpunta dito sa Barangay Batong Malake upang Ireklamo si Verminda Santos Dahil sa parking ng kanyang mga Customer', 'Dahil dito gusto ko siyang makausap upang ang parking namin ay hindi na magamit ng kanilang Customer.', 'Usapin tungkol sa Parking', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(164, 110, 76, '2023-9-51', '9172  sitio pagkakaisa  Brgy, Batong Malake', '9172 sitio pagkakaisa ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-08-30 00:00:00', '2023-08-30', 'Reinna M. Salazar', 'Mary Jean Poche/Daria Casale', 'Nag punta ako dito sa brgy upang ipaalam ang hindi pagbabayad ng renta at hindi pagbabayad ng mga bills ni Mary Jean Poche at Daria Casale', 'Dahil dito, Gusto ko sila makausap para maisettle and mga bayarin nila', 'pagpapaalis sa apartment sa maayos na paraan', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(165, 110, 76, '2023-9-52', 'Umali subdivision barangay batong malake ', 'Umali subdivision barangay batong malake ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-09-03 00:00:00', '2023-09-03', 'Abigail Mendoza ', 'Carla delos santos ', 'Ako si abigail Mendoza , nagtungo ako dito sa Brgy, upang ireklamo si carla delos santos dahil sa mali nyang kinikwento sa aming mga kapitbahay.', 'Gusto ko siyang makaharap, para itigil na nya ang mga maling kinikwento nya sa mga kapitbahay.', 'Pagkalat ng tsismis', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(166, 110, 76, '2023-9-53', 'Diamong Ext., Batong malake ', 'Sitio Sipit Barangay Batong malake', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-09-10 00:00:00', '2023-09-10', 'Ayo Beth D. Pena / Beth Dumagat / Anne D. Vallejera / Lorna Escobin / Andres Dumagat', 'Carlos Aquino / Dexter Cabahuy', 'Si carlos Aquini at Dexter Cabahug ay gustoilong makausap tungkol sa basura ng sitio sipit Homeowners, Ang barusahan kasi nila ay nasa gilid ngaming bahay ito ay nagdudulot ng mabahong amoy.', 'Dahil dito gusto namin makausap sila para magawaan ng paraan at maging maayos ang basurahan.', 'Pakikipaglinawan Tungkol sa Basura', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(167, 110, 76, '2023-9-55', 'BRGY. bayog Los baños, Laguna', 'Sitio Pagkakaisa, Batong Malake Los Baños, Laguna ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-09-18 00:00:00', '2023-09-18', 'Joshua Angeles / Mary grace Vargas ', 'Jed Jordan Oca / Bernalyn Oca ', 'Ako si Joshua Angeles taga BRGY. Bayog ,nagkakaroon ng aksidenteng Banggaan ,at ako po ay handang makipag- usap sa kanila.', 'dahil sa aksidenteng nangyari gusto kong makaharap sila at makausap.', 'Aksidenteng Banggaan', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(168, 110, 76, '2023-9-56', 'OB Purok , Barangay Batong malake ', 'OB Purok , Barangay Batong malake', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-09-23 00:00:00', '2023-09-23', 'Mark Toledo ', 'Kieser Maranan ', 'Ako si Mark Toledo , ako ay pinagbabantaan ni kieser Maranan pinagbabantaan nya ako sa hindi ko malaman na dahilan.', 'Gusto ko siyang makausap para malaman ang dahilan kung bakit nya ako pinagbabantaan.', 'Pagbabanta', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(169, 110, 76, '2023-9-57', 'El Danda ST. Barangay Batong Malake ', 'El Danda ST. Barangay Batong Malake', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-09-25 00:00:00', '2023-09-25', 'Rolando Manaig ', 'Kenneth Villegas ', 'Ako si Roalando Manaig ako ay taga El Danda Batong Malake, Ako ay sinuntok ni Kenneth Villegas.', 'Dahil dito gusto ko syang ipatawag at makausap.', 'Panununtok', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(170, 110, 76, '2023-10-59	', 'Batong Malake L.B.L.', 'Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-01 00:00:00', '2023-10-01', 'Rolando Aguirre ', 'Bessi Alforja', 'Si Bessie Alforja ay mayroong pagkakautang sa akin sya ay may balance pa sa akin hanggang ngayon ay hindi pa rin nya ako binabayaran', 'Gusto ko syang makausap upang pag usapan ang kanyang balance', 'Perang hiniram na hindi Binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(171, 110, 76, '2023-10-60', 'Batong Malake L.B.L', 'FO Santos Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-01 00:00:00', '2023-10-01', ' Amador  A Cube ', 'Alvin Jocson Cube', 'Si Alvin Jocson Cube ay aking inerereklamo dahil ginamit nya ang pangalan ko sa pagkakabit ng internet.', 'Gusto ko syang makaharap at makausap kung bakit nya ginamit ang pangalan ko.', 'Paggamit ng pangalan sa pagkakabit ng internet', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(172, 110, 76, '2023-10-61', '9588 Sitio sipit Batong Malake L.B.L.', '34 Revilleza CompoundBatong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-03 00:00:00', '2023-10-03', 'Violeta A. Casubha', 'Christopher N. Escobin ', 'Si Mr, Christopher Escobin ay umupa sa akin Ngunit nung sya ay umalis Mayroon syang utility bills na hindi nabayaran', 'Gusto ko na ipatawag sya upang pag usapan ang naiwan utang sa mga bills.', 'Pakikipaglinawan sa renta at kontrata', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(173, 110, 76, '2023-10-62	', '9635 Taal Extension Batong Malake L.B.L.', 'Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-03 00:00:00', '2023-10-03', 'Ma. Laarni Ocampo /Alliyah Louise C. Ocampo / Ericson Salcedo ', 'Alfred Lorenze Ocampo /Giohsua Opulencia/ James Ashley Quinta/ Adrian Llagas', 'Si Alfred Ocampo at ang kanyang mga kaibigan ay bisita ng aking anak, Nang biglang si Alfred ay pang nagwawala na at inaaway ako pati ang aking kinakasama dahilan ng kaguluhan sa party ng aking anak.', 'Dahil dito gusto kong magpaliwanag si Alfred at ang kaniyang mga kaibigan kung bakit nagkaroon ng kaguluhan.', 'Panggulo Pananakit at Pagbabanta', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(174, 110, 76, '2023-10-63', 'Ilag Compound Batong Malake L.B.L.', 'Ilag CompoundBatong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-08 00:00:00', '2023-10-08', 'Kyla mae P. Simbajon/Gayle Therese L. Parco/Ma. Jillian L. Parco/Carla S. Redondo', 'Letticia Garcia/Virgilia Conception/ Amilene Pua ', 'Nais naming mabawi ang aming deposit na nagkakahalaga ng Php 8,000 kay Virgilia  Conception dahil yung property ay naibenta na pala', 'Dahil dito gusto naming syang ipatawag upang makaharap at makausap', 'Pag bawi  sa deposit ng apartment', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(175, 110, 76, '2023-10-64', 'Sitio Riverside Batong Malake L.B.L.', 'Sitio Riverside Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-10 00:00:00', '2023-10-10', 'Irene p. Saguin', 'Arlene Garbanzos ', 'Ako ay bumili ng washing machine kay Arlene Garbanzos at ako ay nakabayad ng buo ngunit gusto nya tong kunin bawiin noong ako ay hindi pumayag dahil gusto kong ibalik din nya ang bayad ko ay sinabihan nya ako ng Burikat', 'Gusto kong linawin ang sinabi nya gusto ko syang makaharap', 'Pakikipaglinaw tungkol sa washing machine', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(176, 110, 76, '2023-10-65', '11145 Angeles AT, Mayondon', 'Bangkal Ext. Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-10 00:00:00', '2023-10-10', 'Micah M. Santos', 'Sarah Himongala ', 'Si Sarah Himongala ay nagkakalat ng maling impormasyon ako daw ay hatid sundo sa bahay ni John  Michael Mahipos at ito ay ikinagalit ng aking asawa', 'Gusto kong makaharap at makausap si Sarah upang makipaglinawan', 'Pagkakalat ng maling impormasyon', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(177, 110, 76, '2023-10-66	', '158 Barangay Malinta LBL', 'Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-10 00:00:00', '2023-10-10', 'John Carlo T. Laurel', 'Jomari P. Mula Cruz 	', 'Ako si John Carlo T. Laurel, nagtungo ako dito sa brgy. Upang ipatala ang nangyari sa aking sasakyan nagasgasan ito ni Jomari P. Mula Cruz gusto ko sana sya makausap', 'Gusto ko makaharap upang pagusapan ang nagasgasan kong sasakyan.', 'Nasagasaan na sasakyan', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(178, 110, 76, '2023-10-67', '#57 Dona Aurora Up campus Batong Malake L.B.L.', 'Demarces subd.  Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-17 00:00:00', '2023-10-17', 'Rydz R Rivera', 'Dennis A.Servañez ', 'Ako si Rydz Rivera taga 57 Doña aurora UPLB. Ako po ay naaksidente sa daan ni dennis Servañez taga demarces subd.	', 'Dahil dito gusto ko syang makausap dahil sa nangyaring aksidente', 'Aksidente sa daan', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(179, 110, 76, '2023-10-68', 'Purok 6 Tuntungin Putho', '10336 lopez ave. Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-16 00:00:00', '2023-10-16', 'Rubylyn B. Pelagio', 'Einnor Lait ', 'Si Einnor A. Lait ay aking tauhan na taga 10336 Batong Malake Los Baños Laguna ako ay nawalan ng pera sa kaha s halagang 42,000', 'Gusto kong makaharap sa Einor upang makipaglinawan tungkol sa nawawalang pera sa kaha', 'Nawawalang pera sa kaha', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(180, 110, 76, '2023-10-69', 'Malinta Los Baños Laguna', 'Nuñez Compound Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-10-20 00:00:00', '2023-10-20', 'Elizamae C. Peligrina/ Prince Bary Peligrina', '	Alvin Montecillio', 'Ako si Elizamae Pelegria nanay ni Prince barry Peligrina ay nagpunta sa brgy hingil sa referee na si Alvin Montecillo Nuñez cmpd. Ayon sa aking anak ay inaabangan nito at pinagsisigawan.', 'Gusto ko makaharap ang referee na si Alvin Montecillo upang ipaliwanag nya bakit nya sinisigawan ang anak ko .', 'Pagaabang at pagtataas ng boses', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(181, 110, 76, '2023-11-70', 'Sitio Villegas  Batong Malake L.B.L.', 'Bungalo F. Dona Aurora UPLB Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-11-05 00:00:00', '2023-11-05', 'Rolando Maat', 'Monica Saez ', 'Ang aking motor N Maxiss, Matt black ay naatrasan at natumba ito ay nagkaroon ng mga gasgas at ito ay naatrasan ng kotse na minamaneho ng anak ni allen peter saez	', 'Gusto ko silang makausap upang maipaayos ang aking motor', 'Nasaging motor', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(182, 110, 76, '2023-11-71	', 'Purok 1 OB  Batong Malake L.B.L.', 'Purok 1 OB Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-04-02 00:00:00', '2023-11-07', 'Leni Reyes', 'Narciso Manigbas  ', 'Ako si Leni Reyes taga OB purok 1 batong malake ay hindi na matiis ang aso ni Narciso manigbas na taga OB purok 1 dahil sa paghahalukay ng basura ng aso nya at ito ay nagdudulot ng kalat s aming property at dahil dito ako ay pinagmumura nya at pinag banta', 'Gusto ko po syang makausap upang magpaliwanag bakit nya ako pinagmumura at pinagbantaan.', 'Pag mumura at pag babanta', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(183, 110, 76, ' 2023-11-72', '9010 Sitio Ulik Mabcanc Calauan', '11451 kanluran st. UPCO Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-11-13 00:00:00', '2023-11-13', 'Steven L. Ballesteros ', 'Abigail M. Natanauan', 'Si Abigail Natanauan ay may pagkakautang sakin sa halagang 4,307 Hanggang ngayon hindi pa sya nagbabayad', 'Dahil dito gusto ko sya makausap at makaharap', 'Peran hiniram na Hindi Binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(184, 110, 76, '2023-11-73', '9324 Lopez Ave.  Batong Malake L.B.L.', 'Manzano Apartments Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-11-14 00:00:00', '2023-11-14', 'Ingrid Bianca Manzano/Doris Manzano', 'Rene Paul Manzano ', 'Ako si Ingrid Bianca Manzano at Doris Manzano ay nagpunta sa Brgy upang ipaalam ang nangyari sa aming bakuran ang malimit na pagkakalat ng gamit sa sakop ng aming pwesto nagkakalat at palagi ang pang hahamit ni Rene Paul Manzano', 'Gusto naming syang makaharap at makausap para matigil na ang pagkakalat nito', 'Panghahamit', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(185, 110, 76, '2023-11-74', 'Manzano Apartments Batong Malake L.B.L.', '9324 Lopez Ave.  Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-11-14 00:00:00', '2023-11-14', 'Rene Paul Manzano', 'Ingrid Bianca Manzano/Doris Manzano/Marica Manzano/John Derry Manzano', 'Ako po si Rene Paul Manzano nagtungo ako dito sa brgy upang ipaalam ang pagbabanta paninirang puri nila Doris,Ingrid,Monica,John Deryl Manzano pati narin ang panlalait at pagsasalita ng hindi maganda sa akin at trespassing', 'Gusto ko silang makausap at makaharap upang ipaliwanag nila ang kanilang ginawa sa akin', 'Pagbabanta/paninirang puri/   pisikal na pananakit / verbal abuse at trespassing', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(186, 110, 76, '2023-11-75', '10813 sitio riverside.  Batong Malake L.B.L.', 'Sitio riverside  Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-11-19 00:00:00', '2023-11-19', 'Jenelyn Mayores Geronda', 'Romulo Dacuya ', 'Ang akin pamangkin ay nakagat ng aso nila Romulo Dacuya at ito ay pinadaka sa albularyo ngunit sabi ng albularyo ay dapat maturukan ang bata ngunit hanggang ngayon ay hindi nakikipag usap ang may ari ng aso', 'Gusto ko siyang makausap upang mapagusapan ang pag babayad sa gastos sap pag papaturok.', 'Nakagat ng aso ng kapitbahay', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(187, 110, 76, '2023-11-76', 'Sn. Antonio Los Baños Laguna', 'Sitio Villegas Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-11-21 00:00:00', '2023-11-21', 'Jayson S. Verdana', 'Bonifacio A. Igot Jr/Mariecris Plaza', 'Si Bonifacio Igot dahil sya ay may kulang pa sa akin na nagkakahalaga ng Php 40,550 hanggang ngayon hindi pa sya nakikipagugnayan', 'Dahil dito gusto ko syang makausap upang malaman kung kalian nya ako babayaran.', 'Hiniram nap era na hindi binayaran', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(188, 110, 76, '2023-12-77', '9929 katinglad st. villegas  Batong Malake L.B.L.', '0313 katinglad st. villegas  Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-12-03 00:00:00', '2023-12-03', 'Lizbeth T. Gonzales/Marianne M. Villanueva', 'Jerome S. Dela Cruz', 'Kami si Marianne Villanueva at Lizbeth Gonzales inerereklamo naming si Dela Cruz dahil sa pambabastos nya sa aming mga larawan ng walang paalam', 'Dahil dito gusto naming makausap si Jerome Dela Cruz upang pagpaliwanagin kung bakit binastos ang aming larawan', 'Pang aasar at Panghahamit', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(189, 110, 76, '2023-12-79', 'Enzos ramen Ruby ST. Batong Malake L.B.L.', 'Lopez Ave. Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-12-24 00:00:00', '2023-12-24', 'Emanuel G. Reyes', 'Christopher N. Escobin', 'Gusto kong ireport ang nagyari sa aking sasakyan kahapon nasagi ito ni Karyl Cabonce sya ay walang lisensya sya ay tauhan ni Christoper Escobin nagkaroon ng damage ang akin sasakyan', 'Gusto kong mabayaran nila ang gastos sa pagpapaayos ng aking sasakyan. Dahil hindi lahat ng gastos ay covered ng insurance', 'Sagian ng Sasakyan', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(190, 110, 76, '2023-12-80', 'UPCO. Batong Malake L.B.L.', '3196 Batong Malake L.B.L.', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-12-26 00:00:00', '2023-12-26', 'Andrew Esguerra', '	Jerick B. Eusebio', 'Si Jerick Eusebio ay inerereklamo ko siya ay may utang sa akin nagkakahalaga ng Php 1,000 hanggang ngayon ay hindi nya pa ako binabayaran.', 'Gusto ko syang makaharap upang ako ay kanyang mabayaran.', 'Pakikipaglinawan tungkol sa perang hiniram', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0);
+INSERT INTO `complaints` (`id`, `UserID`, `BarangayID`, `CNum`, `CAddress`, `RAddress`, `complaint_created_date`, `complaint_updated_date`, `Mdate`, `RDate`, `CNames`, `RspndtNames`, `CDesc`, `Petition`, `ForTitle`, `Pangkat`, `CType`, `CStatus`, `CMethod`, `IsArchived`, `seen`, `removenotif`) VALUES
+(191, 115, 1, '02-000-0424 ', 'tadlac', 'tadlac', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-09 00:00:00', NULL, 'Angel May L. De Guzman', 'Gina Gomez', 'Isang taon na hindi nakakapagbayad sa napagusapan na utang. Noong January 2023 nangutang siya ng limang libo sa akin, ipinangako niya na sa isang linggo pagkarating ng sahpd ng asawa ay magbabayad siya. Subalit ngayon ay taong 2024 na perohindi parin siya', 'magbayad ng utang ayon sa napagkasunduang araw. ', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', '', 'Civil', 'Settled', 'Mediation', 1, 0, 0),
+(192, 115, 1, '03-000-0424', 'tadlac', 'tadlac', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-04-11 00:00:00', '0000-00-00', 'Erning Diamonddd', 'Popoy Kaloy', 'Isang taon na hindi nakakapagbayad sa napagusapan na utang. Noong January 2023 nangutang siya ng limang libo sa akin, ipinangako niya na sa isang linggo pagkarating ng sahpd ng asawa ay magbabayad siya. Subalit ngayon ay taong 2024 na perohindi parin siya', 'magbayad ng utang ayon sa napagkasunduang araw, nais kong singilin na may dagdag na tub si Mang Erning sapagkat ang due ng kanyang utang ay lagpas lagpas sa napagkasunduang araw. Ang napagkasunduan na bayad ay 15k ngunit nais ko siyang tubuan pa ng 10k pa', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(193, 115, 1, '03-000-0424', 'tadlac', 'tadlac', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-04-11 00:00:00', '0000-00-00', 'Erning Diamonddd', 'Popoy Kaloy', 'Isang taon na hindi nakakapagbayad sa napagusapan na utang. Noong January 2023 nangutang siya ng limang libo sa akin, ipinangako niya na sa isang linggo pagkarating ng sahpd ng asawa ay magbabayad siya. Subalit ngayon ay taong 2024 na perohindi parin siya', 'magbayad ng utang ayon sa napagkasunduang araw, nais kong singilin na may dagdag na tub si Mang Erning sapagkat ang due ng kanyang utang ay lagpas lagpas sa napagkasunduang araw. Ang napagkasunduan na bayad ay 15k ngunit nais ko siyang tubuan pa ng 10k pa', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(194, 115, 1, '03-001-0424', 'Masili ', 'Masili', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-08-11 00:00:00', '0000-00-00', 'Angel May L. De Guzman', 'Aaron Banaag', 'Isang taon na hindi nakakapagbayad sa napagusapan na utang. Noong January 2023 nangutang siya ng limang libo sa akin, ipinangako niya na sa isang linggo pagkarating ng sahpd ng asawa ay magbabayad siya. Subalit ngayon ay taong 2024 na perohindi parin siya', 'magbayad ng utang ayon sa napagkasunduang araw', 'Alarms and Scandals (Art.155)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(195, 110, 76, '2023-9-58', 'Umali subdivision barangay batong malake ', 'Sitio Villegas, Batong malake Los Baños , Laguna ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-09-27 00:00:00', '2023-09-27', 'Jayous Neil Tabaquero/ Fe P. Sangre', 'Anthony D. Tagana ', 'Kami si Jayous Neil Tabaguero at Fe P. Sangre , Kami ay dumulog dito sa BRGY upang ireport ang aming nasangkutang aksidente ni MR. Anthony Tagana.', 'Dahil dito gsto ko syang makaharap at makausap upang mapagusapan ang nangyaring aksidente.', 'Aksidenteng Banggaan', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(196, 110, 76, '2023-9-54', '10012 Halcon St. Barangay Batong malake', 'JP Heritage Dormitory , Kitanlad St. Barangay Batong malake ', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-09-13 00:00:00', '2023-09-13', 'Yoshiki R. Daranciang ', 'Rose Isip', 'SI Rose Isip ay aking Ininireklamo  dahil sa hindi nya pagtupad sa usapan na ibalik ang downpayment at deposito sakin.', 'Gusto ko syang ipatawag upang makausap at maibalik ang akin pera.', 'Pagbawi sa Deposito at upa sa apartment', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(197, 115, 1, '04-023-0424   ', 'Purok 6A Bambang Los Banos Laguna', 'Purok 4 Libis Lalakay Los Banos Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-28 00:00:00', '2024-04-05', 'Glenndel Paccial', 'Kyle Pamplona', 'I wish to complain about ____ (name of product or service, with serial number or account number) that I purchased on ____ (date and location of transaction). I am complaining because ____ (the reason you are dissatisfied). To resolve this problem I would ', 'A complaint letter format will typically begin with the sender\'s details, followed by stating who it\'s addressed to, the date, and then the letter itself. The opening paragraph should state your reason for writing, and the meat of the text will go into de', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Settled', 'Mediation', 1, 1, 0),
+(198, 115, 1, '03-000-0424', 'Masili ', 'tadlac', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-09-17 00:00:00', NULL, 'Sarah', 'Popoy Kaloyube', 'Isang taon na hindi nakakapagbayad sa napagusapan na utang. Noong January 2023 nangutang siya ng limang libo sa akin, ipinangako niya na sa isang linggo pagkarating ng sahpd ng asawa ay magbabayad siya. Subalit ngayon ay taong 2024 na perohindi parin siya', 'magbayad ng utang ayon sa napagkasunduang araw. ', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', '', 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(199, 110, 76, '2023-12-78', '2479 Tuntungin Putho, Los BaÃ±os, Laguna', 'Ruby St., Umali Subd., Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2023-12-03 00:00:00', '2023-12-03', 'Erlinda M. Obrince', 'Michael Nicdao, Carla NIcdao', 'Gusto kong makausap sina Michael Nicdao at Carla Nicdao upang ipaalis ang kanilang PVC na inilagay sa aking kanal na ipinagawa. Ito ay kanilang inilagay ng walang paalam.', 'Gusto ko silang makausap para itanong bakit hindi sila nagpaalam sa akin bago nila ilagay ang PVC.', 'Pakikipaglinawan Tungkol sa Kanal', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(200, 115, 1, '04-000-0424', 'tadlac', 'Masili', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-08-22 00:00:00', NULL, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam orci risus, tincidunt nec felis nec, finibus dapibus augue. Cras id luctus neque. In hac habitasse platea dictumst. Duis convallis ex non lacus facilisis pulvinar. Vivamus tristique risus at', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam orci risus, tincidunt nec felis nec, finibus dapibus augue. Cras id luctus neque. In hac habitasse platea dictumst. Duis convallis ex non lacus facilisis pulvinar. Vivamus tristique risus at', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam orci risus, tincidunt nec felis nec, finibus dapibus augue. Cras id luctus neque. In hac habitasse platea dictumst. Duis convallis ex non lacus facilisis pulvinar. Vivamus tristique risus at', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam orci risus, tincidunt nec felis nec, finibus dapibus augue. Cras id luctus neque. In hac habitasse platea dictumst. Duis convallis ex non lacus facilisis pulvinar. Vivamus tristique risus at', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(201, 110, 76, '2024-1-04', '9178 El Danda, Batong Malake, Los BaÃ±os, Laguna', 'El Danda, Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-04-17 00:00:00', '2024-01-15', 'Melinda Villarmino', 'Raquel Cabrera Flores, Monica Agtuca Mendoza', 'Ako ay nagtungo sa tanggapan ng Barangay Batong Malake upang ireklamo sina Raquel Cabrera Flores at Monica Agtuca Mendoza dahil sa pagmumura sa akin kanina January 14, 2024, 7:50 ng umaga at paulit-ulit na pagpaparinig sa akin tuwing dadaan ako sa kanila.', 'Gusto ko sila makausap sa barangay upang matigil na ang ginawa nila sa akin.', 'Pagmumura at Pagpaparinig ng Paulit-ulit', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(202, 110, 76, '2024-1-05', '9172 El Danda, Barangay Batong Malake, Los BaÃ±os, Laguna', '9178 El Danda, Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-04-17 00:00:00', '2023-01-16', 'Monica A. Mendoza', 'Melinda Garcia Villarmino', 'Ako si Monica A. Mendoza nagtungo sa tanggapan ng Barangay Batong Malake, Los BaÃ±os, Laguna upang ireklamo si Melinda Garcia Villarmino dahil sa pagpapalayas niya sa amin at pamimilit ng pagpapalabas ng Titulo, wala kaming titulo kundi kontrata ang hawak', 'Ang nais namin ay makausap sila at magbigay sila ng patunay na sa kanila ang lupa na inuupahan namin.', 'Pagpapalayas at Pamimilit na Pagpapalabas ng Titulo', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(203, 110, 76, '2024-1-06', '10329 Ruby St., Los BaÃ±os Subd., Batong Malake, Los BaÃ±os, Laguna', 'Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-04-17 00:00:00', '2024-01-16', 'Maharlinda S. Asuncion', 'Marlene C. Francia', 'Ako po si Ginang Maharlinda S. Asuncion may-ari ng tuta na si Marta breed pure Chihuahua. Namatay noong January 12, 2024. Sa kadahilanan na kinagat ng aso nina Ginang Marlene Francia sa tapat ng bahay nila noong nabuksan ang gate nila. Kinagat sa ulo at t', 'Gusto ko makaharap ang may-ari ng aso na pumatay kay marta para panagutan yung action at responsibility bilang may ari ng aso na pumatay.', 'Asong Pinatay ng Aso ng Kapit-bahay', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(204, 110, 76, '2024-1-07', 'Barangay Bayog, Los BaÃ±os, Laguna', 'Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-04-17 00:00:00', '2024-01-23', 'Rommel Alvarado', 'Harvard Hernani', 'Nagtungo po ako sa tanggapang ng Barangay Batong Malake para ireklamo ang aking contractor na si Harvard Hernani sa hindi pagbabayad sa nagawa naming trabaho.', 'Nais namin siya makausap sa barangay upang makipaglinawan at mabayaran ang ginawa naming proyekto.', 'Hindi Pagbabayad sa Nagawang Kontrata o Proyekto', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(205, 110, 76, '2024-2-08', '6728 Bangkal St., San Antonio, Los BaÃ±os, Laguna', '9624 Taal Ext., Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-01-29 00:00:00', '2024-01-29', 'Mario M. De Guia', 'Jayson S. Estiva', 'Ako si Mario M. De Guia na inirereklamo si Jayson S. Estiva dahil sa pagkakabangga niya sa akin kaninang umaga habang tumatawid ako sa pedestrian lane sa tapat ng Jolibee crossing.', 'Gusto ko na mapag-usapan namin ito sa tanggapan ng Barangay Batong Malake upang tulungan niya ako sa gastusin ng aking pagpapagamot.', 'Pagkakabangga', '', 'Criminal', 'Settled', 'Mediation', 0, 0, 0),
+(206, 110, 76, '2024-2-09', 'Mt. Data St., Batong Malake, Los BaÃ±os, Laguna', '10109 Sierra Madre Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-02-04 00:00:00', '2024-02-04', 'Amparo Magbanua', 'Mel Tejada', 'Ako ay nagtungo sa tanggapan ng Barangay Batong Malake upang ireklamo si Mel Tejada dahil sa pagbibintang sa akin na hindi daw sa akin ang tuwalyang naiwan ko at mga panty.', 'Gusto ko siyang makaharap sa Barangay upang makipaglinawan at malinis ang aking pangalan.', 'Pakikipaglinawan tungkol sa Nawawalang Gamit', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(207, 110, 76, '2024-2-10', 'Barangay Anos, Los BaÃ±os, Laguna', 'LB Square, Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-02-10 00:00:00', '2024-02-10', 'Mary Rose L. Alumbro & Ogie Alumbro Y Delas Armas', 'Jenirey S. Olmidillo', 'Gusto namin ireklamo si Jemrey S. Olmidillo dahil sa kanyang pagkakalat ng maling inpormasyon tungkol sa amin.', 'Nais namin siyang makaharap sa barangay upang matigil na ang kanyang paninira.', 'Pagkakalat ng Maling Inpormasyon', '', 'Civil', 'Settled', 'Mediation', 0, 0, 0),
+(208, 110, 76, '2024-2-12', '9407 Lopez Ave., Los BaÃ±os, Laguna', '9407 Lopez Ave., Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-02-10 00:00:00', '2024-02-10', 'Ronoel P. Revilleza & Emma O. Revilleza', 'Grace Sityar & Sandy Capili', 'Ako si Emma Revilleza ay nagtungo sa tanggapan ng Barangay Batong Malake upang makausap sina Sandy Capili at Grace Sityar. Sila ay mga caretaker ng rental unit na pagmamay-ari ng aking asawa at kanyang mga kapatid. ', 'Nasa ibang bansa ang mga kapatid ng asawa ko kaya nais namin makipaglinawan sa mga caretaker tungkol sa renta at amilyar.', 'Pakikipaglinawan tungkol sa Amilyar at Renta', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(209, 110, 76, '2024-2-13', 'Lungsod ng Makati', '8724 Junction St., Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-02-12 00:00:00', '2024-02-12', 'Jenny Carreon', 'Ramonato Carreon', 'Nasi ko po ireklamo si Ramonato Carreon dail gusto ko na maging legal ang aming usapan tungkol sa pagtira at pag-alis niya sa bahay ng aking tatay.', 'Nais ko siya makaharap sa barangay upang makipaglinawan at legal ang aming usapan.', 'Pakikipaglinawan sa Upa ng Bahay', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(210, 110, 76, '01-03-0424', 'Sitio Riverside, Batong Malake, Los BaÃ±os, Laguna', 'Sitio Riverside, Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-02-12 00:00:00', '2024-02-12', 'Helen Garbanzos Padilla', 'Antonio Garbanzos Padilla', 'Ako si Helen G. Padilla nagpunta sa tanggapan ng Barangay Batong Malake upang ireklamo ang aking kapatid na si Antonio G. Padilla dahil sa kanyang pagwawala kahapon, February 11, 2024, 5:30 ng hapon dahil siya ay lasing. Ako ay inaway niya at gusto akong ', 'Gusto ko pong makaharap siya sa barangay upang makausap siya at mapalitan ang mga nasira niyang upuan at para hindi na maulit ang pagwawala niya.', 'Pagwawala at Paninira ng Gamit', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(211, 110, 76, '2024-2-14', 'Sitio Riverside, Batong Malake, Los BaÃ±os, Laguna', 'Sitio Riverside, Batong Malake, Los BaÃ±os, Laguna', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-02-12 00:00:00', '2024-02-12', 'Helen Garbanzos Padilla', 'Antonio Garbanzos Padilla', 'Ako si Helen G. Padilla nagpunta sa tanggapan ng Barangay Batong Malake upang ireklamo ang aking kapatid na si Antonio G. Padilla dahil sa kanyang pagwawala kahapon, February 11, 2024, 5:30 ng hapon dahil siya ay lasing. Ako ay inaway niya at gusto akong ', 'Gusto ko pong makaharap siya sa barangay upang makausap siya at mapalitan ang mga nasira niyang upuan at para hindi na maulit ang pagwawala niya.', 'Pagwawala at Paninira ng Gamit', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(212, 115, 1, '01-000-0824 ', 'SI', 'SI', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-09 00:00:00', '2024-08-11', 'escanor', 'netoy', 'nag banatan', 'dk alam', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Settled', 'Mediation', 1, 0, 0),
+(213, 115, 1, '02-000-0824      ', 'SI', 'SI', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-27 00:00:00', '2024-08-11', 'manolo', 'mike', 'away sa lupa', 'wala ', 'Removal, sale or pledge of mortgaged property (Art. 319)', '', 'Civil', 'Unsettled', 'Dismissed', 1, 0, 0),
+(214, 115, 1, '02-000-0824', 'san isidro', 'san isidro', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-13 00:00:00', '2024-08-20', 'arin', 'jomel', 'bentahan ng tanso', 'none', 'Light coercions and unjust taxation (Art. 287)', '', 'Civil', 'Settled', 'Mediation', 1, 1, 0),
+(215, 115, 1, '02-000-0824', 'sies', 'sies', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-17 00:00:00', '2024-08-19', 'manolo', 'bigote', 'away sa lupa', 'dk alam', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', '', 'Civil', 'Settled', 'Mediation', 1, 0, 0),
+(216, 125, 79, '01-000-0824', 'san isidro', 'san isidro', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-08-28 00:00:00', '2024-08-28', 'escanor', 'jomel', 'bentahan ng tanso', 'none', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(217, 125, 79, '02-000-0824', 'san isidro', 'san isidro', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-08-28 00:00:00', '2024-08-28', 'person1', 'person2', 'nag abando', 'none', 'Abandoning a minor (Art. 276)', '', 'Criminal', 'Unsettled', 'Pending', 0, 0, 0),
+(218, 125, 79, '02-000-0824', 'san isidro', 'san isidro', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-08-28 00:00:00', '2024-08-28', 'manolo', 'michael', 'sa kuryente', 'none', 'Malubhang pamimilit (Art. 286)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(219, 125, 79, '02-000-0824', 'san isidro', 'san isidro', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-08-28 00:00:00', '2024-08-28', 'fgdfg', 'fdg', 'nag abando', 'none', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', '', 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(256, 134, 92, '01-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-26 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(257, 134, 92, '02-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-11-01 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', '', 'Others', 'Settled', 'Mediation', 1, 0, 0),
+(258, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-11-01 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Using fictitious names and concealing true names (Art. 178)', '', 'Civil', 'Settled', NULL, 1, 0, 0),
+(259, 134, 92, '04-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-11-01 00:00:00', '2024-10-16', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Using fictitious names and concealing true names (Art. 178)', NULL, 'Others', 'Unsettled', 'Pending', 1, 0, 0),
+(260, 134, 92, '05-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-11 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Light threats (Art. 283)', NULL, 'Others', 'Unsettled', 'Pending', 1, 0, 0),
+(261, 135, 93, '01-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-11-01 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Using fictitious names and concealing true names (Art. 178)', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(263, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-11 00:00:00', '2024-10-11', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(264, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-11-01 00:00:00', '2024-10-11', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', '', 'Civil', 'Settled', 'Arbitration', 1, 0, 0),
+(267, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-11 00:00:00', '2024-10-11', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(268, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-11 00:00:00', '2024-10-11', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(271, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-11-01 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Other forms of swindling (Art. 316)', '', 'Civil', 'Settled', 'Mediation', 1, 0, 0),
+(272, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-11-01 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(273, 134, 92, '03-000-1125', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-11-01 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(275, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-30 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Removal, sale or pledge of mortgaged property (Art. 319)', NULL, 'Others', 'Unsettled', 'Pending', 1, 0, 0),
+(277, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-30 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(279, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-29 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(280, 134, 92, '03-000-1124', 'Block 12 lot 32', 'Eksplorasyon', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-29 00:00:00', '2024-11-01', 'Lyward ', 'Maniego', 'Maingay ', 'Patahimikin', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(287, 115, 1, '01-023-1124', 'fdg', 'fgh', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-13 00:00:00', '2024-11-11', 'warren', 'ghfg', 'ghfg', 'yuytu', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Settled', 'Mediation', 1, 1, 0),
+(331, 115, 1, '02-023-1124', 'fg', 'ghfgh', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-11-01 15:38:00', '2024-11-13', 'fdg', 'fggf', 'dfg', 'fgf', 'Unlawful use of means of publication and unlawful utterances (Art. 154)', '', 'Civil', 'Settled', 'Mediation', 1, 1, 0),
+(332, 115, 1, '03-023-1124', 'gfhfgh', 'ghfgh', '2025-02-14 09:04:36', '0000-00-00 00:00:00', '2024-10-31 00:43:00', '2024-11-15', 'hatdogss', 'ghfgh', 'fdgg', 'ghfgh', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Settled', 'Mediation', 1, 1, 0),
+(333, 115, 1, '01-023-0225', 'san isidro', 'san isidro', '2025-02-14 09:07:10', '2025-02-14 12:42:47', '2025-02-14 22:06:00', '2025-02-14', 'miko', 'jomel', 'away', 'walala', 'sdsd', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(334, 115, 1, '02-023-0225', 'san isidro', 'san isidro', '2025-02-14 09:10:44', '2025-02-14 11:05:09', '2024-12-15 05:14:00', '2025-02-14', 'yeye', 'arjay', 'wala', 'wala', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(335, 115, 1, '02-023-0225', 'gsdsdf', 'sdfsdf', '2025-02-14 09:16:34', '2025-02-14 12:42:49', '2025-02-15 06:16:00', NULL, 'ewan', 'fdgdgf', 'sdfsf', 'sdfsdf', 'Using false certificates (Art. 175)', '', 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(336, 115, 1, '03-023-0225', 'dfgdfg', 'fdgdfg', '2025-02-14 10:50:23', '2025-02-14 11:22:56', '2025-02-14 23:49:00', '2025-02-14', 'tt', 'tt', 'dfgdfg', 'dfgdfg', 'Using false certificates (Art. 175)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(337, 115, 1, '03-023-0225', 'fsdf', 'sdfsf', '2025-02-14 11:22:47', '2025-02-14 11:22:53', '2025-02-15 00:22:00', '0000-00-00', 'ww', 'ww', 'sdf', 'sdfsdf', 'Using fictitious names and concealing true names (Art. 178)', NULL, 'Civil', 'Unsettled', 'Pending', 1, 0, 0),
+(338, 115, 1, '03-023-0225', 'hgdfg', 'sfdsf', '2025-02-14 12:43:31', '2025-02-14 16:23:06', '2025-02-15 12:23:00', NULL, 'wassu', 'sdfds', 'fdgdfg', 'dfsdf', 'Alarms and Scandals (Art.155)', '', 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(339, 115, 1, '03-023-0225', 'rtyrt', 'rtyrty', '2025-02-14 13:07:03', '2025-02-14 13:21:28', '2025-02-15 09:21:00', NULL, 'changeg', 'tryrt', 'hfghfgh', 'fghfgh', 'Using false certificates (Art. 175)', '', 'Civil', 'Unsettled', 'Pending', 0, 0, 0),
+(340, 115, 1, '04-023-0225', 'dsf', 'dfgd', '2025-02-14 16:27:02', NULL, '2025-02-15 05:26:00', '0000-00-00', 'third', 'fdgdfg', 'gdfg', 'gddfg', 'Alarms and Scandals (Art.155)', NULL, 'Civil', 'Unsettled', 'Pending', 0, 0, 0);
+
+--
+-- Triggers `complaints`
+--
+DELIMITER $$
+CREATE TRIGGER `update_timestamp` BEFORE UPDATE ON `complaints` FOR EACH ROW BEGIN
+  -- Check if any of the specific columns are updated
+  IF NEW.CNUm != OLD.CNUm OR
+     NEW.ForTitle != OLD.ForTitle OR
+     NEW.CNames != OLD.CNames OR
+     NEW.RspndtNames != OLD.RspndtNames OR
+     NEW.CDesc != OLD.CDesc OR
+     NEW.Petition != OLD.Petition OR
+     NEW.CAddress != OLD.CAddress OR
+     NEW.RAddress != OLD.RAddress OR
+     NEW.Mdate != OLD.Mdate OR
+     NEW.RDate != OLD.RDate OR
+     NEW.Pangkat != OLD.Pangkat OR
+     NEW.CStatus != OLD.CStatus OR
+     NEW.CMethod != OLD.CMethod OR
+     NEW.CType != OLD.CType THEN
+    SET NEW.complaint_updated_date = CURRENT_TIMESTAMP;
+  END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `update_timestamp_v1` BEFORE UPDATE ON `complaints` FOR EACH ROW BEGIN
+  -- Check if any of the specific columns are updated
+  IF NEW.CNum != OLD.CNum OR
+     NEW.ForTitle != OLD.ForTitle OR
+     NEW.CNames != OLD.CNames OR
+     NEW.RspndtNames != OLD.RspndtNames OR
+     NEW.CDesc != OLD.CDesc OR
+     NEW.Petition != OLD.Petition OR
+     NEW.CAddress != OLD.CAddress OR
+     NEW.RAddress != OLD.RAddress OR
+     NEW.Mdate != OLD.Mdate OR
+     NEW.RDate != OLD.RDate OR
+     NEW.Pangkat != OLD.Pangkat OR
+     NEW.CStatus != OLD.CStatus OR
+     NEW.CMethod != OLD.CMethod OR
+     NEW.CType != OLD.CType THEN
+    -- Update the complaint_updated_date to the current timestamp
+    SET NEW.complaint_updated_date = CURRENT_TIMESTAMP;
+  END IF;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `update_timestamp_v2` BEFORE UPDATE ON `complaints` FOR EACH ROW BEGIN
+  -- Only update the timestamp if this is an actual update (not an insert)
+  IF OLD.complaint_updated_date IS NOT NULL THEN
+    -- Check if any of the specific columns are updated
+    IF NEW.CNum != OLD.CNum OR
+       NEW.ForTitle != OLD.ForTitle OR
+       NEW.CNames != OLD.CNames OR
+       NEW.RspndtNames != OLD.RspndtNames OR
+       NEW.CDesc != OLD.CDesc OR
+       NEW.Petition != OLD.Petition OR
+       NEW.CAddress != OLD.CAddress OR
+       NEW.RAddress != OLD.RAddress OR
+       NEW.Mdate != OLD.Mdate OR
+       NEW.RDate != OLD.RDate OR
+       NEW.Pangkat != OLD.Pangkat OR
+       NEW.CStatus != OLD.CStatus OR
+       NEW.CMethod != OLD.CMethod OR
+       NEW.CType != OLD.CType THEN
+      -- Update the complaint_updated_date to the current timestamp
+      SET NEW.complaint_updated_date = CURRENT_TIMESTAMP;
+    END IF;
+  END IF;
+END
+$$
+DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedback_answers`
+--
+
+CREATE TABLE `feedback_answers` (
+  `fa_id` int(11) NOT NULL,
+  `barangay_id` int(11) NOT NULL,
+  `fa1` tinyint(4) NOT NULL,
+  `fa2` tinyint(4) NOT NULL,
+  `fa3` tinyint(4) NOT NULL,
+  `fa4` tinyint(4) NOT NULL,
+  `fa5` tinyint(4) NOT NULL,
+  `comment` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `feedback_answers`
+--
+
+INSERT INTO `feedback_answers` (`fa_id`, `barangay_id`, `fa1`, `fa2`, `fa3`, `fa4`, `fa5`, `comment`) VALUES
+(1, 1, 4, 4, 4, 4, 4, 'fdgdfg'),
+(2, 1, 1, 1, 1, 1, 1, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedback_questions`
+--
+
+CREATE TABLE `feedback_questions` (
+  `fq_id` int(100) NOT NULL,
+  `feedback_title` varchar(100) NOT NULL,
+  `fq1` varchar(100) NOT NULL,
+  `fq2` varchar(100) NOT NULL,
+  `fq3` varchar(100) NOT NULL,
+  `fq4` varchar(100) NOT NULL,
+  `fq5` varchar(100) NOT NULL,
+  `fq_creation_date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `feedback_questions`
+--
+
+INSERT INTO `feedback_questions` (`fq_id`, `feedback_title`, `fq1`, `fq2`, `fq3`, `fq4`, `fq5`, `fq_creation_date`) VALUES
+(1, 'sample title', 'ertret', 'reter', 'werwer', 'gfg', 'dsfgsdfg', '2025-02-20 16:35:09'),
+(2, 'sample title 1', 'fghdfg', 'fdgdfg', 'sdfsdf', 'dfghdfg', 'hfdgdf', '2025-02-20 16:35:53'),
+(3, 'wiwi', 'ghfgh', 'dfgg', 'hjgh', 'ty', 'gfhjfgh', '2025-02-24 15:34:19'),
+(4, 'nigga', 'dfsdf', 'sdf', 'dfg', 'fg', 'sdf', '2025-02-24 15:38:29');
 
 -- --------------------------------------------------------
 
@@ -997,9 +1150,7 @@ INSERT INTO `lupons` (`id`, `user_id`, `name1`, `name2`, `name3`, `name4`, `name
 (102, 135, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-11-01 05:39:22', 0),
 (103, 138, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-11-06 03:46:26', 0),
 (104, 139, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-11-06 06:48:56', 0),
-(105, 140, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-11-06 09:42:21', 0),
-(106, 142, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-11-07 15:59:51', 0),
-(107, 143, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-11-07 16:15:07', 0);
+(105, 140, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024-11-06 09:42:21', 0);
 
 -- --------------------------------------------------------
 
@@ -1048,15 +1199,46 @@ CREATE TABLE `mov` (
   `year` year(4) NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `mov`
+-- Table structure for table `movassessmentmembers`
 --
 
-INSERT INTO `mov` (`id`, `user_id`, `barangay_id`, `IA_1a_pdf_File`, `IA_1b_pdf_File`, `IA_2a_pdf_File`, `IA_2b_pdf_File`, `IA_2c_pdf_File`, `IA_2d_pdf_File`, `IA_2e_pdf_File`, `IB_1forcities_pdf_File`, `IB_1aformuni_pdf_File`, `IB_1bformuni_pdf_File`, `IB_2_pdf_File`, `IB_3_pdf_File`, `IB_4_pdf_File`, `IC_1_pdf_File`, `IC_2_pdf_File`, `ID_1_pdf_File`, `ID_2_pdf_File`, `IIA_pdf_File`, `IIB_1_pdf_File`, `IIB_2_pdf_File`, `IIC_pdf_File`, `IIIA_pdf_File`, `IIIB_pdf_File`, `IIIC_1forcities_pdf_File`, `IIIC_1forcities2_pdf_File`, `IIIC_1forcities3_pdf_File`, `IIIC_2formuni1_pdf_File`, `IIIC_2formuni2_pdf_File`, `IIIC_2formuni3_pdf_File`, `IIID_pdf_File`, `IV_forcities_pdf_File`, `IV_muni_pdf_File`, `V_1_pdf_File`, `threepeoplesorg_pdf_File`, `year`) VALUES
-(35, 139, 97, '1730994518_32.EPRA+JOURNALS+11415 (2).pdf', '1730994518_32.EPRA+JOURNALS+11415 (2).pdf', '1730994518_32.EPRA+JOURNALS+11415 (2).pdf', '1730994518_32.EPRA+JOURNALS+11415 (2).pdf', '1730994518_32.EPRA+JOURNALS+11415 (2).pdf', '1730994518_32.EPRA+JOURNALS+11415.pdf', '1730994518_32.EPRA+JOURNALS+11415 (2).pdf', '1730994518_32.EPRA+JOURNALS+11415 (2).pdf', '1730994518_Capstone-Ipapacheck-bukas.pdf', NULL, NULL, '1730994518_Harnessing-the-Potential-of-Virtual-Reality-VR.pdf', '1730994518_32.EPRA+JOURNALS+11415.pdf', '1730994518_ITEP414-SAM-Assignment-1-and-Task-1.pdf', '1730994518_ITEP414-SAM-Assignment-1-and-Task-1.pdf', '1730994518_Capstone-Ipapacheck-bukas.pdf', '1730994518_Lake-Voice-A-Multi-Platform-Community-Participatory-Policy-Recommendation-System-for-Freshwater-Lakes-of-the-Province-of-Laguna.pdf', '1730994518_City-of-Biñan_LTIA-Form-3.pdf', '1730994518_Engaging-Activity-3.pdf', '1730994518_Replan_N_EA_1.pdf', '1730994518_Engaging-Activity-3.pdf', '1730994518_Engaging-Activity-3.pdf', '1730994518_Engaging-Activity-3.pdf', '1730994518_Performance-Task-2.pdf', '1730994518_Performance-Task-2.pdf', '1730994518_Performance-Task-2.pdf', '1730994518_Performance-Task-2.pdf', '1730994518_10419ijmpict02 (1).pdf', '1730994518_Harnessing-the-Potential-of-Virtual-Reality-VR.pdf', '1730994518_Harnessing-the-Potential-of-Virtual-Reality-VR.pdf', '1730994518_Lake-Voice-A-Multi-Platform-Community-Participatory-Policy-Recommendation-System-for-Freshwater-Lakes-of-the-Province-of-Laguna.pdf', '1730994518_Engaging-Activity-2.pdf', '1730994518_Performance-Task-2.pdf', '1730994518_Harnessing-the-Potential-of-Virtual-Reality-VR.pdf', '2024'),
-(36, 142, 100, 'Performance-Task-2_20241107170432_43e5a6e3.pdf', 'Performance-Task-2_20241107170432_e1f9f8da.pdf', 'Performance-Task-2_20241107170432_99e4638b.pdf', 'Performance-Task-2_20241107170432_555688a3.pdf', 'Performance-Task-2_20241107170432_e42f5324.pdf', 'Performance-Task-2_20241107170432_14f77175.pdf', 'Performance-Task-2_20241107170432_97f8de56.pdf', 'Performance-Task-2_20241107170432_f01bc541.pdf', 'Performance-Task-2_20241107170432_e13daab9.pdf', 'Performance-Task-2_20241107170432_3d6a4506.pdf', 'Performance-Task-2_20241107170432_fe95a82e.pdf', 'Performance-Task-2_20241107170432_df2edc1c.pdf', 'Performance-Task-2_20241107170432_d783f80e.pdf', 'Performance-Task-2_20241107170432_92ef6939.pdf', 'Performance-Task-2_20241107170432_e92484af.pdf', 'Performance-Task-2_20241107170432_c8f187ce.pdf', 'Performance-Task-2_20241107170432_d874cbe7.pdf', 'Performance-Task-2_20241107170432_b1c0a9fd.pdf', 'Performance-Task-2_20241107170432_ae004229.pdf', 'Performance-Task-2_20241107170432_bc94db37.pdf', 'Performance-Task-2_20241107170432_9b44c4d0.pdf', 'Performance-Task-2_20241107170432_9c1bc91a.pdf', 'Performance-Task-2_20241107170432_45b81c25.pdf', 'Performance-Task-2_20241107170432_e6c1e7b0.pdf', 'Performance-Task-2_20241107170432_9946fb22.pdf', 'Performance-Task-2_20241107170432_3cad285f.pdf', 'Performance-Task-2_20241107170432_b3a4288e.pdf', 'Performance-Task-2_20241107170432_b4dd89eb.pdf', 'Performance-Task-2_20241107170432_7a7dc6f4.pdf', 'Performance-Task-2_20241107170432_1a9a378f.pdf', 'Performance-Task-2_20241107170432_78426a2d.pdf', 'Performance-Task-2_20241107170432_df7d2391.pdf', 'Performance-Task-2_20241107170432_7819ed7e.pdf', 'Performance-Task-2_20241107170432_243a7256.pdf', '2025'),
-(37, 143, 101, 'Performance-Task-2_20241107171653_213e2b52.pdf', 'Performance-Task-2_20241107171653_65d28d11.pdf', 'Performance-Task-2_20241107171653_0f470daf.pdf', 'Performance-Task-2_20241107171653_3126a063.pdf', 'Performance-Task-2_20241107171653_4e27a17b.pdf', 'Performance-Task-2_20241107171653_bb31df5f.pdf', 'Performance-Task-2_20241107171653_d84238bd.pdf', 'Performance-Task-2_20241107171653_fcbfce90.pdf', 'Performance-Task-2_20241107171653_f443d1f4.pdf', 'Performance-Task-2_20241107171653_55075fd4.pdf', 'Performance-Task-2_20241107171653_3d7eb27d.pdf', 'Performance-Task-2_20241107171653_5ac86ab7.pdf', 'Performance-Task-2_20241107171653_f3e44148.pdf', 'Performance-Task-2_20241107171653_2a8ddad8.pdf', 'Performance-Task-2_20241107171653_fa220276.pdf', 'Performance-Task-2_20241107171653_b6e12c26.pdf', 'Performance-Task-2_20241107171653_8fd861a2.pdf', 'Performance-Task-2_20241107171653_f52fdded.pdf', 'Performance-Task-2_20241107171653_919d2127.pdf', 'Performance-Task-2_20241107171653_7306350d.pdf', 'Performance-Task-2_20241107171653_a9bac43d.pdf', 'Performance-Task-2_20241107171653_6ae5e3ca.pdf', 'Performance-Task-2_20241107171653_c6cbc430.pdf', NULL, 'Performance-Task-2_20241107171653_d062295f.pdf', 'Performance-Task-2_20241107171653_d275ba13.pdf', 'Performance-Task-2_20241107171653_a7dbe485.pdf', 'Performance-Task-2_20241107171653_013d136c.pdf', 'Performance-Task-2_20241107171653_3c1cf2b7.pdf', 'Performance-Task-2_20241107171653_036f67da.pdf', '', 'Performance-Task-2_20241107171653_a7213341.pdf', 'Performance-Task-2_20241107171653_4781e9f1.pdf', 'Performance-Task-2_20241107171653_ecba2970.pdf', '2024'),
-(38, 142, 100, 'Performance-Task-2_20241107170432_43e5a6e3.pdf', 'Performance-Task-2_20241107170432_e1f9f8da.pdf', 'Performance-Task-2_20241107170432_99e4638b.pdf', 'Performance-Task-2_20241107170432_555688a3.pdf', 'Performance-Task-2_20241107170432_e42f5324.pdf', 'Performance-Task-2_20241107170432_14f77175.pdf', 'Performance-Task-2_20241107170432_97f8de56.pdf', 'Performance-Task-2_20241107170432_f01bc541.pdf', 'Performance-Task-2_20241107170432_e13daab9.pdf', 'Performance-Task-2_20241107170432_3d6a4506.pdf', 'Performance-Task-2_20241107170432_fe95a82e.pdf', 'Performance-Task-2_20241107170432_df2edc1c.pdf', 'Performance-Task-2_20241107170432_d783f80e.pdf', 'Performance-Task-2_20241107170432_92ef6939.pdf', 'Performance-Task-2_20241107170432_e92484af.pdf', 'Performance-Task-2_20241107170432_c8f187ce.pdf', 'Performance-Task-2_20241107170432_d874cbe7.pdf', 'Performance-Task-2_20241107170432_b1c0a9fd.pdf', 'Performance-Task-2_20241107170432_ae004229.pdf', 'Performance-Task-2_20241107170432_bc94db37.pdf', 'Performance-Task-2_20241107170432_9b44c4d0.pdf', 'Performance-Task-2_20241107170432_9c1bc91a.pdf', 'Performance-Task-2_20241107170432_45b81c25.pdf', 'Performance-Task-2_20241107170432_e6c1e7b0.pdf', 'Performance-Task-2_20241107170432_9946fb22.pdf', 'Performance-Task-2_20241107170432_3cad285f.pdf', 'Performance-Task-2_20241107170432_b3a4288e.pdf', 'Performance-Task-2_20241107170432_b4dd89eb.pdf', 'Performance-Task-2_20241107170432_7a7dc6f4.pdf', 'Performance-Task-2_20241107170432_1a9a378f.pdf', 'Performance-Task-2_20241107170432_78426a2d.pdf', 'Performance-Task-2_20241107170432_df7d2391.pdf', 'Performance-Task-2_20241107170432_7819ed7e.pdf', 'Performance-Task-2_20241107170432_243a7256.pdf', '2026');
+CREATE TABLE `movassessmentmembers` (
+  `id` int(11) NOT NULL,
+  `municipality_id` int(11) NOT NULL,
+  `chairperson` varchar(200) NOT NULL,
+  `member1` varchar(200) NOT NULL,
+  `member2` varchar(200) NOT NULL,
+  `member3` varchar(200) NOT NULL,
+  `member4` varchar(200) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `movbrgy_officers`
+--
+
+CREATE TABLE `movbrgy_officers` (
+  `id` int(11) NOT NULL,
+  `barangay` int(11) NOT NULL,
+  `Punong_Barangay` varchar(100) NOT NULL,
+  `Barangay_Secretary` varchar(100) NOT NULL,
+  `Barangay_Treasurer` varchar(100) NOT NULL,
+  `Kagawad1` varchar(100) NOT NULL,
+  `Kagawad2` varchar(100) NOT NULL,
+  `Kagawad3` varchar(100) NOT NULL,
+  `Kagawad4` varchar(100) NOT NULL,
+  `Kagawad5` varchar(100) NOT NULL,
+  `Kagawad6` varchar(100) NOT NULL,
+  `Kagawad7` varchar(100) NOT NULL,
+  `Kagawad8` varchar(100) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `year` year(4) NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1149,19 +1331,10 @@ CREATE TABLE `movrate` (
   `IV_muni_pdf_rate` decimal(11,0) DEFAULT NULL,
   `V_1_pdf_rate` decimal(11,0) DEFAULT NULL,
   `threepeoplesorg_rate` decimal(11,0) DEFAULT NULL,
-  `status_rate` varchar(100) GENERATED ALWAYS AS (case when `IA_1a_pdf_rate` is not null and `IA_1b_pdf_rate` is not null and `IA_2a_pdf_rate` is not null and `IA_2b_pdf_rate` is not null and `IA_2c_pdf_rate` is not null and `IA_2d_pdf_rate` is not null and `IA_2e_pdf_rate` is not null and `IB_1forcities_pdf_rate` is not null and `IB_1aformuni_pdf_rate` is not null and `IB_1bformuni_pdf_rate` is not null and `IB_2_pdf_rate` is not null and `IB_3_pdf_rate` is not null and `IB_4_pdf_rate` is not null and `IC_1_pdf_rate` is not null and `IC_2_pdf_rate` is not null and `ID_1_pdf_rate` is not null and `ID_2_pdf_rate` is not null and `IIA_pdf_rate` is not null and `IIB_1_pdf_rate` is not null and `IIB_2_pdf_rate` is not null and `IIC_pdf_rate` is not null and `IIIA_pdf_rate` is not null and `IIIB_pdf_rate` is not null and `IIIC_1forcities_pdf_rate` is not null and `IIIC_1forcities2_pdf_rate` is not null and `IIIC_1forcities3_pdf_rate` is not null and `IIIC_2formuni1_pdf_rate` is not null and `IIIC_2formuni2_pdf_rate` is not null and `IIIC_2formuni3_pdf_rate` is not null and `IIID_pdf_rate` is not null and `IV_forcities_pdf_rate` is not null and `IV_muni_pdf_rate` is not null and `V_1_pdf_rate` is not null and `threepeoplesorg_rate` is not null then 'Rate Status: Rated' else 'Rate Status: Pending' end) STORED,
   `total` int(11) GENERATED ALWAYS AS (ifnull(`IA_1a_pdf_rate`,0) + ifnull(`IA_1b_pdf_rate`,0) + ifnull(`IA_2a_pdf_rate`,0) + ifnull(`IA_2b_pdf_rate`,0) + ifnull(`IA_2c_pdf_rate`,0) + ifnull(`IA_2d_pdf_rate`,0) + ifnull(`IA_2e_pdf_rate`,0) + ifnull(`IB_1forcities_pdf_rate`,0) + ifnull(`IB_1aformuni_pdf_rate`,0) + ifnull(`IB_1bformuni_pdf_rate`,0) + ifnull(`IB_2_pdf_rate`,0) + ifnull(`IB_3_pdf_rate`,0) + ifnull(`IB_4_pdf_rate`,0) + ifnull(`IC_1_pdf_rate`,0) + ifnull(`IC_2_pdf_rate`,0) + ifnull(`ID_1_pdf_rate`,0) + ifnull(`ID_2_pdf_rate`,0) + ifnull(`IIA_pdf_rate`,0) + ifnull(`IIB_1_pdf_rate`,0) + ifnull(`IIB_2_pdf_rate`,0) + ifnull(`IIC_pdf_rate`,0) + ifnull(`IIIA_pdf_rate`,0) + ifnull(`IIIB_pdf_rate`,0) + ifnull(`IIIC_1forcities_pdf_rate`,0) + ifnull(`IIIC_1forcities2_pdf_rate`,0) + ifnull(`IIIC_1forcities3_pdf_rate`,0) + ifnull(`IIIC_2formuni1_pdf_rate`,0) + ifnull(`IIIC_2formuni2_pdf_rate`,0) + ifnull(`IIIC_2formuni3_pdf_rate`,0) + ifnull(`IIID_pdf_rate`,0) + ifnull(`IV_forcities_pdf_rate`,0) + ifnull(`IV_muni_pdf_rate`,0) + ifnull(`V_1_pdf_rate`,0) + ifnull(`threepeoplesorg_rate`,0)) STORED,
-  `daterate` year(4) NOT NULL DEFAULT current_timestamp()
+  `year` year(4) DEFAULT current_timestamp(),
+  `daterate` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `movrate`
---
-
-INSERT INTO `movrate` (`id`, `barangay`, `mov_id`, `IA_1a_pdf_rate`, `IA_1b_pdf_rate`, `IA_2a_pdf_rate`, `IA_2b_pdf_rate`, `IA_2c_pdf_rate`, `IA_2d_pdf_rate`, `IA_2e_pdf_rate`, `IB_1forcities_pdf_rate`, `IB_1aformuni_pdf_rate`, `IB_1bformuni_pdf_rate`, `IB_2_pdf_rate`, `IB_3_pdf_rate`, `IB_4_pdf_rate`, `IC_1_pdf_rate`, `IC_2_pdf_rate`, `ID_1_pdf_rate`, `ID_2_pdf_rate`, `IIA_pdf_rate`, `IIB_1_pdf_rate`, `IIB_2_pdf_rate`, `IIC_pdf_rate`, `IIIA_pdf_rate`, `IIIB_pdf_rate`, `IIIC_1forcities_pdf_rate`, `IIIC_1forcities2_pdf_rate`, `IIIC_1forcities3_pdf_rate`, `IIIC_2formuni1_pdf_rate`, `IIIC_2formuni2_pdf_rate`, `IIIC_2formuni3_pdf_rate`, `IIID_pdf_rate`, `IV_forcities_pdf_rate`, `IV_muni_pdf_rate`, `V_1_pdf_rate`, `threepeoplesorg_rate`, `daterate`) VALUES
-(40, 100, 36, 2, 2, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024'),
-(41, 100, 38, NULL, NULL, NULL, 2, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024'),
-(42, 101, 37, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, '2024');
 
 --
 -- Triggers `movrate`
@@ -1223,17 +1396,8 @@ CREATE TABLE `movremark` (
   `IV_muni_pdf_remark` varchar(255) DEFAULT NULL,
   `V_1_pdf_remark` varchar(255) DEFAULT NULL,
   `threepeoplesorg_remark` varchar(255) DEFAULT NULL,
-  `dateremark` year(4) NOT NULL DEFAULT current_timestamp()
+  `dateremark` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `movremark`
---
-
-INSERT INTO `movremark` (`id`, `barangay`, `mov_id`, `IA_1a_pdf_remark`, `IA_1b_pdf_remark`, `IA_2a_pdf_remark`, `IA_2b_pdf_remark`, `IA_2c_pdf_remark`, `IA_2d_pdf_remark`, `IA_2e_pdf_remark`, `IB_1forcities_pdf_remark`, `IB_1aformuni_pdf_remark`, `IB_1bformuni_pdf_remark`, `IB_2_pdf_remark`, `IB_3_pdf_remark`, `IB_4_pdf_remark`, `IC_1_pdf_remark`, `IC_2_pdf_remark`, `ID_1_pdf_remark`, `ID_2_pdf_remark`, `IIA_pdf_remark`, `IIB_1_pdf_remark`, `IIB_2_pdf_remark`, `IIC_pdf_remark`, `IIIA_pdf_remark`, `IIIB_pdf_remark`, `IIIC_1forcities_pdf_remark`, `IIIC_1forcities2_pdf_remark`, `IIIC_1forcities3_pdf_remark`, `IIIC_2formuni1_pdf_remark`, `IIIC_2formuni2_pdf_remark`, `IIIC_2formuni3_pdf_remark`, `IIID_pdf_remark`, `IV_forcities_pdf_remark`, `IV_muni_pdf_remark`, `V_1_pdf_remark`, `threepeoplesorg_remark`, `dateremark`) VALUES
-(12, 101, 37, 's', 's', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 's', 's', 's', 's', 's', '2024'),
-(13, 100, 36, 's', 'w', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 'No remarks available', 's', 's', 's', 's', 's', '2024'),
-(14, 100, 38, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2024');
 
 -- --------------------------------------------------------
 
@@ -1345,7 +1509,6 @@ INSERT INTO `security` (`id`, `user_id`, `question1`, `answer1`, `question2`, `a
 (14, 110, '3', '$2y$10$pVO5Gtn89ND6fo/ohiqTNOxgbJWq5DC1viryXtFsStv7DavdFIZ.u', '2', '$2y$10$bVu9wwWWNpzPOXz4LztEbucoEzdiXAiKiEKxFMeDYaOEGMYDUQP4O', '1', '$2y$10$N8UtCJtmttnKXCZG3dx/IOHAMimyq5DM5mvyXdBDEA5UO2eSUVVq6'),
 (15, 118, '4', '$2y$10$0dgVJLBUu9q9WwsIP7BaxOmB.rNkjduhlK7ZvCqswhNLDQp7zpeQG', '3', '$2y$10$Ht15KMgOxVxoCBPM/yo09.CZSENmGfAN12oDumimrKKZEZCiNQuue', '1', '$2y$10$Dxbv/CRY22BL8itmzTJJjOU.KX.mYp4.tWDf3Lvl/VXjurwdzkah2'),
 (25, 122, '2', '$2y$10$jHuq2.wCAznTZtTMjmYXou7ceVkrVzjSTwEq8pMtkrSQChYfnOoAy', '3', '$2y$10$2p/yBXy6pVkOYhzqnA6DgOV1PGJunl0YYeb8UnMfU6q1ZQxZMdx6O', '4', '$2y$10$9JC5rftD4mQDpRF7txi3qOf/cuu.FtfRCAKjyLBi7moqyM9z3rTba'),
-(26, 1, '1', '$2y$10$MwTGTalfgjek.ILhr7oycuhnN7W2zpNGXa/hMDBDeP6kF8Y16spMK', '2', '$2y$10$bxRfSyFe6XZ8BVTPoeuJk.WMHvRgl6fnFIw2hyWrnSb8WSBUNx3AC', '3', '$2y$10$u778tZczP7jPmjU2eLFwK.9m6sffSfyHYbhCDPjiwTLjEdt8/VjJW'),
 (29, 115, '1', '$2y$10$hkxKHeVGmJUSLFso.Wsz/.UN0Sk3N/Sdg9X2P3aUHKAoETMdLpvqS', '1', '$2y$10$hzpFqIAmqIm//aZfZ4vPD.4wkl22mONzSibpuKz5ztH0YZNa9I98S', '1', '$2y$10$U28nrBhK93gpeqvaOXeK0u.CE/IO.MwAg72RH8amyKOdk6DjwU9FC'),
 (33, 125, '2', '$2y$10$5cxEMGZc8IToORJ6gx88Me.3jlggGNOQBam218rGGdSCMRFtkFt1G', '1', '$2y$10$TZ4Uos9L.a/eBhsAweNj3uHkCP8MUvfbJxIu9lI1vqYimsE.zXuva', '2', '$2y$10$43VHYjoRBa5E79eVcTagG.QTEoFAazMV29.ah3r9FkoVa/fvl8NO6'),
 (34, 112, '1', '$2y$10$Lq0.57IS4klSD6kOx9dKYuLWpR8Sd1rLDtexSiJVUwV1cC25KUhKe', '2', '$2y$10$UBwxZ5nMKTLR13nYYBwsJePRhspXhAlyygdozUwTJm5A8cKy35msS', '1', '$2y$10$AM5rhhx79uJZZz3G.D.spewGVEZ4cL/b1opdeRUmG9r5IDec/idBy'),
@@ -1366,8 +1529,11 @@ INSERT INTO `security` (`id`, `user_id`, `question1`, `answer1`, `question2`, `a
 (49, 138, '1', '$2y$10$FQOo9n9yF8GbCI9LhJTfO.jrPFfXJsZ1yha6IOePppJsGUQvpN06G', '3', '$2y$10$uIRPkQ/7UX9w9nYubyJkRufe.CVUMlCP2ed5hR/pUi0E/Hdl9X8L6', '4', '$2y$10$1N9f8IatncWprQXWvZntguyNZ94hpjTZOoUdhCtGO9RG9xYcSGEHW'),
 (50, 139, '1', '$2y$10$uOFqXh72hDD7Boht0VyZk./r7rNpKdZ9EbTXZMbiIOpx2C3gP/tP6', '2', '$2y$10$jEhNa6FzzR.n2k8alsjakelOtRjfAlEvCr3TLbADZh.nsWU9Mqlpm', '4', '$2y$10$MH0Xqbx.xsUPCMaY4t.bw.Q.6sUcERJTjcG0i7/m7CTjwg/JjF2ay'),
 (51, 140, '2', '$2y$10$YposSkY4AivhNMKj9d9fTeY6QNJxs/NWbnBEKuinwtYKa8r4mz0XC', '1', '$2y$10$L56K02Yo4cH1lb6z9nWBHeNXM1w24fRLmx.IdZp8or95UhzapDaOi', '3', '$2y$10$kO7H8o5cTF32u7aQafaWWe52akl9yvpZL0brsDXQUlYdpa8tLynDu'),
-(52, 142, '1', '$2y$10$O7MBlL0WwwxFqRD5a7O89OBxDYelSBkRr.RBVDDEDBSqds.lRWFqy', '1', '$2y$10$ZMr/sj4.zgZCtoupwjxF/uD7E4D02qdTHz0udHh14WnA0/JdavfAy', '1', '$2y$10$6CfxqXLqQ.RRyt0MnqrN7OTWHAqMlFEOnKB8YJ57ieZM1ChUkR8Ge'),
-(53, 143, '1', '$2y$10$cdrXL.oXtGRCcmOQCm3pKOuWxRp0eptTJW9gwd4DlAXsJ3FZIluMK', '1', '$2y$10$xNEg2czDbHb94SVPDGCSi.ifjDaAL4nU89XhHbN8ndt/kaz9zwsU.', '1', '$2y$10$U7mhBz0zct8fRI99Eib9z.rPKrUwmocRd3zUnAkAElVg9O37nWnPO');
+(54, 144, '3', '$2y$10$dhMi1dw1MEYOnPhOkIx59ui294sPDVtxzoTk9DgUZ9xa5Anmab8PO', '1', '$2y$10$kn8.G9q15eOdp3FPkNCqJeUzV8moLHSX/GxRj9iki1qYHGS1S2xni', '2', '$2y$10$k8rFh52qMzPhzUAf233wgeUe5bE7fT2nvRlKWUTVJEe0v8kVLGccq'),
+(55, 145, '1', '$2y$10$Clbp8XtBPxSuHQzCQfVLzORmT/FdLncGCCJZJwq4bhXbL.0M8vJ8a', '2', '$2y$10$04x3kfB6mNzlG/QI0iKHLuqBPls4FvRUDDO0a1c6mXU/lnBeDVndi', '3', '$2y$10$4PCOOcMclqvQUgU7NXfThOIgY5AnhziWVUiWDV619OJXs3/8scjQy'),
+(56, 148, '1', '$2y$10$2gWF/CAJMK3AlFDkNiWhyeKxWXy.I5pAjG7gOfMv1XGIDloP975m2', '3', '$2y$10$Frh.XjMJZ.fKR7H5uBFO0OGF0SwuiGdoEaqMfwHs/dNpHE943NoM6', '3', '$2y$10$nHWbnVVdMLacGQFDHwkcBu4hJopEuvkBRi27W4hBvXX/vcIU/Y8OO'),
+(58, 152, '2', '$2y$10$b/tEU3NNgtF8FP.XEt5RFOIdKFWB4jjUpDzEeVOSIMqNCdFJiLE..', '1', '$2y$10$bVWQMcXMQ8IiEdPuihigP.1/GIcAea76z..Trl.Ff2wuna.RUSMqW', '4', '$2y$10$u0sKU1E4z4kvjNTjqC/hp.KWt9NDmeMCMpqjfcWeLNNfswq8aGPNa'),
+(59, 1, '4', '$2y$10$LTgkep3o93woaXTupC/Ha.aiNdOx5/YT/BnK08s1Iv7J06uewR19.', '3', '$2y$10$Yds5ORP/9sl1pgSaS8EGsumqoP.ISndPDfiMBSBo/bJII8AofshBa', '2', '$2y$10$EmN1t5fWbUd4hsui3C.s3.zAhZzIaShQbjItKBkOesE57eDDrzale');
 
 -- --------------------------------------------------------
 
@@ -1486,7 +1652,8 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `email` varchar(100) NOT NULL,
   `contact_number` varchar(11) DEFAULT NULL,
-  `user_type` enum('superadmin','admin','user') NOT NULL,
+  `user_type` enum('superadmin','admin','user','assessor') NOT NULL,
+  `assessor_type` varchar(20) DEFAULT NULL,
   `municipality_id` int(11) DEFAULT NULL,
   `barangay_id` int(11) DEFAULT NULL,
   `registration_date` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -1502,30 +1669,35 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `first_name`, `last_name`, `password`, `email`, `contact_number`, `user_type`, `municipality_id`, `barangay_id`, `registration_date`, `profile_picture`, `verified`, `attempt_count`, `restrict_end`, `lgu_logo`, `city_logo`) VALUES
-(1, 'SuperAdmins', 'DILGs', 'Head', '$2y$10$TrBHp44V3RHaAaVwmtAreeDmUU5iSlSWXmXv6vmocjS6NtT.K8KF6', 'superadmin@gmail.com', '09212342546', 'superadmin', NULL, NULL, '2023-08-04 01:05:56', '1.jpg', 0, 0, NULL, 'angel.png', 'angel.png'),
-(107, 'binanclgoo@eKP.Aces', 'Fatima Nona', 'Alon', '$2y$10$5i4PM0wyi8jMYs8Ixr8XNempA5Myc1qIIgzB5gj7G/GSRUOZHlzEq', 'clgoobinan@gmail.com', '09567004685', 'admin', 41, NULL, '2024-04-19 09:01:14', NULL, 0, 0, NULL, NULL, NULL),
-(108, 'losbanosmlgoo@eKP.Aces', 'Michiko ', 'Escalante', '$2y$10$7dluF21OMfD.82Ihdnj7y.85w1XQvUY1h4r0FoVBnxAenU6KUiFIS', 'mlgoolosbanos2@gmail.com', '09567004685', 'admin', 42, NULL, '2024-03-08 08:47:23', NULL, 0, 0, NULL, NULL, NULL),
-(109, 'SanVicente_Binan_eKP.Aces', 'Barangay San Vicente', 'City of Binan', '$2y$10$KLTiy/M2p/iszSETtzZpqeFQyFRSvqKUTrT9JLoKUieXCU4ldZDk2', 'barangaysanvicenteofficial@gmail.com', '09190955719', 'user', 41, 74, '2024-03-11 02:11:59', '109.png', 1, 0, NULL, 'Biñan City OFFICIAL LOGO.png', '243194454_199740088924858_2035192919547994160_n.png'),
-(110, 'BatongMalake_LosBaÃ±os_eKP.Aces', 'Barangay Batong Malake', 'Los BaÃ±os', '$2y$10$eayLrM0RoJWODnE2MJ3xFuOYdVJ/yR2tq9CrKe1AXIavbYtBexLfe', 'nidomyla@gmail.com', '09650758255', 'user', 42, 76, '2024-03-11 02:16:57', '110.jpg', 1, 0, NULL, 'th (1).jpg', 'LUPON LOGO.jpg'),
-(111, 'clgoosantarosa', 'Melody', 'Barairo', '$2y$10$tzq6l0PCamb2MqnpXF6hCexa2EvVzNLdmrpKZboo64W3wp46Mn09K', 'clgoosantarosa2@gmail.com', '09955880245', 'admin', 43, NULL, '2024-03-27 03:54:13', NULL, 0, 0, NULL, NULL, NULL),
-(112, 'clgoosanpedro', 'LENIE', 'BAUTISTA', '$2y$10$fGE932U4UaDzIRWVYq6iwuVNlkTEejUZzY.3GuuMp8/71S2.f7L6u', 'clgoosanpedro1@gmail.com', '09985514533', 'admin', 44, NULL, '2024-03-27 03:58:17', NULL, 0, 0, NULL, NULL, NULL),
-(113, 'clgoocalamba4', 'Jennifer', 'Quirante', '$2y$10$dt070nbAOYHBcUG8DJ3s7u9.YxvFdTVxtFBUJT3Jr/rcI9yM2pGcm', 'clgoocalamba4@gmail.com', '09178754605', 'admin', 45, NULL, '2024-03-27 04:04:20', NULL, 0, 0, NULL, NULL, NULL),
-(115, 'samplebarangay', 'sample', 'Barangay', '$2y$10$G7d1ThN/qa2W2RNovjr.zO0f1CUXoUSTAPT/N31rkz.jmgN2A4ubq', 'samplebarangay@gmail.com', '09212342546', 'user', 52, 1, '2024-03-30 04:50:57', '115.jpg', 1, 1, NULL, 'drink.jpg', 'drink3.jpg'),
-(116, 'MLGOO CALAUAN', 'LOIDA', 'VISTA', '$2y$10$KntShdyO8v6zviVwnFvTfe34DEO.lMROz3qnYElWffIOK6fqKxuZC', 'mlgoocalauan2023@gmail.com', '09273834670', 'admin', 46, NULL, '2024-04-19 00:37:07', NULL, 0, 0, NULL, NULL, NULL),
-(117, 'MLGOO BAY', 'JAYSON', 'CHAVEZ', '$2y$10$TeoCPd6plmGxhQPPwPpnEOXRgNR.XoOH7pgV8HbpUiwQS2dmlQ4h6', 'mlgoobay2@gmail.com', '09285021005', 'admin', 47, NULL, '2024-04-19 00:42:32', NULL, 0, 0, NULL, NULL, NULL),
-(118, 'CLGOO SAN PABLO', 'Maria Alma', 'Barrientos', '$2y$10$C.RO0yMg.1TdCFepROoae.YneBGF.58uEKUGO9rK9Dethmx.MAl/W', 'clgoosanpablo8@gmail.com', '09053708601', 'admin', 48, NULL, '2024-04-19 00:50:54', NULL, 0, 0, NULL, NULL, NULL),
-(122, 'sampleadmin', 'Sample', 'Admin', '$2y$10$TrBHp44V3RHaAaVwmtAreeDmUU5iSlSWXmXv6vmocjS6NtT.K8KF6', 'sampleadmin@gmail.com', '09212342546', 'admin', 52, NULL, '2024-03-30 04:50:57', '122.jpg', NULL, 0, NULL, '', ''),
-(128, 'AlaminosAdmin', 'Alaminos', 'Muni', '$2y$10$0jVVb.sdNDY6zMYoACdCC.aQb2RhdfTpmOpL4xHEZnhKm3RvFE7Ru', 'clgooalaminos@gmail.com', '09605595411', 'admin', 54, NULL, '2024-09-02 01:53:11', NULL, 0, 0, NULL, NULL, NULL),
-(134, 'alaminosusername', 'alaminosfname', 'alaminoslname', '$2y$10$xz3yYT.BbszV7rFMit22oOuIkaxUxZHVD2gUvz7sT3AYTxaUcEWhe', 'alaminos@gmail.com', '09605595411', 'user', 54, 92, '2024-09-02 03:44:13', '134.png', 1, 0, NULL, NULL, 'pngwing.com.png'),
-(135, 'sanpedrousername', 'sanpedrofname', 'sanpedrolname', '$2y$10$a4nxbj4.n03Hp7taCK7GL.BaMSfT8AFaEPVaagQr0654AubHSuhse', 'SanPedro@gmail.com', '09605595411', 'user', 44, 93, '2024-09-02 03:47:44', NULL, 1, 0, NULL, 'drink2.jpg', NULL),
-(136, 'masayausername', 'masayafname', 'masayalname', '$2y$10$qyERj5ROeTdFBOtC.8DoYOXBb15i2g6G1AydAGu.fPtcComlrvK5O', 'masaya@gmail.com', '09605595411', 'user', 47, 94, '2024-09-07 04:55:00', NULL, 1, 0, NULL, NULL, NULL),
-(137, 'mlgoolosbanos2@gmail.com', 'test', 'sample', '$2y$10$jaQ3w0OhUd6iPDmzPMXl8eXcUq6GmO5bz5k5WwwwuvclOg4SIyGd2', 'bagongsilang@gmail.com', '09576123845', 'user', 42, 95, '2024-10-31 12:33:21', NULL, 1, 0, NULL, NULL, NULL),
-(138, 'anossample', 'asno', 'anosss', '$2y$10$G8LhDnmZp8zSg1pSEpCR8upRq5tmP.DMHgWd5JQfN63bfaqBEAYi.', 'anos@gmail.com', '0951276495', 'user', 42, 96, '2024-11-04 17:59:16', NULL, 1, 0, NULL, NULL, NULL),
-(139, 'tes', 'fk;nsfk;a;', 'lfansflna', '$2y$10$xG3M9zusn62RAGMvf9c6/.wRpJ1uZpwILiaQ9P7g/t/Dr/HWUoW9G', 'maahas@gmail.com', '0957642036', 'user', 42, 97, '2024-11-06 06:48:12', NULL, 1, 0, NULL, NULL, NULL),
-(140, 'gdgsd', 'gsgsfgs', 'timugan', '$2y$10$T353GR/z2Txh4HCmgjOfKu68mkldaVZIxboU/iYnHinb3uFVg/sye', 'timug@gmail.com', '09572168924', 'user', 42, 98, '2024-11-06 09:41:43', NULL, 1, 0, NULL, NULL, NULL),
-(142, 'jm02', 'john', 'asd', '$2y$10$l9yiokn9nTWTTK97Y/SZ2uMv3YVuVAZDt058/RFpejcMk7.9yw.X2', 'john@gmail.com', '123', 'user', 45, 100, '2024-11-07 15:59:13', NULL, 1, 0, NULL, NULL, NULL),
-(143, 'jm02', 'mark', 'asd', '$2y$10$AjMq9ouVuvMKWAHfi6q0A.Z4P.iNdAajDzh8mbZzzaaF8of9KDoim', 'jm@gmail.com', '123', 'user', 45, 101, '2024-11-07 16:14:27', NULL, 1, 0, NULL, NULL, NULL);
+INSERT INTO `users` (`id`, `username`, `first_name`, `last_name`, `password`, `email`, `contact_number`, `user_type`, `assessor_type`, `municipality_id`, `barangay_id`, `registration_date`, `profile_picture`, `verified`, `attempt_count`, `restrict_end`, `lgu_logo`, `city_logo`) VALUES
+(1, 'SuperAdmins', 'DILG', 'Head', '$2y$10$TrBHp44V3RHaAaVwmtAreeDmUU5iSlSWXmXv6vmocjS6NtT.K8KF6', 'superadmin@gmail.com', '09212342546', 'superadmin', NULL, NULL, NULL, '2023-08-04 01:05:56', '1.jpg', 0, 0, NULL, 'angel.png', 'angel.png'),
+(107, 'binanclgoo@eKP.Aces', 'Fatima Nona', 'Alon', '$2y$10$5i4PM0wyi8jMYs8Ixr8XNempA5Myc1qIIgzB5gj7G/GSRUOZHlzEq', 'clgoobinan@gmail.com', '09567004685', 'admin', NULL, 41, NULL, '2024-04-19 09:01:14', NULL, 0, 0, NULL, NULL, NULL),
+(108, 'losbanosmlgoo@eKP.Aces', 'Michiko ', 'Escalante', '$2y$10$7dluF21OMfD.82Ihdnj7y.85w1XQvUY1h4r0FoVBnxAenU6KUiFIS', 'mlgoolosbanos2@gmail.com', '09567004685', 'admin', NULL, 42, NULL, '2024-03-08 08:47:23', NULL, 0, 0, NULL, NULL, NULL),
+(109, 'SanVicente_Binan_eKP.Aces', 'Barangay San Vicente', 'City of Binan', '$2y$10$KLTiy/M2p/iszSETtzZpqeFQyFRSvqKUTrT9JLoKUieXCU4ldZDk2', 'barangaysanvicenteofficial@gmail.com', '09190955719', 'user', NULL, 41, 74, '2024-03-11 02:11:59', '109.png', 1, 0, NULL, 'Biñan City OFFICIAL LOGO.png', '243194454_199740088924858_2035192919547994160_n.png'),
+(110, 'BatongMalake_LosBaÃ±os_eKP.Aces', 'Barangay Batong Malake', 'Los BaÃ±os', '$2y$10$eayLrM0RoJWODnE2MJ3xFuOYdVJ/yR2tq9CrKe1AXIavbYtBexLfe', 'nidomyla@gmail.com', '09650758255', 'user', NULL, 42, 76, '2024-03-11 02:16:57', '110.jpg', 0, 0, NULL, 'th (1).jpg', 'LUPON LOGO.jpg'),
+(111, 'clgoosantarosa', 'Melody', 'Barairo', '$2y$10$tzq6l0PCamb2MqnpXF6hCexa2EvVzNLdmrpKZboo64W3wp46Mn09K', 'clgoosantarosa2@gmail.com', '09955880245', 'admin', NULL, 43, NULL, '2024-03-27 03:54:13', NULL, 0, 0, NULL, NULL, NULL),
+(112, 'clgoosanpedro', 'LENIE', 'BAUTISTA', '$2y$10$fGE932U4UaDzIRWVYq6iwuVNlkTEejUZzY.3GuuMp8/71S2.f7L6u', 'clgoosanpedro1@gmail.com', '09985514533', 'admin', NULL, 44, NULL, '2024-03-27 03:58:17', NULL, 0, 0, NULL, NULL, NULL),
+(113, 'clgoocalamba4', 'Jennifer', 'Quirante', '$2y$10$dt070nbAOYHBcUG8DJ3s7u9.YxvFdTVxtFBUJT3Jr/rcI9yM2pGcm', 'clgoocalamba4@gmail.com', '09178754605', 'admin', NULL, 45, NULL, '2024-03-27 04:04:20', NULL, 0, 0, NULL, NULL, NULL),
+(115, 'samplebarangay', 'sampled', 'Barangay', '$2y$10$G7d1ThN/qa2W2RNovjr.zO0f1CUXoUSTAPT/N31rkz.jmgN2A4ubq', 'samplebarangay@gmail.com', '09212342546', 'user', NULL, 52, 1, '2024-03-30 04:50:57', '115.jpg', 1, 1, NULL, 'drink.jpg', 'drink3.jpg'),
+(116, 'MLGOO CALAUAN', 'LOIDA', 'VISTA', '$2y$10$KntShdyO8v6zviVwnFvTfe34DEO.lMROz3qnYElWffIOK6fqKxuZC', 'mlgoocalauan2023@gmail.com', '09273834670', 'admin', NULL, 46, NULL, '2024-04-19 00:37:07', NULL, 0, 0, NULL, NULL, NULL),
+(117, 'MLGOO BAY', 'JAYSON', 'CHAVEZ', '$2y$10$VC/eXazma0Iv2DJvNfLmdONbE42b7zn6a5nEAYrqQTr9JraSRUreu', 'mlgoobay2@gmail.com', '09285021005', 'admin', NULL, 47, NULL, '2024-04-19 00:42:32', NULL, 0, 0, NULL, NULL, NULL),
+(118, 'CLGOO SAN PABLO', 'Maria Alma', 'Barrientos', '$2y$10$C.RO0yMg.1TdCFepROoae.YneBGF.58uEKUGO9rK9Dethmx.MAl/W', 'clgoosanpablo8@gmail.com', '09053708601', 'admin', NULL, 48, NULL, '2024-04-19 00:50:54', NULL, 0, 0, NULL, NULL, NULL),
+(122, 'sampleadmin', 'Sample', 'Admin', '$2y$10$TrBHp44V3RHaAaVwmtAreeDmUU5iSlSWXmXv6vmocjS6NtT.K8KF6', 'sampleadmin@gmail.com', '09212342546', 'admin', NULL, 52, NULL, '2024-03-30 04:50:57', '122.jpg', NULL, 0, NULL, '', ''),
+(128, 'AlaminosAdmin', 'Alaminos', 'Muni', '$2y$10$0jVVb.sdNDY6zMYoACdCC.aQb2RhdfTpmOpL4xHEZnhKm3RvFE7Ru', 'clgooalaminos@gmail.com', '09605595411', 'admin', NULL, 54, NULL, '2024-09-02 01:53:11', NULL, 0, 0, NULL, NULL, NULL),
+(134, 'alaminosusername', 'alaminosfname', 'alaminoslname', '$2y$10$xz3yYT.BbszV7rFMit22oOuIkaxUxZHVD2gUvz7sT3AYTxaUcEWhe', 'alaminos@gmail.com', '09605595411', 'user', NULL, 54, 92, '2024-09-02 03:44:13', '134.png', 1, 0, NULL, NULL, 'pngwing.com.png'),
+(135, 'sanpedrousername', 'sanpedrofname', 'sanpedrolname', '$2y$10$a4nxbj4.n03Hp7taCK7GL.BaMSfT8AFaEPVaagQr0654AubHSuhse', 'SanPedro@gmail.com', '09605595411', 'user', NULL, 44, 93, '2024-09-02 03:47:44', NULL, 1, 0, NULL, 'drink2.jpg', NULL),
+(136, 'masayausername', 'masayafname', 'masayalname', '$2y$10$qyERj5ROeTdFBOtC.8DoYOXBb15i2g6G1AydAGu.fPtcComlrvK5O', 'masaya@gmail.com', '09605595411', 'user', NULL, 47, 94, '2024-09-07 04:55:00', NULL, 1, 0, NULL, NULL, NULL),
+(137, 'mlgoolosbanos2@gmail.com', 'test', 'sample', '$2y$10$jaQ3w0OhUd6iPDmzPMXl8eXcUq6GmO5bz5k5WwwwuvclOg4SIyGd2', 'bagongsilang@gmail.com', '09576123845', 'user', NULL, 42, 95, '2024-10-31 12:33:21', NULL, 0, 0, NULL, NULL, NULL),
+(138, 'anossample', 'asno', 'anosss', '$2y$10$n9E9/QD.E7tLjpdhxLrB0u53UzzYiPxtFu5EUDw6ZNolL.PyLaX5y', 'anos@gmail.com', '0951276495', 'user', NULL, 42, 96, '2024-11-04 17:59:16', NULL, 0, 0, NULL, NULL, NULL),
+(139, 'tes', 'dff', 'lfansflna', '$2y$10$xG3M9zusn62RAGMvf9c6/.wRpJ1uZpwILiaQ9P7g/t/Dr/HWUoW9G', 'maahas@gmail.com', '0957642036', 'user', NULL, 42, 97, '2024-11-06 06:48:12', NULL, 1, 0, NULL, NULL, NULL),
+(140, 'gdgsd', 'gsgsfgs', 'timugan', '$2y$10$ysfBKfKBbl8n8bikOVTX/emD4KhSpRTJLS39Esy.zshbQ5lkyFDEO', 'timug@gmail.com', '09572168924', 'user', NULL, 42, 98, '2024-11-06 09:41:43', NULL, 1, 0, NULL, NULL, NULL),
+(141, 'calambausername', 'calambafname', 'calambalname', '$2y$10$IUjr1f03qLER9ZcXfB6fceowVExfzKg3FU4YZxpNW/wwXeOK5vFsW', 'calamba@gmail.com', '09605595411', 'user', NULL, 45, 99, '2024-12-09 20:22:49', NULL, 0, 0, NULL, NULL, NULL),
+(146, 'bot', 'michael', 'larios', '$2y$10$EYPLRVFB8h9sNJ.Z.zUcreQAyvPWEpkKQud3UplArgOtzpv0Rls5C', 'michael@gmail.com', '09605595411', 'user', NULL, 45, 100, '2024-12-10 00:00:02', NULL, 1, 0, NULL, NULL, NULL),
+(148, 'calamba assesor', 'jomel', 'escasura', '$2y$10$gA0x1p./DOMBy40HPljiruwQqSTOQ05v5GumUp7bfcT/ZvHtfjymi', 'calambaassessor@gmail.com', '09605595411', 'assessor', 'doctor', 45, NULL, '2024-12-10 06:37:48', '148.jpg', 0, 0, NULL, NULL, NULL),
+(149, 'dfsd', 'dsfsdf', 'dsfsdf', '$2y$10$XlyE22NQwDjySDjgY8tU/.vQB7mAGNWlyJToTKMgB4hG/AOxva73a', 'aa@gmail.com', '09212342546', 'assessor', 'Department of Justic', 42, NULL, '2025-02-14 23:37:25', NULL, 0, 0, NULL, NULL, NULL),
+(150, 'sdfgds', 'dfgdfg', 'fdgdfg', '$2y$10$dYqKpuOHIsPLcC3tFUlFleTj3UMhtO0wbsTBKh2VHvKTCYHyHbvd2', 'bb@gmail.com', '09212342546', 'assessor', 'Liga ng mga Barangay', 42, NULL, '2025-02-14 23:38:42', NULL, 0, 0, NULL, NULL, NULL),
+(152, 'si', 'si', 'si', '$2y$10$qRHyAA5m/vFhQIGA6QANbepkrWhP7W6eVtbacL3eb21YKG58WqBDG', 'si@gmail.com', '09572168923', 'user', '', 47, 102, '2025-02-17 22:18:33', NULL, 1, 0, NULL, NULL, NULL),
+(153, 'qq', 'qq', 'qq', '$2y$10$U6KpexOfHLsOk.evsL20neAZBTEE54/hJPXyullQtTJCEjcC/mWBK', 'qq@gmail.com', '09605595411', 'user', NULL, 42, 103, '2025-02-24 21:58:06', NULL, 0, 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1548,7 +1720,8 @@ CREATE TABLE `user_files` (
 
 INSERT INTO `user_files` (`id`, `user_id`, `file_name`, `file_path`, `uploaded_at`, `barangay_id`) VALUES
 (18, 109, 'kp_form2_ (1).pdf', 'uploadsLP/kp_form2_ (1).pdf', '2024-03-11 02:31:29', 74),
-(19, 109, 'kp_form3_.pdf', 'uploadsLP/kp_form3_.pdf', '2024-03-11 02:34:33', 74);
+(19, 109, 'kp_form3_.pdf', 'uploadsLP/kp_form3_.pdf', '2024-03-11 02:34:33', 74),
+(30, 115, 'table_20250211_.pdf', 'uploads/lupon/table_20250211_.pdf', '2025-02-15 04:44:51', 1);
 
 -- --------------------------------------------------------
 
@@ -1568,818 +1741,344 @@ CREATE TABLE `user_logs` (
 --
 
 INSERT INTO `user_logs` (`log_id`, `user_id`, `timestamp`, `activity`) VALUES
-(1, 134, '2024-10-12 13:54:47', 'User logged in'),
-(2, 134, '2024-10-12 14:07:40', 'User logged in'),
-(3, 134, '2024-10-12 14:32:03', 'User logged in'),
-(4, 134, '2024-10-12 14:37:53', 'User logged in'),
-(5, 134, '2024-10-12 19:03:09', 'User logged in'),
-(6, 134, '2024-10-12 19:05:06', 'User logged in'),
-(7, 134, '2024-10-12 19:07:05', 'User logged in'),
-(8, 134, '2024-10-12 19:11:12', 'User logged in'),
-(9, 134, '2024-10-12 19:20:35', 'User logged in'),
-(10, 134, '2024-10-12 19:20:40', 'User logged in'),
-(11, 134, '2024-10-12 19:20:47', 'User logged in'),
-(12, 134, '2024-10-12 19:20:48', 'User logged in'),
-(13, 134, '2024-10-12 19:20:49', 'User logged in'),
-(14, 134, '2024-10-12 19:20:49', 'User logged in'),
-(15, 134, '2024-10-12 19:20:49', 'User logged in'),
-(16, 134, '2024-10-12 19:20:50', 'User logged in'),
-(17, 134, '2024-10-12 19:20:52', 'User logged in'),
-(18, 134, '2024-10-12 19:21:49', 'User logged in'),
-(19, 134, '2024-10-12 19:25:48', 'User logged in'),
-(20, 134, '2024-10-12 19:31:33', 'User logged in'),
-(21, 134, '2024-10-12 19:45:53', 'User logged in'),
-(22, 134, '2024-10-12 19:53:04', 'User logged in'),
-(23, 134, '2024-10-13 16:25:13', 'User logged in'),
-(24, 134, '2024-10-13 17:24:45', 'User logged in'),
-(25, 134, '2024-10-13 17:37:12', 'User logged in'),
-(26, 134, '2024-10-13 17:37:54', 'User logged in'),
-(27, 134, '2024-10-13 17:38:37', 'User logged in'),
-(28, 134, '2024-10-13 17:41:36', 'User logged in'),
-(29, 134, '2024-10-14 00:28:09', 'User logged in'),
-(30, 134, '2024-10-14 00:29:11', 'User logged in'),
-(31, 134, '2024-10-14 00:33:50', 'User logged in'),
-(32, 134, '2024-10-14 00:49:32', 'User logged in'),
-(33, 134, '2024-10-14 00:50:10', 'User logged in'),
-(34, 134, '2024-10-14 00:58:21', 'User logged in'),
-(35, 134, '2024-10-14 00:59:52', 'User logged in'),
-(36, 134, '2024-10-14 01:00:35', 'User logged in'),
-(37, 134, '2024-10-14 01:20:11', 'User logged in'),
-(38, 134, '2024-10-14 01:20:50', 'User logged in'),
-(39, 134, '2024-10-14 01:21:17', 'User logged in'),
-(40, 134, '2024-10-14 01:23:56', 'User logged in'),
-(41, 134, '2024-10-14 01:26:36', 'User logged in'),
-(42, 134, '2024-10-14 01:29:06', 'User logged in'),
-(43, 134, '2024-10-14 01:32:25', 'User logged in'),
-(44, 134, '2024-10-14 01:46:19', 'User logged in'),
-(45, 134, '2024-10-14 01:46:32', 'User logged in'),
-(46, 134, '2024-10-14 01:46:45', 'User logged in'),
-(47, 134, '2024-10-14 02:50:43', 'User logged in'),
-(48, 134, '2024-10-14 02:51:04', 'User logged in'),
-(49, 134, '2024-10-14 02:51:44', 'User logged in'),
-(50, 134, '2024-10-14 02:52:01', 'User logged in'),
-(51, 134, '2024-10-14 02:52:39', 'User logged in'),
-(52, 134, '2024-10-14 02:55:20', 'User logged in'),
-(53, 134, '2024-10-14 02:55:59', 'User logged in'),
-(54, 134, '2024-10-14 02:56:38', 'User logged in'),
-(55, 134, '2024-10-14 02:59:14', 'User logged in'),
-(56, 134, '2024-10-14 02:59:40', 'User logged in'),
-(57, 134, '2024-10-14 21:27:34', 'User logged in'),
-(58, 134, '2024-10-14 21:27:57', 'User logged in'),
-(59, 134, '2024-10-14 21:28:34', 'User logged in'),
-(60, 136, '2024-10-22 05:34:19', 'User logged in'),
-(61, 108, '2024-10-22 17:00:29', 'User logged in'),
-(62, 108, '2024-10-22 17:00:32', 'User logged in'),
-(63, 108, '2024-10-22 17:00:32', 'User logged in'),
-(64, 108, '2024-10-22 17:00:32', 'User logged in'),
-(65, 1, '2024-10-22 17:00:56', 'User logged in'),
-(66, 1, '2024-10-22 17:00:56', 'User logged in'),
-(67, 1, '2024-10-22 17:00:58', 'User logged in'),
-(68, 1, '2024-10-22 17:00:59', 'User logged in'),
-(69, 1, '2024-10-22 17:01:01', 'User logged in'),
-(70, 1, '2024-10-22 17:01:01', 'User logged in'),
-(71, 1, '2024-10-22 17:01:01', 'User logged in'),
-(72, 1, '2024-10-22 17:01:01', 'User logged in'),
-(73, 1, '2024-10-22 17:01:01', 'User logged in'),
-(74, 1, '2024-10-22 17:01:01', 'User logged in'),
-(75, 1, '2024-10-22 17:01:02', 'User logged in'),
-(76, 1, '2024-10-22 17:01:02', 'User logged in'),
-(77, 1, '2024-10-22 17:04:33', 'User logged in'),
-(78, 1, '2024-10-22 17:04:33', 'User logged in'),
-(79, 1, '2024-10-22 17:04:34', 'User logged in'),
-(80, 1, '2024-10-22 17:04:34', 'User logged in'),
-(81, 1, '2024-10-22 17:04:34', 'User logged in'),
-(82, 1, '2024-10-22 17:04:34', 'User logged in'),
-(83, 1, '2024-10-22 17:04:52', 'User logged in'),
-(84, 1, '2024-10-22 17:04:53', 'User logged in'),
-(85, 1, '2024-10-22 17:04:54', 'User logged in'),
-(86, 1, '2024-10-22 17:04:54', 'User logged in'),
-(87, 1, '2024-10-22 17:04:54', 'User logged in'),
-(88, 1, '2024-10-22 17:04:54', 'User logged in'),
-(89, 1, '2024-10-22 17:04:55', 'User logged in'),
-(90, 1, '2024-10-22 17:12:54', 'User logged in'),
-(91, 1, '2024-10-22 17:12:54', 'User logged in'),
-(92, 1, '2024-10-22 17:12:55', 'User logged in'),
-(93, 112, '2024-10-22 17:13:45', 'User logged in'),
-(94, 112, '2024-10-22 17:13:45', 'User logged in'),
-(95, 112, '2024-10-22 17:13:46', 'User logged in'),
-(96, 112, '2024-10-22 17:13:46', 'User logged in'),
-(97, 112, '2024-10-22 17:13:46', 'User logged in'),
-(98, 112, '2024-10-22 17:13:46', 'User logged in'),
-(99, 112, '2024-10-22 17:13:46', 'User logged in'),
-(100, 112, '2024-10-22 17:13:47', 'User logged in'),
-(101, 112, '2024-10-22 17:13:47', 'User logged in'),
-(102, 112, '2024-10-22 17:13:47', 'User logged in'),
-(103, 112, '2024-10-22 17:13:47', 'User logged in'),
-(104, 112, '2024-10-22 23:53:50', 'User logged in'),
-(105, 112, '2024-10-22 23:53:50', 'User logged in'),
-(106, 112, '2024-10-22 23:53:50', 'User logged in'),
-(107, 112, '2024-10-22 23:53:50', 'User logged in'),
-(108, 112, '2024-10-22 23:53:50', 'User logged in'),
-(109, 112, '2024-10-22 23:53:51', 'User logged in'),
-(110, 112, '2024-10-22 23:53:51', 'User logged in'),
-(111, 112, '2024-10-22 23:53:51', 'User logged in'),
-(112, 112, '2024-10-22 23:53:52', 'User logged in'),
-(113, 112, '2024-10-22 23:54:01', 'User logged in'),
-(114, 112, '2024-10-22 23:54:01', 'User logged in'),
-(115, 112, '2024-10-22 23:54:02', 'User logged in'),
-(116, 112, '2024-10-22 23:54:02', 'User logged in'),
-(117, 112, '2024-10-22 23:54:02', 'User logged in'),
-(118, 112, '2024-10-22 23:54:02', 'User logged in'),
-(119, 112, '2024-10-22 23:54:02', 'User logged in'),
-(120, 112, '2024-10-22 23:54:02', 'User logged in'),
-(121, 112, '2024-10-22 23:54:03', 'User logged in'),
-(122, 112, '2024-10-22 23:54:03', 'User logged in'),
-(123, 112, '2024-10-22 23:54:03', 'User logged in'),
-(124, 112, '2024-10-22 23:54:04', 'User logged in'),
-(125, 112, '2024-10-22 23:54:04', 'User logged in'),
-(126, 112, '2024-10-22 23:54:04', 'User logged in'),
-(127, 108, '2024-10-23 03:27:06', 'User logged in'),
-(128, 137, '2024-10-23 03:33:46', 'User logged in'),
-(129, 138, '2024-10-23 08:12:34', 'User logged in'),
-(130, 1, '2024-10-23 09:19:01', 'User logged in'),
-(131, 137, '2024-10-23 14:47:47', 'User logged in'),
-(132, 138, '2024-10-23 14:49:27', 'User logged in'),
-(133, 108, '2024-10-23 15:28:28', 'User logged in'),
-(134, 108, '2024-10-23 20:29:23', 'User logged in'),
-(352, 107, '2024-03-08 08:38:10', 'User logged in'),
-(353, 108, '2024-03-08 08:48:13', 'User logged in'),
-(378, 107, '2024-03-11 02:13:39', 'User logged in'),
-(379, 109, '2024-03-11 02:14:58', 'User logged in'),
-(380, 108, '2024-03-11 02:17:38', 'User logged in'),
-(381, 110, '2024-03-11 02:18:06', 'User logged in'),
-(393, 109, '2024-03-12 02:53:43', 'User logged in'),
-(394, 109, '2024-03-12 02:57:48', 'User logged in'),
-(395, 109, '2024-03-12 03:13:03', 'User logged in'),
-(396, 109, '2024-03-12 05:37:05', 'User logged in'),
-(397, 110, '2024-03-12 07:58:21', 'User logged in'),
-(398, 110, '2024-03-13 01:44:32', 'User logged in'),
-(439, 110, '2024-03-19 04:59:03', 'User logged in'),
-(457, 110, '2024-03-22 05:33:54', 'User logged in'),
-(458, 110, '2024-03-24 02:26:00', 'User logged in'),
-(460, 110, '2024-03-24 05:43:00', 'User logged in'),
-(467, 110, '2024-03-25 02:45:11', 'User logged in'),
-(470, 110, '2024-03-25 23:42:30', 'User logged in'),
-(472, 110, '2024-03-26 00:53:36', 'User logged in'),
-(476, 111, '2024-03-27 03:54:42', 'User logged in'),
-(477, 112, '2024-03-27 03:59:13', 'User logged in'),
-(478, 113, '2024-03-27 04:05:07', 'User logged in'),
-(479, 114, '2024-03-30 04:50:02', 'User logged in'),
-(480, 114, '2024-03-30 04:51:51', 'User logged in'),
-(481, 115, '2024-03-30 04:52:02', 'User logged in'),
-(482, 115, '2024-03-30 23:39:34', 'User logged in'),
-(483, 115, '2024-03-30 23:39:59', 'User logged in'),
-(484, 115, '2024-03-30 23:40:29', 'User logged in'),
-(485, 115, '2024-03-30 23:43:16', 'User logged in'),
-(486, 110, '2024-04-01 00:30:37', 'User logged in'),
-(487, 115, '2024-04-01 01:34:18', 'User logged in'),
-(488, 115, '2024-04-01 02:11:24', 'User logged in'),
-(489, 115, '2024-04-01 02:31:50', 'User logged in'),
-(490, 115, '2024-04-02 00:24:59', 'User logged in'),
-(491, 115, '2024-04-02 00:38:35', 'User logged in'),
-(492, 115, '2024-04-02 00:39:31', 'User logged in'),
-(493, 110, '2024-04-02 00:39:49', 'User logged in'),
-(494, 110, '2024-04-03 01:12:19', 'User logged in'),
-(495, 115, '2024-04-04 01:01:41', 'User logged in'),
-(496, 110, '2024-04-04 01:26:28', 'User logged in'),
-(497, 115, '2024-04-04 02:58:55', 'User logged in'),
-(498, 115, '2024-04-04 03:08:47', 'User logged in'),
-(499, 115, '2024-04-04 03:14:12', 'User logged in'),
-(500, 115, '2024-04-05 01:03:58', 'User logged in'),
-(501, 115, '2024-04-05 01:08:05', 'User logged in'),
-(502, 115, '2024-04-08 02:36:54', 'User logged in'),
-(503, 115, '2024-04-08 02:51:19', 'User logged in'),
-(504, 115, '2024-04-08 02:51:52', 'User logged in'),
-(505, 115, '2024-04-08 05:00:52', 'User logged in'),
-(506, 115, '2024-04-08 05:07:34', 'User logged in'),
-(507, 110, '2024-04-08 07:30:23', 'User logged in'),
-(508, 115, '2024-04-12 00:02:43', 'User logged in'),
-(509, 114, '2024-04-12 00:26:18', 'User logged in'),
-(510, 110, '2024-04-12 01:11:38', 'User logged in'),
-(511, 115, '2024-04-12 01:38:07', 'User logged in'),
-(512, 115, '2024-04-12 01:41:54', 'User logged in'),
-(513, 1, '2024-04-12 01:45:31', 'User logged in'),
-(514, 115, '2024-04-12 01:49:44', 'User logged in'),
-(515, 1, '2024-04-12 01:50:50', 'User logged in'),
-(516, 115, '2024-04-12 01:52:04', 'User logged in'),
-(517, 114, '2024-04-12 01:52:20', 'User logged in'),
-(518, 1, '2024-04-12 01:52:55', 'User logged in'),
-(519, 115, '2024-04-12 01:57:06', 'User logged in'),
-(520, 115, '2024-04-12 02:02:06', 'User logged in'),
-(521, 1, '2024-04-12 02:14:17', 'User logged in'),
-(522, 1, '2024-04-12 02:14:47', 'User logged in'),
-(523, 1, '2024-04-12 02:18:07', 'User logged in'),
-(524, 114, '2024-04-12 02:24:06', 'User logged in'),
-(525, 110, '2024-04-12 03:12:31', 'User logged in'),
-(526, 115, '2024-04-12 03:51:28', 'User logged in'),
-(527, 115, '2024-04-12 03:53:49', 'User logged in'),
-(528, 1, '2024-04-12 04:22:50', 'User logged in'),
-(529, 115, '2024-04-12 04:24:07', 'User logged in'),
-(530, 1, '2024-04-12 04:26:26', 'User logged in'),
-(531, 114, '2024-04-12 04:26:54', 'User logged in'),
-(532, 115, '2024-04-12 04:27:04', 'User logged in'),
-(533, 1, '2024-04-12 04:27:22', 'User logged in'),
-(534, 115, '2024-04-12 04:54:24', 'User logged in'),
-(535, 110, '2024-04-12 05:42:51', 'User logged in'),
-(536, 115, '2024-04-12 06:36:10', 'User logged in'),
-(537, 110, '2024-04-12 08:12:38', 'User logged in'),
-(538, 115, '2024-04-13 14:21:03', 'User logged in'),
-(539, 115, '2024-04-15 00:58:43', 'User logged in'),
-(540, 115, '2024-04-15 01:06:25', 'User logged in'),
-(541, 115, '2024-04-15 01:32:19', 'User logged in'),
-(542, 115, '2024-04-15 02:03:07', 'User logged in'),
-(543, 110, '2024-04-15 02:17:37', 'User logged in'),
-(544, 1, '2024-04-15 02:23:25', 'User logged in'),
-(545, 115, '2024-04-15 02:23:38', 'User logged in'),
-(546, 115, '2024-04-15 02:30:05', 'User logged in'),
-(547, 115, '2024-04-15 02:48:33', 'User logged in'),
-(548, 110, '2024-04-15 05:36:56', 'User logged in'),
-(549, 115, '2024-04-15 05:41:40', 'User logged in'),
-(550, 115, '2024-04-15 06:03:38', 'User logged in'),
-(551, 1, '2024-04-15 07:11:07', 'User logged in'),
-(552, 1, '2024-04-15 07:11:12', 'User logged in'),
-(553, 115, '2024-04-15 12:01:26', 'User logged in'),
-(554, 1, '2024-04-15 12:54:54', 'User logged in'),
-(555, 115, '2024-04-15 13:01:48', 'User logged in'),
-(556, 1, '2024-04-15 13:02:04', 'User logged in'),
-(557, 1, '2024-04-15 13:07:39', 'User logged in'),
-(558, 110, '2024-04-16 00:28:26', 'User logged in'),
-(559, 110, '2024-04-16 01:03:00', 'User logged in'),
-(560, 110, '2024-04-16 05:53:43', 'User logged in'),
-(561, 115, '2024-04-17 02:10:52', 'User logged in'),
-(562, 115, '2024-04-17 03:07:16', 'User logged in'),
-(563, 114, '2024-04-17 03:27:33', 'User logged in'),
-(564, 115, '2024-04-17 03:51:17', 'User logged in'),
-(565, 115, '2024-04-17 04:05:25', 'User logged in'),
-(566, 110, '2024-04-17 04:09:47', 'User logged in'),
-(567, 1, '2024-04-17 04:45:23', 'User logged in'),
-(568, 115, '2024-04-17 04:47:19', 'User logged in'),
-(569, 110, '2024-04-17 04:49:18', 'User logged in'),
-(570, 115, '2024-04-17 05:01:36', 'User logged in'),
-(571, 1, '2024-04-17 05:15:05', 'User logged in'),
-(572, 115, '2024-04-17 05:32:24', 'User logged in'),
-(573, 1, '2024-04-17 05:54:40', 'User logged in'),
-(574, 115, '2024-04-17 06:02:31', 'User logged in'),
-(575, 115, '2024-04-17 08:07:25', 'User logged in'),
-(576, 110, '2024-04-17 08:08:38', 'User logged in'),
-(577, 115, '2024-04-17 08:17:38', 'User logged in'),
-(578, 115, '2024-04-17 09:08:09', 'User logged in'),
-(579, 115, '2024-04-17 09:11:34', 'User logged in'),
-(580, 110, '2024-04-17 09:14:53', 'User logged in'),
-(581, 115, '2024-04-17 12:32:48', 'User logged in'),
-(582, 110, '2024-04-18 01:27:15', 'User logged in'),
-(583, 116, '2024-04-19 00:37:54', 'User logged in'),
-(584, 117, '2024-04-19 00:43:06', 'User logged in'),
-(585, 118, '2024-04-19 00:52:33', 'User logged in'),
-(586, 110, '2024-04-19 00:57:56', 'User logged in'),
-(587, 1, '2024-04-19 01:33:13', 'User logged in'),
-(588, 115, '2024-04-19 01:34:36', 'User logged in'),
-(589, 120, '2024-04-19 02:11:23', 'User logged in'),
-(590, 1, '2024-04-19 03:55:00', 'User logged in'),
-(591, 1, '2024-04-19 04:02:09', 'User logged in'),
-(592, 115, '2024-04-19 04:12:33', 'User logged in'),
-(593, 122, '2024-04-19 04:15:24', 'User logged in'),
-(594, 115, '2024-04-19 04:16:19', 'User logged in'),
-(595, 115, '2024-04-19 04:16:45', 'User logged in'),
-(596, 122, '2024-04-19 04:17:41', 'User logged in'),
-(597, 110, '2024-04-19 04:32:53', 'User logged in'),
-(598, 115, '2024-04-19 07:00:10', 'User logged in'),
-(599, 122, '2024-04-19 08:53:09', 'User logged in'),
-(600, 122, '2024-04-19 08:59:05', 'User logged in'),
-(601, 107, '2024-04-19 09:03:39', 'User logged in'),
-(602, 115, '2024-04-20 08:28:11', 'User logged in'),
-(603, 115, '2024-08-10 19:18:17', 'User logged in'),
-(604, 115, '2024-08-10 19:22:29', 'User logged in'),
-(605, 115, '2024-08-10 19:25:45', 'User logged in'),
-(606, 115, '2024-08-10 19:48:57', 'User logged in'),
-(607, 122, '2024-08-10 20:05:47', 'User logged in'),
-(608, 122, '2024-08-10 20:06:58', 'User logged in'),
-(609, 122, '2024-08-10 20:11:44', 'User logged in'),
-(610, 115, '2024-08-11 00:50:47', 'User logged in'),
-(611, 115, '2024-08-11 01:17:04', 'User logged in'),
-(612, 115, '2024-08-11 01:27:29', 'User logged in'),
-(613, 115, '2024-08-11 01:29:31', 'User logged in'),
-(614, 115, '2024-08-11 03:51:59', 'User logged in'),
-(615, 115, '2024-08-11 07:18:33', 'User logged in'),
-(616, 115, '2024-08-11 07:32:24', 'User logged in'),
-(617, 115, '2024-08-12 04:54:08', 'User logged in'),
-(618, 115, '2024-08-12 19:31:59', 'User logged in'),
-(619, 115, '2024-08-12 19:41:50', 'User logged in'),
-(620, 115, '2024-08-13 08:17:43', 'User logged in'),
-(621, 115, '2024-08-13 09:04:38', 'User logged in'),
-(622, 115, '2024-08-13 09:04:49', 'User logged in'),
-(623, 115, '2024-08-13 09:04:55', 'User logged in'),
-(624, 115, '2024-08-13 09:05:35', 'User logged in'),
-(625, 115, '2024-08-13 09:05:40', 'User logged in'),
-(626, 115, '2024-08-13 09:05:45', 'User logged in'),
-(627, 115, '2024-08-13 09:31:53', 'User logged in'),
-(628, 115, '2024-08-13 09:32:11', 'User logged in'),
-(629, 115, '2024-08-13 09:33:46', 'User logged in'),
-(630, 115, '2024-08-13 09:45:41', 'User logged in'),
-(631, 115, '2024-08-13 09:46:06', 'User logged in'),
-(632, 115, '2024-08-14 00:33:49', 'User logged in'),
-(633, 115, '2024-08-14 01:23:16', 'User logged in'),
-(634, 115, '2024-08-14 01:24:22', 'User logged in'),
-(635, 115, '2024-08-14 01:25:23', 'User logged in'),
-(636, 115, '2024-08-14 02:31:07', 'User logged in'),
-(637, 115, '2024-08-14 02:44:29', 'User logged in'),
-(638, 115, '2024-08-14 03:37:37', 'User logged in'),
-(639, 115, '2024-08-14 03:56:38', 'User logged in'),
-(640, 115, '2024-08-14 04:23:23', 'User logged in'),
-(641, 115, '2024-08-14 08:57:19', 'User logged in'),
-(642, 115, '2024-08-14 09:26:59', 'User logged in'),
-(643, 115, '2024-08-14 09:41:33', 'User logged in'),
-(644, 115, '2024-08-14 09:43:54', 'User logged in'),
-(645, 115, '2024-08-15 00:18:31', 'User logged in'),
-(646, 115, '2024-08-15 00:34:13', 'User logged in'),
-(647, 115, '2024-08-15 00:51:26', 'User logged in'),
-(648, 115, '2024-08-15 00:52:02', 'User logged in'),
-(649, 115, '2024-08-15 00:55:53', 'User logged in'),
-(650, 115, '2024-08-15 00:56:06', 'User logged in'),
-(651, 115, '2024-08-16 00:55:30', 'User logged in'),
-(652, 115, '2024-08-17 01:34:49', 'User logged in'),
-(653, 115, '2024-08-17 05:25:40', 'User logged in'),
-(654, 115, '2024-08-17 05:55:19', 'User logged in'),
-(655, 115, '2024-08-17 05:55:59', 'User logged in'),
-(656, 122, '2024-08-17 06:15:18', 'User logged in'),
-(657, 115, '2024-08-17 06:16:57', 'User logged in'),
-(658, 115, '2024-08-17 23:38:05', 'User logged in'),
-(659, 115, '2024-08-18 00:03:22', 'User logged in'),
-(660, 115, '2024-08-18 00:03:29', 'User logged in'),
-(661, 122, '2024-08-18 00:35:03', 'User logged in'),
-(662, 115, '2024-08-18 00:55:33', 'User logged in'),
-(663, 122, '2024-08-18 00:55:56', 'User logged in'),
-(664, 122, '2024-08-18 01:11:22', 'User logged in'),
-(665, 115, '2024-08-18 01:16:27', 'User logged in'),
-(666, 122, '2024-08-18 01:16:38', 'User logged in'),
-(667, 115, '2024-08-18 01:28:55', 'User logged in'),
-(668, 122, '2024-08-18 01:29:14', 'User logged in'),
-(669, 115, '2024-08-18 01:32:26', 'User logged in'),
-(670, 122, '2024-08-18 01:32:44', 'User logged in'),
-(671, 122, '2024-08-18 02:18:47', 'User logged in'),
-(672, 122, '2024-08-18 02:21:32', 'User logged in'),
-(673, 122, '2024-08-18 02:21:51', 'User logged in'),
-(674, 122, '2024-08-18 02:23:29', 'User logged in'),
-(675, 115, '2024-08-18 02:23:51', 'User logged in'),
-(676, 122, '2024-08-18 02:24:22', 'User logged in'),
-(677, 122, '2024-08-18 02:26:05', 'User logged in'),
-(678, 122, '2024-08-18 02:32:28', 'User logged in'),
-(679, 122, '2024-08-18 02:45:53', 'User logged in'),
-(680, 122, '2024-08-18 02:48:59', 'User logged in'),
-(681, 122, '2024-08-18 03:10:16', 'User logged in'),
-(682, 122, '2024-08-18 03:10:34', 'User logged in'),
-(683, 115, '2024-08-18 03:10:45', 'User logged in'),
-(684, 122, '2024-08-18 03:12:18', 'User logged in'),
-(685, 122, '2024-08-18 12:42:47', 'User logged in'),
-(686, 1, '2024-08-18 12:45:10', 'User logged in'),
-(687, 1, '2024-08-18 12:47:15', 'User logged in'),
-(688, 1, '2024-08-18 12:47:26', 'User logged in'),
-(689, 115, '2024-08-18 13:30:13', 'User logged in'),
-(690, 115, '2024-08-18 14:08:58', 'User logged in'),
-(691, 1, '2024-08-18 14:13:13', 'User logged in'),
-(692, 1, '2024-08-18 23:33:51', 'User logged in'),
-(693, 122, '2024-08-18 23:41:35', 'User logged in'),
-(694, 122, '2024-08-19 00:12:48', 'User logged in'),
-(695, 115, '2024-08-19 00:13:00', 'User logged in'),
-(696, 122, '2024-08-19 00:13:08', 'User logged in'),
-(697, 115, '2024-08-19 00:19:49', 'User logged in'),
-(698, 122, '2024-08-19 00:20:25', 'User logged in'),
-(699, 122, '2024-08-19 00:22:57', 'User logged in'),
-(700, 115, '2024-08-19 00:23:39', 'User logged in'),
-(701, 122, '2024-08-19 00:23:53', 'User logged in'),
-(702, 115, '2024-08-19 00:25:07', 'User logged in'),
-(703, 122, '2024-08-19 00:25:15', 'User logged in'),
-(704, 122, '2024-08-20 02:31:25', 'User logged in'),
-(705, 115, '2024-08-20 02:31:54', 'User logged in'),
-(706, 122, '2024-08-20 02:34:54', 'User logged in'),
-(707, 115, '2024-08-20 02:43:20', 'User logged in'),
-(708, 1, '2024-08-20 02:43:52', 'User logged in'),
-(709, 1, '2024-08-20 03:07:25', 'User logged in'),
-(710, 115, '2024-08-20 08:26:59', 'User logged in'),
-(711, 1, '2024-08-20 08:38:11', 'User logged in'),
-(712, 122, '2024-08-20 08:54:55', 'User logged in'),
-(713, 122, '2024-08-20 09:03:26', 'User logged in'),
-(714, 115, '2024-08-20 09:03:39', 'User logged in'),
-(715, 115, '2024-08-20 09:53:47', 'User logged in'),
-(716, 122, '2024-08-20 09:55:02', 'User logged in'),
-(717, 115, '2024-08-20 09:55:35', 'User logged in'),
-(718, 115, '2024-08-20 10:19:21', 'User logged in'),
-(719, 115, '2024-08-20 11:36:11', 'User logged in'),
-(720, 1, '2024-08-20 12:59:18', 'User logged in'),
-(721, 122, '2024-08-20 13:01:15', 'User logged in'),
-(722, 115, '2024-08-20 13:03:59', 'User logged in'),
-(723, 122, '2024-08-20 13:05:43', 'User logged in'),
-(724, 122, '2024-08-20 13:08:57', 'User logged in'),
-(725, 1, '2024-08-20 13:11:42', 'User logged in'),
-(726, 122, '2024-08-20 13:12:03', 'User logged in'),
-(727, 1, '2024-08-20 13:14:55', 'User logged in'),
-(728, 115, '2024-08-20 13:17:24', 'User logged in'),
-(729, 115, '2024-08-21 12:59:56', 'User logged in'),
-(730, 115, '2024-08-23 02:28:34', 'User logged in'),
-(731, 115, '2024-08-23 07:27:00', 'User logged in'),
-(732, 122, '2024-08-23 07:28:38', 'User logged in'),
-(733, 1, '2024-08-23 07:29:10', 'User logged in'),
-(734, 122, '2024-08-23 07:37:06', 'User logged in'),
-(735, 1, '2024-08-23 07:37:48', 'User logged in'),
-(736, 122, '2024-08-23 07:41:49', 'User logged in'),
-(737, 122, '2024-08-23 07:46:01', 'User logged in'),
-(738, 1, '2024-08-23 07:54:01', 'User logged in'),
-(739, 117, '2024-08-23 07:57:57', 'User logged in'),
-(740, 122, '2024-08-23 07:59:51', 'User logged in'),
-(741, 1, '2024-08-23 08:00:02', 'User logged in'),
-(742, 117, '2024-08-23 08:00:35', 'User logged in'),
-(743, 125, '2024-08-23 08:01:36', 'User logged in'),
-(744, 122, '2024-08-23 08:06:07', 'User logged in'),
-(745, 1, '2024-08-23 08:06:20', 'User logged in'),
-(746, 115, '2024-08-23 08:06:45', 'User logged in'),
-(747, 1, '2024-08-23 08:08:22', 'User logged in'),
-(748, 115, '2024-08-23 08:08:51', 'User logged in'),
-(749, 115, '2024-08-23 10:29:49', 'User logged in'),
-(750, 125, '2024-08-25 07:05:27', 'User logged in'),
-(751, 125, '2024-08-25 07:08:59', 'User logged in'),
-(752, 125, '2024-08-25 07:10:04', 'User logged in'),
-(753, 125, '2024-08-25 07:14:39', 'User logged in'),
-(754, 125, '2024-08-25 07:20:35', 'User logged in'),
-(755, 125, '2024-08-25 07:29:39', 'User logged in'),
-(756, 125, '2024-08-25 08:05:19', 'User logged in'),
-(757, 122, '2024-08-25 08:14:59', 'User logged in'),
-(758, 1, '2024-08-25 08:16:05', 'User logged in'),
-(759, 125, '2024-08-25 08:16:16', 'User logged in'),
-(760, 125, '2024-08-25 08:18:06', 'User logged in'),
-(761, 125, '2024-08-25 08:28:37', 'User logged in'),
-(762, 125, '2024-08-25 09:04:01', 'User logged in'),
-(763, 115, '2024-08-25 09:04:15', 'User logged in'),
-(764, 125, '2024-08-25 09:04:31', 'User logged in'),
-(765, 115, '2024-08-25 09:09:35', 'User logged in'),
-(766, 125, '2024-08-25 09:25:57', 'User logged in'),
-(767, 125, '2024-08-25 09:28:32', 'User logged in'),
-(768, 125, '2024-08-25 09:29:29', 'User logged in'),
-(769, 115, '2024-08-25 09:29:36', 'User logged in'),
-(770, 125, '2024-08-25 09:40:47', 'User logged in'),
-(771, 115, '2024-08-25 09:42:36', 'User logged in'),
-(772, 125, '2024-08-25 09:44:35', 'User logged in'),
-(773, 115, '2024-08-25 09:44:47', 'User logged in'),
-(774, 115, '2024-08-25 09:45:18', 'User logged in'),
-(775, 115, '2024-08-25 09:47:36', 'User logged in'),
-(776, 115, '2024-08-25 10:08:20', 'User logged in'),
-(777, 125, '2024-08-25 10:09:32', 'User logged in'),
-(778, 125, '2024-08-25 10:09:58', 'User logged in'),
-(779, 115, '2024-08-25 10:10:38', 'User logged in'),
-(780, 115, '2024-08-27 19:50:22', 'User logged in'),
-(781, 115, '2024-08-27 19:53:43', 'User logged in'),
-(782, 115, '2024-08-27 19:54:04', 'User logged in'),
-(783, 115, '2024-08-27 19:55:26', 'User logged in'),
-(784, 115, '2024-08-27 19:56:30', 'User logged in'),
-(785, 115, '2024-08-27 20:01:09', 'User logged in'),
-(786, 125, '2024-08-27 20:01:47', 'User logged in'),
-(787, 125, '2024-08-27 20:01:59', 'User logged in'),
-(788, 125, '2024-08-27 20:03:48', 'User logged in'),
-(789, 122, '2024-08-27 20:04:05', 'User logged in'),
-(790, 122, '2024-08-27 20:11:20', 'User logged in'),
-(791, 122, '2024-08-27 20:18:47', 'User logged in'),
-(792, 122, '2024-08-27 20:19:19', 'User logged in'),
-(793, 122, '2024-08-27 20:20:51', 'User logged in'),
-(794, 122, '2024-08-27 20:24:50', 'User logged in'),
-(795, 122, '2024-08-27 20:36:25', 'User logged in'),
-(796, 122, '2024-08-27 20:38:39', 'User logged in'),
-(797, 122, '2024-08-27 20:38:57', 'User logged in'),
-(798, 122, '2024-08-27 20:48:12', 'User logged in'),
-(799, 1, '2024-08-27 20:48:57', 'User logged in'),
-(800, 122, '2024-08-27 20:58:14', 'User logged in'),
-(801, 1, '2024-08-27 20:59:21', 'User logged in'),
-(802, 1, '2024-08-27 21:01:59', 'User logged in'),
-(803, 1, '2024-08-28 01:54:47', 'User logged in'),
-(804, 117, '2024-08-28 01:58:47', 'User logged in'),
-(805, 115, '2024-08-28 02:00:04', 'User logged in'),
-(806, 125, '2024-08-28 02:00:19', 'User logged in'),
-(807, 115, '2024-08-28 02:56:01', 'User logged in'),
-(808, 125, '2024-08-28 03:03:16', 'User logged in'),
-(809, 1, '2024-08-28 03:07:06', 'User logged in'),
-(810, 125, '2024-08-28 03:07:55', 'User logged in'),
-(811, 125, '2024-08-28 04:50:55', 'User logged in'),
-(812, 125, '2024-08-28 04:51:12', 'User logged in'),
-(813, 122, '2024-08-28 04:56:58', 'User logged in'),
-(814, 125, '2024-08-28 04:58:18', 'User logged in'),
-(815, 115, '2024-08-28 05:01:06', 'User logged in'),
-(816, 115, '2024-08-28 05:58:00', 'User logged in'),
-(817, 125, '2024-08-28 08:05:06', 'User logged in'),
-(818, 125, '2024-08-28 08:07:17', 'User logged in'),
-(819, 115, '2024-08-28 12:39:55', 'User logged in'),
-(820, 125, '2024-08-28 12:47:51', 'User logged in'),
-(821, 115, '2024-08-28 13:13:36', 'User logged in'),
-(822, 125, '2024-08-28 13:19:31', 'User logged in'),
-(823, 125, '2024-08-28 15:14:58', 'User logged in'),
-(824, 115, '2024-08-28 16:03:44', 'User logged in'),
-(825, 125, '2024-08-28 16:03:57', 'User logged in'),
-(826, 1, '2024-09-02 00:23:45', 'User logged in'),
-(827, 1, '2024-09-02 00:49:02', 'User logged in'),
-(828, 112, '2024-09-02 01:13:17', 'User logged in'),
-(829, 122, '2024-09-02 01:14:46', 'User logged in'),
-(830, 117, '2024-09-02 01:15:55', 'User logged in'),
-(831, 112, '2024-09-02 01:17:13', 'User logged in'),
-(832, 126, '2024-09-02 01:17:54', 'User logged in'),
-(833, 117, '2024-09-02 01:36:00', 'User logged in'),
-(834, 112, '2024-09-02 01:42:48', 'User logged in'),
-(835, 1, '2024-09-02 01:48:21', 'User logged in'),
-(836, 128, '2024-09-02 01:53:43', 'User logged in'),
-(837, 128, '2024-09-02 01:57:12', 'User logged in'),
-(838, 112, '2024-09-02 02:01:15', 'User logged in'),
-(839, 130, '2024-09-02 02:01:56', 'User logged in'),
-(840, 112, '2024-09-02 02:02:33', 'User logged in'),
-(841, 128, '2024-09-02 02:03:00', 'User logged in'),
-(842, 122, '2024-09-02 02:47:33', 'User logged in'),
-(843, 1, '2024-09-02 02:47:43', 'User logged in'),
-(844, 107, '2024-09-02 02:56:56', 'User logged in'),
-(845, 107, '2024-09-02 03:00:41', 'User logged in'),
-(846, 128, '2024-09-02 03:12:15', 'User logged in'),
-(847, 107, '2024-09-02 03:14:48', 'User logged in'),
-(848, 117, '2024-09-02 03:29:37', 'User logged in'),
-(849, 128, '2024-09-02 03:32:09', 'User logged in'),
-(850, 112, '2024-09-02 03:33:10', 'User logged in'),
-(851, 117, '2024-09-02 03:35:06', 'User logged in'),
-(852, 107, '2024-09-02 03:41:41', 'User logged in'),
-(853, 128, '2024-09-02 03:45:04', 'User logged in'),
-(854, 133, '2024-09-02 03:48:17', 'User logged in'),
-(855, 107, '2024-09-02 03:49:14', 'User logged in'),
-(856, 1, '2024-09-05 11:40:20', 'User logged in'),
-(857, 115, '2024-09-05 11:50:19', 'User logged in'),
-(858, 134, '2024-09-05 11:55:31', 'User logged in'),
-(859, 134, '2024-09-06 03:15:05', 'User logged in'),
-(860, 1, '2024-09-06 03:21:24', 'User logged in'),
-(861, 1, '2024-09-07 02:01:45', 'User logged in'),
-(862, 128, '2024-09-07 04:06:35', 'User logged in'),
-(863, 128, '2024-09-07 04:07:43', 'User logged in'),
-(864, 128, '2024-09-07 04:08:29', 'User logged in'),
-(865, 134, '2024-09-07 04:08:57', 'User logged in'),
-(866, 1, '2024-09-07 04:15:17', 'User logged in'),
-(867, 128, '2024-09-07 04:18:24', 'User logged in'),
-(868, 134, '2024-09-07 04:18:57', 'User logged in'),
-(869, 134, '2024-09-07 04:46:18', 'User logged in'),
-(870, 117, '2024-09-07 04:47:20', 'User logged in'),
-(871, 115, '2024-09-07 04:47:31', 'User logged in'),
-(872, 112, '2024-09-07 04:49:31', 'User logged in'),
-(873, 135, '2024-09-07 04:50:08', 'User logged in'),
-(874, 117, '2024-09-07 04:55:28', 'User logged in'),
-(875, 136, '2024-09-07 04:56:56', 'User logged in'),
-(876, 135, '2024-09-07 05:35:53', 'User logged in'),
-(877, 1, '2024-09-07 05:44:55', 'User logged in'),
-(878, 1, '2024-09-07 06:27:42', 'User logged in'),
-(879, 135, '2024-09-07 07:12:57', 'User logged in'),
-(880, 136, '2024-09-07 07:34:50', 'User logged in'),
-(881, 1, '2024-09-08 23:29:01', 'User logged in'),
-(882, 108, '2024-09-10 12:24:53', 'User logged in'),
-(883, 135, '2024-09-10 12:26:49', 'User logged in'),
-(884, 135, '2024-09-11 09:48:04', 'User logged in'),
-(885, 135, '2024-09-12 12:06:57', 'User logged in'),
-(886, 122, '2024-09-12 12:46:44', 'User logged in'),
-(887, 1, '2024-09-12 12:57:36', 'User logged in'),
-(888, 135, '2024-09-13 09:27:11', 'User logged in'),
-(889, 135, '2024-09-15 00:27:17', 'User logged in'),
-(890, 117, '2024-09-15 02:02:53', 'User logged in'),
-(891, 1, '2024-09-15 02:03:04', 'User logged in'),
-(892, 135, '2024-09-15 02:06:02', 'User logged in'),
-(893, 122, '2024-09-15 02:26:25', 'User logged in'),
-(894, 122, '2024-09-15 02:32:13', 'User logged in'),
-(895, 135, '2024-09-15 02:36:52', 'User logged in'),
-(896, 135, '2024-09-15 03:01:45', 'User logged in'),
-(897, 135, '2024-09-15 03:28:06', 'User logged in'),
-(898, 1, '2024-09-15 03:28:40', 'User logged in'),
-(899, 117, '2024-09-15 03:37:11', 'User logged in'),
-(900, 117, '2024-09-15 03:46:03', 'User logged in'),
-(901, 135, '2024-09-15 03:47:29', 'User logged in'),
-(902, 115, '2024-09-15 04:28:42', 'User logged in'),
-(903, 115, '2024-09-15 04:49:22', 'User logged in'),
-(904, 115, '2024-09-15 04:50:55', 'User logged in'),
-(905, 135, '2024-09-15 05:18:37', 'User logged in'),
-(906, 135, '2024-09-15 12:13:28', 'User logged in'),
-(907, 1, '2024-09-15 13:00:54', 'User logged in'),
-(908, 135, '2024-09-16 10:49:50', 'User logged in'),
-(909, 108, '2024-09-17 03:35:49', 'User logged in'),
-(910, 135, '2024-09-17 12:13:12', 'User logged in'),
-(911, 117, '2024-09-17 12:47:54', 'User logged in'),
-(912, 1, '2024-09-17 12:50:35', 'User logged in'),
-(913, 135, '2024-09-17 12:51:18', 'User logged in'),
-(914, 1, '2024-09-17 13:26:28', 'User logged in'),
-(915, 115, '2024-09-17 18:06:33', 'User logged in'),
-(916, 115, '2024-09-17 18:28:56', 'User logged in'),
-(917, 1, '2024-09-17 18:59:28', 'User logged in'),
-(918, 122, '2024-09-17 19:00:41', 'User logged in'),
-(919, 135, '2024-09-17 19:04:27', 'User logged in'),
-(920, 135, '2024-09-18 02:41:39', 'User logged in'),
-(921, 115, '2024-09-18 07:00:20', 'User logged in'),
-(922, 115, '2024-09-22 10:19:30', 'User logged in'),
-(923, 115, '2024-09-22 10:51:38', 'User logged in'),
-(924, 115, '2024-09-23 02:25:26', 'User logged in'),
-(925, 1, '2024-09-23 02:47:41', 'User logged in'),
-(926, 115, '2024-09-23 02:50:47', 'User logged in'),
-(927, 115, '2024-09-23 02:51:32', 'User logged in'),
-(928, 135, '2024-09-23 02:54:22', 'User logged in'),
-(929, 1, '2024-09-23 02:56:00', 'User logged in'),
-(930, 136, '2024-09-23 03:23:52', 'User logged in'),
-(931, 135, '2024-09-23 07:05:24', 'User logged in'),
-(932, 115, '2024-09-23 09:32:35', 'User logged in'),
-(933, 108, '2024-09-23 09:45:19', 'User logged in'),
-(934, 1, '2024-09-23 09:54:26', 'User logged in'),
-(935, 115, '2024-09-24 09:50:10', 'User logged in'),
-(936, 134, '2024-09-24 12:22:43', 'User logged in'),
-(937, 134, '2024-09-24 13:24:36', 'User logged in'),
-(938, 134, '2024-09-24 13:25:13', 'User logged in'),
-(939, 134, '2024-09-24 13:33:34', 'User logged in'),
-(940, 134, '2024-09-24 13:34:36', 'User logged in'),
-(941, 134, '2024-09-24 13:35:58', 'User logged in'),
-(942, 134, '2024-09-24 13:36:41', 'User logged in'),
-(943, 134, '2024-09-24 13:42:00', 'User logged in'),
-(944, 134, '2024-09-24 13:46:19', 'User logged in'),
-(945, 134, '2024-09-24 13:48:20', 'User logged in'),
-(946, 134, '2024-09-24 21:45:53', 'User logged in'),
-(947, 134, '2024-09-24 21:47:52', 'User logged in'),
-(948, 134, '2024-09-24 21:50:09', 'User logged in'),
-(949, 134, '2024-09-24 21:51:49', 'User logged in'),
-(950, 134, '2024-09-24 21:53:59', 'User logged in'),
-(951, 134, '2024-09-24 21:55:01', 'User logged in'),
-(952, 134, '2024-09-24 21:57:06', 'User logged in'),
-(953, 134, '2024-09-24 22:01:04', 'User logged in'),
-(954, 134, '2024-09-24 22:09:02', 'User logged in'),
-(955, 134, '2024-09-24 22:12:58', 'User logged in'),
-(956, 134, '2024-09-24 22:20:41', 'User logged in'),
-(957, 134, '2024-09-24 22:21:26', 'User logged in'),
-(958, 134, '2024-09-24 22:22:51', 'User logged in'),
-(959, 134, '2024-09-24 22:31:28', 'User logged in'),
-(960, 134, '2024-09-24 22:51:07', 'User logged in'),
-(961, 134, '2024-09-24 23:16:48', 'User logged in'),
-(962, 134, '2024-09-25 00:04:56', 'User logged in'),
-(963, 134, '2024-09-25 00:12:15', 'User logged in'),
-(964, 134, '2024-09-25 00:20:31', 'User logged in'),
-(965, 134, '2024-09-25 01:00:11', 'User logged in'),
-(966, 134, '2024-09-25 01:09:33', 'User logged in'),
-(967, 134, '2024-09-25 01:24:03', 'User logged in'),
-(968, 134, '2024-09-25 01:27:10', 'User logged in'),
-(969, 134, '2024-09-25 01:27:42', 'User logged in'),
-(970, 134, '2024-09-25 01:37:31', 'User logged in'),
-(971, 134, '2024-09-25 06:12:21', 'User logged in'),
-(972, 134, '2024-09-25 06:13:00', 'User logged in'),
-(973, 134, '2024-09-25 06:13:31', 'User logged in'),
-(974, 134, '2024-09-25 06:36:21', 'User logged in'),
-(975, 134, '2024-09-25 06:36:50', 'User logged in'),
-(976, 134, '2024-09-25 06:37:57', 'User logged in'),
-(977, 134, '2024-09-25 06:46:31', 'User logged in'),
-(978, 134, '2024-09-25 07:02:46', 'User logged in'),
-(979, 134, '2024-09-25 11:27:58', 'User logged in'),
-(980, 134, '2024-09-25 12:06:55', 'User logged in'),
-(981, 115, '2024-09-25 12:31:49', 'User logged in'),
-(982, 135, '2024-09-25 12:32:45', 'User logged in'),
-(983, 115, '2024-09-25 12:39:46', 'User logged in'),
-(984, 115, '2024-09-25 12:41:57', 'User logged in'),
-(985, 134, '2024-09-25 13:00:41', 'User logged in'),
-(986, 134, '2024-09-25 13:11:55', 'User logged in'),
-(987, 134, '2024-09-25 23:08:51', 'User logged in'),
-(988, 134, '2024-09-25 23:12:26', 'User logged in'),
-(989, 134, '2024-09-25 23:26:21', 'User logged in'),
-(990, 134, '2024-09-26 06:05:05', 'User logged in'),
-(991, 134, '2024-10-15 17:10:36', 'User logged in'),
-(992, 134, '2024-10-17 04:38:54', 'User logged in'),
-(993, 134, '2024-10-17 10:13:21', 'User logged in'),
-(994, 134, '2024-10-17 10:49:53', 'User logged in'),
-(995, 134, '2024-10-17 11:00:20', 'User logged in'),
-(996, 134, '2024-10-17 11:24:49', 'User logged in'),
-(997, 134, '2024-10-17 11:26:58', 'User logged in'),
-(998, 134, '2024-10-17 11:33:18', 'User logged in'),
-(999, 135, '2024-10-17 11:33:47', 'User logged in'),
-(1000, 134, '2024-10-17 11:46:46', 'User logged in'),
-(1001, 134, '2024-10-17 11:52:19', 'User logged in'),
-(1002, 134, '2024-10-17 11:52:56', 'User logged in'),
-(1003, 134, '2024-10-17 11:55:59', 'User logged in'),
-(1004, 134, '2024-10-17 12:52:36', 'User logged in'),
-(1005, 134, '2024-10-18 03:25:44', 'User logged in'),
-(1006, 134, '2024-10-18 03:45:48', 'User logged in'),
-(1007, 134, '2024-10-18 03:48:48', 'User logged in'),
-(1008, 134, '2024-10-18 03:54:08', 'User logged in'),
-(1009, 134, '2024-10-18 03:58:43', 'User logged in'),
-(1010, 134, '2024-10-18 04:06:17', 'User logged in'),
-(1011, 134, '2024-10-25 05:03:05', 'User logged in'),
-(1012, 134, '2024-10-25 05:05:47', 'User logged in'),
-(1013, 134, '2024-10-25 05:07:29', 'User logged in'),
-(1014, 134, '2024-10-25 05:12:58', 'User logged in'),
-(1015, 134, '2024-10-25 12:10:29', 'User logged in'),
-(1016, 134, '2024-10-25 13:27:09', 'User logged in'),
-(1017, 134, '2024-10-26 07:59:42', 'User logged in'),
-(1018, 134, '2024-10-26 08:25:44', 'User logged in'),
-(1019, 134, '2024-10-26 08:26:12', 'User logged in'),
-(1020, 134, '2024-10-27 10:35:02', 'User logged in'),
-(1021, 134, '2024-10-27 12:12:25', 'User logged in'),
-(1022, 134, '2024-10-27 12:20:59', 'User logged in'),
-(1023, 134, '2024-10-27 12:25:08', 'User logged in'),
-(1024, 134, '2024-10-27 12:26:16', 'User logged in'),
-(1025, 134, '2024-10-27 15:52:24', 'User logged in'),
-(1026, 134, '2024-10-27 15:55:47', 'User logged in'),
-(1027, 134, '2024-10-28 00:13:05', 'User logged in'),
-(1028, 134, '2024-10-28 00:13:41', 'User logged in'),
-(1029, 134, '2024-10-28 00:15:45', 'User logged in'),
-(1030, 134, '2024-10-28 00:16:01', 'User logged in'),
-(1031, 134, '2024-10-28 00:16:24', 'User logged in'),
-(1032, 134, '2024-10-28 00:16:37', 'User logged in'),
-(1033, 134, '2024-10-28 00:18:49', 'User logged in'),
-(1034, 134, '2024-10-28 00:19:09', 'User logged in'),
-(1035, 134, '2024-10-28 00:19:22', 'User logged in'),
-(1036, 134, '2024-10-28 00:21:32', 'User logged in'),
-(1037, 134, '2024-10-28 00:22:57', 'User logged in'),
-(1038, 134, '2024-10-28 00:25:11', 'User logged in'),
-(1039, 134, '2024-10-28 00:26:20', 'User logged in'),
-(1040, 134, '2024-10-28 00:27:55', 'User logged in'),
-(1041, 134, '2024-10-28 00:33:21', 'User logged in'),
-(1042, 134, '2024-10-28 01:21:35', 'User logged in'),
-(1043, 134, '2024-10-28 02:37:53', 'User logged in'),
-(1044, 134, '2024-10-31 12:09:14', 'User logged in'),
-(1045, 108, '2024-10-31 12:30:17', 'User logged in'),
-(1046, 134, '2024-10-31 12:30:25', 'User logged in'),
-(1047, 108, '2024-10-31 12:30:50', 'User logged in'),
-(1048, 108, '2024-10-31 12:33:34', 'User logged in'),
-(1049, 108, '2024-10-31 12:49:36', 'User logged in'),
-(1050, 137, '2024-10-31 12:50:02', 'User logged in'),
-(1051, 134, '2024-10-31 22:01:51', 'User logged in'),
-(1052, 134, '2024-10-31 23:34:52', 'User logged in'),
-(1053, 134, '2024-10-31 23:43:00', 'User logged in'),
-(1054, 134, '2024-11-01 00:03:55', 'User logged in'),
-(1055, 134, '2024-11-01 00:30:24', 'User logged in'),
-(1056, 134, '2024-11-01 00:44:03', 'User logged in'),
-(1057, 134, '2024-11-01 00:44:52', 'User logged in'),
-(1058, 134, '2024-11-01 00:52:12', 'User logged in'),
-(1059, 134, '2024-11-01 00:53:34', 'User logged in'),
-(1060, 134, '2024-11-01 00:53:58', 'User logged in'),
-(1061, 134, '2024-11-01 01:11:41', 'User logged in'),
-(1062, 134, '2024-11-01 01:22:51', 'User logged in'),
-(1063, 134, '2024-11-01 01:27:00', 'User logged in'),
-(1064, 134, '2024-11-01 01:28:14', 'User logged in'),
-(1065, 134, '2024-11-01 01:30:45', 'User logged in'),
-(1066, 134, '2024-11-01 02:19:38', 'User logged in'),
-(1067, 134, '2024-11-01 02:43:18', 'User logged in'),
-(1068, 134, '2024-11-01 03:17:27', 'User logged in'),
-(1069, 108, '2024-11-01 03:52:51', 'User logged in'),
-(1070, 1, '2024-11-01 04:00:56', 'User logged in'),
-(1071, 135, '2024-11-01 04:01:57', 'User logged in'),
-(1072, 108, '2024-11-01 05:38:37', 'User logged in'),
-(1073, 135, '2024-11-01 05:39:04', 'User logged in'),
-(1074, 134, '2024-11-01 05:43:25', 'User logged in'),
-(1075, 134, '2024-11-01 06:10:55', 'User logged in'),
-(1076, 134, '2024-11-01 06:13:49', 'User logged in'),
-(1077, 134, '2024-11-01 06:14:17', 'User logged in'),
-(1078, 134, '2024-11-01 06:16:41', 'User logged in'),
-(1079, 134, '2024-11-01 06:21:37', 'User logged in'),
-(1080, 134, '2024-11-01 06:25:03', 'User logged in'),
-(1081, 134, '2024-11-01 06:56:06', 'User logged in'),
-(1082, 134, '2024-11-01 07:43:13', 'User logged in'),
-(1083, 134, '2024-11-01 07:57:45', 'User logged in'),
-(1084, 134, '2024-11-01 07:59:53', 'User logged in'),
-(1085, 134, '2024-11-01 08:04:21', 'User logged in'),
-(1086, 1, '2024-11-04 15:37:29', 'User logged in'),
-(1087, 108, '2024-11-04 15:38:32', 'User logged in'),
-(1088, 1, '2024-11-04 16:07:02', 'User logged in'),
-(1089, 108, '2024-11-04 16:07:36', 'User logged in'),
-(1090, 137, '2024-11-04 17:44:33', 'User logged in'),
-(1091, 108, '2024-11-04 17:59:47', 'User logged in'),
-(1092, 108, '2024-11-05 13:53:08', 'User logged in'),
-(1093, 128, '2024-11-05 13:53:41', 'User logged in'),
-(1094, 1, '2024-11-05 13:58:59', 'User logged in'),
-(1095, 137, '2024-11-05 14:27:03', 'User logged in'),
-(1096, 1, '2024-11-05 14:36:26', 'User logged in'),
-(1097, 137, '2024-11-05 16:30:46', 'User logged in'),
-(1098, 108, '2024-11-05 16:50:01', 'User logged in'),
-(1099, 1, '2024-11-06 00:10:35', 'User logged in'),
-(1100, 113, '2024-11-06 00:57:52', 'User logged in'),
-(1101, 108, '2024-11-06 01:02:51', 'User logged in'),
-(1102, 138, '2024-11-06 03:46:22', 'User logged in'),
-(1103, 108, '2024-11-06 06:48:29', 'User logged in'),
-(1104, 139, '2024-11-06 06:48:54', 'User logged in'),
-(1105, 139, '2024-11-06 07:50:54', 'User logged in'),
-(1106, 138, '2024-11-06 07:51:47', 'User logged in'),
-(1107, 137, '2024-11-06 07:52:45', 'User logged in'),
-(1108, 139, '2024-11-06 07:53:36', 'User logged in'),
-(1109, 137, '2024-11-06 08:28:29', 'User logged in'),
-(1110, 137, '2024-11-06 08:48:30', 'User logged in'),
-(1111, 138, '2024-11-06 08:50:45', 'User logged in'),
-(1112, 137, '2024-11-06 09:26:37', 'User logged in'),
-(1113, 108, '2024-11-06 09:30:18', 'User logged in'),
-(1114, 137, '2024-11-06 09:33:11', 'User logged in'),
-(1115, 108, '2024-11-06 09:41:58', 'User logged in'),
-(1116, 140, '2024-11-06 09:42:20', 'User logged in'),
-(1117, 140, '2024-11-06 09:43:08', 'User logged in'),
-(1118, 137, '2024-11-06 09:43:58', 'User logged in'),
-(1119, 108, '2024-11-07 01:36:54', 'User logged in'),
-(1120, 1, '2024-11-07 02:11:31', 'User logged in'),
-(1121, 137, '2024-11-07 04:31:40', 'User logged in'),
-(1122, 140, '2024-11-07 05:52:17', 'User logged in'),
-(1123, 108, '2024-11-07 05:57:17', 'User logged in'),
-(1124, 140, '2024-11-07 06:03:32', 'User logged in'),
-(1125, 108, '2024-11-07 14:52:38', 'User logged in'),
-(1126, 113, '2024-11-07 15:57:54', 'User logged in'),
-(1127, 113, '2024-11-07 15:59:27', 'User logged in'),
-(1128, 142, '2024-11-07 15:59:50', 'User logged in'),
-(1129, 113, '2024-11-07 16:05:12', 'User logged in'),
-(1130, 113, '2024-11-07 16:14:44', 'User logged in'),
-(1131, 143, '2024-11-07 16:15:07', 'User logged in'),
-(1132, 113, '2024-11-07 16:17:40', 'User logged in'),
-(1133, 113, '2024-11-09 10:22:41', 'User logged in'),
-(1134, 113, '2024-11-10 07:03:24', 'User logged in');
+(1, 115, '2024-11-12 06:44:03', 'User logged in'),
+(2, 1, '2024-11-12 06:44:24', 'User logged in'),
+(3, 1, '2024-11-12 06:44:25', 'User logged in'),
+(4, 115, '2024-11-12 06:46:54', 'User logged in'),
+(5, 1, '2024-11-12 06:47:02', 'User logged in'),
+(6, 1, '2024-11-12 06:47:03', 'User logged in'),
+(7, 1, '2024-11-12 06:48:17', 'User logged in'),
+(8, 1, '2024-11-12 06:48:18', 'User logged in'),
+(9, 1, '2024-11-12 06:48:18', 'User logged in'),
+(10, 1, '2024-11-12 06:48:19', 'User logged in'),
+(11, 1, '2024-11-12 06:48:19', 'User logged in'),
+(12, 1, '2024-11-12 06:48:19', 'User logged in'),
+(13, 1, '2024-11-12 06:48:21', 'User logged in'),
+(14, 1, '2024-11-12 06:48:21', 'User logged in'),
+(15, 1, '2024-11-12 06:48:21', 'User logged in'),
+(16, 1, '2024-11-12 06:48:22', 'User logged in'),
+(17, 1, '2024-11-12 06:48:28', 'User logged in'),
+(18, 1, '2024-11-12 06:48:28', 'User logged in'),
+(19, 1, '2024-11-12 06:48:28', 'User logged in'),
+(20, 1, '2024-11-12 06:48:30', 'User logged in'),
+(21, 1, '2024-11-12 10:06:27', 'User logged in'),
+(22, 1, '2024-11-12 10:06:27', 'User logged in'),
+(23, 115, '2024-11-12 10:06:55', 'User logged in'),
+(24, 1, '2024-11-12 10:09:34', 'User logged in'),
+(25, 1, '2024-11-12 10:09:36', 'User logged in'),
+(26, 1, '2024-11-12 10:09:38', 'User logged in'),
+(27, 1, '2024-11-12 10:09:38', 'User logged in'),
+(28, 1, '2024-11-12 10:09:45', 'User logged in'),
+(29, 1, '2024-11-12 10:09:45', 'User logged in'),
+(30, 1, '2024-11-12 10:09:54', 'User logged in'),
+(31, 1, '2024-11-12 10:09:55', 'User logged in'),
+(32, 1, '2024-11-12 10:09:59', 'User logged in'),
+(33, 1, '2024-11-12 10:10:00', 'User logged in'),
+(34, 1, '2024-11-12 10:10:02', 'User logged in'),
+(35, 1, '2024-11-12 10:10:02', 'User logged in'),
+(36, 1, '2024-11-12 10:10:59', 'User logged in'),
+(37, 1, '2024-11-12 10:11:00', 'User logged in'),
+(38, 1, '2024-11-12 10:11:02', 'User logged in'),
+(39, 1, '2024-11-12 10:11:02', 'User logged in'),
+(40, 1, '2024-11-12 10:11:03', 'User logged in'),
+(41, 1, '2024-11-12 10:11:03', 'User logged in'),
+(42, 1, '2024-11-12 10:11:04', 'User logged in'),
+(43, 1, '2024-11-12 10:11:05', 'User logged in'),
+(44, 1, '2024-11-12 10:11:05', 'User logged in'),
+(45, 1, '2024-11-12 10:11:06', 'User logged in'),
+(46, 1, '2024-11-12 10:11:07', 'User logged in'),
+(47, 1, '2024-11-12 10:11:09', 'User logged in'),
+(48, 1, '2024-11-12 10:11:09', 'User logged in'),
+(49, 1, '2024-11-12 10:11:10', 'User logged in'),
+(50, 1, '2024-11-12 10:11:11', 'User logged in'),
+(51, 1, '2024-11-12 10:11:11', 'User logged in'),
+(52, 1, '2024-11-12 10:11:13', 'User logged in'),
+(53, 1, '2024-11-12 10:11:13', 'User logged in'),
+(54, 1, '2024-11-12 10:11:14', 'User logged in'),
+(55, 1, '2024-11-12 10:11:15', 'User logged in'),
+(56, 1, '2024-11-12 10:11:25', 'User logged in'),
+(57, 1, '2024-11-12 10:12:51', 'User logged in'),
+(58, 1, '2024-11-12 10:13:15', 'User logged in'),
+(59, 115, '2024-11-12 10:18:00', 'User logged in'),
+(60, 115, '2024-11-12 10:28:28', 'User logged in'),
+(61, 115, '2024-11-12 10:32:47', 'User logged in'),
+(62, 115, '2024-11-12 10:36:06', 'User logged in'),
+(63, 115, '2024-11-12 10:38:38', 'User logged in'),
+(64, 1, '2024-11-12 10:38:57', 'User logged in'),
+(65, 115, '2024-11-12 10:40:30', 'User logged in'),
+(66, 108, '2024-11-12 10:41:21', 'User logged in'),
+(67, 115, '2024-11-12 10:41:33', 'User logged in'),
+(68, 115, '2024-11-12 10:57:21', 'User logged in'),
+(69, 115, '2024-11-12 10:57:45', 'User logged in'),
+(70, 115, '2024-11-12 10:58:08', 'User logged in'),
+(71, 115, '2024-11-12 10:58:47', 'User logged in'),
+(72, 115, '2024-11-12 10:59:54', 'User logged in'),
+(73, 115, '2024-11-12 11:25:37', 'User logged in'),
+(74, 115, '2024-11-12 14:40:35', 'User logged in'),
+(75, 115, '2024-11-13 01:10:44', 'User logged in'),
+(76, 115, '2024-11-13 01:15:07', 'User logged in'),
+(77, 115, '2024-11-13 01:16:27', 'User logged in'),
+(78, 115, '2024-11-13 01:17:06', 'User logged in'),
+(79, 115, '2024-11-13 01:17:29', 'User logged in'),
+(80, 115, '2024-11-13 01:43:09', 'User logged in'),
+(81, 1, '2024-11-13 01:43:24', 'User logged in'),
+(82, 1, '2024-11-13 01:45:15', 'User logged in'),
+(83, 115, '2024-11-13 01:48:01', 'User logged in'),
+(84, 1, '2024-11-13 01:48:31', 'User logged in'),
+(85, 134, '2024-11-13 01:51:11', 'User logged in'),
+(86, 108, '2024-11-13 01:51:49', 'User logged in'),
+(87, 115, '2024-11-13 01:54:22', 'User logged in'),
+(88, 1, '2024-11-13 02:01:33', 'User logged in'),
+(89, 115, '2024-11-13 02:13:13', 'User logged in'),
+(90, 1, '2024-11-13 02:13:50', 'User logged in'),
+(91, 115, '2024-11-13 02:14:50', 'User logged in'),
+(92, 115, '2024-11-13 02:15:12', 'User logged in'),
+(93, 1, '2024-11-13 02:15:21', 'User logged in'),
+(94, 115, '2024-11-13 02:15:44', 'User logged in'),
+(95, 1, '2024-11-13 02:16:12', 'User logged in'),
+(96, 1, '2024-11-13 02:16:46', 'User logged in'),
+(97, 115, '2024-11-13 02:18:52', 'User logged in'),
+(98, 1, '2024-11-13 02:19:13', 'User logged in'),
+(99, 115, '2024-11-13 02:23:03', 'User logged in'),
+(100, 1, '2024-11-13 02:23:11', 'User logged in'),
+(101, 115, '2024-11-13 02:23:22', 'User logged in'),
+(102, 1, '2024-11-13 02:23:34', 'User logged in'),
+(103, 115, '2024-11-13 02:23:46', 'User logged in'),
+(104, 1, '2024-11-13 02:24:02', 'User logged in'),
+(105, 1, '2024-11-13 02:26:32', 'User logged in'),
+(106, 115, '2024-11-13 02:28:37', 'User logged in'),
+(107, 1, '2024-11-13 02:28:51', 'User logged in'),
+(108, 115, '2024-11-13 02:29:17', 'User logged in'),
+(109, 1, '2024-11-13 02:29:39', 'User logged in'),
+(110, 1, '2024-11-13 02:30:30', 'User logged in'),
+(111, 115, '2024-11-13 02:30:52', 'User logged in'),
+(112, 1, '2024-11-13 02:32:02', 'User logged in'),
+(113, 108, '2024-11-13 02:32:49', 'User logged in'),
+(114, 108, '2024-11-13 02:35:34', 'User logged in'),
+(115, 115, '2024-11-13 02:36:23', 'User logged in'),
+(116, 1, '2024-11-13 02:40:25', 'User logged in'),
+(117, 1, '2024-11-13 02:45:06', 'User logged in'),
+(118, 108, '2024-11-13 02:45:41', 'User logged in'),
+(119, 115, '2024-11-13 02:45:56', 'User logged in'),
+(120, 1, '2024-11-13 02:50:22', 'User logged in'),
+(121, 1, '2024-11-13 02:51:04', 'User logged in'),
+(122, 115, '2024-11-13 02:53:07', 'User logged in'),
+(123, 108, '2024-11-13 02:53:39', 'User logged in'),
+(124, 108, '2024-11-13 02:54:58', 'User logged in'),
+(125, 115, '2024-11-13 02:55:12', 'User logged in'),
+(126, 1, '2024-11-13 02:56:12', 'User logged in'),
+(127, 115, '2024-11-13 02:56:33', 'User logged in'),
+(128, 1, '2024-11-13 02:56:47', 'User logged in'),
+(129, 1, '2024-11-13 02:58:55', 'User logged in'),
+(130, 1, '2024-11-13 02:59:15', 'User logged in'),
+(131, 1, '2024-11-13 03:01:43', 'User logged in'),
+(132, 1, '2024-11-13 03:03:44', 'User logged in'),
+(133, 1, '2024-11-13 03:06:22', 'User logged in'),
+(134, 1, '2024-11-13 05:21:15', 'User logged in'),
+(135, 1, '2024-11-13 05:21:45', 'User logged in'),
+(136, 1, '2024-11-13 05:24:47', 'User logged in'),
+(137, 115, '2024-11-13 05:27:13', 'User logged in'),
+(138, 115, '2024-11-13 05:28:00', 'User logged in'),
+(139, 115, '2024-11-13 05:28:14', 'User logged in'),
+(140, 115, '2024-11-13 05:28:25', 'User logged in'),
+(141, 115, '2024-11-13 05:29:08', 'User logged in'),
+(142, 115, '2024-11-13 05:30:00', 'User logged in'),
+(143, 1, '2024-11-13 05:30:13', 'User logged in'),
+(144, 115, '2024-11-13 05:30:23', 'User logged in'),
+(145, 115, '2024-11-13 05:36:12', 'User logged in'),
+(146, 1, '2024-11-13 05:36:55', 'User logged in'),
+(147, 115, '2024-11-13 05:37:33', 'User logged in'),
+(148, 108, '2024-11-13 05:40:03', 'User logged in'),
+(149, 108, '2024-11-13 05:40:14', 'User logged in'),
+(150, 108, '2024-11-13 05:42:54', 'User logged in'),
+(151, 115, '2024-11-13 05:43:05', 'User logged in'),
+(152, 108, '2024-11-13 05:43:50', 'User logged in'),
+(153, 108, '2024-11-13 05:44:16', 'User logged in'),
+(154, 108, '2024-11-13 05:44:20', 'User logged in'),
+(155, 108, '2024-11-13 05:44:32', 'User logged in'),
+(156, 1, '2024-11-13 05:44:39', 'User logged in'),
+(157, 1, '2024-11-13 05:44:50', 'User logged in'),
+(158, 108, '2024-11-13 05:44:59', 'User logged in'),
+(159, 115, '2024-11-13 05:45:05', 'User logged in'),
+(160, 1, '2024-11-13 05:45:14', 'User logged in'),
+(161, 108, '2024-11-13 05:45:22', 'User logged in'),
+(162, 1, '2024-11-13 05:45:39', 'User logged in'),
+(163, 115, '2024-11-13 05:45:47', 'User logged in'),
+(164, 108, '2024-11-13 05:45:54', 'User logged in'),
+(165, 1, '2024-11-13 05:46:04', 'User logged in'),
+(166, 1, '2024-11-13 05:46:17', 'User logged in'),
+(167, 108, '2024-11-13 05:46:24', 'User logged in'),
+(168, 108, '2024-11-13 05:46:30', 'User logged in'),
+(169, 115, '2024-11-13 05:46:39', 'User logged in'),
+(170, 1, '2024-11-13 05:48:26', 'User logged in'),
+(171, 108, '2024-11-13 05:48:34', 'User logged in'),
+(172, 115, '2024-11-13 05:48:41', 'User logged in'),
+(173, 115, '2024-11-13 05:48:48', 'User logged in'),
+(174, 115, '2024-11-13 05:48:52', 'User logged in'),
+(175, 115, '2024-11-13 05:49:30', 'User logged in'),
+(176, 108, '2024-11-13 05:50:13', 'User logged in'),
+(177, 115, '2024-11-13 05:50:22', 'User logged in'),
+(178, 115, '2024-11-13 05:51:49', 'User logged in'),
+(179, 108, '2024-11-13 05:52:06', 'User logged in'),
+(180, 108, '2024-11-13 05:52:31', 'User logged in'),
+(181, 108, '2024-11-13 05:53:03', 'User logged in'),
+(182, 115, '2024-11-13 05:53:27', 'User logged in'),
+(183, 108, '2024-11-13 05:53:45', 'User logged in'),
+(184, 115, '2024-11-13 05:53:59', 'User logged in'),
+(185, 115, '2024-11-13 05:58:47', 'User logged in'),
+(186, 108, '2024-11-13 05:59:00', 'User logged in'),
+(187, 108, '2024-11-13 05:59:11', 'User logged in'),
+(188, 108, '2024-11-13 05:59:17', 'User logged in'),
+(189, 115, '2024-11-13 05:59:23', 'User logged in'),
+(190, 1, '2024-11-13 05:59:38', 'User logged in'),
+(191, 1, '2024-11-13 06:00:10', 'User logged in'),
+(192, 1, '2024-11-13 06:00:15', 'User logged in'),
+(193, 115, '2024-11-13 06:00:34', 'User logged in'),
+(194, 108, '2024-11-13 06:01:12', 'User logged in'),
+(195, 1, '2024-11-13 06:01:30', 'User logged in'),
+(196, 1, '2024-11-13 06:01:34', 'User logged in'),
+(197, 1, '2024-11-13 06:01:40', 'User logged in'),
+(198, 108, '2024-11-13 06:01:51', 'User logged in'),
+(199, 108, '2024-11-13 06:01:57', 'User logged in'),
+(200, 115, '2024-11-13 06:02:03', 'User logged in'),
+(201, 115, '2024-11-13 06:03:42', 'User logged in'),
+(202, 115, '2024-11-13 06:03:48', 'User logged in'),
+(203, 115, '2024-11-13 06:03:54', 'User logged in'),
+(204, 115, '2024-11-13 06:03:58', 'User logged in'),
+(205, 115, '2024-11-13 06:04:02', 'User logged in'),
+(206, 1, '2024-11-13 06:04:17', 'User logged in'),
+(207, 1, '2024-11-13 06:04:20', 'User logged in'),
+(208, 108, '2024-11-13 06:04:32', 'User logged in'),
+(209, 108, '2024-11-13 06:04:40', 'User logged in'),
+(210, 108, '2024-11-13 06:04:45', 'User logged in'),
+(211, 115, '2024-11-13 06:05:10', 'User logged in'),
+(212, 115, '2024-11-13 06:06:01', 'User logged in'),
+(213, 115, '2024-11-13 06:10:13', 'User logged in'),
+(214, 115, '2024-11-13 06:10:18', 'User logged in'),
+(215, 108, '2024-11-13 06:10:26', 'User logged in'),
+(216, 108, '2024-11-13 06:10:42', 'User logged in'),
+(217, 115, '2024-11-13 10:51:30', 'User logged in'),
+(218, 115, '2024-11-13 10:55:09', 'User logged in'),
+(219, 115, '2024-11-13 10:59:21', 'User logged in'),
+(220, 115, '2024-11-13 11:01:07', 'User logged in'),
+(221, 115, '2024-11-13 11:09:34', 'User logged in'),
+(222, 115, '2024-11-13 11:44:00', 'User logged in'),
+(223, 115, '2024-11-13 13:21:48', 'User logged in'),
+(224, 115, '2024-11-13 13:23:38', 'User logged in'),
+(225, 115, '2024-11-13 13:48:04', 'User logged in'),
+(226, 115, '2024-11-13 15:10:58', 'User logged in'),
+(227, 108, '2024-11-13 15:16:19', 'User logged in'),
+(228, 1, '2024-11-13 15:16:29', 'User logged in'),
+(229, 115, '2024-11-13 15:22:54', 'User logged in'),
+(230, 108, '2024-11-13 16:22:31', 'User logged in'),
+(231, 108, '2024-11-13 16:41:21', 'User logged in'),
+(232, 115, '2024-11-13 20:54:27', 'User logged in'),
+(233, 115, '2024-11-15 04:56:23', 'User logged in'),
+(234, 115, '2024-11-15 04:57:01', 'User logged in'),
+(235, 115, '2024-11-15 05:33:48', 'User logged in'),
+(236, 115, '2024-11-15 11:12:38', 'User logged in'),
+(237, 115, '2024-11-15 11:12:47', 'User logged in'),
+(238, 115, '2024-11-15 22:10:57', 'User logged in'),
+(239, 113, '2024-11-18 07:10:37', 'User logged in'),
+(240, 141, '2024-11-18 07:11:27', 'User logged in'),
+(241, 113, '2024-11-18 07:19:25', 'User logged in'),
+(242, 113, '2024-11-21 07:03:14', 'User logged in'),
+(243, 141, '2024-11-21 07:04:24', 'User logged in'),
+(244, 113, '2024-11-21 11:26:19', 'User logged in'),
+(245, 141, '2024-11-21 11:31:37', 'User logged in'),
+(246, 140, '2024-11-21 13:14:44', 'User logged in'),
+(247, 108, '2024-11-21 13:15:08', 'User logged in'),
+(248, 138, '2024-11-21 13:17:54', 'User logged in'),
+(249, 108, '2024-11-21 13:19:06', 'User logged in'),
+(250, 115, '2025-02-14 23:25:48', 'User logged in'),
+(251, 108, '2025-02-14 23:26:18', 'User logged in'),
+(252, 108, '2025-02-14 23:37:51', 'User logged in'),
+(253, 108, '2025-02-14 23:38:57', 'User logged in'),
+(254, 115, '2025-02-14 23:40:31', 'User logged in'),
+(255, 115, '2025-02-17 20:22:51', 'User logged in'),
+(256, 115, '2025-02-17 20:42:28', 'User logged in'),
+(257, 115, '2025-02-17 20:53:35', 'User logged in'),
+(258, 108, '2025-02-17 21:05:49', 'User logged in'),
+(259, 1, '2025-02-17 21:07:13', 'User logged in'),
+(260, 108, '2025-02-17 21:10:20', 'User logged in'),
+(261, 115, '2025-02-17 21:12:55', 'User logged in'),
+(262, 115, '2025-02-17 21:15:03', 'User logged in'),
+(263, 115, '2025-02-17 21:22:55', 'User logged in'),
+(264, 115, '2025-02-17 21:58:42', 'User logged in'),
+(265, 108, '2025-02-17 22:04:09', 'User logged in'),
+(266, 140, '2025-02-17 22:10:34', 'User logged in'),
+(267, 1, '2025-02-17 22:14:42', 'User logged in'),
+(268, 1, '2025-02-17 22:15:42', 'User logged in'),
+(269, 117, '2025-02-17 22:16:11', 'User logged in'),
+(270, 152, '2025-02-17 22:20:30', 'User logged in'),
+(271, 152, '2025-02-17 22:53:25', 'User logged in'),
+(272, 115, '2025-02-17 22:56:29', 'User logged in'),
+(273, 1, '2025-02-17 22:59:52', 'User logged in'),
+(274, 108, '2025-02-17 23:04:11', 'User logged in'),
+(275, 115, '2025-02-17 23:26:33', 'User logged in'),
+(276, 108, '2025-02-17 23:36:50', 'User logged in'),
+(277, 108, '2025-02-18 02:03:16', 'User logged in'),
+(278, 1, '2025-02-18 22:54:58', 'User logged in'),
+(279, 108, '2025-02-18 23:05:56', 'User logged in'),
+(280, 115, '2025-02-18 23:09:43', 'User logged in'),
+(281, 108, '2025-02-18 23:11:06', 'User logged in'),
+(282, 108, '2025-02-18 23:11:06', 'User logged in'),
+(283, 1, '2025-02-18 23:13:55', 'User logged in'),
+(284, 115, '2025-02-19 00:36:13', 'User logged in'),
+(285, 115, '2025-02-19 00:37:06', 'User logged in'),
+(286, 115, '2025-02-19 00:37:49', 'User logged in'),
+(287, 1, '2025-02-19 01:53:15', 'User logged in'),
+(288, 1, '2025-02-19 01:54:41', 'User logged in'),
+(289, 1, '2025-02-19 20:19:06', 'User logged in'),
+(290, 115, '2025-02-19 20:30:17', 'User logged in'),
+(291, 115, '2025-02-19 20:44:46', 'User logged in'),
+(292, 1, '2025-02-19 20:45:24', 'User logged in'),
+(293, 1, '2025-02-20 20:18:53', 'User logged in'),
+(294, 134, '2025-02-20 21:00:58', 'User logged in'),
+(295, 115, '2025-02-20 22:03:52', 'User logged in'),
+(296, 115, '2025-02-20 22:04:23', 'User logged in'),
+(297, 115, '2025-02-21 02:52:58', 'User logged in'),
+(298, 1, '2025-02-21 03:54:45', 'User logged in'),
+(299, 115, '2025-02-21 04:01:52', 'User logged in'),
+(300, 1, '2025-02-21 04:19:24', 'User logged in'),
+(301, 115, '2025-02-21 20:24:35', 'User logged in'),
+(302, 115, '2025-02-24 20:26:56', 'User logged in'),
+(303, 108, '2025-02-24 21:06:29', 'User logged in'),
+(304, 108, '2025-02-24 22:00:05', 'User logged in'),
+(305, 108, '2025-02-24 22:54:09', 'User logged in'),
+(306, 108, '2025-02-24 22:55:30', 'User logged in'),
+(307, 122, '2025-02-25 02:24:31', 'User logged in'),
+(308, 1, '2025-02-25 02:48:05', 'User logged in'),
+(309, 134, '2025-02-25 02:49:32', 'User logged in'),
+(310, 134, '2025-02-25 02:50:38', 'User logged in'),
+(311, 122, '2025-02-25 02:54:53', 'User logged in'),
+(312, 1, '2025-02-25 03:05:24', 'User logged in'),
+(313, 115, '2025-02-25 04:39:18', 'User logged in'),
+(314, 115, '2025-02-25 04:42:28', 'User logged in'),
+(315, 115, '2025-02-25 04:43:45', 'User logged in'),
+(316, 1, '2025-02-25 04:45:09', 'User logged in'),
+(317, 115, '2025-02-25 04:45:55', 'User logged in'),
+(318, 115, '2025-02-25 04:53:44', 'User logged in'),
+(319, 115, '2025-02-25 04:54:35', 'User logged in'),
+(320, 115, '2025-02-25 04:55:31', 'User logged in'),
+(321, 115, '2025-02-25 04:56:55', 'User logged in'),
+(322, 1, '2025-02-25 04:57:17', 'User logged in'),
+(323, 1, '2025-02-25 04:57:17', 'User logged in'),
+(324, 115, '2025-02-25 04:57:35', 'User logged in'),
+(325, 115, '2025-02-25 04:58:19', 'User logged in'),
+(326, 115, '2025-02-25 04:59:00', 'User logged in'),
+(327, 115, '2025-02-25 04:59:37', 'User logged in'),
+(328, 122, '2025-02-25 20:45:13', 'User logged in'),
+(329, 115, '2025-02-25 20:46:06', 'User logged in'),
+(330, 134, '2025-02-25 20:47:08', 'User logged in'),
+(331, 115, '2025-02-25 20:47:45', 'User logged in'),
+(332, 115, '2025-02-25 20:48:16', 'User logged in'),
+(333, 115, '2025-02-25 20:49:23', 'User logged in'),
+(334, 134, '2025-02-25 20:49:42', 'User logged in'),
+(335, 108, '2025-02-25 20:50:12', 'User logged in'),
+(336, 134, '2025-02-25 20:51:06', 'User logged in'),
+(337, 122, '2025-02-25 20:51:54', 'User logged in'),
+(338, 1, '2025-02-25 20:52:48', 'User logged in');
 
 --
 -- Indexes for dumped tables
@@ -2415,6 +2114,18 @@ ALTER TABLE `complaints`
   ADD KEY `BarangayID` (`BarangayID`);
 
 --
+-- Indexes for table `feedback_answers`
+--
+ALTER TABLE `feedback_answers`
+  ADD UNIQUE KEY `unique_fa_id_and_brgy_id` (`fa_id`,`barangay_id`);
+
+--
+-- Indexes for table `feedback_questions`
+--
+ALTER TABLE `feedback_questions`
+  ADD PRIMARY KEY (`fq_id`);
+
+--
 -- Indexes for table `hearings`
 --
 ALTER TABLE `hearings`
@@ -2441,6 +2152,20 @@ ALTER TABLE `lupons`
 ALTER TABLE `mov`
   ADD PRIMARY KEY (`id`),
   ADD KEY `barangay_id` (`barangay_id`);
+
+--
+-- Indexes for table `movassessmentmembers`
+--
+ALTER TABLE `movassessmentmembers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `municipality_id` (`municipality_id`);
+
+--
+-- Indexes for table `movbrgy_officers`
+--
+ALTER TABLE `movbrgy_officers`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `barangay` (`barangay`);
 
 --
 -- Indexes for table `movdraft_file`
@@ -2528,19 +2253,25 @@ ALTER TABLE `active_sessions`
 -- AUTO_INCREMENT for table `barangays`
 --
 ALTER TABLE `barangays`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=104;
 
 --
 -- AUTO_INCREMENT for table `case_progress`
 --
 ALTER TABLE `case_progress`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=243;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=303;
 
 --
 -- AUTO_INCREMENT for table `complaints`
 --
 ALTER TABLE `complaints`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=281;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=341;
+
+--
+-- AUTO_INCREMENT for table `feedback_questions`
+--
+ALTER TABLE `feedback_questions`
+  MODIFY `fq_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `hearings`
@@ -2558,31 +2289,43 @@ ALTER TABLE `luponforms`
 -- AUTO_INCREMENT for table `lupons`
 --
 ALTER TABLE `lupons`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `mov`
 --
 ALTER TABLE `mov`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT for table `movassessmentmembers`
+--
+ALTER TABLE `movassessmentmembers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `movbrgy_officers`
+--
+ALTER TABLE `movbrgy_officers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `movdraft_file`
 --
 ALTER TABLE `movdraft_file`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `movrate`
 --
 ALTER TABLE `movrate`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `movremark`
 --
 ALTER TABLE `movremark`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `municipalities`
@@ -2600,7 +2343,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `security`
 --
 ALTER TABLE `security`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `upload_files`
@@ -2612,19 +2355,19 @@ ALTER TABLE `upload_files`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
 
 --
 -- AUTO_INCREMENT for table `user_files`
 --
 ALTER TABLE `user_files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1135;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=339;
 
 --
 -- Constraints for dumped tables
@@ -2665,6 +2408,18 @@ ALTER TABLE `luponforms`
 --
 ALTER TABLE `mov`
   ADD CONSTRAINT `mov_ibfk_1` FOREIGN KEY (`barangay_id`) REFERENCES `barangays` (`id`);
+
+--
+-- Constraints for table `movassessmentmembers`
+--
+ALTER TABLE `movassessmentmembers`
+  ADD CONSTRAINT `movassessmentmembers_ibfk_1` FOREIGN KEY (`municipality_id`) REFERENCES `municipalities` (`id`);
+
+--
+-- Constraints for table `movbrgy_officers`
+--
+ALTER TABLE `movbrgy_officers`
+  ADD CONSTRAINT `movbrgy_officers_ibfk_1` FOREIGN KEY (`barangay`) REFERENCES `barangays` (`id`);
 
 --
 -- Constraints for table `movdraft_file`

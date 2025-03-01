@@ -161,7 +161,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
               echo '</tbody>';
               echo '</table>';
             } else {
-              echo '<p class="text-center text-3xl text-gray-500 font-bold pt-[3rem] text-wrap">There are no account requests as of the moment.</p>';
+              echo '<p class="text-center text-lg">There are no account requests as of the moment.</p>';
             }
 
             echo '</div>';

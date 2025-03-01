@@ -1,11 +1,24 @@
-<?php
+<?php 
+
 session_start();
 include 'connection.php';
 
-session_destroy();
-session_unset();
-?>
+// check if session still has value. means u click from back from browser
+if (isset($_SESSION['user_id'])) { 
 
+  $sql = 'UPDATE users SET is_loggedin = 0 WHERE id = :id';
+  $stmt = $conn->prepare($sql);
+  $stmt->bindParam(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+  $stmt->execute();
+
+  session_destroy();
+  session_unset();
+
+}
+
+
+
+?>
 
 <!doctype html>
 <html lang="en">
@@ -77,7 +90,7 @@ session_unset();
                   } elseif ($_GET['login_message'] === 'not_verified') {
                     echo '<div id="alertMessage" class="alert alert-danger" role="alert">This account is not verified yet. Please contact your Admin.</div>';
                   } elseif ($_GET['login_message'] === 'account_already_open') {
-                    echo '<div id="alertMessage" class="alert alert-danger" role="alert">Your Account is already open on another device.</div>';
+                    echo '<div id="alertMessage" class="alert alert-danger" role="alert">Your Account is already open on another device or browser.</div>';
                   }
                 }
                 ?>
