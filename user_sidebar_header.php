@@ -225,31 +225,6 @@ function traverseDirectory()
         </a>
       </li>
 
-      <?php
-
-      $latestTimestamp = '';
-
-      if (isset($_POST['assignTimestamp'])) {
-        $latestTimestamp = date('Y-m-d H:i:s');
-      }
-
-      $latestTimestamp = $conn->query("SELECT timestamp FROM user_logs WHERE user_id = '$userId' ORDER BY log_id DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
-
-      $latestFeedbackDate = $conn->query("SELECT fq_creation_date FROM feedback_questions ORDER BY fq_id DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
-
-      if ($latestFeedbackDate['fq_creation_date'] > $latestTimestamp['timestamp']) {
-      ?>
-        <form method="post" action="">
-          <button type="submit" name="assignTimestamp">Show This</button>
-        </form>
-
-
-      <?php
-      }
-      ?>
-
-
-
     </ul>
   </div>
 </aside>

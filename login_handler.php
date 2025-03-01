@@ -3,6 +3,7 @@
 session_start();
 include 'connection.php';
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the user inputs from the form
     $email = $_POST['email'] ?? '';
@@ -15,31 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // -------------------------------------------------------------
-
-        $query = "SELECT is_loggedin FROM users WHERE id = :id";
-        $querystmt = $conn->prepare($query);
-        $querystmt->bindParam(':id', $user['id'], PDO::PARAM_INT);
-        $querystmt->execute();
-        $islogin = $querystmt->fetchColumn();
-        // -------------------------------------------------------------
-
-
         if ($user) {
             if (!in_array($user['user_type'], ['user', 'assessor']) || $user['verified']) {
                 // Check if another user with the same barangay is already logged in
-                // if (isset($_SESSION['barangay_id']) && $_SESSION['status'] === 'loggedin') {
-                //     if ($_SESSION['barangay_id'] === $user['barangay_id']) {
-                //         // Another user from the same barangay is already logged in, prevent login
-                //         header("Location: login.php?login_message=account_already_open");
-                //         exit;
-                //     }
-                // }
 
-                if ($islogin === 1) {
-                    header("Location: login.php?login_message=account_already_open");
-                    exit;
-                }
+                // if ($_SESSION['user_id'] === $user['id'] && $_SESSION['isloggedin'] === true) {
+                //     // Another user from the same barangay is already logged in, prevent login
+                //     header("Location: login.php?login_message=account_already_open");
+                //     exit;
+                // }
+                
 
 
                 // Check if the provided password matches the hashed password
@@ -53,18 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['first_name'] = $user['first_name']; // Store first name
                     $_SESSION['last_name'] = $user['last_name'];   // Store last name
                     $_SESSION['barangay_id'] = $user['barangay_id']; // Store barangay ID
-
+                    $_SESSION['isloggedin'] = true;
                     // Log user activity
                     logUserActivity($user['id'], "User logged in");
-
-                    // ----------------------------------------------------------
-
-                    $sql = 'UPDATE users SET is_loggedin = 1 WHERE id = :id';
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bindParam(':id', $user['id'], PDO::PARAM_INT);
-                    $stmt->execute();
-
-                    // ----------------------------------------------------------
 
 
                     // Fetch additional user information like municipality_name and barangay_name

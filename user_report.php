@@ -101,7 +101,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $monthArray = getVariedMonthsFunc($conn, $userID, $selectedYear);
 
     header("Location: user_report.php?yearurl=$selectedYear&monthurl=$selectedMonth");
-    exit;
+    exit();
+
   }
 
 
@@ -121,7 +122,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $male = $_POST['male'] ?? 0;
     $female = $_POST['female'] ?? 0;
 
-    $stmt = $conn->prepare("UPDATE reports 
+    $stmt = $conn->prepare(
+      "UPDATE reports 
       SET mayor = :mayor, 
           region = :region, 
           budget = :budget, 
@@ -133,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       WHERE user_id = :id 
         AND DATE_FORMAT(report_date, '%M %Y') = :monthtemp
          AND DATE_FORMAT(report_date, '%Y') = :yeartemp"
-      );
+    );
 
     // Bind variables instead of expressions
     $stmt->bindParam(':mayor', $mayor);
@@ -157,7 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       header("Location: user_report.php?yearurl=$temp&monthurl=$temp1&update_info_message=success");
       exit;
     } else {
- 
+
       $temp = isset($_GET['yearurl']) ? $_GET['yearurl'] : $latestyear;
       $temp1 = isset($_GET['monthurl']) ? $_GET['monthurl'] : $latestMonth;
 
@@ -205,164 +207,170 @@ if (isset($_GET['yearurl']) || isset($_GET['monthurl'])) {
         <div class="col-lg-7 d-flex align-items-strech">
           <div class="card w-100">
             <div class="card-body">
-              <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                <div class="mb-3 mb-sm-0">
 
-                  <div class="d-flex align-items-center">
-                    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
-                    <div>
-                      <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
-                    </div>
-                  </div>
+              <div class="mb-3 mb-sm-0">
 
-                  <br>
-
-                  <h5 class="card-title mb-9 fw-semibold">Report Overview</h5>
-                  <a href="user_add_report.php" class="btn btn-primary">(+) Add existing Report</a>
-
-                  <div class="flex items-center gap-x-2 my-2">
-
-                    <form method="POST">
-
-                      <h2>Annual Report (<?php echo isset($_GET['yearurl']) ? $_GET['yearurl'] : $latestYear; ?>)</h2>
-                      <label>Select Year:</label>
-                      <select name="selected_year">
-
-                        <option value="" disabled <?php echo empty($selectedYear) ? 'selected' : ''; ?>>
-                          Select a year
-                        </option>
-
-                        <?php foreach ($yearArray as $year) : ?>
-                          <option
-                            value="<?php echo $year['year']; ?>"
-                            <?php echo ($selectedYear == $year['year']) ? 'selected' : ''; ?>>
-                            <?php echo $year['year']; ?>
-                          </option>
-                        <?php endforeach; ?>
-                      </select>
-                      <input class="bg-blue-500 py-2 px-3 hover:bg-blue-400 rounded text-white" type="submit" name="submit_annual" value="Select Annual Report">
-                      <!-- ------------------------------------- -->
-                      <h2>Monthly Report (<?php echo isset($_GET['monthurl']) ? $_GET['monthurl'] : $latestMonth;  ?>)</h2>
-                      <label>Select Month:</label>
-                      <select name="selected_month">
-
-                        <option disabled value="" <?php echo empty($monthArray) ? 'selected' : ''; ?>>Select a Month</option>
-
-                        <?php foreach ($monthArray as $month) : ?>
-                          <option
-                            value="<?php echo $month['month_year']; ?>"
-                            <?php echo ($selectedMonth == $month['month_year']) ? 'selected' : ''; ?>>
-                            <?php echo $month['month_year']; ?>
-                          </option>
-                        <?php endforeach; ?>
-                      </select>
-                      <input <?php echo empty($monthArray) ? 'disabled' : ''; ?> class="<?php echo empty($monthArray) ? 'bg-gray-300 hover:bg-gray-400 cursor-not-allowed' : ''; ?> bg-blue-500 py-2 px-3 hover:bg-blue-400 rounded text-white" type="submit" name="submit_month" value="Select Monthly Report">
-                      <!-- ------------------------------------- -->
-                    </form>
-
-                  </div>
-
-                  <hr>
-                  <br>
-
+                <div class="d-flex align-items-center">
+                  <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
                   <div>
+                    <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
+                  </div>
+                </div>
 
-                    <b>
-                      <b>NATURE OF CASES</b>
-                      <div class="row">
-                        <div class="col-md-3 mb-3">
-                          <label for="criminal">Criminal:</label>
-                          <input type="number" class="form-control" id="criminal" name="criminal" readonly
-                            value="<?php echo !empty($reportData) ? $reportData['criminal'] : (!empty($lmrd) ? $lmrd['criminal'] : ''); ?>">
-                        </div>
-                        <div class="col-md-3 mb-3">
-                          <label for="civil">Civil:</label>
-                          <input type="number" class="form-control" id="civil" name="civil" readonly
-                            value="<?php echo !empty($reportData) ? $reportData['civil'] : (!empty($lmrd) ? $lmrd['civil'] : ''); ?>">
-                        </div>
-                        <div class="col-md-3 mb-3">
-                          <label for="others">Others:</label>
-                          <input type="number" class="form-control" id="others" name="others" readonly
-                            value="<?php echo !empty($reportData) ? $reportData['others'] : (!empty($lmrd) ? $lmrd['others'] : ''); ?>">
-                        </div>
-                        <div class="col-md-3 mb-3">
-                          <label for="totalNature">Total:</label>
-                          <input type="number" class="form-control" id="totalNature" name="totalNature" readonly
-                            value="<?php echo !empty($reportData) ? $reportData['totalNature'] : (!empty($lmrd) ? $lmrd['totalNature'] : ''); ?>">
-                        </div>
+                <br>
+
+                <h5 class="card-title mb-9 fw-semibold">Report Overview</h5>
+                <a href="user_add_report.php" class="btn btn-primary">(+) Add existing Report</a>
+
+                <div class="flex items-center gap-x-2 my-2">
+
+                  <form method="POST">
+
+                    <h2>Annual Report (<?php echo isset($_GET['yearurl']) ? $_GET['yearurl'] : $latestYear; ?>)</h2>
+                    <label>Select Year:</label>
+                    <select name="selected_year">
+
+                      <option value="" disabled <?php echo empty($selectedYear) ? 'selected' : ''; ?>>
+                        Select a year
+                      </option>
+
+                      <?php foreach ($yearArray as $year) : ?>
+                        <option
+                          value="<?php echo $year['year']; ?>"
+                          <?php echo ($selectedYear == $year['year']) ? 'selected' : ''; ?>>
+                          <?php echo $year['year']; ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                    <input class="bg-blue-500 py-2 px-3 hover:bg-blue-400 rounded text-white" type="submit" name="submit_annual" value="Select Annual Report">
+                    <!-- ------------------------------------- -->
+                    <h2>Monthly Report (<?php echo isset($_GET['monthurl']) ? $_GET['monthurl'] : $latestMonth;  ?>)</h2>
+                    <label>Select Month:</label>
+                    <select name="selected_month">
+
+                      <option disabled value="" <?php echo empty($monthArray) ? 'selected' : ''; ?>>Select a Month</option>
+
+                      <?php foreach ($monthArray as $month) : ?>
+                        <option
+                          value="<?php echo $month['month_year']; ?>"
+                          <?php echo ($selectedMonth == $month['month_year']) ? 'selected' : ''; ?>>
+                          <?php echo $month['month_year']; ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                    <input <?php echo empty($monthArray) ? 'disabled' : ''; ?> class="<?php echo empty($monthArray) ? 'bg-gray-300 hover:bg-gray-400 cursor-not-allowed' : ''; ?> bg-blue-500 py-2 px-3 hover:bg-blue-400 rounded text-white" type="submit" name="submit_month" value="Select Monthly Report">
+                    <!-- ------------------------------------- -->
+                  </form>
+
+                </div>
+
+                <hr>
+                <br>
+
+                <div>
+
+                  <b>
+                    <b>NATURE OF CASES</b>
+                    <div class="row">
+                      <div class="col-md-3 mb-3">
+                        <label for="criminal">Criminal:</label>
+                        <input type="number" class="form-control" id="criminal" name="criminal" readonly
+                          value="<?php echo !empty($reportData) ? $reportData['criminal'] : (!empty($lmrd) ? $lmrd['criminal'] : ''); ?>">
                       </div>
+                      <div class="col-md-3 mb-3">
+                        <label for="civil">Civil:</label>
+                        <input type="number" class="form-control" id="civil" name="civil" readonly
+                          value="<?php echo !empty($reportData) ? $reportData['civil'] : (!empty($lmrd) ? $lmrd['civil'] : ''); ?>">
+                      </div>
+                      <div class="col-md-3 mb-3">
+                        <label for="others">Others:</label>
+                        <input type="number" class="form-control" id="others" name="others" readonly
+                          value="<?php echo !empty($reportData) ? $reportData['others'] : (!empty($lmrd) ? $lmrd['others'] : ''); ?>">
+                      </div>
+                      <div class="col-md-3 mb-3">
+                        <label for="totalNature">Total:</label>
+                        <input type="number" class="form-control" id="totalNature" name="totalNature" readonly
+                          value="<?php echo !empty($reportData) ? $reportData['totalNature'] : (!empty($lmrd) ? $lmrd['totalNature'] : ''); ?>">
+                      </div>
+                    </div>
 
-                      <hr>
+                    <hr>
 
-                      <b>ACTION TAKEN - SETTLED</b>
+                    <b>ACTION TAKEN - SETTLED</b>
+                    <div class="row">
+                      <div class="col-md-3 mb-3">
+                        <label for="mediation">Mediation:</label>
+                        <input type="number" class="form-control" id="mediation" name="mediation" readonly
+                          value="<?php echo !empty($reportData) ? $reportData['media'] : (!empty($lmrd) ? $lmrd['media'] : ''); ?>">
+                      </div>
+                      <div class="col-md-3 mb-3">
+                        <label for="conciliation">Conciliation:</label>
+                        <input type="number" class="form-control" id="conciliation" name="conciliation" readonly
+                          value="<?php echo !empty($reportData) ? $reportData['concil'] : (!empty($lmrd) ? $lmrd['concil'] : ''); ?>">
+                      </div>
+                      <div class="col-md-3 mb-3">
+                        <label for="arbit">Arbitration:</label>
+                        <input type="number" class="form-control" id="arbit" name="arbit" readonly
+                          value="<?php echo !empty($reportData) ? $reportData['arbit'] : (!empty($lmrd) ? $lmrd['arbit'] : ''); ?>">
+                      </div>
+                      <div class="col-md-3 mb-3">
+                        <label for="totalSet">Total:</label>
+                        <input type="number" class="form-control" id="totalSet" name="totalSet" readonly
+                          value="<?php echo !empty($reportData) ? $reportData['totalSet'] : (!empty($lmrd) ? $lmrd['totalSet'] : ''); ?>">
+                      </div>
+                    </div>
+                    <hr>
+
+                    <div>
+
+                      <b>ACTION TAKEN - UNSETTLED</b>
                       <div class="row">
                         <div class="col-md-3 mb-3">
-                          <label for="mediation">Mediation:</label>
-                          <input type="number" class="form-control" id="mediation" name="mediation" readonly
-                            value="<?php echo !empty($reportData) ? $reportData['media'] : (!empty($lmrd) ? $lmrd['media'] : ''); ?>">
+                          <label for="pending">Pending:</label>
+                          <input type="number" class="form-control" id="pending" name="pending" readonly
+                            value="<?php echo !empty($reportData) ? $reportData['pending'] : (!empty($lmrd) ? $lmrd['pending'] : ''); ?>">
                         </div>
                         <div class="col-md-3 mb-3">
-                          <label for="conciliation">Conciliation:</label>
-                          <input type="number" class="form-control" id="conciliation" name="conciliation" readonly
-                            value="<?php echo !empty($reportData) ? $reportData['concil'] : (!empty($lmrd) ? $lmrd['concil'] : ''); ?>">
+                          <label for="dismissed">Dismissed:</label>
+                          <input type="number" class="form-control" id="dismissed" name="dismissed" readonly
+                            value="<?php echo !empty($reportData) ? $reportData['dismissed'] : (!empty($lmrd) ? $lmrd['dismissed'] : ''); ?>">
                         </div>
                         <div class="col-md-3 mb-3">
-                          <label for="arbit">Arbitration:</label>
-                          <input type="number" class="form-control" id="arbit" name="arbit" readonly
-                            value="<?php echo !empty($reportData) ? $reportData['arbit'] : (!empty($lmrd) ? $lmrd['arbit'] : ''); ?>">
+                          <label for="repudiated">Repudiated:</label>
+                          <input type="number" class="form-control" id="repudiated" name="repudiated" readonly
+                            value="<?php echo !empty($reportData) ? $reportData['repudiated'] : (!empty($lmrd) ? $lmrd['repudiated'] : ''); ?>">
                         </div>
                         <div class="col-md-3 mb-3">
-                          <label for="totalSet">Total:</label>
-                          <input type="number" class="form-control" id="totalSet" name="totalSet" readonly
+                          <label for="certified">Certified to Court:</label>
+                          <input type="number" class="form-control" id="certified" name="certified" readonly
+                            value="<?php echo !empty($reportData) ? $reportData['certcourt'] : (!empty($lmrd) ? $lmrd['certcourt'] : ''); ?>">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                          <label for="dropped">Dropped/Withdrawn:</label>
+                          <input type="number" class="form-control" id="dropped" name="dropped" readonly
+                            value="<?php echo !empty($reportData) ? $reportData['dropped'] : (!empty($lmrd) ? $lmrd['dropped'] : ''); ?>">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                          <label for="totalUnset">Total:</label>
+                          <input type="number" class="form-control" id="totalUnset" name="totalUnset" readonly
                             value="<?php echo !empty($reportData) ? $reportData['totalSet'] : (!empty($lmrd) ? $lmrd['totalSet'] : ''); ?>">
                         </div>
                       </div>
-                      <hr>
 
-                      <div>
+                      
+                      <a href="user_view_report.php?yearurl=<?= urlencode($_GET['yearurl'] ?? $latestYear) ?>&monthurl=<?= urlencode($_GET['monthurl'] ?? $latestMonth) ?>">
 
-                        <b>ACTION TAKEN - UNSETTLED</b>
-                        <div class="row">
-                          <div class="col-md-3 mb-3">
-                            <label for="pending">Pending:</label>
-                            <input type="number" class="form-control" id="pending" name="pending" readonly
-                              value="<?php echo !empty($reportData) ? $reportData['pending'] : (!empty($lmrd) ? $lmrd['pending'] : ''); ?>">
-                          </div>
-                          <div class="col-md-3 mb-3">
-                            <label for="dismissed">Dismissed:</label>
-                            <input type="number" class="form-control" id="dismissed" name="dismissed" readonly
-                              value="<?php echo !empty($reportData) ? $reportData['dismissed'] : (!empty($lmrd) ? $lmrd['dismissed'] : ''); ?>">
-                          </div>
-                          <div class="col-md-3 mb-3">
-                            <label for="repudiated">Repudiated:</label>
-                            <input type="number" class="form-control" id="repudiated" name="repudiated" readonly
-                              value="<?php echo !empty($reportData) ? $reportData['repudiated'] : (!empty($lmrd) ? $lmrd['repudiated'] : ''); ?>">
-                          </div>
-                          <div class="col-md-3 mb-3">
-                            <label for="certified">Certified to Court:</label>
-                            <input type="number" class="form-control" id="certified" name="certified" readonly
-                              value="<?php echo !empty($reportData) ? $reportData['certcourt'] : (!empty($lmrd) ? $lmrd['certcourt'] : ''); ?>">
-                          </div>
-                          <div class="col-md-3 mb-3">
-                            <label for="dropped">Dropped/Withdrawn:</label>
-                            <input type="number" class="form-control" id="dropped" name="dropped" readonly
-                              value="<?php echo !empty($reportData) ? $reportData['dropped'] : (!empty($lmrd) ? $lmrd['dropped'] : ''); ?>">
-                          </div>
-                          <div class="col-md-3 mb-3">
-                            <label for="totalUnset">Total:</label>
-                            <input type="number" class="form-control" id="totalUnset" name="totalUnset" readonly
-                              value="<?php echo !empty($reportData) ? $reportData['totalSet'] : (!empty($lmrd) ? $lmrd['totalSet'] : ''); ?>">
-                          </div>
-                        </div>
-
-                        <a href="user_view_report.php?yearurl=<?= urlencode($_GET['yearurl'] ?? $latestYear) ?>&monthurl=<?= urlencode($_GET['monthurl'] ?? $latestMonth) ?>" class="bg-blue-500 py-2 px-3 hover:bg-blue-400 rounded text-white">
+                        <button class="bg-blue-500 py-2 px-3 hover:bg-blue-400 rounded text-white">
                           View Report
-                        </a>
-                        
-                      </div>
-                  </div>
+                        </button>
+
+                      </a>
+
+
+                    </div>
                 </div>
               </div>
+
 
             </div>
           </div></b>
@@ -392,6 +400,7 @@ if (isset($_GET['yearurl']) || isset($_GET['monthurl'])) {
                     ?>
 
                     <form method="POST" action="">
+                      
                       <div class="form-group">
                         <label for="mayor">Mayor:</label>
                         <input type="text" class="form-control" id="mayor" name="mayor"
@@ -445,7 +454,9 @@ if (isset($_GET['yearurl']) || isset($_GET['monthurl'])) {
                           value="<?php echo !empty($reportData) ? $reportData['female'] : (!empty($lmrd) ? $lmrd['female'] : ''); ?>">
                       </div>
                       <br>
-                      <input name="submitEdit" type="submit" class="bg-blue-500 py-2 px-3 hover:bg-blue-400 rounded text-white" name="submit" value="Update">
+                      <button name="submitEdit" type="submit" class="bg-blue-500  py-2 px-3 hover:bg-blue-400 rounded text-white" name="submit">
+                        Update
+                     </button>
                     </form>
 
                 </div>
