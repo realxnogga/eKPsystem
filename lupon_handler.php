@@ -1,5 +1,6 @@
 <?php 
 // Initialize the linkedNames array
+
 $linkedNames = array();
 
 // Get the current year
@@ -13,7 +14,10 @@ $checkRowStmt->bindParam(':current_year', $currentYear, PDO::PARAM_INT);
 $checkRowStmt->execute();
 $rowCount = $checkRowStmt->fetchColumn();
 
+$_SESSION['test'] = $_SESSION;
+
 if ($rowCount === 0) {
+
     // If no row exists for the current year, create a new row for the user for the current year
     $createRowQuery = "INSERT INTO lupons (user_id, created_at) VALUES (:user_id, NOW())";
     $createRowStmt = $conn->prepare($createRowQuery);
