@@ -100,10 +100,12 @@ function countAccountRequests($conn, $currentMunicipalityID, $userType)
         <div class="flex items-center ms-3">
 
           <div>
-            <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+            <button type="button" class="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
               <span class="sr-only">Open user menu</span>
 
-              <img class="w-8 h-8 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $admin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+              <section class="h-8 w-8 border rounded-full overflow-hidden relative">
+                <img class="absolute inset-0 object-contain w-full h-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $admin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+              </section>
 
             </button>
           </div>
@@ -142,7 +144,10 @@ function countAccountRequests($conn, $currentMunicipalityID, $userType)
   <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
 
     <div class="w-full flex flex-col gap-y-1 items-center mb-3">
-      <img class="w-20 h-20 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $admin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+
+      <section class="h-20 w-20 border rounded-full overflow-hidden relative">
+        <img class="absolute inset-0 object-contain w-full h-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $admin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+      </section>
 
       <p><?php echo $admin['first_name'] . ' ' .  $admin['last_name']; ?> </p>
 

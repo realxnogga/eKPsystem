@@ -121,6 +121,29 @@ try {
     white-space: nowrap;    /* Prevent wrapping */
 }
 
+.btn-secondary {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: white !important;
+}
+
+.btn-secondary:hover {
+    opacity: 0.65 !important;
+    cursor: not-allowed !important;
+}
+
+.verify-btn[disabled],
+input[disabled],
+textarea[disabled] {
+    opacity: 0.65;
+    cursor: not-allowed !important;
+}
+
+input[disabled],
+textarea[disabled] {
+    background-color: #e9ecef !important;
+}
+
 </style>
 <link rel="stylesheet" href="../assets/css/styles.min.css" />
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -286,12 +309,72 @@ $(document).ready(function () {
                     fileTypes.forEach(function (type) {
                         var fileColumn = $('.file-column[data-type="' + type + '"]');
                         var fileKey = type + '_pdf_File';
+                        var verifyBtn = $('button[data-field="' + type + '_pdf_verify"]');
+                        var $row = fileColumn.closest('tr');
+                        var $rateInput = $row.find(`input[name="${type}_pdf_rate"]`);
+                        var $remarkTextarea = $row.find(`textarea[name="${type}_pdf_remark"]`);
+                        
                         if (data[fileKey]) {
+                            // File exists - enable verification and show View button
                             var filePath = 'movfolder/' + data[fileKey];
                             $('.view-pdf[data-type="' + type + '"]').attr('data-file', filePath).show();
                             fileColumn.html('<button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-type="' + type + '" data-file="' + filePath + '">View</button>');
+                            
+                            // Enable verify button with normal styling
+                            verifyBtn
+                                .prop('disabled', false)
+                                .text('Verify')  // Reset to 'Verify' text
+                                .removeClass('btn-secondary')  // Remove gray styling
+                                .addClass('btn-primary')  // Add primary styling
+                                .css('cursor', 'pointer')
+                                .attr('title', '');
+
+                            // Enable rate input and remark textarea
+                            $rateInput.prop('disabled', false)
+                                .css({
+                                    'background-color': '',
+                                    'cursor': 'pointer'
+                                })
+                                .attr('title', '');
+                            $remarkTextarea.prop('disabled', false)
+                                .css({
+                                    'background-color': '',
+                                    'cursor': 'pointer'
+                                })
+                                .attr('title', '');
                         } else {
+                            // No file - show warning and disable verification
                             fileColumn.html('<div class="alert alert-warning mb-0">No uploaded file</div>');
+                            
+                            // Update verify button to "Upload MOV" and gray styling
+                            verifyBtn
+                                .prop('disabled', true)
+                                .text('Upload MOV')  // Change text to Upload MOV
+                                .removeClass('btn-primary btn-success')  // Remove other button styles
+                                .addClass('btn-secondary')  // Add gray styling
+                                .css({
+                                    'cursor': 'not-allowed',
+                                    'opacity': '0.65'  // Make it look more disabled
+                                })
+                                .attr('title', 'Please upload MOV first');
+
+                            // Disable and clear rate input and remark textarea
+                            $rateInput
+                                .prop('disabled', true)
+                                .val('')
+                                .css({
+                                    'background-color': '#e9ecef',
+                                    'cursor': 'not-allowed'
+                                })
+                                .attr('title', 'Cannot rate - No file uploaded');
+                            $remarkTextarea
+                                .prop('disabled', true)
+                                .val('')
+                                .css({
+                                    'background-color': '#e9ecef',
+                                    'cursor': 'not-allowed'
+                                })
+                                .attr('title', 'Cannot add remarks - No file uploaded');
                         }
                     });
 
@@ -705,20 +788,69 @@ $(document).ready(function () {
             var field = $(this).data('field');
             if (field && verifications[field] !== undefined) {
                 var isVerified = verifications[field] === 1;
+                var $row = $(this).closest('tr');
+                
+                // Update button appearance
                 $(this)
                     .text(isVerified ? 'Verified' : 'Verify')
                     .removeClass('btn-primary btn-success')
                     .addClass(isVerified ? 'btn-success' : 'btn-primary');
+                
+                // Get the corresponding rate input and remark textarea
+                var baseFieldName = field.replace('_verify', '');
+                var $rateInput = $row.find(`input[name="${baseFieldName}_rate"]`);
+                var $remarkTextarea = $row.find(`textarea[name="${baseFieldName}_remark"]`);
+                
+                // Enable/disable based on verification status
+                if (!isVerified) {
+                    $rateInput
+                        .prop('disabled', true)
+                        .css({
+                            'background-color': '#e9ecef',
+                            'cursor': 'not-allowed'
+                        });
+                    $remarkTextarea
+                        .prop('disabled', true)
+                        .css({
+                            'background-color': '#e9ecef',
+                            'cursor': 'not-allowed'
+                        });
+                } else {
+                    $rateInput
+                        .prop('disabled', false)
+                        .css({
+                            'background-color': '',
+                            'cursor': ''
+                        });
+                    $remarkTextarea
+                        .prop('disabled', false)
+                        .css({
+                            'background-color': '',
+                            'cursor': ''
+                        });
+                }
             }
         });
     }
 
     // Add click handler for verify buttons
     $(document).on('click', '.verify-btn', function() {
+        if ($(this).prop('disabled')) {
+            return; // Exit if button is disabled
+        }
+        
         var btn = $(this);
         var field = btn.data('field');
         var movId = $('#mov_id').val();
         var barangayId = $('#barangay_id').val();
+        var $row = btn.closest('tr');
+        var fileColumn = $row.find('.file-column');
+
+        // Check if there's a file uploaded
+        if (fileColumn.find('.alert-warning').length > 0) {
+            showModal('Cannot verify - No file uploaded');
+            return;
+        }
 
         if (!field || !movId || !barangayId) {
             showModal('Missing required data for verification');
@@ -735,12 +867,11 @@ $(document).ready(function () {
             },
             success: function(response) {
                 if (response.status === 'success') {
-                    // Update the button state immediately
                     btn.text(response.verified ? 'Verified' : 'Verify')
                        .removeClass('btn-primary btn-success')
                        .addClass(response.verified ? 'btn-success' : 'btn-primary');
                     
-                    // Also refresh the verification data
+                    // Refresh verification data
                     var selectedBarangay = $('#barangay_select').val();
                     if (selectedBarangay) {
                         $.ajax({
@@ -752,6 +883,9 @@ $(document).ready(function () {
                                 if (data.verifications) {
                                     updateVerificationButtons(data.verifications);
                                 }
+                            },
+                            error: function() {
+                                console.error('Error fetching verification data');
                             }
                         });
                     }

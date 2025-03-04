@@ -10,9 +10,9 @@ $superadmin = $stmt->fetch(PDO::FETCH_ASSOC);
 
 function isActive($path)
 {
-    $currentPage = basename($_SERVER['SCRIPT_NAME']);
-    $targetPage = basename($path);
-    return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
+  $currentPage = basename($_SERVER['SCRIPT_NAME']);
+  $targetPage = basename($path);
+  return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
 }
 
 function getFullUrl()
@@ -41,7 +41,7 @@ function traverseDirectory()
 <script src="<?php echo traverseDirectory(); ?>node_modules/jquery/dist/jquery.min.js"></script>
 
 <script src="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.js"></script>
-<link href="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.css"  rel="stylesheet" />
+<link href="<?php echo traverseDirectory(); ?>node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
 
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
@@ -69,10 +69,12 @@ function traverseDirectory()
         <div class="flex items-center ms-3">
 
           <div>
-            <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+            <button type="button" class="flex text-sm rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
               <span class="sr-only">Open user menu</span>
 
-              <img class="w-8 h-8 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $superadmin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+              <section class="h-8 w-8 border rounded-full overflow-hidden relative">
+                <img class="absolute inset-0 object-contain w-full h-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $superadmin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+              </section>
 
             </button>
           </div>
@@ -108,7 +110,10 @@ function traverseDirectory()
   <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
 
     <div class="w-full flex flex-col gap-y-1 items-center mb-3">
-      <img class="w-20 h-20 rounded-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $superadmin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+
+      <section class="h-20 w-20 border rounded-full overflow-hidden relative">
+        <img class="absolute inset-0 object-contain w-full h-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $superadmin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
+      </section>
 
       <p><?php echo $superadmin['first_name']; ?> </p>
     </div>
@@ -154,8 +159,8 @@ function traverseDirectory()
       </li>
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>sa_feedback.php" class="<?php echo isActive('sa_feedback.php') .' '. isActive('sa_feedback_view.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
-        <i class="ti ti-message text-2xl"></i>
+        <a href="<?php echo traverseDirectory(); ?>sa_feedback.php" class="<?php echo isActive('sa_feedback.php') . ' ' . isActive('sa_feedback_view.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
+          <i class="ti ti-message text-2xl"></i>
           <span>Feedback</span>
         </a>
       </li>

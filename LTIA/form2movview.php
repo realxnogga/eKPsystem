@@ -345,6 +345,13 @@ if (!empty($municipalityID)) {
     $municipalityStmt->execute();
     $municipalityName = $municipalityStmt->fetchColumn() ?: 'Unknown';
 }
+// Fetch verification data from the movverify table based on barangay and year
+$verify_sql = "SELECT * FROM movverify WHERE barangay_id = :barangay_id AND year = :year";
+$verify_stmt = $conn->prepare($verify_sql);
+$verify_stmt->bindParam(':barangay_id', $_SESSION['barangay_id'], PDO::PARAM_INT);
+$verify_stmt->bindParam(':year', $selectedYear, PDO::PARAM_INT);
+$verify_stmt->execute();
+$verificationData = $verify_stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single row
 ?>
 
 <!--script for toggling submit button and cancel button-->
@@ -499,6 +506,33 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('#municipality-row').forEach(row => row.style.display = '');
       }
     });
+    document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('input[type="text"][name$="_verify"]').forEach(input => {
+        let value = input.value.trim(); // Get input value
+        let tr = input.closest("tr"); // Get the closest <tr> element
+
+        if (value !== "" && value !== "0") { // Ensure it's not empty or zero
+            tr.style.border = "2px solid #045e11"; // Apply border color change
+            tr.classList.add("highlight-border"); // Keep hover effect
+
+            // Find and hide the file input, replacing it with "Verified" text
+            let fileInput = tr.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.style.display = "none"; // Hide the file input
+                
+                let verifiedText = document.createElement("span");
+                verifiedText.textContent = "Verified";
+                verifiedText.style.color = "green";
+                verifiedText.style.fontWeight = "bold";
+                verifiedText.style.marginLeft = "10px"; 
+
+                fileInput.parentNode.appendChild(verifiedText); // Place after file input
+            }
+        }
+    });
+});
+
+
 
 </script>
 <!doctype html>
@@ -580,6 +614,8 @@ input[type="file"] {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+
 </style>
 
 <body class="bg-[#E8E8E7]">
@@ -650,10 +686,17 @@ input[type="file"] {
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Example for IA_1a -->
-                                <tr>
+<!-- ___________________________________________________ -->
+                    <tr>
+                        <td colspan="5">I. EFFICIENCY IN OPERATION</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">A. Observance of Settlement Procedure and Settlement Deadlines</td>
+                    </tr>
+                    <tr>
             <td><b>1. a) Proper Recording of every dispute/complaint</b></td>
             <td>
+            <input type="text" name="IA_1a_pdf_verify" style="display: none;" value="<?php echo $verificationData['IA_1a_pdf_verify'] ?? ''; ?>" readonly/>  
               <?php if (!empty($row['IA_1a_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_1a_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -679,9 +722,11 @@ input[type="file"] {
           <button type="button" id="cancel1" onclick="clearInput('IA_1a_pdf_File', 'submit1', 'cancel1')" style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
           <tr>
             <td>b) Sending of Notices and Summons</td>
             <td>
+            <input type="text" name="IA_1b_pdf_verify" style="display: none;" value="<?php echo $verificationData['IA_1b_pdf_verify'] ?? ''; ?>" readonly/>  
               <?php if (!empty($row['IA_1b_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_1b_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -707,16 +752,14 @@ input[type="file"] {
           <button type="button" id="cancel2" onclick="clearInput('IA_1b_pdf_File', 'submit2', 'cancel2')" style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
           <tr>
-                <td>2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
-                <td> </td>
-                <td> </td>
-            <td></td>
-            <td></td>
+                <td colspan="6">2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
               </tr>
                <tr>
                 <td>a) Mediation (within 15 days from initial confrontation with the Lupon Chairman)</td>
                 <td>
+                <input type="text" name="IA_2a_pdf_verify" style="display: none;" value="<?php echo $verificationData['IA_2a_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IA_2a_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_2a_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -740,11 +783,13 @@ input[type="file"] {
               <input type="hidden" name="IA_2a_pdf_File_hidden" id="IA_2a_pdf_File_hidden" value="<?php echo !empty($row['IA_2a_pdf_File']) ? htmlspecialchars($row['IA_2a_pdf_File']) : ''; ?>">
           <button type="submit" name="update" value="IA_2a_pdf_File" id="submit3" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
           <button type="button" id="cancel3" onclick="clearInput('IA_2a_pdf_File', 'submit3', 'cancel3')" style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
-    </td>
+          </td>
               </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>b) Conciliation (15 days from initial confrontation with the Pangkat)</td>
                 <td>
+                <input type="text" name="IA_2b_pdf_verify" style="display: none;" value="<?php echo $verificationData['IA_2b_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IA_2b_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_2b_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -770,9 +815,11 @@ input[type="file"] {
           <button type="button" id="cancel4" onclick="clearInput('IA_2b_pdf_File', 'submit4', 'cancel4')" style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
               </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>c) Conciliation (with extended period not to exceed another 15 days)</td>
                 <td>
+                <input type="text" name="IA_2c_pdf_verify" style="display: none;" value="<?php echo $verificationData['IA_2c_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IA_2c_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_2c_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -798,9 +845,11 @@ input[type="file"] {
           <button type="button" id="cancel5" onclick="clearInput('IA_2c_pdf_File', 'submit5', 'cancel5')" style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
               </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>d) Arbitration (within 10 days from the date of the agreement to arbitrate)</td>
                 <td>
+                <input type="text" name="IA_2d_pdf_verify" style="display: none;" value="<?php echo $verificationData['IA_2d_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IA_2d_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_2d_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -826,9 +875,11 @@ input[type="file"] {
           <button type="button" id="cancel6" onclick="clearInput('IA_2d_pdf_File', 'submit6', 'cancel6')" style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
               </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>e) Conciliation beyond 46 days but not more than 60 days on a clearly meritorious case</td>
              <td>
+             <input type="text" name="IA_2e_pdf_verify" style="display: none;" value="<?php echo $verificationData['IA_2e_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IA_2e_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IA_2e_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -854,23 +905,17 @@ input[type="file"] {
           <button type="button" id="cancel7" onclick="clearInput('IA_2e_pdf_File', 'submit7', 'cancel7')" style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
               </tr>
+<!-- ___________________________________________________ -->
               <tr>
-                <th>B. Systematic Maintenance of Records</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th colspan="6">B. Systematic Maintenance of Records</th>
               </tr>
               <tr>
-                <td><b>1. Record of Cases </b></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="6"><b>1. Record of Cases </b></td>
               </tr>
               <tr id="city-row">
                 <td>For Cities - computer database with searchable case information</td>
                 <td>
+                <input type="text" name="IB_1forcities_pdf_verify" style="display: none;" value="<?php echo $verificationData['IB_1forcities_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IB_1forcities_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IB_1forcities_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -900,6 +945,7 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr id="municipality-row">
                 <td>For Municipalities:</td>
                 <td></td>
@@ -910,6 +956,7 @@ input[type="file"] {
               <tr id="municipality-row">
                 <td>a. Manual Records</td>
                 <td>
+                <input type="text" name="IB_1aformuni_pdf_verify" style="display: none;" value="<?php echo $verificationData['IB_1aformuni_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IB_1aformuni_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IB_1aformuni_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -939,9 +986,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr id="municipality-row">
                 <td>b. Digital Record Filing</td>
                 <td>
+                <input type="text" name="IB_1bformuni_pdf_verify" style="display: none;" value="<?php echo $verificationData['IB_1bformuni_pdf_verify'] ?? ''; ?>" readonly/>  
                   <?php if (!empty($row['IB_1bformuni_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;"class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IB_1bformuni_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -971,9 +1020,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->          
               <tr>
                 <td>2. Copies of Minutes of Lupon meetings with attendance sheets and notices</td>
                 <td>
+                <input type="text" name="IB_2_pdf_verify" style="display: none;" value="<?php echo $verificationData['IB_2_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IB_2_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IB_2_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1003,9 +1054,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>3. Copies of reports submitted to the Court and to the DILG on file</td>
                 <td>
+                <input type="text" name="IB_3_pdf_verify" style="display: none;" value="<?php echo $verificationData['IB_3_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IB_3_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IB_3_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1035,9 +1088,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>4. All records are kept on file in a secured filing cabinet(s)</td>
                 <td>
+                <input type="text" name="IB_4_pdf_verify" style="display: none;" value="<?php echo $verificationData['IB_4_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IB_4_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IB_4_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1067,16 +1122,14 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
-                <th>C. Timely Submissions to the Court and the DILG</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th colspan="5">C. Timely Submissions to the Court and the DILG</th>
               </tr>
               <tr>
                 <td>1. <b>To the Court:</b> Submitted/ presented copies of settlement agreement to the Court from the lapse of the ten-day period repudiating the mediation/ conciliation settlement agreement, or within five (5) calendar days from the date of the arbitration award</td>
                 <td>
+                <input type="text" name="IC_1_pdf_verify" style="display: none;" value="<?php echo $verificationData['IC_1_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IC_1_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IC_1_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1106,9 +1159,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>2. To the DILG (Quarterly)</td>
                 <td>
+                <input type="text" name="IC_2_pdf_verify" style="display: none;" value="<?php echo $verificationData['IC_2_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IC_2_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IC_2_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1138,16 +1193,14 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
-                <th>D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th colspan="6">D. Conduct of monthly meetings for administration of the Katarungang Pambarangay (KP)</th>
               </tr>
               <tr>
                 <td>1. Notice of Meeting</td>
                 <td>
+                <input type="text" name="ID_1_pdf_verify" style="display: none;" value="<?php echo $verificationData['ID_1_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['ID_1_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['ID_1_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1177,9 +1230,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>2. Minutes of the Meeting</td>
                 <td>
+                <input type="text" name="ID_2_pdf_verify" style="display: none;" value="<?php echo $verificationData['ID_2_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['ID_2_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['ID_2_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1209,16 +1264,14 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
-                <th>II. EFFECTIVENESS IN SECURING THE SETTLEMENT OF INTERPERSONAL DISPUTE OBJECTIVE OF THE KATARUNGANG PAMBARANGAY</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th colspan="6">II. EFFECTIVENESS IN SECURING THE SETTLEMENT OF INTERPERSONAL DISPUTE OBJECTIVE OF THE KATARUNGANG PAMBARANGAY</th>
               </tr>
               <tr>
                 <td>A. Quantity of settled cases against filed</td>
                 <td>
+                <input type="text" name="IIA_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIA_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIA_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIA_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1248,16 +1301,14 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
-                <td>B. Quality of Settlement of Cases</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="6">B. Quality of Settlement of Cases</td>
               </tr>
               <tr>
                 <td>1. Zero cases repudiated</td>
                 <td>
+                <input type="text" name="IIB_1_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIB_1_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIB_1_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIB_1_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1287,9 +1338,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>2. Non-recurrence of cases settled</td>
                 <td>
+                <input type="text" name="IIB_2_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIB_2_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIB_2_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIB_2_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1319,9 +1372,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>C. At least 80% compliance with the terms of settlement or award after the cases have been settled</td>
                 <td>
+                <input type="text" name="IIC_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIC_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIC_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIC_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1351,17 +1406,15 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
-                <th>III. CREATIVITY AND RESOURCEFULNESS OF THE LUPONG TAGAPAMAYAPA</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th colspan="6">III. CREATIVITY AND RESOURCEFULNESS OF THE LUPONG TAGAPAMAYAPA</th>
               </tr>
               <tr>
                 <td>A. Settlement Technique utilized by the Lupon</td>
 
                 <td>
+                <input type="text" name="IIIA_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIIA_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIIA_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIIA_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1391,9 +1444,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>B. Coordination with Concerned Agencies relating to disputes filed (PNP, DSWD, DILG, DAR, DENR, Office of the Prosecutor, Court, DOJ, CHR, etc.)</td>
                 <td>
+                <input type="text" name="IIIB_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIIB_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIIB_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIIB_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1423,19 +1478,12 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
-                <td>C. Sustained information drive to promote Katarungang Pambarangay</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="6">C. Sustained information drive to promote Katarungang Pambarangay</td>
               </tr>
               <tr id="city-row">
-                <td>1. For Cities</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="6">1. For Cities</td>
               </tr>
               <tr id="city-row">
                 <td>
@@ -1444,6 +1492,7 @@ input[type="file"] {
                   </ul>
                 </td>
                 <td>
+                <input type="text" name="IIIC_1forcities_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIIC_1forcities_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIIC_1forcities_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIIC_1forcities_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1473,6 +1522,7 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr id="city-row">
                 <td>
                   <ul>
@@ -1480,6 +1530,7 @@ input[type="file"] {
                   </ul>
                 </td>
                 <td>
+                <input type="text" name="IIIC_1forcities2_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIIC_1forcities2_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIIC_1forcities2_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIIC_1forcities2_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1509,6 +1560,7 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr id="city-row">
                 <td>
                   <ul>
@@ -1516,6 +1568,7 @@ input[type="file"] {
                   </ul>
                 </td>
                 <td>
+                <input type="text" name="IIIC_1forcities3_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIIC_1forcities3_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIIC_1forcities3_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIIC_1forcities3_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1545,12 +1598,9 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr id="municipality-row">
-                <td>2. For Municipalities</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="6">2. For Municipalities</td>
               </tr>
               <tr id="municipality-row">
                 <td>
@@ -1559,6 +1609,7 @@ input[type="file"] {
                   </ul>
                 </td>
                 <td>
+                <input type="text" name="IIIC_2formuni1_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIIC_2formuni1_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIIC_2formuni1_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIIC_2formuni1_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1588,6 +1639,7 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr id="municipality-row">
                 <td>
                   <ul>
@@ -1595,6 +1647,7 @@ input[type="file"] {
                   </ul>
                 </td>
                 <td>
+                <input type="text" name="IIIC_2formuni2_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIIC_2formuni2_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIIC_2formuni2_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIIC_2formuni2_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1624,6 +1677,7 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr id="municipality-row">
                 <td>
                   <ul>
@@ -1631,6 +1685,7 @@ input[type="file"] {
                   </ul>
                 </td>
                 <td>
+                <input type="text" name="IIIC_2formuni3_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIIC_2formuni3_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIIC_2formuni3_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIIC_2formuni3_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1660,10 +1715,12 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>D. KP Training or seminar within the assessment period<br />
                   Organized skills training participated by the Lupong Tagapamayapa</td>
                 <td>
+                <input type="text" name="IIID_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIID_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IIID_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IIID_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1693,23 +1750,17 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
-                <th>IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th colspan="6">IV. AREA OR FACILITY FOR KP ACTIVITIES</th>
               </tr>
               <tr>
-                <td><b>Building structure or space:</b></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="6"><b>Building structure or space:</b></td>
               </tr>
               <tr id="city-row">
                 <td>For Cities - the office or space should be exclusive for KP matters</td>
                 <td>
+                <input type="text" name="IV_forcities_pdf_verify" style="display: none;" value="<?php echo $verificationData['IV_forcities_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IV_forcities_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IV_forcities_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1739,9 +1790,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
+<!-- ___________________________________________________ -->
               <tr id="municipality-row">
                 <td>For Municipalities - KP office or space may be shared or used for other Barangay matters.</td>
                 <td>
+                <input type="text" name="IV_muni_pdf_verify" style="display: none;" value="<?php echo $verificationData['IV_muni_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IV_muni_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['IV_muni_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1771,16 +1824,14 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>  
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
-                <th>V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th colspan="6">V. FINANCIAL OR NON-FINANCIAL SUPPORT</th>
               </tr>
               <tr>
                 <td>1. From City, Municipal, Provincial or NGAs</td>
                 <td>
+                <input type="text" name="V_1_pdf_verify" style="display: none;" value="<?php echo $verificationData['V_1_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['V_1_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['V_1_pdf_File']; ?>">View</button>
               <?php else : ?>
@@ -1810,9 +1861,11 @@ input[type="file"] {
                 style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>  
           </tr>
+<!-- ___________________________________________________ -->
               <tr>
                 <td>3 From People's Organizations, NGOs or Private Sector</td>
                 <td>
+                <input type="text" name="threepeoplesorg_verify" style="display: none;" value="<?php echo $verificationData['threepeoplesorg_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['threepeoplesorg_pdf_File'])) : ?>
                 <button type="button" style="background-color: #000033;" class="btn btn-primary view-pdf" data-file="movfolder/<?php echo $row['threepeoplesorg_pdf_File']; ?>">View</button>
               <?php else : ?>

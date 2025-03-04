@@ -134,12 +134,19 @@ function uploadFile($file, $directory)
                     name="profile_pic"
                     style="display: none;">
 
-                  <button
+                  <!-- <button
                     type="button"
                     id="uploadButton"
                     class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">
                     Upload a picture
+                  </button> -->
+
+                  <a href="crop_profile_pic.php">
+                  <button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">
+                    Upload a picture
                   </button>
+                  </a>
+
 
                 </div>
                 <br>
@@ -299,6 +306,8 @@ function uploadFile($file, $directory)
             </div>
           </form>
 
+          
+
           <form id="kplogoForm" enctype="multipart/form-data" action="user_setting.php" method="POST">
             <div class="card mt-3">
               <div class="card-body">
@@ -311,7 +320,6 @@ function uploadFile($file, $directory)
                   <button type="button" id="uploadKPButton" class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white">Upload</button>
                   <button type="submit" id="saveKPButton" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">Save</button>
                 </div>
-
               </div>
             </div>
           </form>
@@ -325,45 +333,45 @@ function uploadFile($file, $directory)
       document.addEventListener('DOMContentLoaded', function() {
 
         // Profile Picture upload
-        const profileFileInput = document.getElementById('fileInput');
-        const profileUploadButton = document.getElementById('uploadButton');
-        const profilePic = document.getElementById('profilePic');
+        // const profileFileInput = document.getElementById('fileInput');
+        // const profileUploadButton = document.getElementById('uploadButton');
+        // const profilePic = document.getElementById('profilePic');
 
-        profileUploadButton.addEventListener('click', function() {
-          profileFileInput.click();
-        });
+        // profileUploadButton.addEventListener('click', function() {
+        //   profileFileInput.click();
+        // });
 
-        profileFileInput.addEventListener('change', function() {
-          const file = this.files[0];
-          if (file) {
-            const reader = new FileReader();
+        // profileFileInput.addEventListener('change', function() {
+        //   const file = this.files[0];
+        //   if (file) {
+        //     const reader = new FileReader();
 
-            reader.onload = function(e) {
-              profilePic.setAttribute('src', e.target.result);
-            };
-            reader.readAsDataURL(file);
+        //     reader.onload = function(e) {
+        //       profilePic.setAttribute('src', e.target.result);
+        //     };
+        //     reader.readAsDataURL(file);
 
-            const formData = new FormData();
-            formData.append('profile_pic', file);
+        //     const formData = new FormData();
+        //     formData.append('profile_pic', file);
 
-            fetch('upload_pic.php', {
-                method: 'POST',
-                body: formData
-              })
-              .then(response => {
-                if (!response.ok) {
-                  throw new Error('Network response was not ok.');
-                }
-                return response.text();
-              })
-              .then(data => {
-                console.log('Profile Picture Upload successful:', data);
-              })
-              .catch(error => {
-                console.error('Profile Picture Upload Error:', error);
-              });
-          }
-        });
+        //     fetch('upload_pic.php', {
+        //         method: 'POST',
+        //         body: formData
+        //       })
+        //       .then(response => {
+        //         if (!response.ok) {
+        //           throw new Error('Network response was not ok.');
+        //         }
+        //         return response.text();
+        //       })
+        //       .then(data => {
+        //         console.log('Profile Picture Upload successful:', data);
+        //       })
+        //       .catch(error => {
+        //         console.error('Profile Picture Upload Error:', error);
+        //       });
+        //   }
+        // });
 
         // LGU Logo upload
         const lguFileInput = document.getElementById('lgulogoInput');

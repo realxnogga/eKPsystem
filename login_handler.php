@@ -3,6 +3,7 @@
 session_start();
 include 'connection.php';
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the user inputs from the form
     $email = $_POST['email'] ?? '';
@@ -18,14 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($user) {
             if (!in_array($user['user_type'], ['user', 'assessor']) || $user['verified']) {
                 // Check if another user with the same barangay is already logged in
-                if (isset($_SESSION['barangay_id']) && $_SESSION['status'] === 'loggedin') {
-                    if ($_SESSION['barangay_id'] === $user['barangay_id']) {
-                        // Another user from the same barangay is already logged in, prevent login
-                        header("Location: login.php?login_message=account_already_open");
-                        exit;
-                    }
-                }
+
+                // if ($_SESSION['user_id'] === $user['id'] && $_SESSION['isloggedin'] === true) {
+                //     // Another user from the same barangay is already logged in, prevent login
+                //     header("Location: login.php?login_message=account_already_open");
+                //     exit;
+                // }
                 
+
 
                 // Check if the provided password matches the hashed password
                 if (password_verify($password, $user['password'])) {
@@ -38,10 +39,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['first_name'] = $user['first_name']; // Store first name
                     $_SESSION['last_name'] = $user['last_name'];   // Store last name
                     $_SESSION['barangay_id'] = $user['barangay_id']; // Store barangay ID
-                    $_SESSION['status'] = 'loggedin'; // Set status to logged in
-
+                    $_SESSION['isloggedin'] = true;
                     // Log user activity
                     logUserActivity($user['id'], "User logged in");
+
 
                     // Fetch additional user information like municipality_name and barangay_name
                     $additionalInfoStmt = $conn->prepare("SELECT municipality_name FROM municipalities WHERE id = :municipality_id");
@@ -61,11 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($user['user_type'] === 'admin') {
                         header("Location: admin_dashboard.php");
                         exit;
-
                     } elseif ($user['user_type'] === 'assessor') {
                         header("Location: LTIA/assessor_ltia_admin_dashboard.php");
                         exit;
-
                     } elseif ($user['user_type'] === 'user') {
                         header("Location: user_dashboard.php");
                         exit;
@@ -99,7 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Function to log user activity
-function logUserActivity($user_id, $activity) {
+function logUserActivity($user_id, $activity)
+{
     global $conn; // Assuming $conn is your database connection variable
 
     $query = "INSERT INTO user_logs (user_id, activity) VALUES (?, ?)";

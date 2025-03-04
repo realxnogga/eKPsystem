@@ -62,16 +62,22 @@ if ($securityQuestions) {
               <div class="mb-3 mb-sm-0">
 
                 <div class="d-flex align-items-center" class="prof-container">
-                  
+
                   <img src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
 
                   <input type="file" id="fileInput" name="profile_pic" style="display: none;">
                 
-                  <button type="button" id="uploadButton" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">
+                  <a href="crop_profile_pic.php">
+                  <button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">
                     Upload a picture
                   </button>
+                  </a>
 
                 </div>
+
+              
+
+
                 <br>
 
                 <h5 class="card-title mb-9 fw-semibold">Account Settings</h5>
@@ -219,7 +225,7 @@ if ($securityQuestions) {
 
       </div>
 
-      <script>
+      <!-- <script>
         document.addEventListener('DOMContentLoaded', function() {
           const fileInput = document.getElementById('fileInput');
           const uploadButton = document.getElementById('uploadButton');
@@ -283,12 +289,11 @@ if ($securityQuestions) {
           });
 
         });
-      </script>
+      </script> -->
 
     </div>
 
   </div>
-
 
   <script src="hide_toast.js"></script>
 </body>
