@@ -2,6 +2,11 @@
 session_start();
 include 'connection.php';
 
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
+  header("Location: login.php");
+  exit;
+}
+
 $userID = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT * FROM users WHERE id = :user_id");
 $stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);

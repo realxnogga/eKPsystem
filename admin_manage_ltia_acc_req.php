@@ -3,15 +3,7 @@ session_start();
 include 'connection.php';
 //include 'admin-navigation.php';
 
-
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-  header("Location: login.php");
-  exit;
-}
-
-// Check if the user has the correct user_type
-if ($_SESSION['user_type'] !== 'admin') {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
   header("Location: login.php");
   exit;
 }

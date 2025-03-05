@@ -1,3 +1,34 @@
+<?php
+  session_start();
+
+
+
+$whatType = $_SESSION['user_type'];
+
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== "$whatType") {
+    header("Location: login.php");
+    exit;
+}
+
+function tempFunc($arg)
+{
+    if ($arg === 'user') {
+        return 'user_setting.php';
+    }
+    if ($arg === 'superadmin') {
+        return 'sa_setting.php';
+    }
+    if ($arg === 'admin') {
+        return 'admin_setting.php';
+    }
+    if ($arg === 'assessor') {
+        return 'assessor_setting.php';
+    }
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,26 +48,6 @@
 </head>
 
 <body class="bg-[#4d4d4d] min-h-screen flex items-center justify-center">
-
-    <?php
-     
-     session_start();
-
-     $whatType = $_SESSION['user_type'];
-
-     function tempFunc($arg) {
-        if ($arg === 'user') {
-            return 'user_setting.php';
-        }
-        if ($arg === 'superadmin') {
-            return 'sa_setting.php';
-        }
-        if ($arg === 'admin') {
-            return 'admin_setting.php';
-        }
-     }
-        
-    ?>
 
     <a href="<?php echo tempFunc($whatType); ?>" class="absolute top-3 left-3 flex gap-x-2 items-center p-2 rounded-lg group">
         <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">

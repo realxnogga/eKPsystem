@@ -3,8 +3,6 @@ session_start();
 include 'connection.php';
 
 
-
-
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;

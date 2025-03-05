@@ -63,10 +63,19 @@ if ($securityQuestions) {
                 <div class="mb-3 mb-sm-0">
 
                   <div class="d-flex align-items-center" class="prof-container">
+
                     <img src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+
+                    
                     <input type="file" id="fileInput" name="profile_pic" style="display: none;">
                     <!--<h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>-->
-                    <button type="button" id="uploadButton" class="bg-blue-500 hover:bg-blue-4  00 px-3 py-2 rounded-md text-white">Upload a picture</button>
+                    <!-- <button type="button" id="uploadButton" class="bg-blue-500 hover:bg-blue-4  00 px-3 py-2 rounded-md text-white">Upload a picture</button> -->
+
+                    <a href="crop_profile_pic.php">
+                      <button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">
+                        Upload a picture
+                      </button>
+                    </a>
 
 
                     <div>

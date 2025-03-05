@@ -2,6 +2,11 @@
 session_start();
 include 'connection.php';
 
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+  header("Location: login.php");
+  exit;
+}
+
 $usertype = $_SESSION['user_type'];
 
 $userId = $_SESSION['user_id'];

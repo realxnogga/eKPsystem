@@ -113,7 +113,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
 
               foreach ($accountRequests as $user) {
                 echo '<tr>';
-                echo '<td>' . $user['username'] . '</td>';
+                echo '<td>' . $user['username'] . 'Lorem ipsum is a dummy or placeholder text commonly used in graphic design, publishing, and web development to fill empty spaces in a layout that does not yet have content.' . '</td>';
                 echo '<td>' . $user['first_name'] . ' ' . $user['last_name'] . '</td>';
                 echo '<td>' . $user['email'] . '</td>';
                 echo '<td>' . $user['contact_number'] . '</td>';
