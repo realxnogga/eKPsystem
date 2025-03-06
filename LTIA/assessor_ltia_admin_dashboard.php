@@ -2014,29 +2014,25 @@ if (classification === "City") {
       </div> 
     </div>
   </div>
-
-  <!-- Modal structure -->
-<div id="responseModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+  <div id="alertModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Notification</h5>
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="large-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p id="modalMessage"></p>
+                <p id="alertMessage"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary"  style="color: blue;" data-dismiss="modal">OK</button>
+                <button type="button" style="background-color: #000033;" class="btn btn-primary" data-dismiss="modal">OK</button>
             </div>
         </div>
     </div>
 </div>
+
 <script>
   // Add this inside your existing $(document).ready(function() { ... });
 $(document).on('click', '.verify-btn', function() {
