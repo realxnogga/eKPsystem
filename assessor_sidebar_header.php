@@ -132,7 +132,7 @@ function traverseDirectory()
       <li>
         <a href="<?php echo traverseDirectory(); ?>LTIA/assessor_ltia_admin_dashboard.php" class="<?php echo isActive('LTIA/assessor_ltia_admin_dashboard.php') . ' ' . isActive('LTIA/assessor_ltia_adminform2evaluate.php'); ?> flex gap-x-2 items-center p-2 rounded-lg hover:bg-gray-100 group">
           <i class="ti ti-certificate-2 text-2xl"></i>
-          <span>LTIA Admin Dashboard</span>
+          <span>LTIA Barangay Assessment</span>
         </a>
       </li>
 
