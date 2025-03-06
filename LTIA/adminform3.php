@@ -190,25 +190,23 @@ function getAdjectivalRating($total)
             <div class="card">
                 <div class="card-body">
                     <div class="menu flex items-center justify-between">
-                        <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform2evaluate.php';">
+                        <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='ltia_admin_overallsummary.php';">
                             <i class="ti ti-building-community mr-2"></i> Back
                         </button>
+                        <div class="flex items-center space-x-4">
+                            <form method="get" action="">
+                                <select name="year" onchange="this.form.submit()" class="form-select">
+                                    <?php foreach ($years as $year): ?>
+                                        <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
+                                            <?php echo htmlspecialchars($year); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </form>
+                            <button onclick="printSecondCard()" class="btn btn-primary">Print</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="text-right">
-                <form method="get" action="">
-                    <select name="year" onchange="this.form.submit()">
-                        <?php foreach ($years as $year): ?>
-                            <option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
-                                <?php echo htmlspecialchars($year); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </form>
-            </div>
-            <div class="text-right">
-                <button onclick="printSecondCard()" class="btn btn-primary">Print</button>
             </div>
             <div class="print-content">
                 <div class="card mt-4">
@@ -230,19 +228,19 @@ function getAdjectivalRating($total)
                         <div class="border border-gray-800 rounded-md p-4 mt-4">
                             <b>A. IDENTIFYING INFORMATION</b>
                             <p style="padding-left: 5em;">
-                                City/Municipality: 
-                                <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span> 
-                                OF <?php echo strtoupper(htmlspecialchars($municipality_name)); ?>
+                                City/Municipality 
+                                <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase; text-decoration: underline;"></span> 
+                                <span style="text-decoration: underline;">OF <span style="text-decoration: underline;"><?php echo strtoupper(htmlspecialchars($municipality_name)); ?></span>
                             </p>
                             <p style="padding-left: 5em;">
-                                Region <span style="display: inline-block; width: 3em; text-align: center;">:</span> IV-A CALABARZON    
+                                Region <span style="display: inline-block; width: 3em; text-align: center;"></span> <span style="text-decoration: underline;">IV-A CALABARZON</span>    
                             </p>
                             <p style="padding-left: 5em;">
-                                Province <span style="display: inline-block; width: 3em; text-align: center;">:</span> LAGUNA
+                                Province <span style="display: inline-block; width: 3em; text-align: center;"></span> <span style="text-decoration: underline;">LAGUNA</span>
                             </p>
                             <p style="padding-left: 5em;">
-                                Category <span style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase;"></span>: 
-                                <span id="municipality-category" style="text-transform: uppercase;"></span>
+                                Category <span style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase; text-decoration: underline;"></span> 
+                                <span id="municipality-category" style="text-transform: uppercase; text-decoration: underline;"></span>
                             </p>
                         </div>
                         <script>

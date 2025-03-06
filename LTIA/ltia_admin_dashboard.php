@@ -56,14 +56,17 @@ $stmt = $conn->prepare($query);
 $stmt->bindValue(':municipality_id', $municipality_id, PDO::PARAM_INT);
 $stmt->bindValue(':year', $selectedYear, PDO::PARAM_INT);
 $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-$stmt->execute();
 
-$barangays = [];
-$totals = [];
-
-while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $barangays[] = $row['barangay_name'];
-    $totals[] = $row['total'];
+if ($stmt->execute()) {
+    $barangays = [];
+    $totals = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $barangays[] = $row['barangay_name'];
+        $totals[] = $row['total'];
+    }
+} else {
+    $errorInfo = $stmt->errorInfo();
+    echo "Error executing query: " . $errorInfo[2];
 }
 ?>
 <!doctype html>
@@ -108,12 +111,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             <div class="menu">
               <ul class="flex space-x-4">
               <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform3.php';" style="margin-left: 0;">
-                  <i class="ti ti-report-analytics mr-2"> </i> 
-                      Summary
-                  </button>
-                </li>
-              <li>
                   <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='ltia_admin_overallsummary.php';" style="margin-left: 0;">
                   <i class="ti ti-report-analytics mr-2"> </i> 
                       Overall Summary
@@ -134,68 +131,70 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           </div>
 
           <script>
-  const barangays = <?php echo json_encode($barangays); ?>;
-  const totals = <?php echo json_encode($totals); ?>;
+  document.addEventListener('DOMContentLoaded', function() {
+    const barangays = <?php echo json_encode($barangays); ?>;
+    const totals = <?php echo json_encode($totals); ?>;
 
-  const performanceLabels = totals.map(total => {
-    if (total >= 100) return 'Outstanding';
-    else if (total >= 90) return 'Very Satisfactory';
-    else if (total >= 80) return 'Fair';
-    else if (total >= 70) return 'Poor';
-    else return 'Very Poor';
-  });
+    const performanceLabels = totals.map(total => {
+      if (total >= 100) return 'Outstanding';
+      else if (total >= 90) return 'Very Satisfactory';
+      else if (total >= 80) return 'Fair';
+      else if (total >= 70) return 'Poor';
+      else return 'Very Poor';
+    });
 
-  const ctx = document.getElementById('barangayChart').getContext('2d');
-  const barangayChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: barangays,
-      datasets: [{
-        label: 'Total Score',
-        data: totals,
-        backgroundColor: totals.map(total => 
-          total >= 100 ? 'rgba(0, 51, 102, 0.6)' : 'rgba(0, 51, 102, 0.6)'), 
-        borderColor: totals.map(total => 
-          total >= 100 ? 'rgba(0, 153, 51, 1)' : 'rgba(54, 162, 235, 1)'),
-        borderWidth: 1
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 100,
-          title: {
-            display: true,
-            text: 'Total Score'
-          }
-        }
+    const ctx = document.getElementById('barangayChart').getContext('2d');
+    const barangayChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: barangays,
+        datasets: [{
+          label: 'Total Score',
+          data: totals,
+          backgroundColor: totals.map(total => 
+            total >= 100 ? 'rgba(0, 51, 102, 0.6)' : 'rgba(0, 51, 102, 0.6)'), 
+          borderColor: totals.map(total => 
+            total >= 100 ? 'rgba(0, 153, 51, 1)' : 'rgba(54, 162, 235, 1)'),
+          borderWidth: 1
+        }]
       },
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top',
-          labels: {
-            color: '#333',
-            font: {
-              size: 14
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Total Score'
             }
           }
         },
-        tooltip: {
-          callbacks: {
-            afterLabel: function(context) {
-              return 'Performance: ' + performanceLabels[context.dataIndex];
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              color: '#333',
+              font: {
+                size: 14
+              }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              afterLabel: function(context) {
+                return 'Performance: ' + performanceLabels[context.dataIndex];
+              }
             }
           }
+        },
+        animation: {
+          duration: 1000, // Animation duration in milliseconds
+          easing: 'easeInOutBounce', // Animation easing function
         }
-      },
-      animation: {
-        duration: 1000, // Animation duration in milliseconds
-        easing: 'easeInOutBounce', // Animation easing function
       }
-    }
+    });
   });
 </script>
 

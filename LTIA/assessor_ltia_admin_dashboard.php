@@ -149,6 +149,8 @@ textarea[disabled] {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="LTIAassest/jquery-3.6.0.min.js"></script>
+<script src="LTIAassest/bootstrap.min.js"></script>
  <link rel="stylesheet" href="css/td_hover.css">
 
 
@@ -998,9 +1000,9 @@ $(document).on('click', '.verify-btn', function() {
             <div class="menu">
               <ul class="flex space-x-4">
                 <li>
-                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='ltia_admin_dashboard.php';" style="margin-left: 0;">
+                  <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessorForm3summary.php';" style="margin-left: 0;">
                   <i class="ti ti-building-community mr-2"> </i> 
-                      Back
+                     My Form 3
                   </button>
                 </li>
               </ul>
@@ -2080,8 +2082,8 @@ $(document).on('click', '.verify-btn', function() {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <!-- Main modal for PDF viewing -->
-<div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed inset-0 z-50 justify-center items-center w-full h-full">
-    <div class="relative p-4 w-full max-w-6xl h-[85%]">
+<div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed inset-0 z-50 flex justify-center items-center w-full h-full">
+    <div class="relative p-4 w-full max-w-6xl h-[90%]">
         <!-- Modal content -->
         <div class="relative bg-white shadow rounded-lg h-full dark:bg-gray-700">
             <!-- Modal header -->
@@ -2101,24 +2103,31 @@ $(document).on('click', '.verify-btn', function() {
         </div>
     </div>
 </div>
-<!-- Modal structure -->
-<div id="alertModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Notification</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p id="alertMessage"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" style="background-color: #000033;" class="btn btn-primary" data-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
+
+<script>
+$(document).ready(function () {
+    // Handle PDF viewing inside the modal
+    $(document).on('click', '.view-pdf', function () {
+        var file = $(this).data('file'); // Get the file URL
+        console.log('PDF URL:', file); // Debug the file path
+
+        if (file) {
+            // Set the source of the iframe in the modal to the PDF URL
+            $('#pdfViewer').attr('src', file);
+
+            // Show the modal by removing the hidden class
+            $('#large-modal').removeClass('hidden');
+        } else {
+            alert('No file available to view.');
+        }
+    });
+
+    // Close the modal when the close button is clicked
+    $('[data-modal-hide="large-modal"]').on('click', function () {
+        $('#large-modal').addClass('hidden'); // Hide the modal
+        $('#pdfViewer').attr('src', ''); // Clear the iframe src when modal is closed
+    });
+});
+</script>
 </body>
 </html>
