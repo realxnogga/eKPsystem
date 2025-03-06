@@ -118,7 +118,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                 echo '<td>' . $user['email'] . '</td>';
                 echo '<td>' . $user['contact_number'] . '</td>';
 
-                echo '<td class="flex items-center flex-col">';
+                echo '<td class="">';
 
                 if (!isset($user['verified']) || !$user['verified']) {
                   echo '<form class="flex items-center flex-col" method="post" action="' . $_SERVER['PHP_SELF'] . '">';
@@ -138,11 +138,6 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                       <p class="hide-icon hidden">Deny</p>
                    </span> 
                                     </button>';
-                  echo '</form>';
-                } else {
-                  echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
-                  echo '<input type="hidden" name="user_id" value="' . $user['id'] . '">';
-                  echo '<button class="btn btn-danger m-1" type="submit" name="action" value="unverify">Unverify</button>';
                   echo '</form>';
                 }
 

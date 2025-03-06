@@ -113,7 +113,7 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
 
               foreach ($accountRequests as $user) {
                 echo '<tr>';
-                echo '<td>' . $user['username'] . 'Lorem ipsum is a dummy or placeholder text commonly used in graphic design, publishing, and web development to fill empty spaces in a layout that does not yet have content.' . '</td>';
+                echo '<td>' . $user['username'] . '</td>';
                 echo '<td>' . $user['first_name'] . ' ' . $user['last_name'] . '</td>';
                 echo '<td>' . $user['email'] . '</td>';
                 echo '<td>' . $user['contact_number'] . '</td>';
@@ -141,12 +141,8 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                   </button>';
 
                   echo '</form>';
-                } else {
-                  echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
-                  echo '<input type="hidden" name="user_id" value="' . $user['id'] . '">';
-                  echo '<button class="btn btn-danger m-1" type="submit" name="action" value="unverify">Unverify</button>';
-                  echo '</form>';
                 }
+
                 echo '<button class="w-fit btn btn-light m-1 bg-gray-300" onclick="window.location.href=\'admin_manage_acc_req.php?user_id=' . $user['id'] . '\'">
                 <span>
                       <i class="ti ti-user-cog text-lg show-icon"></i>
