@@ -595,11 +595,9 @@ document.addEventListener('DOMContentLoaded', function () {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
-    max-width: 350px; /* Adjust the width as needed */
-    white-space: nowrap;
+    max-width: 100%; /* Adjust the width as needed */
     overflow: hidden;
     text-overflow: ellipsis;
-
 }
 .comment strong {
     color: #333;
@@ -607,6 +605,7 @@ document.addEventListener('DOMContentLoaded', function () {
 .comment p {
     margin: 0;
     color: #555;
+    white-space: normal; /* Allow text to wrap */
 }
 input[type="file"] {
     max-width: 270px; /* Adjust the width as needed */
