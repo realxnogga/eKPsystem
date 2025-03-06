@@ -141,12 +141,8 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                   </button>';
 
                   echo '</form>';
-                } else {
-                  echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
-                  echo '<input type="hidden" name="user_id" value="' . $user['id'] . '">';
-                  echo '<button class="btn btn-danger m-1" type="submit" name="action" value="unverify">Unverify</button>';
-                  echo '</form>';
                 }
+
                 echo '<button class="w-fit btn btn-light m-1 bg-gray-300" onclick="window.location.href=\'admin_manage_acc_req.php?user_id=' . $user['id'] . '\'">
                 <span>
                       <i class="ti ti-user-cog text-lg show-icon"></i>

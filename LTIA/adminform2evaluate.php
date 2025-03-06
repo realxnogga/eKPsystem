@@ -495,6 +495,15 @@ $(document).ready(function () {
     $('#status_rate').text(''); // Reset the rate status to blank
     clearRates();
     clearRemarks();
+    
+    // Add this new code to reset verification buttons
+    $('.verify-btn').each(function() {
+        $(this)
+            .text('Verify')
+            .removeClass('btn-success btn-secondary')
+            .addClass('btn-primary')
+            .prop('disabled', false);
+    });
 }
 
     // Function to clear remarks

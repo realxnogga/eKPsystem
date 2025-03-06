@@ -10,24 +10,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 
 include 'admin_func.php';
 
-
-$action_submitted = isset($_GET['search']);
 $currentMunicipalityID = $_SESSION['municipality_id'] ?? null;
-// Prepare the search query if search form is submitted
-if ($action_submitted) {
-  $search_query = $_GET['search'];
-  $searchUsersQuery = "SELECT u.id, u.username, u.first_name, u.last_name, u.email, u.contact_number, b.barangay_name 
-                    FROM users u 
-                    LEFT JOIN barangays b ON u.barangay_id = b.id 
-                    WHERE u.verified = 1 
-                    AND u.municipality_id = ? 
-                    AND (u.first_name LIKE '%$search_query%' 
-                        OR u.last_name LIKE '%$search_query%' 
-                        OR b.barangay_name LIKE '%$search_query%')";
 
-  $searchUsersStatement = $conn->prepare($searchUsersQuery);
-  $searchUsersStatement->execute([$currentMunicipalityID]);
-}
 ?>
 
 <!doctype html>
@@ -45,17 +29,20 @@ if ($action_submitted) {
   <link rel="stylesheet" href="hide_show_icon.css">
 
   <style>
-        table {
-            width: 100%;
-            table-layout: fixed; /* Ensures all columns have equal width */
-        }
-        th, td {
-        
-            padding: 8px;
-            text-align: center;
-        }
-    </style>
-    
+    table {
+      width: 100%;
+      table-layout: fixed;
+      /* Ensures all columns have equal width */
+    }
+
+    th,
+    td {
+
+      padding: 8px;
+      text-align: center;
+    }
+  </style>
+
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -87,13 +74,8 @@ if ($action_submitted) {
 
             <br>
 
-            <!-- <form method="GET" action="" class="searchInput">
-              <input type="text" class="form-control" name="search" id="search" placeholder="Search by Name or Barangay Name" required>
-              <input type="submit" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 ml-2 rounded-md text-white" value="Search">
-            </form> -->
 
-
-            <?php // Your code before the table structure
+            <?php 
             $verifiedUsersQuery = "SELECT id, username, first_name, last_name, email, contact_number, user_type, barangay_id 
                         FROM users 
                         WHERE verified = 1 
@@ -121,63 +103,6 @@ if ($action_submitted) {
 
               <?php
               echo '<tbody>';
-            
-              if ($action_submitted) {
-                while ($verifiedUser = $searchUsersStatement->fetch(PDO::FETCH_ASSOC)) {
-                  // Fetch barangay name for the current user if the key exists
-                  $barangayName = $verifiedUser['barangay_name'] ?? '';
-                  if (array_key_exists('barangay_id', $verifiedUser)) {
-                    $barangayNameQuery = "SELECT barangay_name FROM barangays WHERE id = ?";
-                    $barangayStatement = $conn->prepare($barangayNameQuery);
-                    $barangayStatement->execute([$verifiedUser['barangay_id']]);
-                    $barangayName = $barangayStatement->fetchColumn();
-                  }
-
-                  // Displaying table rows for search results
-                  echo '<tr>';
-                  echo '<td class="max-w-[10ch]">' . $verifiedUser['username'] . '</td>';
-                  echo '<td>' . $verifiedUser['first_name'] . ' ' . $verifiedUser['last_name'] . '</td>';
-                  echo '<td>' . $verifiedUser['email'] . '</td>';
-                  echo '<td>' . $verifiedUser['contact_number'] . '</td>';
-                  echo '<td>' . $barangayName . '</td>';
-                  echo '<td class="flex flex-col gap-y-2">';
-                  // Your actions/buttons for search results
-                  echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
-                  echo '<input type="hidden"  name="user_id" value="' . $verifiedUser['id'] . '">';
-                  // echo '<button class="bg-green-500 hover:bg-green-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">1Lock</button>';
-                
-                  echo '<button class="bg-red-500 hover:bg-red-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">
-                  <span>
-                  <i class="ti ti-lock text-lg show-icon"></i>
-                  <p class="whitespace-nowrap hide-icon hidden">Lock</p>
-                  </span>    
-                  </button>';
-
-                  echo '</form>';
-                 
-                  // Your actions/buttons for search results
-                  echo '<form method="post" action="admin_viewreport.php">';
-                  echo '<input type="hidden" name="user_id" value="' . $verifiedUser['id'] . '">';
-                  // Fetch barangay_id and include it as a hidden input
-                  $barangayIdQuery = "SELECT barangay_id FROM users WHERE id = ?";
-                  $barangayStatement = $conn->prepare($barangayIdQuery);
-                  $barangayStatement->execute([$verifiedUser['id']]);
-                  $barangayId = $barangayStatement->fetchColumn();
-                  echo '<input type="hidden" name="barangay_id" value="' . $barangayId . '">';
-                  // echo '<button class="btn btn-success m-1" type="submit" name="viewreport">View Report</button>';
-
-                  echo '<button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 ml-2 rounded-md text-white" type="submit" name="viewreport">
-                  <span>
-                      <i class="ti ti-report-search text-lg show-icon"></i>
-                      <p class="whitespace-nowrap hide-icon hidden hide-icon">View Report</p>
-                      </span>
-                  </button>';
-
-                  echo '</form>';
-                  echo '</td>';
-                  echo '</tr>';
-                }
-              } else {
 
                 while ($verifiedUser = $verifiedUsersStatement->fetch(PDO::FETCH_ASSOC)) {
                   // Fetch barangay name for the current user if the key exists
@@ -195,9 +120,10 @@ if ($action_submitted) {
                   echo '<td>' . $verifiedUser['email'] . '</td>';
                   echo '<td>' . $verifiedUser['contact_number'] . '</td>';
                   echo '<td>' . ($barangayName === '' ? '(NA)assessor' : $barangayName) . '</td>';
-                  echo '<td class="flex flex-col gap-y-2">';
+                  // =============== lock button ================
+                  echo '<td class="">';
                   // Your actions/buttons for verified users
-                  echo '<form method="post"  action="' . $_SERVER['PHP_SELF'] . '">';
+                  echo '<form method="post" class="mb-2"  action="' . $_SERVER['PHP_SELF'] . '">';
                   echo '<input type="hidden" name="user_id" value="' . $verifiedUser['id'] . '">';
 
                   echo '<button class="bg-red-500 hover:bg-red-400 w-fit px-3 py-2 ml-2 rounded-md text-white" type="submit" name="action" value="unverify">
@@ -210,10 +136,10 @@ if ($action_submitted) {
 ';
 
                   echo '</form>';
-                
-                
-                  // Your actions/buttons for verified users
-                  echo '<form method="post"  action="admin_viewreport.php">';
+
+
+                 // =============== view report button ================
+                  echo '<form method="post" action="admin_viewreport.php">';
                   echo '<input type="hidden" name="user_id" value="' . $verifiedUser['id'] . '">';
                   // Fetch barangay_id and include it as a hidden input
                   $barangayIdQuery = "SELECT barangay_id FROM users WHERE id = ?";
@@ -246,7 +172,7 @@ if ($action_submitted) {
                   echo '</td>';
                   echo '</tr>';
                 }
-              }
+              
               // Closing table structure
               echo '</tbody>';
               echo '</table>';
@@ -265,32 +191,32 @@ if ($action_submitted) {
   </div>
 
   <script>
- function searchTable() {
-    
-    let input = document.getElementById('searchBarangayButton');
-    let filter = input.value.toLowerCase();
-    let table = document.getElementById('barangayTable');
-    let tr = table.getElementsByTagName('tr');
+    function searchTable() {
 
-    // Loop through all table rows, excluding the header
-    for (let i = 1; i < tr.length; i++) {
-      let td = tr[i].getElementsByTagName('td');
-      let rowText = '';
+      let input = document.getElementById('searchBarangayButton');
+      let filter = input.value.toLowerCase();
+      let table = document.getElementById('barangayTable');
+      let tr = table.getElementsByTagName('tr');
 
-      // Concatenate all text content from each cell
-      for (let j = 0; j < td.length - 1; j++) {
-        rowText += td[j].textContent || td[j].innerText;
-      }
+      // Loop through all table rows, excluding the header
+      for (let i = 1; i < tr.length; i++) {
+        let td = tr[i].getElementsByTagName('td');
+        let rowText = '';
 
-      // If the row matches the search term, show it, otherwise hide it
-      if (rowText.toLowerCase().indexOf(filter) > -1) {
-        tr[i].style.display = '';
-      } else {
-        tr[i].style.display = 'none';
+        // Concatenate all text content from each cell
+        for (let j = 0; j < td.length - 1; j++) {
+          rowText += td[j].textContent || td[j].innerText;
+        }
+
+        // If the row matches the search term, show it, otherwise hide it
+        if (rowText.toLowerCase().indexOf(filter) > -1) {
+          tr[i].style.display = '';
+        } else {
+          tr[i].style.display = 'none';
+        }
       }
     }
-  }
-</script>
+  </script>
 
 </body>
 

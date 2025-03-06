@@ -2,7 +2,10 @@
 session_start();
 include 'connection.php';
 
-
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
+  header("Location: login.php");
+  exit;
+}
 
 // Set default language to English if not set
 $_SESSION['language'] = isset($_SESSION['language']) ? $_SESSION['language'] : 'english';

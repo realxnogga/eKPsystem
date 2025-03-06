@@ -110,13 +110,12 @@ function countAccountRequests($conn, $currentMunicipalityID, $userType)
             </button>
           </div>
 
-          <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow" id="dropdown-user">
+          <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow max-w-[20rem]" id="dropdown-user">
             <div class="px-4 py-3" role="none">
-              <p class="text-sm text-gray-900 dark:text-white" role="none">
-                <?php echo $admin['first_name'];
-                echo $admin['last_name']; ?>
+              <p class="text-sm text-gray-900" role="none">
+                <?php echo $admin['first_name']; echo $admin['last_name']; ?>
               </p>
-              <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">
+              <p class="text-sm font-medium text-gray-900 dark:text-gray-300" role="none">
                 <?php echo $admin['email']; ?>
               </p>
             </div>
@@ -149,7 +148,7 @@ function countAccountRequests($conn, $currentMunicipalityID, $userType)
         <img class="absolute inset-0 object-contain w-full h-full" src="<?php echo traverseDirectory(); ?>profile_pictures/<?php echo $admin['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="user photo">
       </section>
 
-      <p><?php echo $admin['first_name'] . ' ' .  $admin['last_name']; ?> </p>
+      <p class="text-center"><?php echo $admin['first_name'] . ' ' .  $admin['last_name']; ?> </p>
 
     </div>
 

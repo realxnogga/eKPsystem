@@ -3,16 +3,14 @@ session_start();
 
 include 'connection.php';
 include 'include/custom-scrollbar.php';
-
 include 'user_set_timezone.php';
-
-
-$userID = $_SESSION['user_id'];
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
 }
+
+$userID = $_SESSION['user_id'];
 
 include 'user_notification_handler.php';
 
