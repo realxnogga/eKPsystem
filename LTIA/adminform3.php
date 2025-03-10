@@ -122,7 +122,7 @@ function getAdjectivalRating($total)
                 top: 0;
                 width: 100%;
                 height: auto;
-                font-size: 12pt;
+                font-size: 12px;
                 margin: 0;
                 box-sizing: border-box;
             }
@@ -156,8 +156,9 @@ function getAdjectivalRating($total)
             }
             .print-content th,
             .print-content td {
-                padding: 8px;
-                font-size: 12pt;
+                padding: 2px; /* Reduce padding */
+                font-size: 12px; /* Adjust font-size */
+                line-height: 1; /* Adjust line-height */
             }
             .btn,
             .btn-save,
@@ -169,7 +170,8 @@ function getAdjectivalRating($total)
             }
             .print-content p,
             .print-content b {
-                font-size: 12pt;
+                font-size: 12px;
+                line-height: 1; /* Adjust line-height */
             }
             .print-content .spacingtabs {
                 display: inline-block;
@@ -226,22 +228,45 @@ function getAdjectivalRating($total)
                             </div>
                         </div>
                         <div class="border border-gray-800 rounded-md p-4 mt-4">
-                            <b>A. IDENTIFYING INFORMATION</b>
-                            <p style="padding-left: 5em;">
-                                City/Municipality 
-                                <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase; text-decoration: underline;"></span> 
-                                <span style="text-decoration: underline;">OF <span style="text-decoration: underline;"><?php echo strtoupper(htmlspecialchars($municipality_name)); ?></span>
-                            </p>
-                            <p style="padding-left: 5em;">
-                                Region <span style="display: inline-block; width: 3em; text-align: center;"></span> <span style="text-decoration: underline;">IV-A CALABARZON</span>    
-                            </p>
-                            <p style="padding-left: 5em;">
-                                Province <span style="display: inline-block; width: 3em; text-align: center;"></span> <span style="text-decoration: underline;">LAGUNA</span>
-                            </p>
-                            <p style="padding-left: 5em;">
-                                Category <span style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase; text-decoration: underline;"></span> 
-                                <span id="municipality-category" style="text-transform: uppercase; text-decoration: underline;"></span>
-                            </p>
+                            <b>A. IDENTIFYING INFORMATION</b><br>
+                            <table>
+                                <tr>
+                                    <td style="padding-left: 5em;">
+                                        City/Municipality
+                                    </td>
+                                    <td style="padding-left: 1em;">
+                                        <span id="details-municipality-type" style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase; text-decoration: underline;"></span> 
+                                        <u>OF <?php echo strtoupper(htmlspecialchars($municipality_name)); ?></u>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 5em;">
+                                        <p>
+                                            Region 
+                                        </p>
+                                    </td>
+                                    <td style="padding-left: 1em;">
+                                        <u>IV-A CALABARZON</u>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 5em;">
+                                        Province 
+                                    </td>
+                                    <td style="padding-left: 1em;" >
+                                       <p style= "text-decoration: underline;">LAGUNA
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-left: 5em;">
+                                        Category
+                                    </td>
+                                    <td style="padding-left: 1em;">
+                                        <span style="display: inline-block; white-space: nowrap; width: auto; text-transform: uppercase; text-decoration: underline;"></span> 
+                                        <span id="municipality-category" style="text-transform: uppercase; text-decoration: underline;"></span>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                         <script>
                             document.addEventListener('DOMContentLoaded', function () {
