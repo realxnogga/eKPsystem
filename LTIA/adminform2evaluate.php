@@ -1693,7 +1693,7 @@ if (classification === "City") {
               <tr>
                 <td>
                 <details>
-                <summary><b>B. Coordination with Concerned Agencies Relating to Disputes Filed</b></summary>
+                <summary><b>B. Coordination with Concerned Agencies relating to disputes filed (PNP, DSWD, DILG, DAR, DENR, Office of the Prosecutor, Court, DOJ, CHR, etc.)</b></summary>
                 <p><br>
                   <b>5 points</b> – With proof of coordination relative to the filed disputes.<br>
                   <b>0 points</b> – Without proof of coordination relative to the filed disputes.
