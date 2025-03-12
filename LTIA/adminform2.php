@@ -171,15 +171,29 @@ function getAdjectivalRating($total)
             .print-content p,
             .print-content b {
                 font-size: 12px;
-                line-height: 2; /* Adjust line-height */
+                line-height: 1; /* Adjust line-height */
             }
             .print-content .spacingtabs {
                 display: inline-block;
-                width: 4em;
+                width: 6em;
                 text-align: center;
             }
             .print-content p {
                 word-wrap: break-word;
+            }
+        }
+        @media print {
+            .underline-input {
+                border-bottom: 1px solid #000;
+                width: auto;
+                min-width: 200px;
+                background-color: transparent;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+            }
+            .underline-input option {
+                display: none;
             }
         }
     </style>
@@ -196,9 +210,9 @@ function getAdjectivalRating($total)
                             <i class="ti ti-building-community mr-2"></i> Back
                         </button>
                         <div class="flex items-center space-x-4">
-                        <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform1.php';">
-                            <i class="ti ti-license mr-2"></i>Form 1
-                        </button>
+                            <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform3.php';">
+                                <i class="ti ti-license mr-2"></i> Form 3
+                            </button>
                             <form method="get" action="">
                                 <select name="year" onchange="this.form.submit()" class="form-select">
                                     <?php foreach ($years as $year): ?>
@@ -223,16 +237,30 @@ function getAdjectivalRating($total)
                             <div class="text-center">
                                 <h1 class="text-xl font-bold">
                                     CY Lupong Tagapamayapa Incentives Award (LTIA) <br>
-                                    LTIA FORM 3 (C/M) - COMPARATIVE EVALUATION FORM
+                                    LTIA FORM 2 (C/M) - COMPARATIVE EVALUATION FORM
                                 </h1>
                             </div>
                             <div class="ltialogo flex justify-center">
                                 <img src="images/ltialogo.png" alt="LTIA Logo" style="max-width: 120px; max-height: 120px;" class="mx-auto">
                             </div>
                         </div>
-                        <div class="mt-4">
+                        <div class="border border-gray-800 rounded-md p-4 mt-4">
                             <b>A. IDENTIFYING INFORMATION</b><br>
                             <table>
+                                <tr>
+                                    <td style="padding-left: 5em;">
+                                        Lupong Tagapamayapa
+                                    </td>
+                                    <td style="padding-left: 1em;">
+                                        <select name="verified_barangays" class="underline-input" style="width: auto; min-width: 200px;">
+                                            <?php foreach ($barangay_ratings as $barangay): ?>
+                                                <option value="<?php echo htmlspecialchars($barangay['barangay']); ?>">
+                                                    <?php echo htmlspecialchars($barangay['barangay']); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select><br>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <td style="padding-left: 5em;">
                                         City/Municipality
@@ -250,14 +278,6 @@ function getAdjectivalRating($total)
                                     </td>
                                     <td style="padding-left: 1em;">
                                         <u>IV-A CALABARZON</u>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-left: 5em;">
-                                        Province 
-                                    </td>
-                                    <td style="padding-left: 1em;" >
-                                       <p style= "text-decoration: underline;">LAGUNA
                                     </td>
                                 </tr>
                                 <tr>
@@ -315,10 +335,9 @@ function getAdjectivalRating($total)
                             <table class="table table-bordered w-full border border-gray-800">
                                 <thead>
                                     <tr>
-                                        <th class="px-4 py-2 text-left">LUPONG TAGAPAMAYAPA (LT)</th>
-                                        <th class="px-4 py-2 text-left">OVERALL PERFORMANCE RATING</th>
-                                        <th class="px-4 py-2 text-left">ADJECTIVAL RATING</th>
-                                        <th class="px-4 py-2 text-left">RANK</th>
+                                        <th class="px-4 py-2 text-left">CRITERIA</th>
+                                        <th class="px-4 py-2 text-left">ASSIGNED POINT SCORE</th>
+                                        <th class="px-4 py-2 text-left">PERFORMANCE RATING<th>EVALUATOR</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -342,7 +361,7 @@ function getAdjectivalRating($total)
                             <?php if (!empty($admin)): ?>
                                 <div class="pb-2 mb-4">
                                     <input type="text" name=" " class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($admin['first_name'] . ' ' . $admin['last_name']); ?>"><br>
-                                    <p>Chairman<?php // echo $admin['user_type'] === 'CLGOO' ? 'CLGOO' : 'MLGOO'; ?> - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee</p>
+                                    <p><?php echo $admin['user_type'] === 'CLGOO' ? 'CLGOO' : 'MLGOO'; ?> - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee</p>
                                 </div>
                             <?php else: ?>
                                 <p class="text-red-500 font-semibold">No admin found for this municipality.</p>
@@ -356,11 +375,11 @@ function getAdjectivalRating($total)
                         </div>
                         <br><br>
                         <b>D. DATE ACCOMPLISHED</b><br>
-                            <input type="date" name="date_accomplished" class="underline-input" placeholder="Enter Date" value=""><br>
+                        <input type="date" name="date_accomplished" class="underline-input" placeholder="Enter Date" value=""><br>
                         <br><br>
                         <div class="text-right mt-4">
                             <form method="post" action="" enctype="multipart/form-data">
-                               <!-- <input type="submit" value="Save" style="background-color: #000035;" class="btn-save">-->
+                                <!-- <input type="submit" value="Save" style="background-color: #000035;" class="btn-save">-->
                             </form>
                         </div>
                     </div>
@@ -376,7 +395,7 @@ function getAdjectivalRating($total)
 </body>
 <style>
     .spacingtabs {
-        padding-left: 0;
+        padding-left: 2em;
     }
     .underline-input {
         text-align: center;
