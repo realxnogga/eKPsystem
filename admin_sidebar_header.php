@@ -74,6 +74,9 @@ function countAccountRequests($conn, $currentMunicipalityID, $userType)
 <!-- tabler icon -->
 <link rel="stylesheet" href="<?php echo traverseDirectory(); ?>node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
+<!-- tabler support -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css"/>
+
 <!-- delete later -->
 <script src="https://cdn.tailwindcss.com"></script>
 

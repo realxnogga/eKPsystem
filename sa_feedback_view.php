@@ -136,7 +136,7 @@ function fetchFeedbackAnswerFunc($conn, $whatYear)
               <?php } ?>
             </table>
 
-            <hr class="my-3 <?php echo count($answerTemp) === 1 ? 'hidden' : ''; ?>">
+            <hr class="my-3 <?php echo (int)count($answerTemp) === 1 ? 'hidden' : ''; ?>">
           </section>
 
         <?php } ?>

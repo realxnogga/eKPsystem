@@ -1,5 +1,5 @@
 <?php
-  session_start();
+session_start();
 
 
 
@@ -56,9 +56,11 @@ function tempFunc($arg)
     </a>
 
     <section class="m-5 p-5 w-full max-w-5xl flex flex-col md:flex-row items-center gap-x-4 gap-y-4 bg-gray-300 rounded-xl bg-opacity-20">
-        <section class="w-full md:w-3/4 h-100 md:h-auto">
+
+        <section class="w-full md:w-3/4 h-full md:h-auto">
             <img id="image" class="h-full w-full object-contain" />
         </section>
+
 
         <section class="w-full md:w-1/4 flex flex-col gap-y-6">
 
@@ -90,7 +92,6 @@ function tempFunc($arg)
                     <i class="ti ti-crop text-lg"></i>
                     <p>Crop</p>
                 </button>
-
             </section>
         </section>
     </section>
@@ -157,6 +158,7 @@ function tempFunc($arg)
             }
         });
     </script>
+
 </body>
 
 </html>

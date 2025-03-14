@@ -444,9 +444,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "Nuisance (Art. 694 of the Civil Code in the relation to Art. 695, for local ordinance with penal sanctions)",
         "Violation of P.D. No. 1612 or the Anti-Fencing Law",
         "Violation of Republic Act No. 11313 or 'The Safe Spaces Act' Gender-based sexual harassment in streets and public spaces.",
-        "Sample tagalog1",
-        "Sample tagalog2",
-        "Sample tagalog3",
       ];
 
       // Initialize Select2
