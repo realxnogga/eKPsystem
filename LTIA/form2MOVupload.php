@@ -57,8 +57,9 @@ if (!empty($municipalityID)) {
   <title>LTIA</title>
 
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="LTIAassets/jquery-3.6.4.min.js" defer></script>
   <script src="js/tables.js" defer></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -391,12 +392,42 @@ if (!empty($municipalityID)) {
             <div class="modal-body text-center"> <!-- Centered the content -->
                 <p>The files have already been uploaded for this barangay. Please check the draft.</p>
             </div>
-            <div class="modal-footer justify-content-center"> <!-- Centered the footer buttons -->
-                <button class="btn btn-primary" style="background-color: #2eb8b8;" data-bs-dismiss="modal">Close</button>
+            <div class="modal-footer justify-content-center">
+                <button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Add this modal HTML before the closing </body> tag -->
+<div class="modal fade" id="noFileUploadedModal" tabindex="-1" aria-labelledby="noFileUploadedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning" id="noFileUploadedModalLabel">Notice</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Please Attach file.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Show the "No File Uploaded" modal if the condition is met
+    <?php if (isset($_SESSION['no_file_uploaded']) && $_SESSION['no_file_uploaded']): ?>
+        document.addEventListener("DOMContentLoaded", function () {
+            $('#noFileUploadedModal').modal('show');
+            <?php unset($_SESSION['no_file_uploaded']); ?>
+        });
+    <?php endif; ?>
+</script>
 
 <script>
 // Show the "Files Already Uploaded" modal if the condition is met
@@ -407,6 +438,9 @@ if (!empty($municipalityID)) {
     });
 <?php endif; ?>
 </script>
+
+<!-- Include Bootstrap 5 JavaScript library -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
     <style>
       .custom-h2 {

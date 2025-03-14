@@ -127,6 +127,8 @@ if ($stmt->execute()) {
           </div>
 
           <div id="chart-container" class="mt-6">
+         <h1> Your Account summary of Barangay Ratings <br></h1>
+
             <canvas id="barangayChart"></canvas>
           </div>
 
