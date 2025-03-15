@@ -395,12 +395,8 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'forms_tagalog' : 'forms_englis
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
 
+      <?php $page = isset($_GET['page']) ? $_GET['page'] : 1; ?>
 
-      <?php
-      $page = isset($_GET['page']) ? $_GET['page'] : 1;
-      ?>
-      <a href="user_complaints.php?page=<?= $page ?>" class="btn btn-dark m-1">Back to Complaints</a>
-      <br><br>
       <div class="row">
         <div class="col-lg-8 d-flex align-items-strech">
           <div class="card w-100">

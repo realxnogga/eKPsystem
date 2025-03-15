@@ -16,9 +16,6 @@ $checkRowStmt->bindParam(':current_year', $currentYear, PDO::PARAM_INT);
 $checkRowStmt->execute();
 $rowCount = (int) $checkRowStmt->fetchColumn();
 
-
-$_SESSION['test'] = gettype($rowCount);
-
 if ($rowCount === 0) {
 
     // If no row exists for the current year, create a new row for the user for the current year

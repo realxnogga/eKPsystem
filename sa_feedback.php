@@ -37,40 +37,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   if (isset($_POST['editfq_id'])) {
-    $fq_id = $_POST['editfq_id'];
+    $id = $_POST['editfq_id'];
 
-    if (isset($_POST['submitEditFeedbackQuestion' . $fq_id])) {
-      $fq1edit = $_POST['editfq1'];
-      $fq2edit = $_POST['editfq2'];
-      $fq3edit = $_POST['editfq3'];
-      $fq4edit = $_POST['editfq4'];
-      $fq5edit = $_POST['editfq5'];
+    if (isset($_POST['submitDeleteFeedbackQuestion' . $id])) {
+      // Delete from feedback_questions table
+      $stmt1 = $conn->prepare("DELETE FROM feedback_questions WHERE fq_id = :fq_id");
+      $stmt1->bindParam(':fq_id', $id, PDO::PARAM_INT);
 
-      $stmt = $conn->prepare("UPDATE feedback_questions SET fq1 = :fq1, fq2 = :fq2, fq3 = :fq3, fq4 = :fq4, fq5 = :fq5 WHERE fq_id = :fq_id");
-      $stmt->bindParam(':fq1', $fq1edit, PDO::PARAM_STR);
-      $stmt->bindParam(':fq2', $fq2edit, PDO::PARAM_STR);
-      $stmt->bindParam(':fq3', $fq3edit, PDO::PARAM_STR);
-      $stmt->bindParam(':fq4', $fq4edit, PDO::PARAM_STR);
-      $stmt->bindParam(':fq5', $fq5edit, PDO::PARAM_STR);
-      $stmt->bindParam(':fq_id', $fq_id, PDO::PARAM_INT);
+      // Delete from another_table
+      $stmt2 = $conn->prepare("DELETE FROM feedback_answers WHERE fa_id = :fa_id");
+      $stmt2->bindParam(':fa_id', $id, PDO::PARAM_INT);
 
-      if ($stmt->execute()) {
+      // Execute both statements
+      $success1 = $stmt1->execute();
+      $success2 = $stmt2->execute();
+
+      if ($success1 && $success2) {
+        // Redirect after successful deletion
         header("Location: sa_feedback.php");
         exit();
       }
     }
   }
 
+
+
   // -----------------------------------------------------------------------------------
   if (isset($_POST['yearfilter'])) {
     $selectedYear = $_POST['yearfilter'];
-    $_SESSION['fy_feedback'] = $selectedYear; 
+    $_SESSION['fy_feedback'] = $selectedYear;
     $questionTemp = fetchFeedbackQuestionFunc($conn, $selectedYear);
   }
-} 
-  
-  $selectedYear = isset($_SESSION['fy_feedback']) ? $_SESSION['fy_feedback'] : date('Y');
-  $questionTemp = fetchFeedbackQuestionFunc($conn, $selectedYear);
+}
+
+$selectedYear = isset($_SESSION['fy_feedback']) ? $_SESSION['fy_feedback'] : date('Y');
+$questionTemp = fetchFeedbackQuestionFunc($conn, $selectedYear);
 
 // Fetch feedback questions
 function fetchFeedbackQuestionFunc($conn, $whatYear)
@@ -81,7 +82,7 @@ function fetchFeedbackQuestionFunc($conn, $whatYear)
   $stmt->execute();
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-  // -----------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------
 
 
 function countResponseFunc($conn, $whatTable, $condition = null)
@@ -238,8 +239,8 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
                 <input hidden value="<?php echo $row['fq_id']; ?>" required name="editfq_id" type="number">
 
                 <section class="flex justify-between items-end">
-                  <button name="submitEditFeedbackQuestion<?php echo $row['fq_id']; ?>" type="submit" class="py-2 px-3 text-white rounded-md bg-blue-500 w-fit">
-                    Update
+                  <button name="submitDeleteFeedbackQuestion<?php echo $row['fq_id']; ?>" type="submit" class="py-2 px-3 text-white rounded-md bg-red-500 w-fit">
+                    Delete
                   </button>
 
                   <a data-tooltip-target="tooltip-light<?php echo $row['fq_id']; ?>" data-tooltip-style="light" class="" href="sa_feedback_view.php?fq_id_url=<?php echo $row['fq_id']; ?>">

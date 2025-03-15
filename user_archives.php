@@ -51,7 +51,7 @@ $result = fetchArchiveFunc($conn, $userID, $selectedYear);
 
 function fetchArchiveFunc($conn, $userID, $whatYear)
 {
-  $query = "SELECT * FROM complaints WHERE UserID = :userID AND YEAR(Mdate) = :year AND IsArchived = 1";
+  $query = "SELECT * FROM complaints WHERE UserID = :userID AND YEAR(Mdate) = :year AND IsArchived = 1 ORDER BY archive_updated_date DESC";
   $stmt = $conn->prepare($query);
   $stmt->bindParam(':userID', $userID);
   $stmt->bindParam(':year', $whatYear, PDO::PARAM_INT);
