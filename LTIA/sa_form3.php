@@ -253,7 +253,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
-</script>
 </head>
 <body class="bg-[#E8E8E7]">
 <?php include "../sa_sidebar_header.php"; ?>
@@ -389,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function () {
 <br><br>
 
 <b>D. DATE ACCOMPLISHED</b><br>
-<span class="spacingtabs"><?php echo date("F j, Y"); ?></span>
+<!--<span class="spacingtabs"><?php echo date("F j, Y"); ?></span>-->
 
 <br><br>
 

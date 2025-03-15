@@ -801,11 +801,11 @@ if (!empty($municipalityID)) {
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-success" id="successModalLabel">Submission Successful</h5>
+                <h5 class="modal-title text-success" id="successModalLabel">Draft</h5>
                 <button type="button" class="btn-close" style="background-color: #2eb8b8;" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
-                <p>Your submission has been successful.</p>
+                <p>Saved to Draft.</p>
             </div>
             <div class="modal-footer justify-content-center">
                 <button class="btn btn-primary" style="background-color: #2eb8b8;" data-bs-dismiss="modal">Close</button>
