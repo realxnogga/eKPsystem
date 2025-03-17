@@ -58,24 +58,24 @@
 
             <section class="flex flex-col items-center gap-y-3">
 
-                <label for="inputImage" class="w-full text-center text-gray-200 border border-blue-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 flex items-center justify-center gap-x-2">
+                <label for="inputImage" class="w-full text-center text-gray-200 border border-blue-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 focus:outline-none flex items-center justify-center gap-x-2">
                     <i class="ti ti-photo text-lg"></i>
                     <p>Upload</p>
                 </label>
 
                 <input class="hidden" type="file" id="inputImage">
 
-                <button id="squareButton" type="button" class="w-full text-center text-gray-200 border border-blue-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 flex items-center justify-center gap-x-2">
+                <button id="squareButton" type="button" class="w-full text-center text-gray-200 border border-blue-500 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 focus:outline-none flex items-center justify-center gap-x-2">
                     <i class="ti ti-square text-lg"></i>
                     <p>Square (AR)</p>
                 </button>
 
-                <button id="dynamicButton" type="button" class="w-full text-center border border-blue-500 text-gray-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 flex items-center justify-center gap-x-2">
+                <button id="dynamicButton" type="button" class="w-full text-center border border-blue-500 text-gray-200 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 focus:outline-none flex items-center justify-center gap-x-2">
                     <i class="ti ti-rectangle text-lg"></i>
                     <p>Dynamic (AR)</p>
                 </button>
 
-                <button id="cropButton" type="button" class="w-full text-center text-gray-200 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 flex items-center justify-center gap-x-2">
+                <button id="cropButton" type="button" class="w-full text-center text-gray-200 bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-5 py-2.5 focus:outline-none flex items-center justify-center gap-x-2">
                     <i class="ti ti-crop text-lg"></i>
                     <p>Crop</p>
                 </button>
