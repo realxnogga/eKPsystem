@@ -117,6 +117,10 @@ function getAdjectivalRating($total)
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+       .custom-button {
+                background-color: white;
+                border: 2px solid #1F2937;
+            }
         @media print {
             body * {
                 visibility: hidden;
@@ -150,7 +154,6 @@ function getAdjectivalRating($total)
                 text-align: left;
                 margin-left: 0px;
                 line-height: .5px;
-                /* Hide the dropdown arrow */
                 -webkit-appearance: none;
                 -moz-appearance: none;
                 appearance: none;
@@ -240,9 +243,15 @@ function getAdjectivalRating($total)
                             <i class="ti ti-building-community mr-2"></i> Back
                         </button>
                         <div class="flex items-center space-x-4">
-                            <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform3.php';">
-                                <i class="ti ti-license mr-2"></i> Form 3
-                            </button>
+                        <button class="bg-white border-2 border-gray-800 hover:bg-gray-100 px-3 py-2 rounded-md text-gray-800 flex items-center transition-colors duration-300" onclick="location.href='adminform1.php';">
+                            <i class="ti ti-license mr-2"></i>Form 1
+                        </button>
+                        <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform2.php';">
+                            <i class="ti ti-license mr-2"></i>Form 2
+                        </button>
+                        <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='adminform3.php';">
+                            <i class="ti ti-license mr-2"></i>Form 3
+                        </button>
                             <form method="get" action="">
                                 <select name="year" onchange="this.form.submit()" class="form-select">
                                     <?php foreach ($years as $year): ?>
