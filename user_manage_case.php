@@ -266,6 +266,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
+// ---------------------------for delete used form-----------------------------------------
+
+
+// --------------------------------------------------------------------
+
+
 // Set session variables for the current complaint ID and current hearing
 $_SESSION['current_complaint_id'] = $_GET['id'];
 $_SESSION['current_hearing'] = $currentHearing;
@@ -311,7 +317,9 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'forms_tagalog' : 'forms_englis
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Manage Case</title>
   <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
-  
+
+  <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+
   <style>
     body,
     html {
@@ -386,6 +394,8 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'forms_tagalog' : 'forms_englis
   </style>
 
 
+
+
 </head>
 
 <body class="bg-[#E8E8E7]">
@@ -444,7 +454,7 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'forms_tagalog' : 'forms_englis
                   <h5 class="card-title mb-9 fw-semibold"><?php echo ucfirst($_SESSION['language']); ?> Forms</h5>
 
                   <form method="POST">
-                    <button type="submit" name="language" value="english"class="btn <?php echo ($_SESSION['language'] === 'en') ? 'bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white' : 'bg-gray-300 hover:bg-gray-200 px-3 py-2 rounded-md text-black'; ?> m-1">English</button>
+                    <button type="submit" name="language" value="english" class="btn <?php echo ($_SESSION['language'] === 'en') ? 'bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white' : 'bg-gray-300 hover:bg-gray-200 px-3 py-2 rounded-md text-black'; ?> m-1">English</button>
 
                     <button type="submit" name="language" value="tagalog" class="btn <?php echo ($_SESSION['language'] === 'tl') ? 'bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white' : 'bg-gray-300 hover:bg-gray-200 px-3 py-2 rounded-md text-black'; ?> m-1">Tagalog</button>
                   </form>
@@ -533,6 +543,7 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'forms_tagalog' : 'forms_englis
                   <div class="form-buttons">
                     <h5>Used Forms</h5>
 
+
                     <?php
                     $formButtons = [
                       'KP 7',
@@ -554,12 +565,22 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'forms_tagalog' : 'forms_englis
                       'KP 23',
                       'KP 24',
                       'KP 25',
-                      'KP 20 - A',
-                      'KP 20 - B'
+                      'KP 20A',
+                      'KP 20B'
                     ];
+
+
+                    echo "<div class='flex flex-wrap gap-2'>";
 
                     foreach ($formButtons as $buttonText) {
                       $formUsed = array_search($buttonText, $formButtons) + 7; // Assuming a sequential mapping starting from 7
+
+                      $temp = null;
+                     if ($formUsed === 26) {
+                       $temp = '20A';
+                     } elseif ($formUsed === 27) {
+                       $temp = '20B';
+                     }
 
                       // Query to fetch the forms with the same complaint_id, form_used, and hearing_number
                       $query = "SELECT id FROM hearings WHERE complaint_id = :complaintId AND hearing_number = :currentHearing AND form_used = :formUsed";
@@ -570,75 +591,142 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'forms_tagalog' : 'forms_englis
                       $stmt->execute();
                       $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                      // Display buttons with proper naming for multiple occurrences
+                      // Display buttons with delete functionality
                       $counter = 0;
                       foreach ($results as $result) {
                         $counter++;
                         $formID = $result['id'];
                         $formIdentifier = count($results) > 1 ? " ($counter)" : "";
-                        $buttonID = 'formButton_' . $formUsed . '_' . $counter;
-                        echo '<button class="open-form btn btn-success m-1" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . $formUsed . '"><i class="fas fa-file-alt"></i> ' . $buttonText . $formIdentifier . ' </button>';
+                        $buttonID = 'formButton_' . ($temp === null ? $formUsed : $temp) . '_' . $counter;
+
+                        // Open Form Button
+                       
+                        echo '<div id="toHide" class="flex items-center bg-gray-200 rounded-md">';
+                        echo '<button class="open-form btn btn-success" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . ($temp === null ? $formUsed : $temp) . '">';
+                        echo $buttonText . $formIdentifier;
+                        echo '</button>';
+
+                        echo '<button data-form-id="' . $formID . '" class="p-2 delete-form"><i class="ti ti-trash text-red-500"></i></button>';
+
+                        echo '</div>';
+                      
                       }
                     }
+
+                    echo "</div>";
+
                     ?>
-                  </div>
+
+<!-- to rederection of used form when click -->
+<script>
+var buttons = document.querySelectorAll('.open-form');
+        buttons.forEach(function(button) {
+          button.addEventListener('click', function() {
+            var formID = this.getAttribute('data-form-id'); 
+            var formUsed = this.getAttribute('data-form-used');
+            var folderName = '<?php echo $folderName; ?>'; 
+
+            window.location.href = folderName + '/kp_form' + formUsed + '.php?formID=' + formID;
+          });
+        });
+</script>
 
 
-                  <script>
-                    // JavaScript to handle button clicks and redirection with formID and formUsed
-                    var buttons = document.querySelectorAll('.open-form');
-                    buttons.forEach(function(button) {
-                      button.addEventListener('click', function() {
-                        var formID = this.getAttribute('data-form-id');
-                        var formUsed = this.getAttribute('data-form-used');
-                        var folderName = '<?php echo $folderName; ?>'; // PHP variable for folder name
+<!-- for deleting used form -->
+<script>
+        document.querySelectorAll('.delete-form').forEach(button => {
+          button.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
 
-                        // Adjust formUsed based on special cases
-                        if (formUsed == 26) {
-                          formUsed = '20A';
-                        } else if (formUsed == 27) {
-                          formUsed = '20B';
+            // Optional: Confirm before deletion
+            if (!confirm('Are you sure you want to delete this form?')) {
+              return;
+            }
+
+            // Send a request to the server to delete the form
+            fetch('user_delete_kp7to24_handler.php', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  formID: formId
+                }),
+              })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Failed to delete the form');
+                }
+                return response.json();
+              })
+              .then(data => {
+                // Remove the corresponding form's HTML element from the DOM
+                if (data.success) {
+                  document.getElementById('toHide').remove();
+                } else {
+                  alert('Failed to delete the form. Please try again.');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the form.');
+              });
+          });
+        });
+      </script>
+                    <!-- <script>
+                      function confirmDelete(event, tempValue) {
+                        // Prevent the form from submitting automatically
+                        event.preventDefault();
+
+                        // Display the modal asking for confirmation
+                        const userConfirmed = confirm("Are you sure you want to delete KP " + tempValue + "?");
+
+                        if (userConfirmed) {
+                          // Submit the form if the user confirms
+                          event.target.submit();
+                        } else {
+                          // Do nothing if the user cancels
+                          return false;
                         }
+                      }
+                    </script> -->
 
-                        window.location.href = folderName + '/kp_form' + formUsed + '.php?formID=' + formID;
-                      });
-                    });
-                  </script>
-                  <br>
-                  <br>
-                  <hr>
-                  <h5>Signed Forms</h5>
+                    <br>
+                    <br>
+                    <hr>
+                    <h5>Signed Forms</h5>
 
-
-                  <br>
+                    <br>
 
 
-                  <br>
-                  <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . ($_GET['id'] ?? ''); ?>" method="post" enctype="multipart/form-data" class="mb-4">
-                    <div class="input-group">
+                    <br>
+                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . ($_GET['id'] ?? ''); ?>" method="post" enctype="multipart/form-data" class="mb-4">
+                      <div class="input-group">
 
-                      <input type="file" class="bg-white rounded-md text-black" name="file" id="file">
-                      
-                      <button type="submit" class="bg-blue-500 px-2 hover:bg-blue-400 border rounded-md text-white">Upload</button>
-                    </div>
-                  </form>
+                        <input type="file" class="bg-white rounded-md text-black" name="file" id="file">
 
-                  <?php echo $uploadMessage; ?>
+                        <button type="submit" class="bg-blue-500 px-2 hover:bg-blue-400 border rounded-md text-white">Upload</button>
+                      </div>
+                    </form>
 
-                  <ul class="list-group">
-                    <?php foreach ($fileList as $file): ?>
-                      <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                          <a href="<?php echo $file['file_path']; ?>" target="_blank"><?php echo $file['signed_form']; ?></a>
-                        </div>
-                        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . ($_GET['id'] ?? ''); ?>" method="post" class="ml-2">
-                          <input type="hidden" name="delete_file_id" value="<?php echo $file['id']; ?>">
-                          <button type="submit" class="bg-red-500 hover:bg-red-400 px-3 py-2 rounded-md text-white" name="delete_file">Delete</button>
-                        </form>
-                      </li>
-                    <?php endforeach; ?>
-                  </ul>
+                    <?php echo $uploadMessage; ?>
 
+                    <ul class="list-group">
+                      <?php foreach ($fileList as $file): ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                          <div>
+                            <a href="<?php echo $file['file_path']; ?>" target="_blank"><?php echo $file['signed_form']; ?></a>
+                          </div>
+                          <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . ($_GET['id'] ?? ''); ?>" method="post" class="ml-2">
+                            <input type="hidden" name="delete_file_id" value="<?php echo $file['id']; ?>">
+                            <button type="submit" class="bg-red-500 hover:bg-red-400 px-3 py-2 rounded-md text-white" name="delete_file">Delete</button>
+                          </form>
+                        </li>
+                      <?php endforeach; ?>
+                    </ul>
+
+                  </div>
                 </div>
               </div>
             </div>
@@ -646,7 +734,6 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'forms_tagalog' : 'forms_englis
         </div>
       </div>
     </div>
-  </div>
 
 </body>
 

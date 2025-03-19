@@ -2,7 +2,6 @@
 session_start();
 include 'connection.php';
 
-
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
@@ -15,32 +14,68 @@ if (!isset($_SESSION['language'])) {
   $_SESSION['language'] = 'english'; // Set default language to English
 }
 
-$folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_tagalog';
+$folderName = ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_tagalog';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $data = json_decode(file_get_contents('php://input'), true);
+
+  if (isset($data['formID'])) {
+    $formID = $data['formID'];
+    $userID = $_SESSION['user_id'];
+
+    $_SESSION['test'] = $userID;
+
+    // Perform deletion logic, e.g., database query
+    $query = "DELETE FROM luponforms WHERE id = :id AND user_id = :user_id";
+    $stmt = $conn->prepare($query);
+
+    // Bind parameters
+    $stmt->bindParam(':id', $formID, PDO::PARAM_INT);
+    $stmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+      echo json_encode(['success' => true]);
+    } else {
+      echo json_encode(['success' => false]);
+    }
+  } else {
+    echo json_encode(['success' => false]);
+  }
+  exit;
+}
 ?>
-
 
 <!doctype html>
 <html lang="en">
 
 <head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lupon</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  
 
+  <style>
+    .truncate-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+
+    .truncate-text:hover {
+      white-space: normal;
+      overflow: visible;
+      z-index: 1;
+    }
+  </style>
 </head>
 
 <body class="bg-[#E8E8E7]">
 
-<?php include "user_sidebar_header.php"; ?>
+  <?php include "user_sidebar_header.php"; ?>
 
   <div class="p-4 sm:ml-44 ">
-  <div class="rounded-lg mt-16">
-
-
+    <div class="rounded-lg mt-16">
       <div class="card overflow-hidden">
         <div class="card-body p-4">
           <div class="d-flex align-items-center">
@@ -52,15 +87,9 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_
           <br>
           <h5 class="card-title mb-9 fw-semibold"><?php echo ucfirst($_SESSION['language']); ?> Forms</h5>
 
-
           <!-- Language Selection Buttons -->
           <button type="button" onclick="setLanguage('english')" class="btn <?php echo ($_SESSION['language'] === 'english') ? 'bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white' : 'bg-gray-300 hover:bg-gray-200 px-3 py-2 rounded-md text-black'; ?> m-1">English</button>
-
-          
-
           <button type="button" onclick="setLanguage('tagalog')" class="btn <?php echo ($_SESSION['language'] === 'tagalog') ? 'bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white' : 'bg-gray-300 hover:bg-gray-200 px-3 py-2 rounded-md text-black'; ?> m-1">Tagalog</button>
-
-
 
           <script>
             // Function to set language via AJAX
@@ -84,21 +113,13 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_
             }
           </script>
           <br>
-
-
-          <div class="form-buttons">
-
-
-          </div>
-
         </div>
         <a href="user_lupon.php" class="btn btn-dark">Back to Lupon</a>
       </div>
 
-      <h6>Forms Used</h6>
-
       <!-- Single input for selecting the year -->
-      <input type="number" class="form-control mb-2" id="yearInput" min="2000" placeholder="Search Year">
+      <input type="search" id="searchBar" class="form-control" placeholder="Search by Year">
+      <br>
 
       <!-- Display KP Columns -->
       <div class="row">
@@ -156,7 +177,11 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_
 
             $buttonID = 'formButton_' . $formID;
 
-            echo '<button class="open-form btn btn-success w-100 mb-1" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . $i . '"><i class="fas fa-file-alt"></i> ' . $buttonText . ' </button>';
+            echo '<div id="toHide" class="h-fit w-full flex items-center bg-white my-2 rounded-lg">';
+            echo '<button class="truncate-text open-form btn btn-success w-fit" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . $i . '"> ' . $buttonText . ' </button>';
+
+            echo '<button class="delete-form" data-form-id="' . $formID . '"><i class="ti ti-trash text-red-500 p-2"></i></button>';
+            echo '</div>';
           }
 
           echo '</div>';
@@ -178,33 +203,66 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_
           });
         });
 
-        // JavaScript to handle search functionality
-        document.getElementById("yearInput").addEventListener("input", function() {
-          var searchYear = this.value.trim();
-          var buttons = document.querySelectorAll(".open-form");
+        // Search functionality to filter elements by year
+        document.getElementById("searchBar").addEventListener("input", function() {
+          const searchValue = this.value.toLowerCase();
+          const elements = document.querySelectorAll("#toHide");
 
-          buttons.forEach(function(button) {
-            var buttonText = button.textContent;
-            var buttonYear = buttonText.match(/\b\d{4}\b/g); // Extract all 4-digit numbers (years) from the button text
+          elements.forEach((element) => {
+            // Extract the year from the text (assuming it's in a specific format, e.g., "(2023)")
+            const yearMatch = element.textContent.match(/\((\d{4})\)/);
+            const year = yearMatch ? yearMatch[1] : ""; // Extract year or empty string if no match
 
-            // Check if the search year matches any extracted year from the button text
-            if (searchYear === '' || (buttonYear && buttonYear.includes(searchYear))) {
-              button.style.display = "block";
-              document.getElementById("kpColumn_" + button.getAttribute("data-form-used")).style.display = "block";
+            if (year.includes(searchValue)) {
+              element.style.display = "flex"; // Show matched element
             } else {
-              button.style.display = "none";
+              element.style.display = "none"; // Hide unmatched element
             }
           });
         });
+      </script>
 
+      <script>
+        document.querySelectorAll('.delete-form').forEach(button => {
+          button.addEventListener('click', function() {
+            const formId = this.getAttribute('data-form-id');
 
-        // Show all buttons when the page is loaded
-        window.onload = function() {
-          var buttons = document.querySelectorAll(".open-form");
-          buttons.forEach(function(button) {
-            button.style.display = "block";
+            // Optional: Confirm before deletion
+            if (!confirm('Are you sure you want to delete this form?')) {
+              return;
+            }
+
+            // Send a request to the server to delete the form
+            fetch('user_used_forms.php', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  formID: formId
+                }),
+              })
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error('Failed to delete the form');
+                }
+                return response.json();
+              })
+              .then(data => {
+                // Remove the corresponding form's HTML element from the DOM
+                if (data.success) {
+                  this.closest('#toHide').remove();
+               
+                } else {
+                  alert('Failed to delete the form. Please try again.');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the form.');
+              });
           });
-        };
+        });
       </script>
 
     </div>

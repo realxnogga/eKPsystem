@@ -85,7 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if (isset($_SESSION['requestingAssessor'])) {
        $accountRequests = searchBarangayData($conn, $currentMunicipalityID, $_SESSION['requestingAssessor']);
 
-       $_SESSION['test'] = $accountRequests;
       } else {
         $accountRequests = getBarangayData($conn, $currentMunicipalityID);
       }

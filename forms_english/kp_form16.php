@@ -100,7 +100,8 @@ $stmt->bindParam(':madeDate', $madeDate);
 $stmt->bindParam(':settlement', $settlement);
 
 if ($stmt->execute()) {
-$message = "Form submit successful.";
+    header("Location: ../user_manage_case.php?id=$complaintId");
+    exit;
 } else {
 $message = "Form submit failed.";
 }
@@ -312,7 +313,7 @@ if ($isCity) {
 <p style="font-size: 18px;"> Respondent/s </p> 
              
 
-<h3 style="text-align: center; style= font-size: 18px;"><b style= "font-size: 18px;">AMMICABLE SETTLEMENT</b></h3>
+<h3 style="text-align: center; font-size: 18px;"><b style= "font-size: 18px;">AMMICABLE SETTLEMENT</b></h3>
 <form method="POST">
     <div style="text-align: justify; text-indent: 2em; margin-left: 1px; font-size: 18px;">We, complainant/s and respondent/s in the above-captioned case, do hereby agree to settle our dispute as follows:            
     </div>

@@ -69,7 +69,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute([$userID, $formUsed, $madeDate, $receivedDate, $lupon1, $lupon2, $brgysec]);
 
     if ($stmt->rowCount() > 0) {
-        echo "Row added successfully!";
+        header("Location: ../user_lupon.php");
+		exit;
     } else {
         echo "Error adding row!";
     }
@@ -109,7 +110,7 @@ function createDateFromInputs($day, $month, $year) {
 
     /* Hide the number input arrows for Firefox */
     input[type=number] {
-        -moz-appearance: textfield;
+        appearance: textfield;
         border: none;
         width: 40px;
         text-align: center;

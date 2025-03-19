@@ -398,7 +398,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="form-group col-sm-6 flex-column d-flex">
                   <label class="form-control-label px-3">Made:<span class="text-danger"> *</span></label>
-                  <input type="datetime-local" class="form-control" id="Mdate" name="Mdate" onblur="validate(7)" value="<?php echo date('Y-m-d\TH:i'); ?>">
+                  <input type="datetime-local" class="form-control" id="Mdate" name="Mdate" onblur="validate(7)" value="<?php echo $complaint['Mdate']; ?>">
                 </div>
 
                 <div class="form-group col-sm-6 flex-column d-flex">
