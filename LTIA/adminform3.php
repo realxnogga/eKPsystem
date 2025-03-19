@@ -132,6 +132,7 @@ function getAdjectivalRating($total)
             }
             .headerwiwit {
                 height: fit-content;
+                margin-top: -2rem;
                 display: flex;
                 flex-direction: row;
                 background-color: #000035;
@@ -143,14 +144,13 @@ function getAdjectivalRating($total)
                 font-size: medium;
             }
             .headerwiwit div img {
-                height: 4rem;
-                width: 4rem;
+                height: 5rem;
+                width: 5rem;
             }
             .print-content .card {
                 width: 100%;
                 max-width: 100%;
                 padding: 0;
-                margin: 0;
                 box-sizing: border-box;
                 box-shadow: none;
             }
@@ -160,7 +160,7 @@ function getAdjectivalRating($total)
             }
             .print-content th,
             .print-content td {
-                padding: 2px; /* Reduce padding */
+                padding: 0px; /* Reduce padding */
                 font-size: 12px; /* Adjust font-size */
                 line-height: 1; /* Adjust line-height */
             }
@@ -327,7 +327,7 @@ function getAdjectivalRating($total)
                             });
                         </script>
                         <br>
-                        <b>B. COMPARATIVE EVALUATION RESULTS</b><br>
+                        <b>B. COMPARATIVE EVALUATION RESULTS</b>
                         <div class="overflow-x-auto mt-4">
                             <table class="table table-bordered w-full border border-gray-800">
                                 <thead>
@@ -358,7 +358,7 @@ function getAdjectivalRating($total)
                         <div class="certification-section text-center">
                             <?php if (!empty($admin)): ?>
                                 <div class="pb-2 mb-4">
-                                    <input type="text" name=" " class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($admin['first_name'] . ' ' . $admin['last_name']); ?>"><br>
+                                    <input type="text" name=" " class="underline-input" placeholder="" value="<?php echo htmlspecialchars($admin['first_name'] . ' ' . $admin['last_name']); ?>"><br>
                                     <p>Chairman<?php // echo $admin['user_type'] === 'CLGOO' ? 'CLGOO' : 'MLGOO'; ?> - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee</p>
                                 </div>
                             <?php else: ?>
@@ -366,7 +366,7 @@ function getAdjectivalRating($total)
                             <?php endif; ?>
                             <?php foreach ($verified_users as $user): ?>
                                 <?php if ($user['user_type'] === 'admin' || $user['user_type'] === 'assessor'): ?>
-                                    <input type="text" name=" " class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?>"><br>
+                                    <input type="text" name=" " class="underline-input" placeholder="" value="<?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?>"><br>
                                     <?php echo $user['user_type'] === 'admin' ? 'Admin' : 'Member'; ?> - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
                                 <?php endif; ?>
                             <?php endforeach; ?>
