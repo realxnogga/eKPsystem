@@ -184,7 +184,7 @@ function fetchMatchingRows($conn, $userID, $searchText, $whatYear)
                 </select>
               </form>
 
-              <form method="POST" action="" class="flex">
+              <form title="see recently updated complaint" method="POST" action="" class="flex">
                 <button type="submit" name="seeUpdateRecently">
                   <i class="ti ti-clock-24 text-[2rem]"></i>
                 </button>
@@ -257,27 +257,25 @@ function fetchMatchingRows($conn, $userID, $searchText, $whatYear)
                         <?php endif; ?>
                       </td>
 
-                      <td>
-                        <div class="h-full w-full flex flex-col items-center gap-x-2">
+                      <td class="border">
+                        <div class="h-full w-full flex flex-row items-center gap-x-2">
                           <form action="user_edit_complaint.php" method="get" style="display: inline;">
                             <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                            <button type="submit" class="btn btn-sm btn-secondary bg-blue-500 h-7" title="Edit" data-placement="top" style="width: 60px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
-                              <i class="fas fa-edit show-icon"></i>
-                              <p class="hide-icon">Edit</p>
+                            <button type="submit" class="btn btn-sm btn-secondary bg-blue-500 h-7" title="Edit" data-placement="top" >
+                              <i class="fas fa-edit"></i>
                             </button>
                           </form>
                           <form action="archive_complaint.php" method="get" style="display: inline;">
                             <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                            <button type="submit" class="btn btn-sm btn-danger bg-red-500 h-7" title="Archive" data-placement="top" style="width: 60px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
-                              <i class="fas fa-archive show-icon"></i>
-                              <p class="hide-icon">Archive</p>
+                            <button type="submit" class="btn btn-sm btn-danger bg-red-500 h-7" title="Archive" data-placement="top">
+                              <i class="fas fa-archive"></i> 
                             </button>
                           </form>
                           <form action="user_manage_case.php" method="get" style="display: inline;">
                             <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                            <button type="submit" class="btn btn-sm btn-warning bg-yellow-400 h-7" title="Manage" data-placement="top" style="width: 60px; display: flex; align-items: center; justify-content: center; margin-bottom: 5px;">
-                              <i class="fas fa-folder show-icon"></i>
-                              <p class="hide-icon">Manage</p>
+                            <button type="submit" class="btn btn-sm btn-warning bg-yellow-400 h-7" title="Manage" data-placement="top">
+                              <i class="fas fa-folder"></i>
+                             
                             </button>
                           </form>
                         </div>

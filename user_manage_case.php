@@ -662,7 +662,7 @@ var buttons = document.querySelectorAll('.open-form');
               .then(data => {
                 // Remove the corresponding form's HTML element from the DOM
                 if (data.success) {
-                  document.getElementById('toHide').remove();
+                  this.closest('#toHide').remove();
                 } else {
                   alert('Failed to delete the form. Please try again.');
                 }
