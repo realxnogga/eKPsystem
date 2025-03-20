@@ -33,8 +33,6 @@ try {
     }
 
     $municipality_id = $municipalityRow['municipality_id'];
-
-    // Fetch the average total for the specific barangay of the logged-in user
     $query = "
         SELECT AVG(m.total) AS avg_total
         FROM movrate m
@@ -46,8 +44,8 @@ try {
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $avg_total = $row ? number_format($row['avg_total'], 2) : "N/A";
-    $performance = $row && $row['avg_total'] !== null ? getPerformanceRating($row['avg_total']) : "No Rating yet";
+    $avg_total = $row ? number_format($row['avg_total'], 2) : "LTIA";
+    $performance = $row && $row['avg_total'] !== null ? getPerformanceRating($row['avg_total']) : "Form 1";
 
     // Fetch distinct years for dropdown
     $yearQuery = "SELECT DISTINCT `year` FROM `movrate` ORDER BY year DESC";
@@ -67,12 +65,12 @@ try {
     $certification_data = $stmt->fetch(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     error_log("Database error: " . $e->getMessage());
-    $avg_total = "Error";
-    $performance = "Error fetching data";
+    $avg_total = "LTIA";
+    $performance = "Form 1";
 } catch (Exception $e) {
     error_log("Application error: " . $e->getMessage());
-    $avg_total = "Error";
-    $performance = "Error fetching data";
+    $avg_total = "LTIA";
+    $performance = "Form 1";
 }
 
 $barangay = $_SESSION['barangay_id']; // Assign barangay from session
@@ -134,6 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $message = "Error saving details.";
     }
+header("Location: " . $_SERVER['PHP_SELF'] . "?submitted=" . time());
+exit;
 }
 ?>
 <!DOCTYPE html>

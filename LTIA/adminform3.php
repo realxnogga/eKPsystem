@@ -36,8 +36,8 @@ try {
         $stmt->execute();
         $years = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-        // Get selected year from request or default to the latest year
-        $selectedYear = $_GET['year'] ?? $years[0];
+        // Get selected year from request or default to current year if no years found
+        $selectedYear = $_GET['year'] ?? (count($years) > 0 ? $years[0] : date('Y'));
 
         // Step 4: Fetch barangays and their average ratings from movrate for the selected year
         $query = "

@@ -282,18 +282,19 @@ $admin = $adminStmt->fetch(PDO::FETCH_ASSOC);
         </tr>
       </thead>
       <tbody>
-        <?php
-        $num = 1;
-        $rank = 1;
-        foreach ($barangay_ratings as $row): ?>
-          <tr>
-            <td class="px-4 py-2"><?php echo $num++; ?>. <span class="spacingtabs"><?php echo htmlspecialchars($row['barangay']); ?></span></td>
-            <td class="px-4 py-2"><?php echo htmlspecialchars($row['average_total']); ?></td>
-            <td class="px-4 py-2"><?php echo getAdjectivalRating($row['average_total']); ?></td>
-            <td class="px-4 py-2"><?php echo $rank++; ?></td>
-          </tr>
-        <?php endforeach; ?>
-      </tbody>
+  <?php
+  $num = 1;
+  $rank = 1;
+  foreach ($barangay_ratings as $row): ?>
+    <tr>
+      <td class="px-4 py-2"><?php echo $num++; ?>. <span class="spacingtabs"><?php echo htmlspecialchars($row['barangay']); ?></span></td>
+      <td class="px-4 py-2"><?php echo number_format($row['average_total'], 1); ?></td>
+      <td class="px-4 py-2"><?php echo getAdjectivalRating($row['average_total']); ?></td>
+      <td class="px-4 py-2"><?php echo $rank++; ?></td>
+    </tr>
+  <?php endforeach; ?>
+</tbody>
+
     </table>
   </div>
 </div>
