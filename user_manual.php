@@ -36,17 +36,17 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
         <br>
         <br>
 
-        <nav class="">
+        <nav class="sticky top-[4rem] bg-white overflow-x-auto">
           <ul class="flex">
-            <li id="um_registration" onclick="navigateTo('um_registration')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md border-1 border-white hover:bg-blue-100 px-4 py-2 cursor-pointer">Registration/Login</li>
-            <li id="um_dashboard" onclick="navigateTo('um_dashboard')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Dashboard</li>
+            <li id="um_registration" onclick="navigateTo('um_registration')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md border-1 border-white hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Registration/Login</li>
+            <li id="um_dashboard" onclick="navigateTo('um_dashboard')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Dashboard</li>
             <li id="um_lupon" onclick="navigateTo('um_lupon')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Lupon</li>
-            <li id="um_complaint" onclick="navigateTo('um_complaint')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Complaint</li>
-            <li id="um_archive" onclick="navigateTo('um_archive')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Archive</li>
-            <li id="um_report" onclick="navigateTo('um_report')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Reports</li>
+            <li id="um_complaint" onclick="navigateTo('um_complaint')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Complaint</li>
+            <li id="um_archive" onclick="navigateTo('um_archive')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Archive</li>
+            <li id="um_report" onclick="navigateTo('um_report')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Reports</li>
             <li id="um_LTIA" onclick="navigateTo('um_LTIA')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">LTIA</li>
-            <li id="um_userlogs" onclick="navigateTo('um_userlogs')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">User logs</li>
-            <li id="um_settings" onclick="navigateTo('um_settings')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Settings</li>
+            <li id="um_userlogs" onclick="navigateTo('um_userlogs')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">User logs</li>
+            <li id="um_settings" onclick="navigateTo('um_settings')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Settings</li>
           </ul>
         </nav>
 
@@ -118,6 +118,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     const registrationTab = document.getElementById('um_registration');
     registrationTab.classList.add('bg-blue-100', 'text-black', 'rounded-tl-lg', 'rounded-tr-lg');
   </script>
+
 
 </body>
 

@@ -17,13 +17,19 @@ function loadRegistrationLoginContent() {
           <img class="w-[40rem]" src="user_manual_pic/password.png" alt="password field picture">
           <p>7. Select your position. For user, choose 'Barangay Secretary' if an admin, choose 'C/LMGOOs' or Assessor.</p>
           <img class="w-[40rem]" src="user_manual_pic/iama.png" alt="iama field picture">
-          <p>8. When done filling up the form, click the 'Register' button.</p>
+          <p>8. Click 'Register' once the form is complete. following a successful registration. You will see a message stating that your resignation was successful.</p>
+            <img class="w-[40rem]" src="user_manual_pic/registrationsuccess.png" alt="successfull registration picture">
+          <p>9. If a registration is successful, a text file named EKP_Login_credentials will be created on your desktop's device containing the password and email that you provided during the registration.</p>
+           <img class="w-[40rem]" src="user_manual_pic/textfile.png" alt="text file picture">
         </section>
 
         <section class="flex flex-col gap-y-2">
           <h2 class="text-[2rem]">2. Login</h2>
           <p>To login, go to the link <a class="text-blue-500 underline" href="https://ekpsystem.online/ekpsys/login.php">https://ekpsystem.online/ekpsys/login.php</a></p>
           <img class="w-[40rem]" src="user_manual_pic/login.png" alt="login picture">
+           <p>1. Enter the email and password that you provided during the registration. Then click the Submit button.</p>
+           <p>2. If the login is successful, it will redirect you to the dashboard, and a modal will pop up for security questions. Note that the security modal will only pop up if it is your first time logging in to your newly created account.</p>
+            <img class="w-[40rem]" src="user_manual_pic/securitymodal.png" alt="security modal picture">
         </section>
 
         <section class="flex flex-col gap-y-2">

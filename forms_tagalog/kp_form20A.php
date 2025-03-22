@@ -125,7 +125,8 @@ else{
    
     
     if ($stmt->execute()) {
-        $message = "Form submit successful.";
+        header("Location: ../user_manage_case.php?id=$complaintId");
+		exit;
     } else {
         $message = "Form submit failed.";
     }
@@ -226,7 +227,7 @@ $tagalogMonths = array(
 
     /* Hide the number input arrows for Firefox */
     input[type=number] {
-        -moz-appearance: textfield;
+        appearance: textfield;
         border: none;
         width: 40px;
         text-align: center;

@@ -177,10 +177,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $buttonID = 'formButton_' . $formID;
 
-            echo '<div id="toHide" class="h-fit w-full flex items-center bg-white my-2 rounded-lg">';
-            echo '<button class="truncate-text open-form btn btn-success w-fit" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . $i . '"> ' . $buttonText . ' </button>';
+            echo '<div id="toHide" class="h-fit w-full flex item-center justify-between bg-white my-2 rounded-lg">';
+            echo '<button class="truncate-text open-form btn btn-success w-full" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . $i . '"> ' . $buttonText . ' </button>';
 
-            echo '<button class="delete-form" data-form-id="' . $formID . '"><i class="ti ti-trash text-red-500 p-2"></i></button>';
+            echo '<button class="delete-form w-fit" data-form-id="' . $formID . '"><i class="ti ti-trash text-red-500 p-2"></i></button>';
             echo '</div>';
           }
 

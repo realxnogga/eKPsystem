@@ -93,7 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute(array_merge([$userID, $formUsed, $madeDate, $receivedDate], $lupons, [$_POST['pngbrgy']]));
 
     if ($stmt->rowCount() > 0) {
-        header("Location: ../user_lupon.php");
+        header("Location: ../user_used_forms.php");
 		exit;
     } else {
         echo "Error adding form!";

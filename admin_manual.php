@@ -17,8 +17,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
-    <!-- might delete later -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <!-- might delete later -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
 
@@ -31,19 +31,19 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 
       <div class="bg-white h-fit w-full rounded-md p-4">
 
-      <h2 class="text-[2rem] font-thin">ADMIN MANUAL</h2>
+        <h2 class="text-[2rem] font-thin">ADMIN MANUAL</h2>
 
         <br>
         <br>
 
-        <nav class="">
+        <nav class="sticky top-[4rem] bg-white overflow-x-auto z-50">
           <ul class="flex">
-            <li id="am_registration" onclick="navigateTo('am_registration')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md border-1 border-white hover:bg-blue-100 px-4 py-2 cursor-pointer">Registration/Login</li>
-            <li id="am_secretarys_corner" onclick="navigateTo('am_secretarys_corner')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Secretary's Corner</li>
-            <li id="am_account_request" onclick="navigateTo('am_account_request')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Account Request</li>
-            <li id="am_LTIA" onclick="navigateTo('am_LTIA')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">LTIA</li>
-            <li id="am_assessor_request" onclick="navigateTo('am_assessor_request')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Assessor Request</li>
-            <li id="am_setting" onclick="navigateTo('am_setting')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Setting</li>
+            <li id="am_registration" onclick="navigateTo('am_registration')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md border-1 border-white hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Registration/Login</li>
+            <li id="am_secretarys_corner" onclick="navigateTo('am_secretarys_corner')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Secretary's Corner</li>
+            <li id="am_account_request" onclick="navigateTo('am_account_request')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Account Request</li>
+            <li id="am_LTIA" onclick="navigateTo('am_LTIA')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">LTIA</li>
+            <li id="am_assessor_request" onclick="navigateTo('am_assessor_request')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Assessor Request</li>
+            <li id="am_setting" onclick="navigateTo('am_setting')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Setting</li>
           </ul>
         </nav>
 
@@ -62,7 +62,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 
   <script src="user_um_reglogin.js"></script>
   <script src="admin_am_functions.js"></script>
-
 
   <script>
     function navigateTo(page) {
@@ -107,7 +106,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
       registrationTab.classList.add('bg-blue-100', 'text-black', 'rounded-tl-lg', 'rounded-tr-lg');
     };
   </script>
-
 
 </body>
 
