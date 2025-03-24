@@ -149,10 +149,12 @@ textarea[disabled] {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="LTIAassest/jquery-3.6.0.min.js"></script>
+<script src="LTIAassest/bootstrap.min.js"></script>
  <link rel="stylesheet" href="css/td_hover.css">
 
 
- <script>
+<script>
 $(document).ready(function () {
     // Function to show modal with message
     function showModal(message) {
@@ -253,6 +255,8 @@ $(document).ready(function () {
             'border-color': '#ef5350'
         });
     }
+
+    
 
     // Handle barangay selection
     $('#barangay_select').on('change', function () {
@@ -495,6 +499,15 @@ $(document).ready(function () {
     $('#status_rate').text(''); // Reset the rate status to blank
     clearRates();
     clearRemarks();
+    
+    // Add this new code to reset verification buttons
+    $('.verify-btn').each(function() {
+        $(this)
+            .text('Verify')
+            .removeClass('btn-success btn-secondary')
+            .addClass('btn-primary')
+            .prop('disabled', false);
+    });
 }
 
     // Function to clear remarks
@@ -789,46 +802,98 @@ $(document).ready(function () {
             if (field && verifications[field] !== undefined) {
                 var isVerified = verifications[field] === 1;
                 var $row = $(this).closest('tr');
-                
-                // Update button appearance
-                $(this)
-                    .text(isVerified ? 'Verified' : 'Verify')
-                    .removeClass('btn-primary btn-success')
-                    .addClass(isVerified ? 'btn-success' : 'btn-primary');
+                var fileColumn = $row.find('.file-column');
+                var hasFile = !fileColumn.find('.alert-warning').length;
                 
                 // Get the corresponding rate input and remark textarea
-                var baseFieldName = field.replace('_verify', '');
+                var baseFieldName;
+                if (field === 'threepeoplesorg_verify') {
+                    baseFieldName = 'threepeoplesorg'; // Match database field name
+                } else {
+                    baseFieldName = field.replace('_verify', '');
+                }
+                
                 var $rateInput = $row.find(`input[name="${baseFieldName}_rate"]`);
                 var $remarkTextarea = $row.find(`textarea[name="${baseFieldName}_remark"]`);
                 
-                // Enable/disable based on verification status
-                if (!isVerified) {
+                // Disable and style inputs if no MOV or not verified
+                if (!hasFile || !isVerified) {
+                    // Disable and style rate input
                     $rateInput
                         .prop('disabled', true)
+                        .val('') // Clear value
                         .css({
                             'background-color': '#e9ecef',
-                            'cursor': 'not-allowed'
-                        });
+                            'cursor': 'not-allowed',
+                            'color': '#6c757d',
+                            'border-color': '#ced4da',
+                            'pointer-events': 'none'
+                        })
+                        .attr('title', !hasFile ? 'Cannot rate - No file uploaded' : 'Cannot rate - File not verified');
+
+                    // Disable and style remark textarea
                     $remarkTextarea
                         .prop('disabled', true)
+                        .val('') // Clear value
                         .css({
                             'background-color': '#e9ecef',
-                            'cursor': 'not-allowed'
-                        });
+                            'cursor': 'not-allowed',
+                            'color': '#6c757d',
+                            'border-color': '#ced4da',
+                            'pointer-events': 'none',
+                            'resize': 'none'
+                        })
+                        .attr('title', !hasFile ? 'Cannot add remarks - No file uploaded' : 'Cannot add remarks - File not verified');
+
+                    // Update verify button if no file
+                    if (!hasFile) {
+                        $(this)
+                            .prop('disabled', true)
+                            .text('Upload MOV')
+                            .removeClass('btn-primary btn-success')
+                            .addClass('btn-secondary')
+                            .css({
+                                'cursor': 'not-allowed',
+                                'opacity': '0.65'
+                            })
+                            .attr('title', 'Please upload MOV first');
+                    }
                 } else {
+                    // Enable and restore normal styling for inputs
                     $rateInput
                         .prop('disabled', false)
                         .css({
                             'background-color': '',
-                            'cursor': ''
-                        });
+                            'cursor': 'pointer',
+                            'color': '',
+                            'border-color': '',
+                            'pointer-events': ''
+                        })
+                        .attr('title', '');
+
                     $remarkTextarea
                         .prop('disabled', false)
                         .css({
                             'background-color': '',
-                            'cursor': ''
-                        });
+                            'cursor': 'pointer',
+                            'color': '',
+                            'border-color': '',
+                            'pointer-events': '',
+                            'resize': ''
+                        })
+                        .attr('title', '');
                 }
+
+                // Update verify button appearance
+                $(this)
+                    .text(isVerified ? 'Verified' : (!hasFile ? 'Upload MOV' : 'Verify'))
+                    .removeClass('btn-primary btn-success btn-secondary')
+                    .addClass(isVerified ? 'btn-success' : (!hasFile ? 'btn-secondary' : 'btn-primary'))
+                    .prop('disabled', !hasFile)
+                    .css({
+                        'cursor': !hasFile ? 'not-allowed' : 'pointer',
+                        'opacity': !hasFile ? '0.65' : '1'
+                    });
             }
         });
     }
@@ -963,7 +1028,7 @@ $(document).on('click', '.verify-btn', function() {
 </script>
 </head>
 <body class="bg-[#E8E8E7]">
-<?php include "../assessor_sidebar_header.php"; ?>
+  <?php include "../assessor_ltia_admin_dashboard.php"; ?>
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
     <div class="card">
@@ -1076,6 +1141,22 @@ if (classification === "City") {
 }
 });
 </script>
+
+<h2 class="text-left text-2xl font-semibold" id="mov_year" hidden></h2>
+          <div class="form-group mt-4">
+    <label for="year_select" class="block text-lg font-medium text-gray-700">Select Year</label>
+    <!-- <select id="year_select" name="year" class="form-control">
+        <?php 
+        $currentYear = date('Y');
+        // Show last 5 years including current year
+        for($i = 0; $i <= 4; $i++) {
+            $year = $currentYear - $i;
+            $selected = ($year == $currentYear) ? 'selected' : '';
+            echo "<option value='$year' $selected>$year</option>";
+        }
+        ?>
+    </select>
+</div> -->
 
             <h2 class="text-left text-2xl font-semibold" id="mov_year" hidden></h2>
           <div class="form-group mt-4">
@@ -1722,7 +1803,6 @@ if (classification === "City") {
         </p>
       </details>
                 </td>
-                <td></td>
               </tr>
               <tr id="city-row" style="display:none;">
                 <td>
@@ -2070,9 +2150,20 @@ $(document).on('click', '.verify-btn', function() {
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Hide modal when the close button is clicked
+    $('[data-modal-hide="large-modal"]').on('click', function() {
+        $('#large-modal').addClass('hidden');
+    });
+});
+</script>
 <!-- Main modal for PDF viewing -->
-<div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed inset-0 z-50 justify-center items-center w-full h-full">
-    <div class="relative p-4 w-full max-w-6xl h-[85%]">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Main modal for PDF viewing -->
+<div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed inset-0 z-50 flex justify-center items-center w-full h-full">
+    <div class="relative p-4 w-full max-w-6xl h-[90%]">
         <!-- Modal content -->
         <div class="relative bg-white shadow rounded-lg h-full dark:bg-gray-700">
             <!-- Modal header -->
