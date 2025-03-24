@@ -47,7 +47,7 @@ if (!in_array($currentYear, $years)) {
 $query = "
 SELECT b.barangay_name, COALESCE(m.total, 0) AS total 
 FROM barangays b 
-LEFT JOIN movrate m ON b.id = m.barangay AND m.year = :year
+LEFT JOIN movavg m ON b.id = m.barangay AND m.year = :year
 WHERE b.municipality_id = :municipality_id
 ";
 
