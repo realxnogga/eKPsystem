@@ -506,7 +506,7 @@ if (isset($_POST['rev_number_select']) && !empty($_POST['rev_number_select'])) {
                     <div class="flex items-center space-x-4">
                         <form method="post" action="" class="flex items-center space-x-2">
                             <select name="rev_number_select" class="form-select" onchange="this.form.submit()">
-                                <option value="">Select Revision Number</option>
+                                <option value="">Select Rev. Number</option>
                                 <?php foreach ($rev_numbers as $rev): ?>
                                     <option value="<?php echo htmlspecialchars($rev); ?>" 
                                         <?php if (isset($selectedRev) && $selectedRev == $rev) echo 'selected'; ?>>
