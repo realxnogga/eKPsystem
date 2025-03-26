@@ -86,7 +86,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute(array_merge([$userID, $formUsed, $madeDate], $lupons, [$_POST['pngbrgy'], $brgysec]));
 
     if ($stmt->rowCount() > 0) {
-        echo "Form submitted successfully!";
+        header("Location: ../user_lupon.php");
+		exit;
     } else {
         echo "Error adding form!";
     }
@@ -129,7 +130,7 @@ function createDateFromInputs($day, $month, $year) {
 
     /* Hide the number input arrows for Firefox */
     input[type=number] {
-        -moz-appearance: textfield;
+        appearance: textfield;
         border: none;
         width: 40px;
         text-align: center;

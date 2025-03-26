@@ -149,6 +149,8 @@ textarea[disabled] {
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="LTIAassest/jquery-3.6.0.min.js"></script>
+<script src="LTIAassest/bootstrap.min.js"></script>
  <link rel="stylesheet" href="css/td_hover.css">
 
 
@@ -495,6 +497,15 @@ $(document).ready(function () {
     $('#status_rate').text(''); // Reset the rate status to blank
     clearRates();
     clearRemarks();
+    
+    // Add this new code to reset verification buttons
+    $('.verify-btn').each(function() {
+        $(this)
+            .text('Verify')
+            .removeClass('btn-success btn-secondary')
+            .addClass('btn-primary')
+            .prop('disabled', false);
+    });
 }
 
     // Function to clear remarks
@@ -1682,7 +1693,7 @@ if (classification === "City") {
               <tr>
                 <td>
                 <details>
-                <summary><b>B. Coordination with Concerned Agencies Relating to Disputes Filed</b></summary>
+                <summary><b>B. Coordination with Concerned Agencies relating to disputes filed (PNP, DSWD, DILG, DAR, DENR, Office of the Prosecutor, Court, DOJ, CHR, etc.)</b></summary>
                 <p><br>
                   <b>5 points</b> – With proof of coordination relative to the filed disputes.<br>
                   <b>0 points</b> – Without proof of coordination relative to the filed disputes.
@@ -1722,7 +1733,6 @@ if (classification === "City") {
         </p>
       </details>
                 </td>
-                <td></td>
               </tr>
               <tr id="city-row" style="display:none;">
                 <td>
@@ -2070,9 +2080,20 @@ $(document).on('click', '.verify-btn', function() {
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Hide modal when the close button is clicked
+    $('[data-modal-hide="large-modal"]').on('click', function() {
+        $('#large-modal').addClass('hidden');
+    });
+});
+</script>
 <!-- Main modal for PDF viewing -->
-<div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed inset-0 z-50 justify-center items-center w-full h-full">
-    <div class="relative p-4 w-full max-w-6xl h-[85%]">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Main modal for PDF viewing -->
+<div id="large-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto fixed inset-0 z-50 flex justify-center items-center w-full h-full">
+    <div class="relative p-4 w-full max-w-6xl h-[90%]">
         <!-- Modal content -->
         <div class="relative bg-white shadow rounded-lg h-full dark:bg-gray-700">
             <!-- Modal header -->

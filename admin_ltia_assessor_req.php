@@ -12,23 +12,92 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
 include 'admin_func.php';
 
 
+// $currentMunicipalityID = $_SESSION['municipality_id'] ?? null;
+
+// $search_query = isset($_GET['search']) ? $_GET['search'] : '';
+
+// $accountRequestsQuery = "SELECT u.id, u.username, u.first_name, u.last_name, u.assessor_type, u.email, u.contact_number, b.barangay_name, u.verified 
+//                        FROM users u 
+//                        LEFT JOIN barangays b ON u.barangay_id = b.id 
+//                        WHERE u.verified = 0 
+//                        AND u.municipality_id = ? 
+//                        AND u.user_type = 'assessor'
+//                        AND (u.first_name LIKE ? OR u.last_name LIKE ? OR b.barangay_name LIKE ?)
+//                        ORDER BY b.barangay_name"; // Order by barangay_name for readability
+
+// $search_query_like = '%' . $search_query . '%';
+// $accountRequestsStatement = $conn->prepare($accountRequestsQuery);
+// $accountRequestsStatement->execute([$currentMunicipalityID, $search_query_like, $search_query_like, $search_query_like]);
+// $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
+
 $currentMunicipalityID = $_SESSION['municipality_id'] ?? null;
 
-$search_query = isset($_GET['search']) ? $_GET['search'] : '';
+function getBarangayData($conn, $currentMunicipalityID,)
+{
+  $accountRequestsQuery = "SELECT u.id, u.username, u.first_name, u.last_name,  u.assessor_type, u.email, u.contact_number, b.barangay_name, u.verified 
+  FROM users u 
+  LEFT JOIN barangays b ON u.barangay_id = b.id 
+  WHERE u.verified = 0 
+  AND u.municipality_id = ? 
+  AND u.user_type = 'assessor'
+  ORDER BY b.barangay_name"; // Order by barangay_name for readability
 
-$accountRequestsQuery = "SELECT u.id, u.username, u.first_name, u.last_name, u.assessor_type, u.email, u.contact_number, b.barangay_name, u.verified 
-                       FROM users u 
-                       LEFT JOIN barangays b ON u.barangay_id = b.id 
-                       WHERE u.verified = 0 
-                       AND u.municipality_id = ? 
-                       AND u.user_type = 'assessor'
-                       AND (u.first_name LIKE ? OR u.last_name LIKE ? OR b.barangay_name LIKE ?)
-                       ORDER BY b.barangay_name"; // Order by barangay_name for readability
+  $accountRequestsStatement = $conn->prepare($accountRequestsQuery);
 
-$search_query_like = '%' . $search_query . '%';
-$accountRequestsStatement = $conn->prepare($accountRequestsQuery);
-$accountRequestsStatement->execute([$currentMunicipalityID, $search_query_like, $search_query_like, $search_query_like]);
-$accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
+  if ($accountRequestsStatement->execute([$currentMunicipalityID])) {
+   return $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
+  }
+}
+
+function searchBarangayData($conn, $currentMunicipalityID, $searchTerm) {
+  $searchQuery = "SELECT u.id, u.username, u.first_name, u.last_name,  u.assessor_type, u.email, u.contact_number, b.barangay_name, u.verified 
+                  FROM users u 
+                  LEFT JOIN barangays b ON u.barangay_id = b.id 
+                  WHERE u.verified = 0 AND u.municipality_id = ? AND u.user_type = 'assessor' 
+                  AND (b.barangay_name LIKE ? OR u.username LIKE ? OR u.assessor_type LIKE ? OR CONCAT(u.first_name, ' ', u.last_name) LIKE ? OR u.email LIKE ? OR u.contact_number LIKE ? )
+                  ORDER BY b.barangay_name";
+  
+  // Prepare the search term for the query
+  $searchTerm = "%" . $searchTerm . "%";
+  
+  $searchStatement = $conn->prepare($searchQuery);
+  if ($searchStatement->execute([$currentMunicipalityID, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm])) {
+      return $searchStatement->fetchAll(PDO::FETCH_ASSOC);
+  }
+  return [];
+}
+
+
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  if (isset($_POST['inputField'])) {
+
+    // check if submitted input has value or not. save value to session if it has, delete if not
+    if (!empty($_POST['inputField'])) {
+      $_SESSION['requestingAssessor'] = $_POST['inputField'];
+    } else {
+      $_SESSION['requestingAssessor'] = null;
+    }
+
+      // check if session has value. call fetchMatchingRows function if it has, call getComplaintData if not
+      if (isset($_SESSION['requestingAssessor'])) {
+       $accountRequests = searchBarangayData($conn, $currentMunicipalityID, $_SESSION['requestingAssessor']);
+
+      } else {
+        $accountRequests = getBarangayData($conn, $currentMunicipalityID);
+      }
+  }
+}
+else {
+    // run when page load. call fetchMatchingRows function if session has value, call getComplaintData if not
+    if (isset($_SESSION['requestingAssessor'])) {
+      $accountRequests = searchBarangayData($conn, $currentMunicipalityID, $_SESSION['requestingAssessor']);
+    } else {
+      $accountRequests = getBarangayData($conn, $currentMunicipalityID);
+    }
+}
 
 ?>
 <!doctype html>
@@ -82,7 +151,11 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
           <b>
             <br>
 
-            <input onkeyup="searchTable();" type="search" id="searchAssessorRequestButton" class="form-control" placeholder="search">
+            <form id="myForm" method="POST" action="" class="w-full">
+              <input class="form-control w-full" type="text" id="inputField" name="inputField" placeholder="search" value="<?php echo isset($_SESSION['requestingAssessor']) ? $_SESSION['requestingAssessor'] : ''; ?>">
+            </form>
+
+            <!-- <input onkeyup="searchTable();" type="search" id="searchAssessorRequestButton" class="form-control" placeholder="search"> -->
 
             <br>
 
@@ -113,12 +186,12 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
               foreach ($accountRequests as $user) {
                 echo '<tr>';
                 echo '<td>' . $user['username'] . '</td>';
-                echo '<td>' . $user['last_name'] . ' ' . $user['first_name'] . '</td>';
+                echo '<td>' . $user['first_name'] . ' ' . $user['last_name'] . '</td>';
                 echo '<td>' . $user['assessor_type'] . '</td>';
                 echo '<td>' . $user['email'] . '</td>';
                 echo '<td>' . $user['contact_number'] . '</td>';
 
-                echo '<td class="flex items-center flex-col">';
+                echo '<td class="">';
 
                 if (!isset($user['verified']) || !$user['verified']) {
                   echo '<form class="flex items-center flex-col" method="post" action="' . $_SERVER['PHP_SELF'] . '">';
@@ -138,11 +211,6 @@ $accountRequests = $accountRequestsStatement->fetchAll(PDO::FETCH_ASSOC);
                       <p class="hide-icon hidden">Deny</p>
                    </span> 
                                     </button>';
-                  echo '</form>';
-                } else {
-                  echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '">';
-                  echo '<input type="hidden" name="user_id" value="' . $user['id'] . '">';
-                  echo '<button class="btn btn-danger m-1" type="submit" name="action" value="unverify">Unverify</button>';
                   echo '</form>';
                 }
 

@@ -1,6 +1,8 @@
 <?php
 // Initialize the linkedNames array
 
+use function PHPSTORM_META\type;
+
 $linkedNames = array();
 
 // Get the current year
@@ -12,8 +14,7 @@ $checkRowStmt = $conn->prepare($checkRowQuery);
 $checkRowStmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
 $checkRowStmt->bindParam(':current_year', $currentYear, PDO::PARAM_INT);
 $checkRowStmt->execute();
-$rowCount = $checkRowStmt->fetchColumn();
-
+$rowCount = (int) $checkRowStmt->fetchColumn();
 
 if ($rowCount === 0) {
 
@@ -80,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $checkAppointStmt = $conn->prepare($checkAppointQuery);
         $checkAppointStmt->bindParam(':user_id', $userID, PDO::PARAM_INT);
         $checkAppointStmt->execute();
-        $rowCount = $checkAppointStmt->fetchColumn();
+        $rowCount = (int) $checkAppointStmt->fetchColumn();
 
         if ($rowCount === 0) {
 

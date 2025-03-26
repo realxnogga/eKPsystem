@@ -3,96 +3,109 @@ session_start();
 include '../connection.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'assessor') {
-	header("Location: login.php");
-	exit;
+    header("Location: login.php");
+    exit;
 }
 
 $user_id = $_SESSION['user_id'];
 
+// Fetch user's first and last name
 try {
-	// Step 1: Get the municipality ID for the logged-in user
-	$query = "SELECT municipality_id FROM users WHERE id = :user_id";
-	$stmt = $conn->prepare($query);
-	$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-	$stmt->execute();
+    $query = "SELECT first_name, last_name FROM users WHERE id = :user_id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-	$user_row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($user) {
+        $first_name = $user['first_name'];
+        $last_name = $user['last_name'];
+    } else {
+        $first_name = 'Unknown';
+        $last_name = 'User';
+    }
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
 
-	if ($user_row && isset($user_row['municipality_id'])) {
-		$municipality_id = $user_row['municipality_id'];
+try {
+    // Step 1: Get the municipality ID for the logged-in user
+    $query = "SELECT municipality_id FROM users WHERE id = :user_id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
 
-		// Step 2: Fetch municipality name
-		$query = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
-		$stmt = $conn->prepare($query);
-		$stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
-		$stmt->execute();
+    $user_row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		$municipality_row = $stmt->fetch(PDO::FETCH_ASSOC);
-		$municipality_name = $municipality_row ? strtoupper($municipality_row['municipality_name']) : 'No municipality found';
+    if ($user_row && isset($user_row['municipality_id'])) {
+        $municipality_id = $user_row['municipality_id'];
 
-		// Step 3: Fetch barangays and their total ratings from movrate, sorted by total in descending order
-		$query = "
+        // Step 2: Fetch municipality name
+        $query = "SELECT municipality_name FROM municipalities WHERE id = :municipality_id";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $municipality_row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $municipality_name = $municipality_row ? strtoupper($municipality_row['municipality_name']) : 'No municipality found';
+
+        // Step 3: Fetch available years from movrate table
+        $query = "SELECT DISTINCT YEAR(year) AS year FROM movrate WHERE user_id = :user_id AND user_type = :user_type ORDER BY year DESC";
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_type', $_SESSION['user_type'], PDO::PARAM_STR);
+        $stmt->execute();
+        $years = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        // Add the current year if not present in the years array
+        $currentYear = (int)date('Y');
+        if (!in_array($currentYear, $years)) {
+            $years[] = $currentYear;
+            rsort($years); // Sort years in descending order
+        }
+
+        // Get selected year from request or default to the latest year
+        $selectedYear = $_GET['year'] ?? $currentYear;
+
+        // Step 4: Fetch barangays and their total ratings from movrate, filtered by user_id, user_type, and selected year
+        $query = "
             SELECT b.barangay_name AS barangay, m.total 
             FROM barangays b
             JOIN movrate m ON b.id = m.barangay
             WHERE b.municipality_id = :municipality_id
+              AND m.user_id = :user_id
+              AND m.user_type = :user_type
+              AND YEAR(m.year) = :selectedYear
             ORDER BY m.total DESC";
-
-		$stmt = $conn->prepare($query);
-		$stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
-		$stmt->execute();
-		$barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	} else {
-		$municipality_name = 'No municipality ID found for this user';
-		$barangay_ratings = []; // Empty if no data found
-	}
+        $stmt = $conn->prepare($query);
+        $stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_type', $_SESSION['user_type'], PDO::PARAM_STR);
+        $stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
+        $stmt->execute();
+        $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        $municipality_name = 'No municipality ID found for this user';
+        $barangay_ratings = []; // Empty if no data found
+    }
 } catch (PDOException $e) {
-	echo "Error: " . $e->getMessage();
+    echo "Error: " . $e->getMessage();
 }
 
 function getAdjectivalRating($total)
 {
-	if ($total >= 100) {
-		return "Outstanding";
-	} elseif ($total >= 90 && $total <= 99) {
-		return "Very Satisfactory";
-	} elseif ($total >= 80 && $total <= 89) {
-		return "Fair";
-	} elseif ($total >= 70 && $total <= 79) {
-		return "Poor";
-	} else {
-		return "Very Poor";
-	}
-
-} // Fetch available years from movrate table
-$query = "SELECT DISTINCT YEAR(year) AS year FROM movrate ORDER BY year DESC"; // use 'daterate' instead of 'date'
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$years = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-// Add the current year if not present in the years array
-$currentYear = (int)date('Y');
-if (!in_array($currentYear, $years)) {
-	$years[] = $currentYear;
-	rsort($years); // Sort years in descending order
+    if ($total >= 100) {
+        return "Outstanding";
+    } elseif ($total >= 90 && $total <= 99) {
+        return "Very Satisfactory";
+    } elseif ($total >= 80 && $total <= 89) {
+        return "Fair";
+    } elseif ($total >= 70 && $total <= 79) {
+        return "Poor";
+    } else {
+        return "Very Poor";
+    }
 }
-
-// Get selected year from request or default to the latest year
-$selectedYear = $_GET['year'] ?? $currentYear;
-
-// Filter dataset by selected year
-$query = "
-    SELECT b.barangay_name AS barangay, m.total 
-    FROM barangays b
-    JOIN movrate m ON b.id = m.barangay
-    WHERE b.municipality_id = :municipality_id
-      AND YEAR(m.year) = :selectedYear  -- use 'year' instead of 'date'
-    ORDER BY m.total DESC";
-$stmt = $conn->prepare($query);
-$stmt->bindParam(':municipality_id', $municipality_id, PDO::PARAM_INT);
-$stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
-$stmt->execute();
-$barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html lang="en">
@@ -222,15 +235,12 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="rounded-lg mt-16">
     <div class="card">
 				<div class="card-body">
-					<div class="menu flex items-center justify-between">
-						<button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessor_ltia_admin_dashboard.php';">
-							<i class="ti ti-building-community mr-2"></i> Back
-						</button>
-					</div>
-				</div>
-			</div>
-			<div class="text-right">
-				<form method="get" action="">
+				<div class="menu flex items-center justify-between">
+				<button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='assessor_ltia_admin_dashboard.php';">
+				<i class="ti ti-building-community mr-2"></i> Back
+                        </button>
+                        <div class="flex items-center space-x-4">
+						<form method="get" action="">
 					<select name="year" onchange="this.form.submit()">
 						<?php foreach ($years as $year): ?>
 							<option value="<?php echo $year; ?>" <?php if ($year == $selectedYear) echo 'selected'; ?>>
@@ -239,13 +249,11 @@ $barangay_ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 						<?php endforeach; ?>
 					</select>
 				</form>
-			</div>
-					</div>
-				
-			<div class="text-right">
-				<button onclick="printSecondCard()" class="btn btn-primary">Print</button>
-			</div>
-
+							<button onclick="printSecondCard()" class="btn btn-primary">Print</button>
+							</div>
+                    </div>
+                </div>
+            </div>
 			<!-- Content to be printed -->
 			<div class="print-content">
 				<!-- header -->
@@ -368,31 +376,20 @@ document.addEventListener('DOMContentLoaded', function () {
 						<br>
 						<b>C. I CERTIFY TO THE CORRECTNESS OF THE ABOVE INFORMATION</b><br><br>
 						<div class="certification-section text-center">
-							<form method="post" action="" enctype="multipart/form-data">
-								<input type="text" name=" " class="underline-input" placeholder="Enter Name" value="<>"><br>
-								Chairperson - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
+						
+								<input type="text" name=" " class="underline-input" placeholder="Enter Name" value="<?php echo htmlspecialchars($first_name . ' ' . $last_name); ?>"><br>
+								Member - <?php echo htmlspecialchars($first_name . ' ' . $last_name); ?> City Awards Committee <br><br>
 
-								<input type="text" name=" " class="underline-input" placeholder="Enter Name" value=" "><br>
-								Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
-
-								<input type="text" name=" " class="underline-input" placeholder="Enter Name" value=" "><br>
-								Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
-
-								<input type="text" name=" " class="underline-input" placeholder="Enter Name" value=" "><br>
-								Member - <?php echo htmlspecialchars($municipality_name); ?> City Awards Committee <br><br>
-							
 						</div>
 
 						<br><br>
 						<b>D. DATE ACCOMPLISHED</b><br>
-						<span class="spacingtabs"> <?php echo date("F j, Y"); ?></span>
+						<input type="date" name=" " class="underline-input" value=" "><br>
+
 						<br><br>
 
 						<!-- Do not print this -->
-						<div class="text-right mt-4">
-							<input type="submit" value="Save" style="background-color: #000035;" class="btn-save">
-							</form>
-						</div>
+						
 					</div>
 				</div>
 			</div>

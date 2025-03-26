@@ -595,11 +595,9 @@ document.addEventListener('DOMContentLoaded', function () {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
-    max-width: 350px; /* Adjust the width as needed */
-    white-space: nowrap;
+    max-width: 100%; /* Adjust the width as needed */
     overflow: hidden;
     text-overflow: ellipsis;
-
 }
 .comment strong {
     color: #333;
@@ -607,6 +605,7 @@ document.addEventListener('DOMContentLoaded', function () {
 .comment p {
     margin: 0;
     color: #555;
+    white-space: normal; /* Allow text to wrap */
 }
 input[type="file"] {
     max-width: 270px; /* Adjust the width as needed */
@@ -1373,7 +1372,7 @@ input[type="file"] {
     </td>
           </tr>
 <!-- ___________________________________________________ -->
-              <tr>
+<tr>
                 <td>C. At least 80% compliance with the terms of settlement or award after the cases have been settled</td>
                 <td>
                 <input type="text" name="IIC_pdf_verify" style="display: none;" value="<?php echo $verificationData['IIC_pdf_verify'] ?? ''; ?>" readonly/>  
@@ -1395,15 +1394,12 @@ input[type="file"] {
                         </div>
                       <?php endif; ?>
                 <?php endforeach; ?>
-          </td>
-            <td class="text-center align-middle"><input type="file" id="IIC_pdf_File" name="IIC_pdf_File" accept=".pdf" 
-               onchange="toggleSubmitButton(this, 'submit21', 'cancel21')" />
-              <input type="hidden" name="IIC_pdf_File_hidden" id="IIC_pdf_File_hidden" 
-               value="<?php echo !empty($row['IIC_pdf_File']) ? htmlspecialchars($row['IIC_pdf_File']) : ''; ?>">
-          <button type="submit" name="update" value="IIC_pdf_File" id="submit21" 
-                style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
-          <button type="button" id="cancel21" onclick="clearInput('IIC_pdf_File', 'submit21', 'cancel21')" 
-                style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
+                </td>
+    <td class="text-center align-middle">
+        <input type="file" id="IIC_pdf_File" name="IIC_pdf_File" accept=".pdf" onchange="toggleSubmitButton(this, 'submit21', 'cancel21')" />
+        <input type="hidden" name="IIC_pdf_File_hidden" id="IIC_pdf_File_hidden" value="<?php echo !empty($row['IIC_pdf_File']) ? htmlspecialchars($row['IIC_pdf_File']) : ''; ?>">
+        <button type="submit" name="update" value="IIC_pdf_File" id="submit21" style="display: none; background-color: #000033;" class="btn btn-primary btn-sm">Update</button>
+        <button type="button" id="cancel21" onclick="clearInput('IIC_pdf_File', 'submit21', 'cancel21')" style="display: none; background-color: #FF0000;" class="btn btn-danger btn-sm">Cancel</button>
     </td>
           </tr>
 <!-- ___________________________________________________ -->
@@ -1943,17 +1939,16 @@ input[type="file"] {
     </div>
 </div>
 
-  <script>
+<script>
     $(document).ready(function() {
         $('.view-pdf').attr('data-modal-target', 'large-modal');
         $('.view-pdf').attr('data-modal-toggle', 'large-modal');
 
         $('.view-pdf').click(function() {
             var pdfFile = $(this).data('file'); // Get the PDF file path from data attribute
-            $('#pdfViewer').attr('src', pdfFile); // Set the file path in the iframe   
-
+            $('#pdfViewer').attr('src', decodeURIComponent(pdfFile)); // Set the file path in the iframe
         });
     });
-  </script>
+</script>
 </body>
 </html>

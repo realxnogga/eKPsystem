@@ -3,16 +3,14 @@ session_start();
 
 include 'connection.php';
 include 'include/custom-scrollbar.php';
-
 include 'user_set_timezone.php';
-
-
-$userID = $_SESSION['user_id'];
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
   header("Location: login.php");
   exit;
 }
+
+$userID = $_SESSION['user_id'];
 
 include 'user_notification_handler.php';
 
@@ -193,10 +191,9 @@ function get_time_ago($time)
 
     <section class="bg-white shadow h-[75%] w-[70%] overflow-y-auto">
       <?php if (!empty($notifData)) { ?>
+
         <?php foreach ($notifData as $row) { ?>
-
-
-          <div class="relative <?php echo $row['seen'] === 1 ? 'bg-white' : 'bg-blue-100' ?> hover:bg-gray-100 h-fit w-full border p-3 pl-4 flex items-center justify-between">
+          <div class="relative <?php echo (int)$row['seen'] === 1 ? 'bg-white' : 'bg-blue-100' ?> hover:bg-gray-100 h-fit w-full border p-3 pl-4 flex items-center justify-between">
 
 
             <div class="flex flex-col gap-y-1 items-start cursor-default">

@@ -2,7 +2,10 @@
 session_start();
 include 'connection.php';
 
-
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
+  header("Location: login.php");
+  exit;
+}
 
 $userID = $_SESSION['user_id'] ?? null; // Get user ID from session
 $barangayID = $_SESSION['barangay_id'] ?? null; // Get barangay ID from session

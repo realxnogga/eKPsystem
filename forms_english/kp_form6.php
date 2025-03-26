@@ -83,7 +83,8 @@ $bindValues = array_merge([$userID, $formUsed, $madeDate, $receivedDate], $lupon
 
 
     if ($stmt->rowCount() > 0) {
-        echo "Row added successfully!";
+        header("Location: ../user_lupon.php");
+		exit;
     } else {
         echo "Error adding row!";
     }
@@ -248,7 +249,7 @@ h5 {
         font-size: 12pt; /* Adjust as needed */
     }
     .input-field {
-        max-width: 100%
+        max-width: 100%;
         height: auto; /* Adjust as needed */
         /* Other print styles for input fields */
     }

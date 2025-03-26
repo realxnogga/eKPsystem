@@ -461,31 +461,31 @@ $budgetCountArray = [
     }
 
     // Function to download table as Excel
-    function downloadExcel() {
-      var element = document.querySelector('table');
+    // function downloadExcel() {
+    //   var element = document.querySelector('table');
 
-      // Use xlsx library to generate Excel file
-      var wb = XLSX.utils.table_to_book(element);
-      var wbout = XLSX.write(wb, {
-        bookType: 'xlsx',
-        bookSST: true,
-        type: 'binary'
-      });
+    //   // Use xlsx library to generate Excel file
+    //   var wb = XLSX.utils.table_to_book(element);
+    //   var wbout = XLSX.write(wb, {
+    //     bookType: 'xlsx',
+    //     bookSST: true,
+    //     type: 'binary'
+    //   });
 
-      // Convert string to ArrayBuffer
-      function s2ab(s) {
-        var buf = new ArrayBuffer(s.length);
-        var view = new Uint8Array(buf);
-        for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-        return buf;
-      }
+    //   // Convert string to ArrayBuffer
+    //   function s2ab(s) {
+    //     var buf = new ArrayBuffer(s.length);
+    //     var view = new Uint8Array(buf);
+    //     for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+    //     return buf;
+    //   }
 
-      // Create Blob and trigger download
-      var blob = new Blob([s2ab(wbout)], {
-        type: 'application/octet-stream'
-      });
-      saveAs(blob, 'table_' + getFormattedDate() + '.xlsx');
-    }
+    //   // Create Blob and trigger download
+    //   var blob = new Blob([s2ab(wbout)], {
+    //     type: 'application/octet-stream'
+    //   });
+    //   saveAs(blob, 'table_' + getFormattedDate() + '.xlsx');
+    // }
 
     // Function to adjust table styles for PDF generation
     function adjustTableStyles(table) {
@@ -695,7 +695,7 @@ $budgetCountArray = [
         </section>
 
         <button class="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300" onclick="generatePDF()">Generate PDF</button>
-        <button class="px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ml-4" onclick="downloadExcel()">Download Excel</button>
+        <!-- <button class="px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300 ml-4" onclick="downloadExcel()">Download Excel</button> -->
     </div>
   </div>
 </body>

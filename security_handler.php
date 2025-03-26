@@ -54,30 +54,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['security_settings'])) 
         $insertSecurityStmt->bindParam(':answer3', password_hash($answer3, PASSWORD_BCRYPT), PDO::PARAM_STR);
 
 
-        function changeTextFunc($arg)
+        function dashboardFunc($arg)
+        {
+            if ($arg === 'user') return 'user_dashboard.php';
+            if ($arg === 'superadmin') return 'sa_dashboard.php';
+            if ($arg === 'admin') return 'admin_dashboard.php';
+            if ($arg === 'assessor') return 'LTIA/assessor_ltia_admin_dashboard.php';
+        }
+        $dashboardtemp = dashboardFunc($user_type);
+
+        function settingFunc($arg)
         {
             if ($arg === 'user') return 'user';
             if ($arg === 'superadmin') return 'sa';
             if ($arg === 'admin') return 'admin';
             if ($arg === 'assessor') return 'assessor';
         }
-        $temp = changeTextFunc($user_type);
+        $settingtemp = settingFunc($user_type);
 
         if ($insertSecurityStmt->execute()) {
 
             if ($isFirstTimeToAddSecurity) {
 
-                header("Location: {$temp}_dashboard.php");
+                header("Location: $dashboardtemp");
                 exit();
 
             } else {
                 
-                header("Location: {$temp}_setting.php?update_securityquestion_message=SQupdatedsuccessfully");
+                header("Location: {$settingtemp}_setting.php?update_securityquestion_message=SQupdatedsuccessfully");
                 exit();
             }
 
         } else {
-            header("Location: {$temp}_setting.php?update_securityquestion_message=SQupdatederror");
+            header("Location: {$settingtemp}_setting.php?update_securityquestion_message=SQupdatederror");
             exit();
         }
     }
