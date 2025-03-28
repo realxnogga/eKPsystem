@@ -68,6 +68,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $selectedYear = isset($_SESSION['fy_questionfeedback']) ? $_SESSION['fy_questionfeedback'] : date('Y');
 $questionTemp = fetchFeedbackQuestionFunc($conn, $selectedYear);
+// Fetch all answered feedback IDs once and store them in a variable
+$answeredFeedbackIds = isAlreadyAnsweredFunc($conn, $barangay_id);
 
 function fetchFeedbackQuestionFunc($conn, $whatYear)
 {
@@ -106,6 +108,8 @@ function isAlreadyAnsweredFunc($conn, $brgy_id)
   <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
   <!-- tabler icon -->
   <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+   <!-- tabler support -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
   <!-- tailwind cdn -->
 <link rel="stylesheet" href="output.css">
 </head>
@@ -143,62 +147,66 @@ function isAlreadyAnsweredFunc($conn, $brgy_id)
           <?php echo empty($questionTemp) ? 'No data available' : ''; ?>
         </p>
 
-        <?php foreach ($questionTemp as $row) { ?>
-          <section class="feedback-item <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'relative text-gray-300 cursor-not-allowed' : '' ?> border border-gray-300 rounded-lg p-4 mb-4 bg-gray-50 shadow-sm">
+        <?php
 
-            <?php if (in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id))) { ?>
-              <h3 class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-gray-500">You already answered this!</h3>
+foreach ($questionTemp as $row) { ?>
+  <section class="feedback-item <?php echo in_array($row['fq_id'], $answeredFeedbackIds) ? 'relative text-gray-300 cursor-not-allowed' : '' ?> border border-gray-300 rounded-lg p-4 mb-4 bg-gray-50 shadow-sm">
+
+    <?php if (in_array($row['fq_id'], $answeredFeedbackIds)) { ?>
+      <h3 class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-gray-500">You already answered this!</h3>
+    <?php } ?>
+
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
+      <p class="text-lg font-bold"><?php echo $row["feedback_title"]; ?></p>
+      <p class="text-sm text-gray-500">Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
+    </div>
+
+    <form method="POST" action="" class="flex flex-col gap-4">
+      <div class="overflow-x-auto">
+        <table class="table-auto w-full border-collapse border border-gray-300">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="py-2 px-4 text-left text-xs w-1/3">Questions</th>
+              <th class="py-2 px-4 text-center text-xs">(5) Very Satisfied</th>
+              <th class="py-2 px-4 text-center text-xs">(4) Satisfied</th>
+              <th class="py-2 px-4 text-center text-xs">(3) Neutral</th>
+              <th class="py-2 px-4 text-center text-xs">(2) Dissatisfied</th>
+              <th class="py-2 px-4 text-center text-xs">(1) Very Dissatisfied</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php for ($i = 1; $i <= 5; $i++) { ?>
+              <tr>
+                <td class="py-2 px-4 text-sm"><?php echo $row["fq$i"]; ?></td>
+                <?php for ($j = 5; $j >= 1; $j--) { ?>
+                  <td class="py-2 px-4 text-center">
+                    <input class="<?php echo in_array($row['fq_id'], $answeredFeedbackIds) ? 'border border-gray-300' : '' ?>" 
+                           <?php echo in_array($row['fq_id'], $answeredFeedbackIds) ? 'disabled' : '' ?> 
+                           type="radio" value="<?php echo $j; ?>" name="fa<?php echo $i; ?>" required>
+                  </td>
+                <?php } ?>
+              </tr>
             <?php } ?>
+          </tbody>
+        </table>
+      </div>
 
-            <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
-              <p class="text-lg font-bold"><?php echo $row["feedback_title"]; ?></p>
-              <p class="text-sm text-gray-500">Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
-            </div>
+      <textarea class="border border-gray-300 rounded-md p-2 w-full <?php echo in_array($row['fq_id'], $answeredFeedbackIds) ? 'placeholder-gray-300 cursor-not-allowed' : '' ?>" 
+                <?php echo in_array($row['fq_id'], $answeredFeedbackIds) ? 'disabled' : '' ?> 
+                id="comment" name="comment" rows="2" placeholder="Write a comment/suggestion"></textarea>
 
-            <form method="POST" action="" class="flex flex-col gap-4">
-              <div class="overflow-x-auto">
-                <table class="table-auto w-full border-collapse border border-gray-300">
-                  <thead>
-                    <tr class="bg-gray-200">
-                      <th class="py-2 px-4 text-left text-xs">Questions</th>
-                      <th class="py-2 px-4 text-center text-xs">(5) Very Satisfied</th>
-                      <th class="py-2 px-4 text-center text-xs">(4) Satisfied</th>
-                      <th class="py-2 px-4 text-center text-xs">(3) Neutral</th>
-                      <th class="py-2 px-4 text-center text-xs">(2) Dissatisfied</th>
-                      <th class="py-2 px-4 text-center text-xs">(1) Very Dissatisfied</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php for ($i = 1; $i <= 5; $i++) { ?>
-                      <tr>
-                        <td class="py-2 px-4 text-sm"><?php echo $row["fq$i"]; ?></td>
-                        <?php for ($j = 5; $j >= 1; $j--) { ?>
-                          <td class="py-2 px-4 text-center">
-                            <input class="<?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>" 
-                                   <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> 
-                                   type="radio" value="<?php echo $j; ?>" name="fa<?php echo $i; ?>" required>
-                          </td>
-                        <?php } ?>
-                      </tr>
-                    <?php } ?>
-                  </tbody>
-                </table>
-              </div>
+      <input hidden value="<?php echo $row['fq_id']; ?>" required name="fa_id" type="number">
 
-              <textarea class="border border-gray-300 rounded-md p-2 w-full <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'placeholder-gray-300 cursor-not-allowed' : '' ?>" 
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> 
-                        id="comment" name="comment" rows="2" placeholder="Write a comment/suggestion"></textarea>
-
-              <input hidden value="<?php echo $row['fq_id']; ?>" required name="fa_id" type="number">
-
-              <button name="submitFeedbackAnswer<?php echo $row['fq_id']; ?>" type="submit" 
-                      class="py-2 px-4 text-white rounded-md bg-blue-500 hover:bg-blue-600 w-fit <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'bg-gray-300 cursor-not-allowed' : '' ?>" 
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?>>
-                Submit
-              </button>
-            </form>
-          </section>
-        <?php } ?>
+      <div>
+        <button name="submitFeedbackAnswer<?php echo $row['fq_id']; ?>" type="submit" 
+                class="bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-md text-white w-fit sm:w-auto <?php echo in_array($row['fq_id'], $answeredFeedbackIds) ? 'bg-gray-300 cursor-not-allowed' : '' ?>" 
+                <?php echo in_array($row['fq_id'], $answeredFeedbackIds) ? 'disabled' : '' ?>>
+          Submit
+        </button>
+      </div>
+    </form>
+  </section>
+<?php } ?>
 
       </section>
     </div>

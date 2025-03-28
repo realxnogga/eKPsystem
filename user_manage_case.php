@@ -425,7 +425,7 @@ $folderName = ($_SESSION['language'] === 'tl') ? 'forms_tagalog' : 'forms_englis
               <div class="mb-3 sm:mb-0">
 
                 <div class="flex items-center">
-                  <img src="img/cluster.png" alt="Logo" class="max-w-[120px] max-h-[120px] mr-4 align-middle">
+                  <img src="img/cluster.png" alt="Logo" class="h-24 w-24 mr-4 align-middle">
                   <div>
                     <h5 class="text-lg font-semibold mb-2">Department of the Interior and Local Government</h5>
                   </div>

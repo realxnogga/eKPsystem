@@ -120,22 +120,23 @@ function get_time_ago($time)
   <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
   <script src="node_modules/flowbite/dist/flowbite.min.css"></script>
 
-  <!-- tailwind link -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
   <!-- tabler icon link -->
   <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
+    <!-- tailwind link -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="output.css">
 </head>
 
-<body class="bg-[#E8E8E7] h-screen w-screen flex flex-col gap-y-2 items-center justify-center">
+<body class="bg-gray-200 h-screen w-screen flex flex-col gap-y-2 items-center justify-center">
 
-    <section class="w-[70%] flex justify-between">
-      <h3 class="text-4xl font-bold text-gray-700">Notifications</h3>
-      <a href="user_dashboard.php" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">back to dashboard</a>
+    <section class="w-full md:w-9/12 px-4 sm:px-0 flex justify-between">
+      <h3 class="text-3xl md:text-4xl font-bold text-gray-700">Notifications</h3>
+      <a href="user_dashboard.php" class="bg-blue-500 hover:bg-blue-400 px-3 py-1 sm:px-3 sm:py-2 text-lg sm:text-lg rounded-md text-white">Back</a>
     </section>
 
-    <section class="bg-white shadow rounded-lg h-[4rem] w-[70%] flex items-center justify-between p-3">
+    <section class="bg-white shadow rounded-0 sm:rounded-lg h-16 w-full md:w-9/12 flex items-center justify-between p-3">
 
 
       <form action="" method="POST" class="m-0 p-0">
@@ -143,7 +144,7 @@ function get_time_ago($time)
           type="submit"
           value="Mark all as read"
           name="submit_readAll"
-          class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+          class="text-sm px-1 py-1 sm:px-3 rounded-sm hover:bg-gray-100 border border-gray-400 cursor-pointer">
       </form>
 
       <!-- ----------------------------- -->
@@ -154,7 +155,7 @@ function get_time_ago($time)
             type="submit"
             value="All"
             name="submit_all"
-            class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+            class="text-sm px-1 py-1 sm:px-3 rounded-sm hover:bg-gray-100 border border-gray-400 cursor-pointer">
         </form>
 
         <form action="" method="POST" class="m-0 p-0">
@@ -162,13 +163,13 @@ function get_time_ago($time)
             type="submit"
             value="Unread"
             name="submit_unread"
-            class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+            class="text-sm px-1 py-1 sm:px-3 hover:bg-gray-100 border border-gray-400 cursor-pointer">
         </form>
 
         <form action="" method="POST" class="m-0 p-0">
           <select
             name="filter_period"
-            class="p-1 rounded-sm bg-gray-100 border border-gray-300"
+            class="text-sm px-1 py-1 sm:px-3 rounded-sm bg-gray-100 border border-gray-300"
             onchange="this.form.submit()">
 
             <?php
@@ -189,7 +190,7 @@ function get_time_ago($time)
 
     </section>
 
-    <section class="bg-white shadow h-[75%] w-[70%] overflow-y-auto">
+    <section class="bg-white shadow h-3/4 w-full md:w-9/12 overflow-y-auto">
       <?php if (!empty($notifData)) { ?>
 
         <?php foreach ($notifData as $row) { ?>
@@ -198,8 +199,8 @@ function get_time_ago($time)
 
             <div class="flex flex-col gap-y-1 items-start cursor-default">
 
-              <div class="flex">
-                <p clas>The case </p>
+              <div class="flex text-sm sm:text-lg">
+                <p>The case </p>
                 <form action="" method="POST" class="m-0 p-0">
                   <input
                     type="hidden"
@@ -238,7 +239,7 @@ function get_time_ago($time)
             </div>
 
             <!-- --------------------------- -->
-            <section class="flex gap-x-4 items-center">
+            <section class="flex flex-col sm:flex-row gap-x-4 items-center">
 
               <i class="ti ti-copy text-2xl cursor-pointer" onclick="copyText(<?php echo $row['id']; ?>)"></i>
 
@@ -273,7 +274,7 @@ function get_time_ago($time)
     </section>
 
   <!-- for custom alert -->
-  <div class="hidden bg-red-500 text-white p-4 absolute top-5 left-1/2 transform -translate-x-1/2 rounded-lg z-[1000]" id="customAlert"></div>
+  <div class="hidden bg-red-500 text-white p-2 sm:p-4 text-sm sm:text-lg absolute top-5 left-1/2 transform -translate-x-1/2 rounded-lg z-50" id="customAlert"></div>
 
   <script>
     function copyText(index) {

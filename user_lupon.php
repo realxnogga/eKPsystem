@@ -103,7 +103,7 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_
               $languageFolder = ($_SESSION['language'] === 'english') ? 'forms_english/' : 'forms_tagalog/';
               $formPath = $languageFolder . $formFileName;
 
-              echo '<a href="' . $formPath . '" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-400 text-nowrap">' . $buttonText . '</a>';
+              echo '<a href="' . $formPath . '" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-400 whitespace-nowrap">' . $buttonText . '</a>';
             }
             ?>
           </div>

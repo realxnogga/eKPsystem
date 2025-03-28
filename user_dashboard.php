@@ -230,7 +230,7 @@
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- References Card -->
-        <div class="bg-white col-span-2 rounded-lg shadow-lg p-6">
+        <div class="bg-white cols-span-3 md:col-span-2 rounded-lg shadow-lg p-6">
           <h5 class="text-xl font-semibold mb-4 text-gray-800">References</h5>
           <ul class="list-disc list-inside text-gray-600">
           <a href="links/Related_Laws_Katarungang_Pambarangay_Handbook (1).pdf" download>Related Laws KP Handbook</a><br>
@@ -250,7 +250,7 @@
         </div>
 
         <!-- External Links -->
-        <div class="grid grid-cols-1 gap-4">
+        <div class="grid cols-span-3 md:cols-span-1 gap-4">
           <a href="https://www.dilg.gov.ph/" class="block bg-contain bg-center bg-custom-official rounded-lg shadow-lg h-40" target="_blank"></a>
           <a href="https://www.facebook.com/dilglaguna.clustera.7" class="block bg-contain bg-custom-fb rounded-lg shadow-lg h-40" target="_blank"></a>
           <a href="https://www.instagram.com/dilgr4a/" class="block bg-cover bg-contain bg-custom-ig rounded-lg shadow-lg h-40" target="_blank"></a>

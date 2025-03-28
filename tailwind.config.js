@@ -10,6 +10,9 @@ module.exports = {
             'custom-fb': "url('img/fb.png')",
             'custom-ig': "url('img/ig.png')",
           },
+          width: {
+            '70p': '70%',
+          },
       },
     },
     plugins: [],
