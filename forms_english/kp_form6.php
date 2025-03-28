@@ -83,7 +83,7 @@ $bindValues = array_merge([$userID, $formUsed, $madeDate, $receivedDate], $lupon
 
 
     if ($stmt->rowCount() > 0) {
-        header("Location: ../user_lupon.php");
+        header("Location: ../user_used_forms.php");
 		exit;
     } else {
         echo "Error adding row!";

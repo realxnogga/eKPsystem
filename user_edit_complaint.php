@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
   if ($cStatus == 'Settled' && $cMethod == 'Mediation') {
-    
+
     $seen = " seen = 0,";
     $removenotif = " removenotif = 0,";
 
@@ -141,6 +141,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   if ($updateSuccessful) {
 
+    // if update successfull update the "complaint_updated_date" table
+    $curdate = date("Y-m-d H:i:s");
+    $updateComplaintquery = "UPDATE complaints SET complaint_updated_date = '$curdate' WHERE id = $complaintId";
+    $updateComplaintstmt = $conn->prepare($updateComplaintquery);
+    $updateComplaintstmt->execute();
+    // ------------------------------
+
     echo json_encode(['status' => 'success', 'message' => 'Complaint Updated Successfully!']);
 
     // Fetch the updated complaint data from the database
@@ -166,8 +173,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Edit Information</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <!-- flowbite component -->
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <!-- tailwind cdn -->
+  <link rel="stylesheet" href="output.css">
 
   <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
+  <!-- select2 for dropdown -->
+  <link href="node_modules/select2/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="node_modules/select2/dist/js/select2.min.js"></script>
 
 
   <style>
@@ -324,314 +345,323 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </head>
 
-<body class="bg-[#E8E8E7]">
+<body class="bg-gray-200">
 
   <?php include "user_sidebar_header.php"; ?>
 
-  <div class="p-4 sm:ml-44 ">
+  <!-- filepath: /c:/xampp/htdocs/eKPsystem/user_edit_complaint.php -->
+  <div class="p-0 sm:p-6 sm:ml-44 text-gray-700">
     <div class="rounded-lg mt-16">
-
-      <!--  Row 1 -->
-      <div class="card">
-        <div class="card-body">
-
-          <div class="d-flex align-items-center">
-            <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
+      <div class="bg-white shadow-lg rounded-lg p-6">
+        <div>
+          <div class="flex items-center">
+            <img src="img/cluster.png" alt="Logo" class="w-24 h-24 sm:w-30 sm:h-30 mr-4">
             <div>
-              <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
-
+              <h5 class="text-lg font-semibold mb-2">Department of the Interior and Local Government</h5>
             </div>
           </div>
           <br>
+          <h5 class="text-lg font-semibold mb-1">Edit Complaint</h5>
+          <p id="message" class="hidden bg-green-100 text-green-700 p-4 rounded-md"></p>
 
-          <h5 class="card-title mb-9 fw-semibold">Edit Information</h5>
-          <b>
-
-
-            <p id="message" class="hidden p-3 rounded-md text-white"></p>
-
-            <form id="formEditComplaint">
-              <div>
-                <label class="form-control-label px-3">Case No.<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control" id="CNum" name="CNum" placeholder="Case No. - Blotter No. - MMYY" onblur="validate(1)" value="<?php echo $complaint['CNum']; ?>" required>
+          <form id="formEditComplaint" class="space-y-1">
+            <!-- Case No -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Case No.<span class="text-red-500"> *</span></label>
+                <input type="text" class="border rounded-md p-2" id="CNum" name="CNum" placeholder="Case No. - Blotter No. - MMYY" onblur="validate(1)" value="<?php echo $complaint['CNum']; ?>" required>
               </div>
 
-              <div>
-                <label class="form-control-label px-3">For:<span class="text-danger"> *</span></label>
-                <select class="form-control" id="ForTitle" name="ForTitle" required>
+              <!-- For -->
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">For:<span class="text-red-500"> *</span></label>
+                <select class="border rounded-md p-2" id="ForTitle" name="ForTitle" required>
                   <option value="<?php echo $complaint['ForTitle']; ?>" selected><?php echo $complaint['ForTitle']; ?></option>
                 </select>
               </div>
+            </div>
 
-
-              <div>
-                <label class="form-control-label px-3">Complainants:<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control" id="CNames" name="CNames" placeholder="Enter name of complainants" onblur="validate(3)" required value="<?php echo $complaint['CNames']; ?>">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+              <!-- Complainants -->
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Complainants:<span class="text-red-500"> *</span></label>
+                <input type="text" class="border rounded-md p-2" id="CNames" name="CNames" placeholder="Enter name of complainants" onblur="validate(3)" required value="<?php echo $complaint['CNames']; ?>">
               </div>
 
-              <div>
-                <label class="form-control-label px-3">Respondents:<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control" id="RspndtNames" name="RspndtNames" placeholder="Enter name of respondents" onblur="validate(4)" required value="<?php echo $complaint['RspndtNames']; ?>">
+              <!-- Respondents -->
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Respondents:<span class="text-red-500"> *</span></label>
+                <input type="text" class="border rounded-md p-2" id="RspndtNames" name="RspndtNames" placeholder="Enter name of respondents" onblur="validate(4)" required value="<?php echo $complaint['RspndtNames']; ?>">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+              <!-- Complaint -->
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Complaint:<span class="text-red-500"> *</span></label>
+                <input type="text" class="border rounded-md p-2" id="CDesc" name="CDesc" placeholder="" onblur="validate(5)" required value="<?php echo $complaint['CDesc']; ?>">
               </div>
 
-              <div>
-                <label class="form-control-label px-3">Complaint:<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control" id="CDesc" name="CDesc" placeholder="" onblur="validate(5)" required value="<?php echo $complaint['CDesc']; ?>">
+              <!-- Petition -->
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Petition:<span class="text-red-500"> *</span></label>
+                <input type="text" class="border rounded-md p-2" id="Petition" name="Petition" placeholder="" onblur="validate(6)" required value="<?php echo $complaint['Petition']; ?>">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+              <!-- Complainant Address -->
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Complainant Address:<span class="text-red-500"> *</span></label>
+                <input type="text" class="border rounded-md p-2" id="CAddress" name="CAddress" placeholder="Enter complainant address" required value="<?php echo $complaint['CAddress']; ?>">
               </div>
 
-              <div>
-                <label class="form-control-label px-3">Petition:<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control" id="Petition" name="Petition" placeholder="" onblur="validate(6)" required value="<?php echo $complaint['Petition']; ?>">
+              <!-- Respondent Address -->
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Respondent Address:<span class="text-red-500"> *</span></label>
+                <input type="text" class="border rounded-md p-2" id="RAddress" name="RAddress" placeholder="Enter respondent address" required value="<?php echo $complaint['RAddress']; ?>">
               </div>
-              <div>
-                <label class="form-control-label px-3">Complainant Address:<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control" id="CAddress" name="CAddress" placeholder="Enter complainant address" required value="<?php echo $complaint['CAddress']; ?>">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+              <!-- Made and Received Dates -->
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Made:<span class="text-red-500"> *</span></label>
+                <input type="datetime-local" class="border rounded-md p-2" id="Mdate" name="Mdate" onblur="validate(7)" value="<?php echo $complaint['Mdate']; ?>">
+              </div>
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Received:</label>
+                <input type="date" class="border rounded-md p-2" id="RDate" name="RDate" onblur="validate(8)" value="<?php echo $complaint['RDate']; ?>">
+              </div>
+            </div>
+
+            <!-- Pangkat -->
+            <div class="flex flex-col">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Pangkat:</label>
+              <input type="text" class="border rounded-md p-2" id="Pangkat" name="Pangkat" placeholder="Enter name of Punong Barangay" oninput="showDropdown()" value="<?php echo $complaint['Pangkat']; ?>">
+              <div id="pangkatDropdown"></div>
+            </div>
+
+            <!-- Case Status and Method -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-4">
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Case Status:<span class="text-red-500"> *</span></label>
+                <select name="CStatus" id="cStatusSelect" class="border rounded-md p-2">
+                  <option value="Settled" <?php if ($complaint['CStatus'] === 'Settled') echo 'selected'; ?>>Settled</option>
+                  <option value="Unsettled" <?php if ($complaint['CStatus'] === 'Unsettled') echo 'selected'; ?>>Unsettled</option>
+                  <option value="Others" <?php if ($complaint['CStatus'] === 'Others') echo 'selected'; ?>>Outside the Jurisdiction</option>
+                </select>
               </div>
 
-              <div>
-                <label class="form-control-label px-3">Respondent Address:<span class="text-danger"> *</span></label>
-                <input type="text" class="form-control" id="RAddress" name="RAddress" placeholder="Enter respondent address" required value="<?php echo $complaint['RAddress']; ?>">
-              </div>
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Case Method:<span class="text-red-500"> *</span></label>
+                <select name="CMethod" id="CMethodSelect" class="border rounded-md p-2">
+                  <?php
+                  $methodOptions = [];
 
+                  if ($complaint['CStatus'] === 'Settled') {
+                    $methodOptions = ['Mediation', 'Conciliation', 'Arbitration'];
+                  } else if ($complaint['CStatus'] === 'Unsettled') {
+                    $methodOptions = ['Pending', 'Dismissed', 'Repudiated', 'Certified to File Action in Court', 'Dropped/Withdrawn'];
+                  }
 
-              <div class="row justify-content-between text-left">
-
-                <div class="form-group col-sm-6 flex-column d-flex">
-                  <label class="form-control-label px-3">Made:<span class="text-danger"> *</span></label>
-                  <input type="datetime-local" class="form-control" id="Mdate" name="Mdate" onblur="validate(7)" value="<?php echo $complaint['Mdate']; ?>">
-                </div>
-
-                <div class="form-group col-sm-6 flex-column d-flex">
-                  <label class="form-control-label px-3">Received:</label>
-                  <input type="date" class="form-control" id="RDate" name="RDate" onblur="validate(8)" value="<?php echo $complaint['RDate']; ?>">
-                </div>
-              </div>
-              <div class="row justify-content-between text-left">
-                <div class="form-group col-12 flex-column d-flex">
-                  <label class="form-control-label px-3">Pangkat:<span class="text-danger"></span></label>
-                  <input type="text" class="form-control" id="Pangkat" name="Pangkat" placeholder="Enter name of Punong Barangay" oninput="showDropdown()" value="<?php echo $complaint['Pangkat']; ?>">
-                  <!-- Apply the custom class to the dropdown container -->
-                  <div id="pangkatDropdown"></div>
-                </div>
-
-              </div>
-              <div class="row justify-content-between text-left">
-
-
-                <div>
-                  <label class="form-control-label px-3">Case Status:<span class="text-danger"> *</span></label>
-                  <select name="CStatus" id="cStatusSelect" class="form-select">
-                    <option value="Settled" <?php if ($complaint['CStatus'] === 'Settled') echo 'selected'; ?>>Settled</option>
-                    <option value="Unsettled" <?php if ($complaint['CStatus'] === 'Unsettled') echo 'selected'; ?>>Unsettled</option>
-                    <option value="Others" <?php if ($complaint['CStatus'] === 'Others') echo 'selected'; ?>>Outside the Jurisdiction</option>
-
-                  </select>
-                </div>
-                <input type="hidden" id="hiddenCMethod" name="hiddenCMethod" value="<?php echo $complaint['CMethod']; ?>">
-
-                <div>
-                  <label class="form-control-label px-3">Case Method:<span class="text-danger"> *</span></label>
-                  <select name="CMethod" id="CMethodSelect" class="form-select">
-                    <?php
-                    $methodOptions = [];
-
-                    if ($complaint['CStatus'] === 'Settled') {
-                      $methodOptions = ['Mediation', 'Conciliation', 'Arbitration'];
-                    } else if ($complaint['CStatus'] === 'Unsettled') {
-                      $methodOptions = ['Pending', 'Dismissed', 'Repudiated', 'Certified to File Action in Court', 'Dropped/Withdrawn'];
+                  foreach ($methodOptions as $option) {
+                    echo '<option value="' . $option . '"';
+                    if ($complaint['CMethod'] === $option) {
+                      echo ' selected';
                     }
+                    echo '>' . $option . '</option>';
+                  }
 
-                    foreach ($methodOptions as $option) {
-                      echo '<option value="' . $option . '"';
-                      if ($complaint['CMethod'] === $option) {
-                        echo ' selected';
-                      }
-                      echo '>' . $option . '</option>';
-                    }
-
-                    if ($complaint['CStatus'] === 'Others') {
-                      echo '<option value="" selected disabled hidden>Select Method</option>';
-                    }
-                    ?>
-                  </select>
-                </div>
-
+                  if ($complaint['CStatus'] === 'Others') {
+                    echo '<option value="" selected disabled hidden>Select Method</option>';
+                  }
+                  ?>
+                </select>
               </div>
-              <div>
-                <label class="form-control-label">Case Type:<span class="text-danger"> *</span></label>
-                <select name="CType" class="form-select">
+
+              <!-- Case Type -->
+              <div class="flex flex-col">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Case Type:<span class="text-red-500"> *</span></label>
+                <select name="CType" class="border rounded-md p-2">
                   <option value="Civil" <?php if ($complaint['CType'] === 'Civil') echo 'selected'; ?>>Civil</option>
                   <option value="Criminal" <?php if ($complaint['CType'] === 'Criminal') echo 'selected'; ?>>Criminal</option>
                   <option value="Others" <?php if ($complaint['CType'] === 'Others') echo 'selected'; ?>>Others</option>
                 </select>
-              </div> <br>
-              <input type="submit" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white" name="submit" value="Update">
-            </form>
-          </b>
+              </div>
+            </div>
+
+
+            <br>
+            <!-- Submit Button -->
+            <div>
+              <input type="submit" class="bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-md text-white w-full sm:w-auto" name="submit" value="Update">
+
+            </div>
+          </form>
         </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    var luponsArray = <?php echo json_encode($luponsArray); ?>;
+    <script>
+      var luponsArray = <?php echo json_encode($luponsArray); ?>;
 
-    document.addEventListener('DOMContentLoaded', function() {
-      var hiddenCMethod = document.getElementById('hiddenCMethod');
-      var cMethodSelect = document.getElementById('CMethodSelect');
-      var cStatusSelect = document.getElementById('cStatusSelect');
+      document.addEventListener('DOMContentLoaded', function() {
+        var hiddenCMethod = document.getElementById('hiddenCMethod');
+        var cMethodSelect = document.getElementById('CMethodSelect');
+        var cStatusSelect = document.getElementById('cStatusSelect');
 
-      // Function to update Case Method options based on Case Status
-      function updateMethodOptions(selectedStatus) {
-        var methodOptions = [];
+        // Function to update Case Method options based on Case Status
+        function updateMethodOptions(selectedStatus) {
+          var methodOptions = [];
 
-        if (selectedStatus === 'Settled') {
-          methodOptions = ['Mediation', 'Conciliation', 'Arbitration'];
-        } else if (selectedStatus === 'Unsettled') {
-          methodOptions = ['Pending', 'Dismissed', 'Repudiated', 'Certified to File Action in Court', 'Dropped/Withdrawn'];
+          if (selectedStatus === 'Settled') {
+            methodOptions = ['Mediation', 'Conciliation', 'Arbitration'];
+          } else if (selectedStatus === 'Unsettled') {
+            methodOptions = ['Pending', 'Dismissed', 'Repudiated', 'Certified to File Action in Court', 'Dropped/Withdrawn'];
+          }
+
+          cMethodSelect.innerHTML = ''; // Clear previous options
+
+          methodOptions.forEach(function(option) {
+            var optionElement = document.createElement('option');
+            optionElement.value = option;
+            optionElement.textContent = option;
+            cMethodSelect.appendChild(optionElement);
+          });
+
+          // Set the selected option based on the hidden input value
+          cMethodSelect.value = hiddenCMethod.value;
         }
 
-        cMethodSelect.innerHTML = ''; // Clear previous options
+        // Event listener to handle changes in Case Status
+        cStatusSelect.addEventListener('change', function() {
+          var selectedStatus = cStatusSelect.value;
 
-        methodOptions.forEach(function(option) {
-          var optionElement = document.createElement('option');
-          optionElement.value = option;
-          optionElement.textContent = option;
-          cMethodSelect.appendChild(optionElement);
+          if (selectedStatus === 'Others') {
+            cMethodSelect.style.display = 'none';
+            cMethodSelect.value = null;
+            hiddenCMethod.value = null; // Reset hidden value
+          } else {
+            cMethodSelect.style.display = 'block';
+            updateMethodOptions(selectedStatus);
+          }
         });
 
-        // Set the selected option based on the hidden input value
-        cMethodSelect.value = hiddenCMethod.value;
-      }
-
-      // Event listener to handle changes in Case Status
-      cStatusSelect.addEventListener('change', function() {
-        var selectedStatus = cStatusSelect.value;
-
-        if (selectedStatus === 'Others') {
-          cMethodSelect.style.display = 'none';
-          cMethodSelect.value = null;
-          hiddenCMethod.value = null; // Reset hidden value
+        // Initial setup
+        var initialStatus = cStatusSelect.value;
+        if (initialStatus !== 'Others') {
+          updateMethodOptions(initialStatus);
         } else {
-          cMethodSelect.style.display = 'block';
-          updateMethodOptions(selectedStatus);
+          cMethodSelect.style.display = 'none';
+          hiddenCMethod.value = null; // Reset hidden value
         }
       });
 
-      // Initial setup
-      var initialStatus = cStatusSelect.value;
-      if (initialStatus !== 'Others') {
-        updateMethodOptions(initialStatus);
-      } else {
-        cMethodSelect.style.display = 'none';
-        hiddenCMethod.value = null; // Reset hidden value
-      }
-    });
 
+      $(document).ready(function() {
+        var suggestions = [
+          "Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)",
+          "Unlawful use of means of publication and unlawful utterances (Art. 154)",
+          "Alarms and Scandals (Art.155)",
+          "Using false certificates (Art. 175)",
+          "Using fictitious names and concealing true names (Art. 178)",
+          "Illegal use of uniform and insignias (Art. 179)",
+          "Physical injuries inflicted in a tumultuous affray (Art. 252)",
+          "Giving assistance to suicide (Art. 253)",
+          "Responsibility of participants in a duel (Art. 260)",
+          "Less serious physical injuries [which shall incapacitate the offended party for labor for ten (10) days or more, or shall require medical assistance for the same period] (Art. 265]",
+          "Slight physical injuries and maltreatment (Art. 266)",
+          "Unlawful arrest (Art. 269)",
+          "Inducing a minor to abandon his home (Art. 271)",
+          "Abandonment of persons in danger and abandonment of one's own victim (Art. 275)",
+          "Abandoning a minor (Art. 276)",
+          "Abandonment of minor by a person entrusted with his custody; indifference of parents (Art. 277)",
+          "Qualified trespass to dwelling (Art. 280)",
+          "Other forms of trespass (Art. 281)",
+          "Light threats (Art. 283)",
+          "Other light threats (Art. 285)",
+          "Grave coercion (Art. 286)",
+          "Light coercions and unjust taxation (Art. 287)",
+          "Other similar coercions (Compulsory purchase of merchandise and payment of wages by means of tokens) (Art. 288)",
+          "Discovering secrets through the seizure of correspondence (Art. 290)",
+          "Revealing secrets with abuse of office (if secrets are not revealed) (Art.291)",
+          "Theft (Art. 309)",
+          "Altering boundaries or landmarks (Art. 313)",
+          "Swindling or Estafa (Art. 315)",
+          "Other forms of swindling (Art. 316)",
+          "Swindling a minor (Art. 317)",
+          "Other deceits (Art. 318)",
+          "Removal, sale or pledge of mortgaged property (Art. 319)",
+          "Special cases of malicious mischief (Art. 328)",
+          "Other mischief (Art. 327, in relation to Art. 329)",
+          "Simple seduction (Art. 338)",
+          "Acts of lasciviousness with the consent of the offended party (Art. 339)",
+          "Threatening to publish and offer to prevent such publication for compensation (Art. 356)",
+          "Prohibited publication of acts referred to in the course of official proceedings (Art. 357)",
+          "Slander (Oral Defamation) (Art. 356)",
+          "Slander by Deed (Art. 359)",
+          "Incriminating Innocent Person (Art. 363)",
+          "Intriguing against honor (Art. 364)",
+          "Reckless imprudence and Simple negligence (Art. 365)",
+          "Violation of B.P. NO. 22 or the Bouncing Checks Law",
+          "Nuisance (Art. 694 of the Civil Code in the relation to Art. 695, for local ordinance with penal sanctions)",
+          "Violation of P.D. No. 1612 or the Anti-Fencing Law",
+          "Violation of Republic Act No. 11313 or 'The Safe Spaces Act' Gender-based sexual harassment in streets and public spaces.",
+        ];
 
-    $(document).ready(function() {
-      var suggestions = [
-        "Tumults and other disturbances of public order; Tumltuous disturbances or interruption liable to cause disturbance (Art. 153)",
-        "Unlawful use of means of publication and unlawful utterances (Art. 154)",
-        "Alarms and Scandals (Art.155)",
-        "Using false certificates (Art. 175)",
-        "Using fictitious names and concealing true names (Art. 178)",
-        "Illegal use of uniform and insignias (Art. 179)",
-        "Physical injuries inflicted in a tumultuous affray (Art. 252)",
-        "Giving assistance to suicide (Art. 253)",
-        "Responsibility of participants in a duel (Art. 260)",
-        "Less serious physical injuries [which shall incapacitate the offended party for labor for ten (10) days or more, or shall require medical assistance for the same period] (Art. 265]",
-        "Slight physical injuries and maltreatment (Art. 266)",
-        "Unlawful arrest (Art. 269)",
-        "Inducing a minor to abandon his home (Art. 271)",
-        "Abandonment of persons in danger and abandonment of one's own victim (Art. 275)",
-        "Abandoning a minor (Art. 276)",
-        "Abandonment of minor by a person entrusted with his custody; indifference of parents (Art. 277)",
-        "Qualified trespass to dwelling (Art. 280)",
-        "Other forms of trespass (Art. 281)",
-        "Light threats (Art. 283)",
-        "Other light threats (Art. 285)",
-        "Grave coercion (Art. 286)",
-        "Light coercions and unjust taxation (Art. 287)",
-        "Other similar coercions (Compulsory purchase of merchandise and payment of wages by means of tokens) (Art. 288)",
-        "Discovering secrets through the seizure of correspondence (Art. 290)",
-        "Revealing secrets with abuse of office (if secrets are not revealed) (Art.291)",
-        "Theft (Art. 309)",
-        "Altering boundaries or landmarks (Art. 313)",
-        "Swindling or Estafa (Art. 315)",
-        "Other forms of swindling (Art. 316)",
-        "Swindling a minor (Art. 317)",
-        "Other deceits (Art. 318)",
-        "Removal, sale or pledge of mortgaged property (Art. 319)",
-        "Special cases of malicious mischief (Art. 328)",
-        "Other mischief (Art. 327, in relation to Art. 329)",
-        "Simple seduction (Art. 338)",
-        "Acts of lasciviousness with the consent of the offended party (Art. 339)",
-        "Threatening to publish and offer to prevent such publication for compensation (Art. 356)",
-        "Prohibited publication of acts referred to in the course of official proceedings (Art. 357)",
-        "Slander (Oral Defamation) (Art. 356)",
-        "Slander by Deed (Art. 359)",
-        "Incriminating Innocent Person (Art. 363)",
-        "Intriguing against honor (Art. 364)",
-        "Reckless imprudence and Simple negligence (Art. 365)",
-        "Violation of B.P. NO. 22 or the Bouncing Checks Law",
-        "Nuisance (Art. 694 of the Civil Code in the relation to Art. 695, for local ordinance with penal sanctions)",
-        "Violation of P.D. No. 1612 or the Anti-Fencing Law",
-        "Violation of Republic Act No. 11313 or 'The Safe Spaces Act' Gender-based sexual harassment in streets and public spaces.",
-      ];
+        // Initialize Select2
+        $('#ForTitle').select2({
+          theme: 'bootstrap-5',
+          placeholder: 'Select or start typing...',
+          data: suggestions.map(function(item) {
+            return {
+              id: item,
+              text: item
+            };
+          }),
+          tags: true,
+          createTag: function(params) {
+            var term = $.trim(params.term);
+            if (term === '') {
+              return null;
+            }
+            return {
+              id: term,
+              text: term,
+              newTag: true
+            };
+          },
+          tokenSeparators: [','],
+          closeOnSelect: false
+        });
 
-      // Initialize Select2
-      $('#ForTitle').select2({
-        theme: 'bootstrap-5',
-        placeholder: 'Select or start typing...',
-        data: suggestions.map(function(item) {
-          return {
-            id: item,
-            text: item
-          };
-        }),
-        tags: true,
-        createTag: function(params) {
-          var term = $.trim(params.term);
-          if (term === '') {
-            return null;
+        // // Add a click event listener to the "Other" option
+        // $('#ForTitle').on('select2:select', function(e) {
+        //   var selectedValue = e.params.data.id;
+        //   if (selectedValue === 'Other') {
+        //     // Clear the selected value
+        //     $(this).val(null).trigger('change');
+        //     // Enable typing for the "Other" case
+        //     $(this).select2('open');
+        //   }
+        // });
+
+        // Handle keyup event to update the input value with the typed text
+        $('#ForTitle').on('keyup', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            var value = $(this).val();
+            // Add the typed text as a tag
+            if (value.trim() !== '') {
+              $(this).append(new Option(value, value, true, true)).trigger('change');
+            }
+            // Clear the input
+            $(this).val(null);
           }
-          return {
-            id: term,
-            text: term,
-            newTag: true
-          };
-        },
-        tokenSeparators: [','],
-        closeOnSelect: false
+        });
       });
-
-      // // Add a click event listener to the "Other" option
-      // $('#ForTitle').on('select2:select', function(e) {
-      //   var selectedValue = e.params.data.id;
-      //   if (selectedValue === 'Other') {
-      //     // Clear the selected value
-      //     $(this).val(null).trigger('change');
-      //     // Enable typing for the "Other" case
-      //     $(this).select2('open');
-      //   }
-      // });
-
-      // Handle keyup event to update the input value with the typed text
-      $('#ForTitle').on('keyup', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          var value = $(this).val();
-          // Add the typed text as a tag
-          if (value.trim() !== '') {
-            $(this).append(new Option(value, value, true, true)).trigger('change');
-          }
-          // Clear the input
-          $(this).val(null);
-        }
-      });
-    });
-  </script>
-  <script src="edit_script.js"></script>
+    </script>
+    <script src="edit_script.js"></script>
 
 </body>
 

@@ -122,187 +122,155 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reports</title>
-  <link rel="shortcut icon" type="image/png" href="assets/images/logos/favicon.png" />
 
-  <style>
-    .card {
-      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
-      border-radius: 15px;
-    }
-  </style>
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+
+  <!-- flowbite component -->
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+ <!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
+
 </head>
 
-<body class="bg-[#E8E8E7]">
+<body class="sm:bg-gray-200 bg-white">
 
   <?php include "user_sidebar_header.php"; ?>
 
-  <div class="p-4 sm:ml-44 ">
+  <!-- filepath: /c:/xampp/htdocs/eKPsystem/user_add_report.php -->
+  <div class="p-0 sm:p-6 sm:ml-44 text-gray-700">
     <div class="rounded-lg mt-16">
 
-      <!--  Row 1 -->
-      <div class="row">
-        <div class="col-lg-7 d-flex align-items-strech">
-          <div class="card w-100">
-            <div class="card-body">
-              <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                <div class="mb-3 mb-sm-0">
-
-                  <div class="d-flex align-items-center">
-                    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
-                    <div>
-                      <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
-                    </div>
-                  </div>
-                  <br>
-
-                  <h5 class="card-title mb-9 fw-semibold">Add Existing Report </h5>
-
-                  <?php
-                  if (isset($_GET['add_userreport_message'])) {
-                    if ($_GET['add_userreport_message'] === 'reportalreadyexist') {
-                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Report already exists for the specified month and year.</div>";
-                    }
-                    if ($_GET['add_userreport_message'] === 'reportsuccessadd') {
-                      echo "<div id='alertMessage' class='alert alert-success' role='alert'>Report added successfully.</div>";
-                    }
-                    if ($_GET['add_userreport_message'] === 'reportfailedadd') {
-                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Report Failed to add.</div>";
-                    }
-                  }
-                  ?>
-
-
-                  <div style="display: flex; align-items: center;">
-
-                    <form method="POST">
-                      <div>
-                        <label for="report_date">Report Date:</label>
-                        <input style="width:100%;" type="date" class="form-control" id="report_date" name="report_date" value="" required onchange="fetchReportData()">
-                      </div>
-                      <script>
-                        function fetchReportData() {
-                          // Get the selected report date
-                          var selectedDate = document.getElementById('report_date').value;
-
-                          // Extract the year from the selected date
-                          var selectedYear = (new Date(selectedDate)).getFullYear();
-
-                          // Make an AJAX request to fetch data based on the selected year
-                          var xhr = new XMLHttpRequest();
-                          xhr.onreadystatechange = function() {
-                            if (this.readyState == 4 && this.status == 200) {
-                              var data = JSON.parse(this.responseText);
-                              // Update input values for 'Basic Information' fields
-                              document.getElementById('mayor').value = data.mayor;
-                              document.getElementById('budget').value = data.budget;
-                              document.getElementById('landarea').value = data.landarea;
-                              document.getElementById('region').value = data.region;
-                              document.getElementById('population').value = data.population;
-                              document.getElementById('numlupon').value = data.numlupon;
-
-                              // Repeat similar steps for other sections if needed
-                            }
-                          };
-                          xhr.open('GET', 'fetch_data.php?year=' + selectedYear, true);
-                          xhr.send();
-                        }
-                      </script>
-                      <!-- Define field sections -->
-                      <?php
-                      $sections = [
-                        'Basic Information' => ['mayor', 'budget', 'totalcase', 'numlupon', 'landarea', 'region', 'population', 'male', 'female'],
-                        'Nature of Cases' => ['criminal', 'others', 'civil', 'totalNature'],
-                        'Action Taken - Settled' => ['media', 'arbit', 'concil', 'totalSet'],
-                        'Action Taken - Unsettled' => ['pending', 'repudiated', 'dropped', 'outsideBrgy', 'dismissed', 'certcourt', 'totalUnset']
-                      ];
-
-                      foreach ($sections as $sectionTitle => $fields) {
-                        echo '<div class="row">';
-                        echo '<b>' . $sectionTitle . '</b>';
-                        foreach ($fields as $field) {
-                          echo '<div class="col-md-6">';
-                          echo '<div class="form-group">';
-                          echo '<label for="' . $field . '">' . ucwords(str_replace('_', ' ', $field)) . ':</label>';
-                          // Check if the field should be of type "text" or "number"
-                          $inputType = in_array($field, ['mayor', 'budget', 'landarea', 'region', 'population', 'numlupon']) ? 'text' : 'number';
-                          echo '<input type="' . $inputType . '" class="form-control" id="' . $field . '" name="' . $field . '" value="" required>';
-                          echo '</div>';
-                          echo '</div>';
-                        }
-                        echo '</div>';
-                        echo '<br>';
-                      }
-
-                      ?>
-
-                      <input type="submit" class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white" name="submit" value="Submit">
-                    </form>
-
-                  </div>
-                </div>
-              </div>
+      <!-- Row 1 -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column -->
+        <div class="lg:col-span-2 col-span-3 bg-white shadow-none sm:shadow-md rounded-0 sm:rounded-lg p-6">
+          <div class="flex items-center mb-6">
+            <img src="img/cluster.png" alt="Logo" class="w-24 h-24 mr-4">
+            <div>
+              <h5 class="text-lg font-semibold">Department of the Interior and Local Government</h5>
             </div>
           </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="card overflow-hidden">
-                <div class="card-body p-4">
+          <h5 class="text-lg font-semibold mb-6">Add Existing Report</h5>
 
-                  Existing Reports:
+          <?php
+          if (isset($_GET['add_userreport_message'])) {
+            if ($_GET['add_userreport_message'] === 'reportalreadyexist') {
+              echo "<div id='alertMessage' class='bg-red-100 text-red-700 p-3 rounded mb-4'>Report already exists for the specified month and year.</div>";
+            }
+            if ($_GET['add_userreport_message'] === 'reportsuccessadd') {
+              echo "<div id='alertMessage' class='bg-green-100 text-green-700 p-3 rounded mb-4'>Report added successfully.</div>";
+            }
+            if ($_GET['add_userreport_message'] === 'reportfailedadd') {
+              echo "<div id='alertMessage' class='bg-red-100 text-red-700 p-3 rounded mb-4'>Report Failed to add.</div>";
+            }
+          }
+          ?>
 
-                 
-                  <?php
-                  if (isset($_GET['delete_userreport_message'])) {
-                    if ($_GET['delete_userreport_message'] === 'Report Deleted Successfully') {
-                      echo "<div id='alertMessage' class='alert alert-success' role='alert'>Report deleted successfully.</div>";
-                    } else {
-                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Report failed to delete.</div>";
-                    }
-                  }
-                  ?>
-                  
-
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th>Report Date</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php
-                      // Fetch existing reports from the database
-                      $existing_reports_query = "SELECT * FROM reports WHERE user_id = :user_id AND barangay_id = :barangay_id";
-                      $stmt = $conn->prepare($existing_reports_query);
-                      $stmt->bindParam(':user_id', $userID);
-                      $stmt->bindParam(':barangay_id', $barangay_id);
-                      $stmt->execute();
-                      $existing_reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                      foreach ($existing_reports as $report) {
-                        echo '<tr>';
-                        // Format report_date as "Month Year"
-                        $formatted_date = date('F Y', strtotime($report['report_date']));
-                        echo '<td>' . $formatted_date . '</td>';
-                        echo '<td>';
-                        // Edit button
-                        echo '<a href="user_edit_report.php?report_id=' . $report['report_id'] . '" class="btn btn-primary btn-sm">Edit</a>';
-                        // Delete button
-                        echo '<a href="#" class="btn btn-danger btn-sm" onclick="confirmDelete(' . $report['report_id'] . ');">Delete</a>';
-                        echo '</td>';
-                        echo '</tr>';
-                      }
-                      ?>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+          <form method="POST" class="space-y-4">
+            <div>
+              <label for="report_date" class="block text-sm font-medium">Report Date:</label>
+              <input type="date" id="report_date" name="report_date" class="border rounded-md p-2 w-full" required onchange="fetchReportData()">
             </div>
-          </div>
+
+            <script>
+              function fetchReportData() {
+                var selectedDate = document.getElementById('report_date').value;
+                var selectedYear = (new Date(selectedDate)).getFullYear();
+
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+                    var data = JSON.parse(this.responseText);
+                    document.getElementById('mayor').value = data.mayor;
+                    document.getElementById('budget').value = data.budget;
+                    document.getElementById('landarea').value = data.landarea;
+                    document.getElementById('region').value = data.region;
+                    document.getElementById('population').value = data.population;
+                    document.getElementById('numlupon').value = data.numlupon;
+                  }
+                };
+                xhr.open('GET', 'fetch_data.php?year=' + selectedYear, true);
+                xhr.send();
+              }
+            </script>
+
+            <?php
+            $sections = [
+              'Basic Information' => ['mayor', 'budget', 'totalcase', 'numlupon', 'landarea', 'region', 'population', 'male', 'female'],
+              'Nature of Cases' => ['criminal', 'others', 'civil', 'totalNature'],
+              'Action Taken - Settled' => ['media', 'arbit', 'concil', 'totalSet'],
+              'Action Taken - Unsettled' => ['pending', 'repudiated', 'dropped', 'outsideBrgy', 'dismissed', 'certcourt', 'totalUnset']
+            ];
+
+            foreach ($sections as $sectionTitle => $fields) {
+              echo '<div>';
+              echo '<h6 class="font-semibold mb-2">' . $sectionTitle . '</h6>';
+              echo '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
+              foreach ($fields as $field) {
+                $inputType = in_array($field, ['mayor', 'budget', 'landarea', 'region', 'population', 'numlupon']) ? 'text' : 'number';
+                echo '<div>';
+                echo '<label for="' . $field . '" class="block text-sm font-medium text-gray-700 mb-1">' . ucwords(str_replace('_', ' ', $field)) . ':</label>';
+                echo '<input type="' . $inputType . '" id="' . $field . '" name="' . $field . '" class="border rounded-md p-2 w-full" required>';
+                echo '</div>';
+              }
+              echo '</div>';
+              echo '</div>';
+            }
+            ?>
+
+            <button type="submit" name="submit" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-md">Submit</button>
+          </form>
         </div>
 
+        <!-- Right Column -->
+        <div class="lg:col-span-1 col-span-3 bg-white shadow-none sm:shadow-md rounded-0 sm:rounded-lg p-6 h-fit">
+          <h5 class="text-lg font-semibold mb-6">Existing Reports</h5>
+
+          <?php
+          if (isset($_GET['delete_userreport_message'])) {
+            if ($_GET['delete_userreport_message'] === 'Report Deleted Successfully') {
+              echo "<div id='alertMessage' class='bg-green-100 text-green-700 p-3 rounded mb-4'>Report deleted successfully.</div>";
+            } else {
+              echo "<div id='alertMessage' class='bg-red-100 text-red-700 p-3 rounded mb-4'>Report failed to delete.</div>";
+            }
+          }
+          ?>
+
+          <table class="min-w-full border border-gray-300 rounded-md">
+            <thead class="bg-gray-200">
+              <tr>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Report Date</th>
+                <th class="px-4 py-2 text-left text-sm font-medium text-gray-700">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              $existing_reports_query = "SELECT * FROM reports WHERE user_id = :user_id AND barangay_id = :barangay_id";
+              $stmt = $conn->prepare($existing_reports_query);
+              $stmt->bindParam(':user_id', $userID);
+              $stmt->bindParam(':barangay_id', $barangay_id);
+              $stmt->execute();
+              $existing_reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+              foreach ($existing_reports as $report) {
+                $formatted_date = date('F Y', strtotime($report['report_date']));
+                echo '<tr class="border-t">';
+                echo '<td class="px-4 py-2">' . $formatted_date . '</td>';
+                echo '<td class="px-4 py-2 space-x-2">';
+                echo '<a href="user_edit_report.php?report_id=' . $report['report_id'] . '" class="text-blue-600 hover:underline">Edit</a>';
+                echo '<button onclick="confirmDelete(' . $report['report_id'] . ');" class="text-red-600 hover:underline">Delete</button>';
+                echo '</td>';
+                echo '</tr>';
+              }
+              ?>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>

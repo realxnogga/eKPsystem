@@ -54,7 +54,7 @@ if (!empty($municipalityID)) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LTIA</title>
+  <title>LTIA Upload</title>
 
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -45,10 +45,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>User Logs</title>
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-  <script src="user_notifjs.js"></script>
-  
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <!-- flowbite component -->
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+ <!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
+</head>
+
+<body class="sm:bg-gray-200 bg-white">
+
+  <?php include "user_sidebar_header.php"; ?>
+
+  <div class="sm:ml-44 p-0 sm:p-6 text-gray-700">
+    <div class="rounded-lg mt-16">
+      <div class="bg-white sm:shadow-md rounded-lg p-6 shadow-none">
+        <form id="formUserLog" class="flex items-center space-x-4">
+          <input type="date" class="w-full form-input border-gray-300 shadow-sm" name="selected_date" id="selected_date">
+          <input type="submit" class="bg-blue-500 hover:bg-blue-400 px-4 py-2 rounded-md text-white cursor-pointer" value="Go">
+        </form>
+
+        <br>
+
+        <table class="table-auto table-fixed w-full border">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="px-4 py-2 text-left">Timestamp</th>
+              <th class="px-4 py-2 text-left">Activity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($result as $row) { ?>
+              <tr class="hover:bg-gray-100">
+                <td class="border px-4 py-2"><?php echo $row['timestamp'] ?></td>
+                <td class="border px-4 py-2"><?php echo $row['activity'] ?></td>
+              </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Send data via POST using fetch API
     async function sendData(selectedDate) {
@@ -71,9 +114,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Populate table with new data
         result.forEach(row => {
-          const newRow = `<tr>
-                                <td>${row.timestamp}</td>
-                                <td>${row.activity}</td>
+          const newRow = `<tr class="hover:bg-gray-100">
+                            <td class="border border-gray-300 px-4 py-2">${row.timestamp}</td>
+                            <td class="border border-gray-300 px-4 py-2">${row.activity}</td>
                           </tr>`;
           tableBody.innerHTML += newRow;
         });
@@ -115,51 +158,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
   </script>
 
-
-</head>
-
-<body class="bg-[#E8E8E7]">
-
-  <?php include "user_sidebar_header.php"; ?>
-
-  <div class="p-4 sm:ml-44 ">
-    <div class="rounded-lg mt-16">
-      <div class="card">
-        <div class="card-body">
-
-          <form id="formUserLog">
-
-            <div class="d-flex">
-              <input type="date" class="form-control" name="selected_date" id="selected_date">
-              <input type="submit" class="bg-gray-800 hover:bg-gray-700 ml-2 px-3 py-2 rounded-md text-white" value="Go" class="ml-2">
-            </div>
-          </form>
-
-          <br>
-
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;">Timestamp</th>
-                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;">Activity</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($result as $row) { ?>
-
-                <tr>
-                  <td><?php echo $row['timestamp'] ?></td>
-                  <td><?php echo $row['activity'] ?></td>
-                </tr>
-
-              <?php  } ?>
-
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
 </body>
 
 </html>

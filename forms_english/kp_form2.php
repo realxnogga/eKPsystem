@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->execute([$userID, $formUsed, $madeDate, $lupon1, $brgysec, $pngbrgy]);
 
     if ($stmt->rowCount() > 0) {
-        header("Location: ../user_lupon.php");
+        header("Location: ../user_used_forms.php");
 		exit;
     } else {
         echo "Error adding row!";

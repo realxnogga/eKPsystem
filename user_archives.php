@@ -40,9 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // -----------------------------------------------------------------------------------
   if (isset($_POST['yearfilter'])) {
     $selectedYear = $_POST['yearfilter'];
-    
+
     $_SESSION['ay_archiveyear'] = $selectedYear;
-    $result = fetchArchiveFunc($conn,$userID, $selectedYear);
+    $result = fetchArchiveFunc($conn, $userID, $selectedYear);
   }
 }
 
@@ -60,6 +60,7 @@ function fetchArchiveFunc($conn, $userID, $whatYear)
 }
 ?>
 
+<!-- filepath: /c:/xampp/htdocs/eKPsystem/user_archives.php -->
 <!doctype html>
 <html lang="en">
 
@@ -68,6 +69,84 @@ function fetchArchiveFunc($conn, $userID, $whatYear)
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Archives</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+  <!-- flowbite component -->
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
+</head>
+
+<body class="sm:bg-gray-200 bg-white">
+
+  <?php include "user_sidebar_header.php"; ?>
+
+  <div class="p-0 sm:p-6 sm:ml-44 text-gray-700">
+    <div class="rounded-0 sm:rounded-lg mt-16 sm:mt-16 bg-white shadow-none sm:shadow-lg p-4 sm:p-6">
+
+      <!-- Search and Filter Section -->
+      <div class="flex flex-col sm:flex-row items-center gap-4 mb-6">
+        <input type="text" id="searchUnarchive" placeholder="Search" onkeyup="searchTable()" class="w-full sm:w-auto flex-grow border border-gray-300 p-2 focus:ring-blue-500 focus:border-blue-500">
+
+        <form method="POST" action="" class="w-full sm:w-auto">
+          <select id="yearfilter" name="yearfilter" onchange="this.form.submit()" class="w-full sm:w-auto border border-gray-300 p-2 focus:ring-blue-500 focus:border-blue-500">
+            <?php
+            $currentYear = date('Y');
+            $startYear = $currentYear - 5;
+
+            for ($year = $startYear; $year <= $currentYear; $year++) {
+              echo "<option value='$year'" . ($year == $selectedYear ? " selected" : "") . ">$year</option>";
+            }
+            ?>
+          </select>
+        </form>
+      </div>
+
+      <!-- Table Section -->
+      <div class="overflow-x-auto">
+        <table id="UnarchiveTable" class="table-auto lg:table-fixed w-full bg-white rounded-lg border <?php echo empty($result) ? 'hidden' : ''; ?>">
+          <thead>
+            <tr class="bg-gray-200 text-gray-700 text-sm">
+              <th class="p-3 text-sm font-semibold text-gray-700 text-center">No.</th>
+              <th class="p-3 text-sm font-semibold text-gray-700 text-center">Title</th>
+              <th class="p-3 text-sm font-semibold text-gray-700 text-center">Complainants</th>
+              <th class="p-3 text-sm font-semibold text-gray-700 text-center">Respondents</th>
+              <th class="p-3 text-sm font-semibold text-gray-700 text-center">Date</th>
+              <th class="p-3 text-sm font-semibold text-gray-700 text-center">Unarchive</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <?php foreach ($result as $row) { ?>
+              <tr class="hover:bg-gray-100 text-sm">
+                <td class="px-2 py-1 text-center"><?php echo $row['CNum']; ?></td>
+                <td class="px-2 py-1 text-center"><?php echo $row['ForTitle']; ?></td>
+                <td class="px-2 py-1 text-center"><?php echo $row['CNames']; ?></td>
+                <td class="px-2 py-1 text-center"><?php echo $row['RspndtNames']; ?></td>
+                <td class="px-2 py-1 text-center"><?php echo $row['Mdate']; ?></td>
+                <td class="px-2 py-1 text-center">
+                  <input type="checkbox" class="case-checkbox" value="<?php echo $row['id']; ?>">
+                </td>
+              </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- No Data Message -->
+      <p class="text-center text-lg mt-4 text-gray-500">
+        <?php echo empty($result) ? 'No data available' : ''; ?>
+      </p>
+
+      <!-- Unarchive Button -->
+      <section id="unarchiveButtonSection" class="<?php echo empty($result) ? 'hidden' : ''; ?> w-full flex justify-end mt-4">
+        <button id="unarchiveSelected" class="p-2 bg-red-400 text-white rounded-md hover:bg-red-500 transition">Unarchive</button>
+      </section>
+
+    </div>
+  </div>
 
   <script>
     async function sendData(selectedIds) {
@@ -91,13 +170,13 @@ function fetchArchiveFunc($conn, $userID, $whatYear)
       // Populate table with new data
       result.forEach(row => {
         const newRow = `
-              <tr class="flex w-full text-sm border">                 
-                <td class="flex-1 px-2">${row.CNum}</td>
-                <td class="flex-1 px-2">${row.ForTitle}</td>
-                <td class="flex-1 px-2">${row.CNames}</td>
-                <td class="flex-1 px-2">${row.RspndtNames}</td>
-                <td class="flex-1 px-2">${row.Mdate}</td>
-                <td class="flex-1 px-2"><input type="checkbox" class="case-checkbox mx-4" value="${row.id}"></td>
+              <tr class="hover:bg-gray-100 text-sm">                 
+                <td class="px-2 py-1 text-center">${row.CNum}</td>
+                <td class="px-2 py-1 text-center">${row.ForTitle}</td>
+                <td class="px-2 py-1 text-center">${row.CNames}</td>
+                <td class="px-2 py-1 text-center">${row.RspndtNames}</td>
+                <td class="px-2 py-1 text-center">${row.Mdate}</td>
+                <td class="px-2 py-1 text-center"><input type="checkbox" class="case-checkbox mx-4" value="${row.id}"></td>
               </tr>`;
         tableBody.innerHTML += newRow;
       });
@@ -149,104 +228,23 @@ function fetchArchiveFunc($conn, $userID, $whatYear)
     });
   </script>
 
-</head>
-
-<body class="bg-[#E8E8E7]">
-
-  <?php include "user_sidebar_header.php"; ?>
-
-  <div class="p-4 sm:ml-44">
-    <div class="rounded-lg mt-16">
-
-      <!--  Row 1 -->
-      <div class="card">
-        <div class="card-body">
-
-          <section class="flex justify-between gap-x-4">
-
-            <input type="text" class="form-control" name="search" id="searchUnarchive" placeholder="search" onkeyup="searchTable()" class="searchInput" style="flex: 1; margin-right: 5px;">
-
-            <form method="POST" action="">
-              <select id="yearfilter" name="yearfilter" onchange="this.form.submit()">
-                <?php
-                $currentYear = date('Y');
-                $startYear = $currentYear - 5; // Start 5 years before the current year
-
-                // Loop to generate options from startYear to endYear
-                for ($year = $startYear; $year <= $currentYear; $year++) {
-                  echo "<option value='$year'" . ($year == $selectedYear ? " selected" : "") . ">$year</option>";
-                }
-                ?>
-              </select>
-            </form>
-
-          </section>
-
-
-          <br>
-          <table id="UnarchiveTable" class="<?php echo empty($result) ? 'hidden' : ''; ?> table table-striped w-full">
-            <thead>
-              <tr class="flex w-full text-sm">
-                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">No.</th>
-                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">Title</th>
-                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">Complainants</th>
-                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">Respondents</th>
-                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">Date</th>
-                <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap;" class="flex-1 px-2">Unarchive</th>
-              </tr>
-            </thead>
-            <tbody class="flex flex-col max-h-[28rem] overflow-y-scroll">
-              <?php foreach ($result as $row) { ?>
-                <tr class="flex w-full text-sm border">
-                  <td class="flex-1 px-2"><?php echo $row['CNum']; ?></td>
-                  <td class="flex-1 px-2"><?php echo $row['ForTitle']; ?></td>
-                  <td class="flex-1 px-2"><?php echo $row['CNames']; ?></td>
-                  <td class="flex-1 px-2"><?php echo $row['RspndtNames']; ?></td>
-                  <td class="flex-1 px-2"><?php echo $row['Mdate']; ?></td>
-                  <td class="flex-1 px-2"><input type="checkbox" class="case-checkbox mx-4" value="<?php echo $row['id']; ?>"></td>
-                </tr>
-              <?php } ?>
-
-            </tbody>
-          </table>
-
-          <p class="text-center text-lg mt-4">
-            <?php echo empty($result) ? 'No data available' : ''; ?>
-          </p>
-
-          <section id="unarchiveButtonSection" class="<?php echo empty($result) ? 'hidden' : ''; ?> w-full flex justify-end">
-            <button id="unarchiveSelected" class="p-2 bg-red-400 text-white rounded-md">Unarchive</button>
-          </section>
-
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script>
     function searchTable() {
-      // Declare variables
       let input = document.getElementById('searchUnarchive');
       let filter = input.value.toLowerCase();
       let table = document.getElementById('UnarchiveTable');
       let tr = table.getElementsByTagName('tr');
 
-      // Loop through all table rows, excluding the header
       for (let i = 1; i < tr.length; i++) {
         let td = tr[i].getElementsByTagName('td');
         let rowText = '';
 
-        // Concatenate all text content from each cell
         for (let j = 0; j < td.length - 1; j++) {
           rowText += td[j].textContent || td[j].innerText;
         }
 
-        // If the row matches the search term, show it, otherwise hide it
-        if (rowText.toLowerCase().indexOf(filter) > -1) {
-          tr[i].style.display = '';
-        } else {
-          tr[i].style.display = 'none';
-        }
+        tr[i].style.display = rowText.toLowerCase().indexOf(filter) > -1 ? '' : 'none';
       }
     }
   </script>

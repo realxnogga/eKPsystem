@@ -13,7 +13,9 @@ try {
     $user_id = $_SESSION['user_id'];
     $user_type = $_SESSION['user_type'];
     $barangay_name = $_POST['barangay_name'];
-    $current_year = date('Y'); // Get current year
+    
+    // Use selected year if provided, otherwise use current year
+    $year = isset($_POST['year']) ? $_POST['year'] : date('Y');
 
     // Get barangay ID
     $query = "SELECT id FROM barangays WHERE barangay_name = :barangay_name";
@@ -29,16 +31,16 @@ try {
 
     $barangay_id = $barangay['id'];
 
-    // Get MOV data for current year only
-    $query = "SELECT * FROM mov WHERE barangay_id = :barangay_id AND year = :current_year";
+    // Get MOV data for selected year
+    $query = "SELECT * FROM mov WHERE barangay_id = :barangay_id AND year = :year";
     $stmt = $conn->prepare($query);
     $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
-    $stmt->bindParam(':current_year', $current_year, PDO::PARAM_STR);
+    $stmt->bindParam(':year', $year, PDO::PARAM_STR);
     $stmt->execute();
     $mov = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$mov) {
-        echo json_encode(['error' => 'No MOV files found for current year']);
+        echo json_encode(['error' => 'No MOV files found for selected year']);
         exit;
     }
 
@@ -54,71 +56,95 @@ try {
         if (strpos($key, '_pdf_File') !== false && !empty($value)) {
             $response[$key] = $value;
         }
+        if (strpos($key, '_File') !== false && !empty($value)) {
+            $response[$key] = $value;
+        }
     }
 
     // Get verification statuses
     $verifyQuery = "SELECT * FROM movverify 
                     WHERE mov_id = :mov_id 
-                    AND barangay_id = :barangay_id";
+                    AND barangay_id = :barangay_id
+                    AND year = :year";
     $stmt = $conn->prepare($verifyQuery);
     $stmt->bindParam(':mov_id', $mov['id'], PDO::PARAM_INT);
     $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
+    $stmt->bindParam(':year', $year, PDO::PARAM_STR);
     $stmt->execute();
     $verifications = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($verifications) {
+        // Ensure threepeoplesorg verification is properly mapped
+        if (isset($verifications['threepeoplesorg_verify'])) {
+            $verifications['threepeoplesorg_verify'] = $verifications['threepeoplesorg_verify'];
+        }
         $response['verifications'] = $verifications;
     } else {
-        $response['verifications'] = null;
+        // Initialize verification status as 0 (unverified)
+        $response['verifications'] = array_fill_keys([
+            'IA_1a_pdf_verify', 'IA_1b_pdf_verify', 'IA_2a_pdf_verify',
+            'IA_2b_pdf_verify', 'IA_2c_pdf_verify', 'IA_2d_pdf_verify',
+            'IA_2e_pdf_verify', 'IB_1forcities_pdf_verify', 'IB_1aformuni_pdf_verify',
+            'IB_1bformuni_pdf_verify', 'IB_2_pdf_verify', 'IB_3_pdf_verify',
+            'IB_4_pdf_verify', 'IC_1_pdf_verify', 'IC_2_pdf_verify',
+            'ID_1_pdf_verify', 'ID_2_pdf_verify', 'IIA_pdf_verify',
+            'IIB_1_pdf_verify', 'IIB_2_pdf_verify', 'IIC_pdf_verify',
+            'IIIA_pdf_verify', 'IIIB_pdf_verify', 'IIIC_1forcities_pdf_verify',
+            'IIIC_1forcities2_pdf_verify', 'IIIC_1forcities3_pdf_verify',
+            'IIIC_2formuni1_pdf_verify', 'IIIC_2formuni2_pdf_verify',
+            'IIIC_2formuni3_pdf_verify', 'IIID_pdf_verify',
+            'IV_forcities_pdf_verify', 'IV_muni_pdf_verify', 'V_1_pdf_verify',
+            'threepeoplesorg_verify'  // Added this field
+        ], 0);
     }
 
     if ($user_type === 'assessor') {
-        // Get assessor's own rates for current year and specific MOV
+        // Get assessor's own rates for selected year and specific MOV
         $rateQuery = "SELECT * FROM movrate 
                      WHERE mov_id = :mov_id 
                      AND barangay = :barangay_id 
                      AND user_id = :user_id 
                      AND user_type = 'assessor'
-                     AND year = :current_year
+                     AND year = :year
                      ORDER BY created_at DESC 
                      LIMIT 1";
         $stmt = $conn->prepare($rateQuery);
         $stmt->bindParam(':mov_id', $mov['id'], PDO::PARAM_INT);
         $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt->bindParam(':current_year', $current_year, PDO::PARAM_STR);
+        $stmt->bindParam(':year', $year, PDO::PARAM_STR);
         $stmt->execute();
         $rates = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Get assessor's own remarks for current year and specific MOV
+        // Get assessor's own remarks for selected year and specific MOV
         $remarkQuery = "SELECT * FROM movremark 
                        WHERE mov_id = :mov_id 
                        AND barangay = :barangay_id 
                        AND user_id = :user_id 
                        AND user_type = 'assessor'
-                       AND year = :current_year
+                       AND year = :year
                        ORDER BY created_at DESC 
                        LIMIT 1";
         $stmt = $conn->prepare($remarkQuery);
         $stmt->bindParam(':mov_id', $mov['id'], PDO::PARAM_INT);
         $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
         $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-        $stmt->bindParam(':current_year', $current_year, PDO::PARAM_STR);
+        $stmt->bindParam(':year', $year, PDO::PARAM_STR);
         $stmt->execute();
         $remarks = $stmt->fetch(PDO::FETCH_ASSOC);
     } else {
-        // For admin, get only admin ratings and remarks for current year and specific MOV
+        // For admin, get only admin ratings and remarks for selected year and specific MOV
         $rateQuery = "SELECT * FROM movrate 
                      WHERE mov_id = :mov_id 
                      AND barangay = :barangay_id
                      AND user_type = 'admin'
-                     AND year = :current_year
+                     AND year = :year
                      ORDER BY created_at DESC 
                      LIMIT 1";
         $stmt = $conn->prepare($rateQuery);
         $stmt->bindParam(':mov_id', $mov['id'], PDO::PARAM_INT);
         $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
-        $stmt->bindParam(':current_year', $current_year, PDO::PARAM_STR);
+        $stmt->bindParam(':year', $year, PDO::PARAM_STR);
         $stmt->execute();
         $rates = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -126,13 +152,13 @@ try {
                        WHERE mov_id = :mov_id 
                        AND barangay = :barangay_id
                        AND user_type = 'admin'
-                       AND year = :current_year
+                       AND year = :year
                        ORDER BY created_at DESC 
                        LIMIT 1";
         $stmt = $conn->prepare($remarkQuery);
         $stmt->bindParam(':mov_id', $mov['id'], PDO::PARAM_INT);
         $stmt->bindParam(':barangay_id', $barangay_id, PDO::PARAM_INT);
-        $stmt->bindParam(':current_year', $current_year, PDO::PARAM_STR);
+        $stmt->bindParam(':year', $year, PDO::PARAM_STR);
         $stmt->execute();
         $remarks = $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -183,7 +209,10 @@ try {
     }
 
     if ($remarks) {
-        $response['remarks'] = $remarks;
+        // Convert any NULL values to empty strings for remarks
+        $response['remarks'] = array_map(function($value) {
+            return $value === null ? '' : $value;
+        }, $remarks);
     } else {
         $response['remarks'] = [
             'IA_1a_pdf_remark' => '',

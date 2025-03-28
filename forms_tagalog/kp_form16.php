@@ -104,7 +104,8 @@ $stmt->bindParam(':madeDate', $madeDate);
 $stmt->bindParam(':settlement', $settlement);
 
 if ($stmt->execute()) {
-$message = "Form submit successful.";
+    header("Location: ../user_manage_case.php?id=$complaintId");
+    exit;
 } else {
 $message = "Form submit failed.";
 }
@@ -373,7 +374,7 @@ if ($isCity) {
 
 <p style="font-size: 18px;"> (Mga) Ipinagsusumbong </p> 
 
-<h3 style="text-align: center; style= font-size: 18px;"><b style= "font-size: 18px;">KASUNDUANG PAG-AAYOS</b></h3>
+<h3 style="text-align: center; font-size: 18px;"><b style= "font-size: 18px;">KASUNDUANG PAG-AAYOS</b></h3>
 <form method="POST">
     <div style="text-align: justify; text-indent: 2em; margin-left: 1px; font-size: 18px;">Kami, ang (mga) maysumbong at (mga) ipinagsusumbong sa usaping isinasaad sa itaas, ay nagkakasundo sa pamamagitan nito na aayusin ang aming alitan tulad ng sumusunod:            
     </div>

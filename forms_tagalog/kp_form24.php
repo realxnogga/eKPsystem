@@ -132,7 +132,8 @@ if ($existingForm10Count > 0) {
     $stmt->bindParam(':settlement', $settlement);
     
     if ($stmt->execute()) {
-        $message = "Form submit successful.";
+        header("Location: ../user_manage_case.php?id=$complaintId");
+		exit;
     } else {
         $message = "Form submit failed.";
     }

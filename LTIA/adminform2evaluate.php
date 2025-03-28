@@ -154,7 +154,7 @@ textarea[disabled] {
  <link rel="stylesheet" href="css/td_hover.css">
 
 
- <script>
+<script>
 $(document).ready(function () {
     // Function to show modal with message
     function showModal(message) {
@@ -255,6 +255,8 @@ $(document).ready(function () {
             'border-color': '#ef5350'
         });
     }
+
+    
 
     // Handle barangay selection
     $('#barangay_select').on('change', function () {
@@ -800,46 +802,98 @@ $(document).ready(function () {
             if (field && verifications[field] !== undefined) {
                 var isVerified = verifications[field] === 1;
                 var $row = $(this).closest('tr');
-                
-                // Update button appearance
-                $(this)
-                    .text(isVerified ? 'Verified' : 'Verify')
-                    .removeClass('btn-primary btn-success')
-                    .addClass(isVerified ? 'btn-success' : 'btn-primary');
+                var fileColumn = $row.find('.file-column');
+                var hasFile = !fileColumn.find('.alert-warning').length;
                 
                 // Get the corresponding rate input and remark textarea
-                var baseFieldName = field.replace('_verify', '');
+                var baseFieldName;
+                if (field === 'threepeoplesorg_verify') {
+                    baseFieldName = 'threepeoplesorg'; // Match database field name
+                } else {
+                    baseFieldName = field.replace('_verify', '');
+                }
+                
                 var $rateInput = $row.find(`input[name="${baseFieldName}_rate"]`);
                 var $remarkTextarea = $row.find(`textarea[name="${baseFieldName}_remark"]`);
                 
-                // Enable/disable based on verification status
-                if (!isVerified) {
+                // Disable and style inputs if no MOV or not verified
+                if (!hasFile || !isVerified) {
+                    // Disable and style rate input
                     $rateInput
                         .prop('disabled', true)
+                        .val('') // Clear value
                         .css({
                             'background-color': '#e9ecef',
-                            'cursor': 'not-allowed'
-                        });
+                            'cursor': 'not-allowed',
+                            'color': '#6c757d',
+                            'border-color': '#ced4da',
+                            'pointer-events': 'none'
+                        })
+                        .attr('title', !hasFile ? 'Cannot rate - No file uploaded' : 'Cannot rate - File not verified');
+
+                    // Disable and style remark textarea
                     $remarkTextarea
                         .prop('disabled', true)
+                        .val('') // Clear value
                         .css({
                             'background-color': '#e9ecef',
-                            'cursor': 'not-allowed'
-                        });
+                            'cursor': 'not-allowed',
+                            'color': '#6c757d',
+                            'border-color': '#ced4da',
+                            'pointer-events': 'none',
+                            'resize': 'none'
+                        })
+                        .attr('title', !hasFile ? 'Cannot add remarks - No file uploaded' : 'Cannot add remarks - File not verified');
+
+                    // Update verify button if no file
+                    if (!hasFile) {
+                        $(this)
+                            .prop('disabled', true)
+                            .text('Upload MOV')
+                            .removeClass('btn-primary btn-success')
+                            .addClass('btn-secondary')
+                            .css({
+                                'cursor': 'not-allowed',
+                                'opacity': '0.65'
+                            })
+                            .attr('title', 'Please upload MOV first');
+                    }
                 } else {
+                    // Enable and restore normal styling for inputs
                     $rateInput
                         .prop('disabled', false)
                         .css({
                             'background-color': '',
-                            'cursor': ''
-                        });
+                            'cursor': 'pointer',
+                            'color': '',
+                            'border-color': '',
+                            'pointer-events': ''
+                        })
+                        .attr('title', '');
+
                     $remarkTextarea
                         .prop('disabled', false)
                         .css({
                             'background-color': '',
-                            'cursor': ''
-                        });
+                            'cursor': 'pointer',
+                            'color': '',
+                            'border-color': '',
+                            'pointer-events': '',
+                            'resize': ''
+                        })
+                        .attr('title', '');
                 }
+
+                // Update verify button appearance
+                $(this)
+                    .text(isVerified ? 'Verified' : (!hasFile ? 'Upload MOV' : 'Verify'))
+                    .removeClass('btn-primary btn-success btn-secondary')
+                    .addClass(isVerified ? 'btn-success' : (!hasFile ? 'btn-secondary' : 'btn-primary'))
+                    .prop('disabled', !hasFile)
+                    .css({
+                        'cursor': !hasFile ? 'not-allowed' : 'pointer',
+                        'opacity': !hasFile ? '0.65' : '1'
+                    });
             }
         });
     }
@@ -1087,6 +1141,22 @@ if (classification === "City") {
 }
 });
 </script>
+
+<h2 class="text-left text-2xl font-semibold" id="mov_year" hidden></h2>
+          <!-- <div class="form-group mt-4">
+    <label for="year_select" class="block text-lg font-medium text-gray-700">Select Year</label>
+    <select id="year_select" name="year" class="form-control">
+        <?php 
+        $currentYear = date('Y');
+        // Show last 5 years including current year
+        for($i = 0; $i <= 4; $i++) {
+            $year = $currentYear - $i;
+            $selected = ($year == $currentYear) ? 'selected' : '';
+            echo "<option value='$year' $selected>$year</option>";
+        }
+        ?>
+    </select>
+</div> -->
 
             <h2 class="text-left text-2xl font-semibold" id="mov_year" hidden></h2>
           <div class="form-group mt-4">
@@ -1693,7 +1763,7 @@ if (classification === "City") {
               <tr>
                 <td>
                 <details>
-                <summary><b>B. Coordination with Concerned Agencies relating to disputes filed (PNP, DSWD, DILG, DAR, DENR, Office of the Prosecutor, Court, DOJ, CHR, etc.)</b></summary>
+                <summary><b>B. Coordination with Concerned Agencies Relating to Disputes Filed</b></summary>
                 <p><br>
                   <b>5 points</b> – With proof of coordination relative to the filed disputes.<br>
                   <b>0 points</b> – Without proof of coordination relative to the filed disputes.
