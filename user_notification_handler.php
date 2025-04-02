@@ -5,6 +5,7 @@ session_status() == PHP_SESSION_NONE ? session_start() : null;
 
 include 'connection.php';
 
+
 $userID = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
 // select all function

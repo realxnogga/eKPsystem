@@ -81,29 +81,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 function get_time_ago($time)
 {
-  $time_difference = time() - $time;
+    
+    $time_difference = time() - $time;
 
-  if ($time_difference < 1) {
-    return 'less than 1 second ago';
-  }
-  $condition = array(
-    12 * 30 * 24 * 60 * 60 =>  'year',
-    30 * 24 * 60 * 60       =>  'month',
-    24 * 60 * 60            =>  'day',
-    60 * 60                 =>  'hour',
-    60                      =>  'minute',
-    1                       =>  'second'
-  );
-
-  foreach ($condition as $secs => $str) {
-    $d = $time_difference / $secs;
-
-    if ($d >= 1) {
-      $t = round($d);
-      return $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
+    if ($time_difference < 1) {
+        return 'less than 1 second ago';
     }
-  }
+    $condition = array(
+        12 * 30 * 24 * 60 * 60 => 'year',
+        30 * 24 * 60 * 60       => 'month',
+        24 * 60 * 60            => 'day',
+        60 * 60                 => 'hour',
+        60                      => 'minute',
+        1                       => 'second'
+    );
+
+    foreach ($condition as $secs => $str) {
+        $d = $time_difference / $secs;
+
+        if ($d >= 1) {
+            $t = round($d);
+            return $t . ' ' . $str . ($t > 1 ? 's' : '') . ' ago';
+        }
+    }
 }
+
 
 ?>
 
@@ -126,16 +128,32 @@ function get_time_ago($time)
   <!-- tabler icon link -->
   <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
+  <script>
+    tailwind.config = {
+      theme: {
+        screens: {
+          'dt': { 'max': '1366px' },
+          'tb': { 'max': '1000px' },
+          'mo': { 'max': '450px' },
+          'breakPoint': { 'max': '68rem' },
+        }
+      }
+    }
+  </script>
+
 </head>
 
 <body class="bg-[#E8E8E7] h-screen w-screen flex flex-col gap-y-2 items-center justify-center">
 
-    <section class="w-[70%] flex justify-between">
-      <h3 class="text-4xl font-bold text-gray-700">Notifications</h3>
-      <a href="user_dashboard.php" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">back to dashboard</a>
+    <section class="w-[70%] flex items-center justify-between
+    tb:w-[95%] mo:w-[100%] mo:px-2">
+      <h3 class="text-4xl font-bold text-gray-700 mo:text-xl">Notifications</h3>
+      <a href="user_dashboard.php" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white
+      mo:px-2 mo:py-1">back to dashboard</a>
     </section>
 
-    <section class="bg-white shadow rounded-lg h-[4rem] w-[70%] flex items-center justify-between p-3">
+    <section class="bg-white shadow rounded-lg h-[4rem] w-[70%] flex items-center justify-between p-3
+    tb:w-[95%] mo:w-[100%] mo:rounded-none">
 
 
       <form action="" method="POST" class="m-0 p-0">
@@ -143,18 +161,20 @@ function get_time_ago($time)
           type="submit"
           value="Mark all as read"
           name="submit_readAll"
-          class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+          class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer
+          mo:text-sm mo:px-1">
       </form>
 
       <!-- ----------------------------- -->
-      <section class="flex gap-x-2">
+      <section class="flex gap-x-2 items-center mo:text-sm">
 
         <form action="" method="POST" class="m-0 p-0">
           <input
             type="submit"
             value="All"
             name="submit_all"
-            class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+            class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer
+           mo:px-1">
         </form>
 
         <form action="" method="POST" class="m-0 p-0">
@@ -162,7 +182,8 @@ function get_time_ago($time)
             type="submit"
             value="Unread"
             name="submit_unread"
-            class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer">
+            class="p-1 rounded-sm hover:bg-gray-100 border border-gray-400 px-3 cursor-pointer
+            mo:px-1">
         </form>
 
         <form action="" method="POST" class="m-0 p-0">
@@ -189,7 +210,8 @@ function get_time_ago($time)
 
     </section>
 
-    <section class="bg-white shadow h-[75%] w-[70%] overflow-y-auto">
+    <section class="bg-white shadow h-[75%] w-[70%] overflow-y-auto
+    tb:w-[95%] mo:w-[100%]">
       <?php if (!empty($notifData)) { ?>
 
         <?php foreach ($notifData as $row) { ?>
@@ -198,7 +220,8 @@ function get_time_ago($time)
 
             <div class="flex flex-col gap-y-1 items-start cursor-default">
 
-              <div class="flex">
+              <div class="flex
+              mo:text-sm">
                 <p clas>The case </p>
                 <form action="" method="POST" class="m-0 p-0">
                   <input
@@ -238,9 +261,10 @@ function get_time_ago($time)
             </div>
 
             <!-- --------------------------- -->
-            <section class="flex gap-x-4 items-center">
+            <section class="flex flex-row gap-x-4 items-center
+            mo:flex-col">
 
-              <i class="ti ti-copy text-2xl cursor-pointer" onclick="copyText(<?php echo $row['id']; ?>)"></i>
+              <i title="Copy complaint number" class="ti ti-copy text-2xl cursor-pointer" onclick="copyText(<?php echo $row['id']; ?>)"></i>
 
               <form action="" method="POST" class="m-0 p-0">
                 <input
@@ -249,7 +273,7 @@ function get_time_ago($time)
                   value="<?php echo $row['id']; ?>">
 
                 <button type="submit" id="notiftoremove<?php echo $row['id']; ?>" name="submit_remove_notif">
-                  <i class="ti ti-trash-x text-2xl text-red-500 cursor-pointer"></i>
+                  <i title="Remove" class="ti ti-trash-x text-2xl text-red-500 cursor-pointer"></i>
                 </button>
 
               </form>
@@ -273,7 +297,8 @@ function get_time_ago($time)
     </section>
 
   <!-- for custom alert -->
-  <div class="hidden bg-red-500 text-white p-4 absolute top-5 left-1/2 transform -translate-x-1/2 rounded-lg z-[1000]" id="customAlert"></div>
+  <div class="hidden bg-red-500 text-white p-4 absolute top-5 left-1/2 transform -translate-x-1/2 rounded-lg z-[1000]
+  mo:p-2 mo:text-sm" id="customAlert"></div>
 
   <script>
     function copyText(index) {

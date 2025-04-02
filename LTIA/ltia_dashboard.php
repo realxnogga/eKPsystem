@@ -281,16 +281,16 @@ exit;
              
                         </div>
                         <div class="menu">
-                            <ul class="flex space-x-4">
+                            <ul class="flex space-x-2">
                                 <li>
                                 <button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='formulationcommentsheet.php';" style="margin-left: 0;">
-                                    <i class="ti ti-message mr-2"></i>
+                                    <i class="ti ti-message"></i>
                                     Policy Formulation Comment
                                 </button>
                                 </li>
                                 <li>
                                     <button class="bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-md text-white flex items-center" onclick="location.href='form2MOVupload.php';" style="margin-left: 0;">
-                                        <i class="ti ti-file-upload mr-2"></i> Upload Means of Verification
+                                        <i class="ti ti-file-upload"></i> Upload Means of Verification
                                     </button>
                                 </li>
                             </ul>

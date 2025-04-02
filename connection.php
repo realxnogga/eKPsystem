@@ -1,6 +1,6 @@
 <?php
 $db_host = "localhost"; // Your database host
-$db_name = "ejusticesys"; // Your database name
+$db_name = "aaa"; // Your database name
 $username = "root"; // Your database username
 $password = ""; // Your database password
 

@@ -100,12 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       echo json_encode(['status' => 'success', 'message' => 'Complaint Submitted Successfully!']);
       exit;
     } else {
-     
+
       echo json_encode(['status' => 'failed', 'message' => 'Failed to Insert to case_progress table. Contact Devs.']);
       exit;
     }
   } else {
-  
+
     echo json_encode(['status' => 'failed', 'message' => 'Failed to Submit Complaint. Contact Devs.']);
     exit;
   }
@@ -125,22 +125,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>complaint</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <!-- flowbite component -->
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <!-- tailwind cdn -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 
-
-  <style>
-    .card {
-      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
-      border-radius: 15px;
-
-    }
-  </style>
+  <!-- select2 for dropdown -->
+  <link href="node_modules/select2/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="node_modules/select2/dist/js/select2.min.js"></script>
 
   <script>
     // Send data via POST using fetch API
     async function sendData(ForTitle, CNames, RspndtNames, CDesc, Petition, Mdate, RDate, CType, CNum, CAddress, RAddress) {
       try {
-        const response = await fetch("", {
+        const response = await fetch("user_add_complaint.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -171,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           if (result.status === 'success') {
             document.getElementById('message').classList.add('bg-green-300');
 
-           // scroll to top to see shit
+            // scroll to top to see shit
             window.scrollTo({
               top: 0,
               behavior: 'smooth'
@@ -194,19 +200,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               window.location.href = "user_complaints.php";
             }, 1000);
           }
-
-          // empty input value
-          // document.querySelector('select[name="ForTitle"]').value = '';
-          // document.querySelector('input[name="CNames"]').value = '';
-          // document.querySelector('input[name="RspndtNames"]').value = '';
-          // document.querySelector('input[name="CDesc"]').value = '';
-          // document.querySelector('input[name="Petition"]').value = '';
-          // document.querySelector('input[name="Mdate"]').value = '';
-          // document.querySelector('input[name="RDate"]').value = '';
-          // document.querySelector('select[name="CType"]').value = '';
-          //    document.querySelector('input[name="CNum"]').value = result.casenum;
-          // document.querySelector('input[name="CAddress"]').value = '';
-          // document.querySelector('input[name="RAddress"]').value = '';
 
         }
 
@@ -259,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             RAddress
           }));
           alert('No internet. Your request will be executed once the internet is restored.');
-          
+
         }
       };
 
@@ -282,117 +275,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </head>
 
-<body class="bg-[#E8E8E7]">
+<body class="bg-gray-200">
 
   <?php include "user_sidebar_header.php"; ?>
 
-  <div class="p-4 sm:ml-44 ">
-    <div class="rounded-lg mt-16">
-
-
-      <!--  Row 1 -->
-      <div class="card">
-        <div class="card-body">
-
-          <div class="d-flex align-items-center">
-            <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
-            <div>
-              <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
-            </div>
+  <!-- filepath: /c:/xampp/htdocs/eKPsystem/user_add_complaint.php -->
+<div class="p-0 sm:p-6 sm:ml-44 text-gray-700">
+  <div class="rounded-lg mt-16">
+    <!-- Row 1 -->
+    <div class="bg-white shadow-lg rounded-lg p-6">
+      <div>
+        <div class="flex items-center">
+          <img src="img/cluster.png" alt="Logo" class="w-24 h-24 sm:w-30 sm:h-30 mr-4">
+          <div>
+            <h5 class="text-lg font-semibold mb-2">Department of the Interior and Local Government</h5>
           </div>
-          <br>
-
-          <h5 class="card-title mb-9 fw-semibold">Add complaintData</h5>
-          <b>
-
-            <p id="message" class="hidden p-3 rounded-md text-white"></p>
-
-            <form id="formAddComplaint">
-              <b>
-                <div class="row justify-content-between text-left">
-                  <div class="form-group col-sm-6 flex-column d-flex">
-                    <label class="form-control-label px-3">Case No.<span class="text-danger">*</span></label>
-                    <!-- Set the Case Number input field value -->
-                    <input type="text" class="form-control" id="CNum" name="CNum" placeholder="MMYY - Case No." value="<?php echo $caseNum; ?>" onblur="validate(1)">
-                  </div>
-                  
-                  <div class="form-group col-sm-6 flex-column d-flex">
-                    <label class="form-control-label px-3">For:<span class="text-danger">*</span></label>
-                    <select class="form-control" id="ForTitle" name="ForTitle" onblur="validate(2)" required>
-                      <option value="" selected disabled></option>
-                    </select>
-                  </div>
-
-                </div>
-
-                <div class="row justify-content-between text-left">
-                  <div class="form-group col-sm-6 flex-column d-flex">
-                    <label class="form-control-label px-3">Complainants:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="CNames" name="CNames" placeholder="Enter name of complainants" onblur="validate(3)" required>
-                  </div>
-                  <div class="form-group col-sm-6 flex-column d-flex">
-                    <label class="form-control-label px-3">Respondents:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="RspndtNames" name="RspndtNames" placeholder="Enter name of respondents" onblur="validate(4)" required>
-                  </div>
-                </div>
-                <div class="row justify-content-between text-left">
-                  <div class="form-group col-sm-6 flex-column d-flex">
-                    <label class="form-control-label px-3">Address of Complainants:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="CAddress" name="CAddress" placeholder="Enter address of complainants" onblur="validate(9)" required>
-                  </div>
-                  <div class="form-group col-sm-6 flex-column d-flex">
-                    <label class="form-control-label px-3">Address of Respondents:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="RAddress" name="RAddress" placeholder="Enter address of respondents" onblur="validate(10)" required>
-                  </div>
-                </div>
-
-                <div class="row justify-content-between text-left">
-                  <div class="form-group col-12 flex-column d-flex">
-                    <label class="form-control-label px-3">Complaint:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="CDesc" name="CDesc" placeholder="" onblur="validate(5)" required>
-                  </div>
-                </div>
-                <div class="row justify-content-between text-left">
-                  <div class="form-group col-12 flex-column d-flex">
-                    <label class="form-control-label px-3">Petition:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="Petition" name="Petition" placeholder="" onblur="validate(6)" required>
-                  </div>
-                </div>
-                <div class="row justify-content-between text-left">
-                  <div class="form-group col-sm-6 flex-column d-flex">
-                    <label class="form-control-label px-3">Made:<span class="text-danger">*</span></label>
-                    <input type="datetime-local" class="form-control" id="Mdate" name="Mdate" onblur="validate(7)" value="<?php echo date('Y-m-d\TH:i'); ?>" required>
-                  </div>
-
-                  <div class="form-group col-sm-6 flex-column d-flex">
-                    <label class="form-control-label px-3">Received:</label>
-                    <input type="date" class="form-control" id="RDate" name="RDate" onblur="validate(8)">
-                  </div>
-                </div>
-
-                <div class="row justify-content-between text-left">
-                  <div class="form-group col-sm-6 flex-column d-flex">
-                    <label class="form-control-label px-3">Case Type:<span class="text-danger">*</span></label>
-                    <select name="CType" class="form-select">
-                      <option value="Civil">Civil</option>
-                      <option value="Criminal">Criminal</option>
-                      <option value="Others">Others</option>
-                    </select>
-                  </div>
-                </div><br>
-                <div class="form-group col-2">
-                  <input type="submit" name="submitaddcomplaint" value="Submit" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">
-                </div>
-              </b>
-            </form>
-          </b>
         </div>
-      </div>
-
+        <br>
+        <h5 class="text-lg font-semibold mb-1">Add Complaint</h5>
+        <p id="message" class="hidden bg-green-100 text-green-700 p-4 rounded-md"></p>
+        
+        <form id="formAddComplaint" class="space-y-1">
+  <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+    <div class="flex flex-col">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Case No.<span class="text-red-500">*</span></label>
+      <input type="text" class="border rounded-md p-2" id="CNum" name="CNum" placeholder="MMYY - Case No." value="<?php echo $caseNum; ?>" onblur="validate(1)">
     </div>
+    <div class="flex flex-col">
+      <label class="block text-sm font-medium text-gray-700 mb-1">For:<span class="text-red-500">*</span></label>
+      <select class="border rounded-md p-2" id="ForTitle" name="ForTitle" onblur="validate(2)" required>
+        <option value="" selected disabled></option>
+      </select>
+    </div>
+  </div>
 
+  <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+    <div class="flex flex-col">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Complainants:<span class="text-red-500">*</span></label>
+      <input type="text" class="border rounded-md p-2" id="CNames" name="CNames" placeholder="Enter name of complainants" onblur="validate(3)" required>
+    </div>
+    <div class="flex flex-col">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Respondents:<span class="text-red-500">*</span></label>
+      <input type="text" class="border rounded-md p-2" id="RspndtNames" name="RspndtNames" placeholder="Enter name of respondents" onblur="validate(4)" required>
+    </div>
   </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+    <div class="flex flex-col">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Address of Complainants:<span class="text-red-500">*</span></label>
+      <input type="text" class="border rounded-md p-2" id="CAddress" name="CAddress" placeholder="Enter address of complainants" onblur="validate(9)" required>
+    </div>
+    <div class="flex flex-col">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Address of Respondents:<span class="text-red-500">*</span></label>
+      <input type="text" class="border rounded-md p-2" id="RAddress" name="RAddress" placeholder="Enter address of respondents" onblur="validate(10)" required>
+    </div>
   </div>
+
+  <div class="flex flex-col">
+    <label class="block text-sm font-medium text-gray-700 mb-1">Complaint:<span class="text-red-500">*</span></label>
+    <input type="text" class="border rounded-md p-2" id="CDesc" name="CDesc" placeholder="" onblur="validate(5)" required>
+  </div>
+
+  <div class="flex flex-col">
+    <label class="block text-sm font-medium text-gray-700 mb-1">Petition:<span class="text-red-500">*</span></label>
+    <input type="text" class="border rounded-md p-2" id="Petition" name="Petition" placeholder="" onblur="validate(6)" required>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+    <div class="flex flex-col">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Made:<span class="text-red-500">*</span></label>
+      <input type="datetime-local" class="border rounded-md p-2" id="Mdate" name="Mdate" onblur="validate(7)" value="<?php echo date('Y-m-d\TH:i'); ?>" required>
+    </div>
+    <div class="flex flex-col">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Received:</label>
+      <input type="date" class="border rounded-md p-2" id="RDate" name="RDate" onblur="validate(8)">
+    </div>
+  </div>
+
+  <div class="flex flex-col">
+    <label class="block text-sm font-medium text-gray-700 mb-1">Case Type:<span class="text-red-500">*</span></label>
+    <select name="CType" class="border rounded-md p-2">
+      <option value="Civil">Civil</option>
+      <option value="Criminal">Criminal</option>
+      <option value="Others">Others</option>
+    </select>
+  </div>
+
+  <br>
+  <div>
+    <input type="submit" name="submitaddcomplaint" value="Submit" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-md">
+  </div>
+</form>
+      </div>
+    </div>
+  </div>
+</div>
 
   <script>
     $(document).ready(function() {

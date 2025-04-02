@@ -100,12 +100,10 @@ if (isset($_POST['update'])) {
 
     header("Location: user_edit_report.php?report_id=" . urlencode($_GET['report_id']) . "&edit_userreport_message=reporteditsuccess");
     exit();
-
   } else {
 
     header("Location: user_edit_report.php?report_id=" . urlencode($_GET['report_id']) . "&edit_userreport_message=reportediterror");
     exit();
-
   }
 }
 
@@ -118,101 +116,92 @@ if (isset($_POST['update'])) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reports</title>
-  <link rel="shortcut icon" type="image/png" href=".assets/images/logos/favicon.png" />
-  
-  <style>
-    .card {
-      box-shadow: 0 0 0.3cm rgba(0, 0, 0, 0.2);
-      border-radius: 15px;
-    }
-  </style>
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+
+  <!-- flowbite component -->
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <!-- tailwind cdn -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 
-<body class="bg-[#E8E8E7]">
+<body class="sm:bg-gray-200 bg-white">
 
   <?php include "user_sidebar_header.php"; ?>
 
-  <div class="p-4 sm:ml-44 ">
+ <!-- filepath: /c:/xampp/htdocs/eKPsystem/user_edit_report.php -->
+<div class="p-0 sm:p-6 sm:ml-44 text-gray-700">
     <div class="rounded-lg mt-16">
 
-      <!--  Row 1 -->
-      <div class="row">
-        <div class="col-lg-7 d-flex align-items-strech">
-          <div class="card w-100">
-            <div class="card-body">
-              <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                <div class="mb-3 mb-sm-0">
-
-                  <div class="d-flex align-items-center">
-                    <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
-                    <div>
-                      <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
+        <!-- Row 1 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="col-span-3 lg:col-span-2 bg-white shadow-none sm:shadow-md rounded-0 sm:rounded-lg p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        <img src="img/cluster.png" alt="Logo" class="w-24 h-24 mr-4">
+                        <div>
+                            <h5 class="text-lg font-semibold">Department of the Interior and Local Government</h5>
+                        </div>
                     </div>
-                  </div>
-                  <br>
+                </div>
 
-                  <h5 class="card-title mb-9 fw-semibold">Edit Report of <?php echo $report_date; ?> </h5>
+                <h5 class="text-lg font-semibold mb-6">Edit Report of <?php echo $report_date; ?></h5>
 
-                  <?php
-                  if (isset($_GET['edit_userreport_message'])) {
+                <?php
+                if (isset($_GET['edit_userreport_message'])) {
                     if ($_GET['edit_userreport_message'] === 'reporteditsuccess') {
-                      echo "<div id='alertMessage' class='alert alert-success' role='alert'>Report updated successfully.</div>";
+                        echo "<div id='alertMessage' class='bg-green-100 text-green-800 p-4 rounded mb-4'>Report updated successfully.</div>";
                     }
                     if ($_GET['edit_userreport_message'] === 'reportediterror') {
-                      echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Report failed to update.</div>";
+                        echo "<div id='alertMessage' class='bg-red-100 text-red-800 p-4 rounded mb-4'>Report failed to update.</div>";
                     }
-                  }
-                  ?>
+                }
+                ?>
 
-                  <div style="display: flex; align-items: center;">
+                <form method="POST" class="space-y-6">
+                    <div>
+                        <label for="report_date" class="block text-sm font-medium text-gray-700 mb-1">Report Date:</label>
+                        <input type="date" id="report_date" name="report_date" value="<?php echo $report['report_date']; ?>" required class="border rounded-md p-2 w-full">
+                    </div>
 
-                    <form method="POST">
-                      <div>
-                        <label for="report_date">Report Date:</label>
-                        <!-- Display the report_date in the input field -->
-                        <input style="width:100%;" type="date" class="form-control" id="report_date" name="report_date" value="<?php echo $report['report_date']; ?>" required onchange="fetchReportData()">
-                      </div>
-
-                      <!-- Define field sections -->
-                      <?php
-                      $sections = [
+                    <!-- Define field sections -->
+                    <?php
+                    $sections = [
                         'Basic Information' => ['mayor', 'budget', 'totalcase', 'numlupon', 'landarea', 'region', 'population', 'male', 'female'],
                         'Nature of Cases' => ['criminal', 'others', 'civil', 'totalNature'],
                         'Action Taken - Settled' => ['media', 'arbit', 'concil', 'totalSet'],
                         'Action Taken - Unsettled' => ['pending', 'repudiated', 'dropped', 'outsideBrgy', 'dismissed', 'certcourt', 'totalUnset']
-                      ];
+                    ];
 
-                      foreach ($sections as $sectionTitle => $fields) {
-                        echo '<div class="row">';
-                        echo '<b>' . $sectionTitle . '</b>';
+                    foreach ($sections as $sectionTitle => $fields) {
+                        echo '<div>';
+                        echo '<h6 class="text-md font-semibold mb-4">' . $sectionTitle . '</h6>';
+                        echo '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
                         foreach ($fields as $field) {
-                          echo '<div class="col-md-6">';
-                          echo '<div class="form-group">';
-                          echo '<label for="' . $field . '">' . ucwords(str_replace('_', ' ', $field)) . ':</label>';
-                          // Check if the field should be of type "text" or "number"
-                          $inputType = in_array($field, ['mayor', 'budget', 'landarea', 'region', 'population']) ? 'text' : 'number';
-                          echo '<input type="' . $inputType . '" class="form-control" id="' . $field . '" name="' . $field . '" value="' . $report[$field] . '" required>';
-                          echo '</div>';
-                          echo '</div>';
+                            $inputType = in_array($field, ['mayor', 'budget', 'landarea', 'region', 'population']) ? 'text' : 'number';
+                            echo '<div>';
+                            echo '<label for="' . $field . '" class="block text-sm font-medium text-gray-700 mb-1">' . ucwords(str_replace('_', ' ', $field)) . ':</label>';
+                            echo '<input type="' . $inputType . '" id="' . $field . '" name="' . $field . '" value="' . $report[$field] . '" required class="border rounded-md p-2 w-full">';
+                            echo '</div>';
                         }
                         echo '</div>';
-                        echo '<br>';
-                      }
-                      ?>
+                        echo '</div>';
+                    }
+                    ?>
 
-                      <input type="submit" class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white" name="update" value="Update">
-                    </form>
-
-
-                  </div>
-                </div>
-              </div>
+                    <div>
+                        <input type="submit" name="update" value="Update" class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded cursor-pointer">
+                    </div>
+                </form>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 
   <script src="hide_toast.js"></script>
 </body>

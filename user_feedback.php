@@ -90,10 +90,7 @@ function isAlreadyAnsweredFunc($conn, $brgy_id)
   // Extract the fa_id column into a single-dimensional array
   return array_column($result, 0);
 }
-
-
 ?>
-
 
 <!doctype html>
 <html lang="en">
@@ -103,29 +100,39 @@ function isAlreadyAnsweredFunc($conn, $brgy_id)
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard</title>
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-  <link rel="stylesheet" href="assets/css/styles.min.css" />
+
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <!-- flowbite component -->
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
   <script src="https://cdn.tailwindcss.com"></script>
-
+  
 </head>
 
-
-<body class="bg-[#E8E8E7]">
+<body class="sm:bg-gray-200 bg-white">
 
   <?php include "user_sidebar_header.php"; ?>
+    <!-- tailwind cdn -->
+    
 
-  <div class="p-4 sm:ml-44">
+  <div class="p-0 sm:p-6 sm:ml-44 text-gray-700">
     <div class="rounded-lg mt-16">
 
-      <section class="p-4 bg-white rounded-xl h-fit">
+      <section class="p-6 bg-white rounded-lg shadow-none sm:shadow-md">
 
+        <!-- Search and Filter Section -->
+        <section class="flex flex-col sm:flex-row justify-between gap-4 mb-4">
+          <input onkeyup="searchFeedback();" type="search" id="searchFeedbackButton" class="form-control border border-gray-300 rounded-md p-2 w-full sm:w-1/2" placeholder="Search by feedback title">
 
-        <section class="flex justify-between gap-x-4">
-
-          <input onkeyup="searchFeedback();" type="search" id="searchFeedbackButton" class="form-control" placeholder="Search by feedback title">
-
-          <form method="POST" action="">
-            <select id="yearfilter" name="yearfilter" onchange="this.form.submit()">
+          <form method="POST" action="" class="w-full sm:w-auto">
+            <select id="yearfilter" name="yearfilter" onchange="this.form.submit()" class="border border-gray-300 rounded-md p-2 w-full sm:w-auto">
               <?php
               $currentYear = date('Y');
               $startYear = $currentYear - 5; // Start 5 years before the current year
@@ -137,184 +144,65 @@ function isAlreadyAnsweredFunc($conn, $brgy_id)
               ?>
             </select>
           </form>
-
         </section>
 
+        <!-- Feedback Items -->
         <p class="text-center text-lg mt-4">
           <?php echo empty($questionTemp) ? 'No data available' : ''; ?>
         </p>
 
         <?php foreach ($questionTemp as $row) { ?>
+          <section class="feedback-item <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'relative text-gray-300 cursor-not-allowed' : '' ?> border border-gray-300 rounded-lg p-4 mb-4 bg-gray-50 shadow-sm">
 
-          <section class="feedback-item <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'relative text-gray-300 cursor-not-allowed' : '' ?>">
-
-            <?php
-
-            if (in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id))) { ?>
-
-              <h3 class="absolute inset-0 flex items-center justify-center text-[2rem] font-bold text-gray-500">You already answered to this!</h3>
-
+            <?php if (in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id))) { ?>
+              <h3 class="absolute inset-0 flex items-center justify-center text-2xl font-bold text-gray-500">You already answered this!</h3>
             <?php } ?>
 
-
-            <div class="w-100 flex justify-between items-center">
-              <p class='text-lg font-bold'><?php echo $row["feedback_title"]; ?></p>
-              <p>Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
-
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-4">
+              <p class="text-lg font-bold"><?php echo $row["feedback_title"]; ?></p>
+              <p class="text-sm text-gray-500">Created on <?php echo date('M d Y', strtotime($row['fq_creation_date'])) ?></p>
             </div>
 
-
-            <form method="POST" action="" class="<?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?> mb-3 flex flex-col gap-y-3 w-100 border-2 !border-gray-400 rounded-lg p-2">
-
-              <div class="flex justify-between">
-
-                <table style="table-layout: fixed;" class="w-full">
-
-                  <tr class="border-b">
-                    <th class="py-2 text-start text-xs w-1/3">Questions</th>
-                    <th class="py-2 text-center text-xs">(5)Very Satisfied</th>
-                    <th class="py-2 text-center text-xs">(4)Satisfied</th>
-                    <th class="py-2 text-center text-xs">(3)Neutral</th>
-                    <th class="py-2 text-center text-xs">(2)Dissatisfied</th>
-                    <th class="py-2 text-center text-xs">(1)Very Dissatisfied</th>
-                  </tr>
-
-                  <tr>
-                    <td class="py-1 text-start text-sm"><?php echo $row['fq1']; ?></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="5" name="fa1" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="4" name="fa1" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="3" name="fa1" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="2" name="fa1" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="1" name="fa1" required></td>
-                  </tr>
-
-                  <tr>
-                    <td class="py-1 text-start text-sm"><?php echo $row['fq2']; ?></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="5" name="fa2" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="4" name="fa2" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="3" name="fa2" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="2" name="fa2" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="1" name="fa2" required></td>
-                  </tr>
-
-                  <tr>
-                    <td class="py-1 text-start text-sm"><?php echo $row['fq3']; ?></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="5" name="fa3" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="4" name="fa3" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="3" name="fa3" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="2" name="fa3" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="1" name="fa3" required></td>
-                  </tr>
-
-                  <tr>
-                    <td class="py-1 text-start text-sm"><?php echo $row['fq4']; ?></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="5" name="fa4" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="4" name="fa4" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="3" name="fa4" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                     <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="2" name="fa4" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                       <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="1" name="fa4" required></td>
-                  </tr>
-
-                  <tr>
-                    <td class="py-1 text-start text-sm"><?php echo $row['fq5']; ?></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="5" name="fa5" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="4" name="fa5" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="3" name="fa5" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="2" name="fa5" required></td>
-
-                    <td class="py-1 text-center text-sm"><input class="
-                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>"
-                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> type="radio" value="1" name="fa5" required></td>
-                  </tr>
-
+            <form method="POST" action="" class="flex flex-col gap-4">
+              <div class="overflow-x-auto">
+                <table class="table-auto w-full border-collapse border border-gray-300">
+                  <thead>
+                    <tr class="bg-gray-200">
+                      <th class="py-2 px-4 text-left text-xs">Questions</th>
+                      <th class="py-2 px-4 text-center text-xs">(5) Very Satisfied</th>
+                      <th class="py-2 px-4 text-center text-xs">(4) Satisfied</th>
+                      <th class="py-2 px-4 text-center text-xs">(3) Neutral</th>
+                      <th class="py-2 px-4 text-center text-xs">(2) Dissatisfied</th>
+                      <th class="py-2 px-4 text-center text-xs">(1) Very Dissatisfied</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php for ($i = 1; $i <= 5; $i++) { ?>
+                      <tr>
+                        <td class="py-2 px-4 text-sm"><?php echo $row["fq$i"]; ?></td>
+                        <?php for ($j = 5; $j >= 1; $j--) { ?>
+                          <td class="py-2 px-4 text-center">
+                            <input class="<?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300' : '' ?>" 
+                                   <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> 
+                                   type="radio" value="<?php echo $j; ?>" name="fa<?php echo $i; ?>" required>
+                          </td>
+                        <?php } ?>
+                      </tr>
+                    <?php } ?>
+                  </tbody>
                 </table>
               </div>
 
-              <textarea class="
-                <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'border border-gray-300 placeholder-gray-300 cursor-not-allowed' : '' ?>"
-                <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> id="comment" name="comment" rows="2" cols="50" placeholder="Write a comment/suggestion"></textarea>
+              <textarea class="border border-gray-300 rounded-md p-2 w-full <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'placeholder-gray-300 cursor-not-allowed' : '' ?>" 
+                        <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?> 
+                        id="comment" name="comment" rows="2" placeholder="Write a comment/suggestion"></textarea>
 
               <input hidden value="<?php echo $row['fq_id']; ?>" required name="fa_id" type="number">
 
-              <button
-                name="submitFeedbackAnswer<?php echo $row['fq_id']; ?>"
-                type="submit"
-                <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?>
-                class="<?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'bg-gray-300 cursor-not-allowed' : '' ?> py-2 px-3 text-white rounded-md bg-blue-500 w-fit">
-                submit
-
+              <button name="submitFeedbackAnswer<?php echo $row['fq_id']; ?>" type="submit" 
+                      class="py-2 px-4 text-white rounded-md bg-blue-500 hover:bg-blue-600 w-fit <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'bg-gray-300 cursor-not-allowed' : '' ?>" 
+                      <?php echo in_array($row['fq_id'], isAlreadyAnsweredFunc($conn, $barangay_id)) ? 'disabled' : '' ?>>
+                Submit
               </button>
             </form>
           </section>
@@ -342,6 +230,9 @@ function isAlreadyAnsweredFunc($conn, $brgy_id)
       }
     }
   </script>
+
+
+
 </body>
 
 </html>

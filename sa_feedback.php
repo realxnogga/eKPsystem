@@ -243,14 +243,14 @@ function getFeedbackDataFunc($conn, $whatCol, $whatTable, $id)
                     Delete
                   </button>
 
-                  <a data-tooltip-target="tooltip-light<?php echo $row['fq_id']; ?>" data-tooltip-style="light" class="" href="sa_feedback_view.php?fq_id_url=<?php echo $row['fq_id']; ?>">
+                  <a title="View more" href="sa_feedback_view.php?fq_id_url=<?php echo $row['fq_id']; ?>">
                     <p><?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . ''); ?> / <?php echo countResponseFunc($conn, "barangays"); ?> <?php echo countResponseFunc($conn, "feedback_answers", 'fa_id = ' . $row['fq_id'] . '') > 1 ? "responses" : "response"; ?></p>
                   </a>
 
-                  <div id="tooltip-light<?php echo $row['fq_id']; ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip">
+                  <!-- <div id="tooltip-light<?php echo $row['fq_id']; ?>" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-xs opacity-0 tooltip">
                     view more
                     <div class="tooltip-arrow" data-popper-arrow></div>
-                  </div>
+                  </div> -->
 
                 </section>
 

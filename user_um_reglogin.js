@@ -3,13 +3,12 @@ function loadRegistrationLoginContent() {
     return `
         <section class="flex flex-col gap-y-2">
           <h2 class="text-[2rem]">1. Register</h2>
-          <p>To register, go to the link <a class="text-blue-500 underline" href="https://ekpsystem.online/ekpsys/registration.php">https://ekpsystem.online/ekpsys/registration.php</a></p>
           <img class="w-[40rem]" src="user_manual_pic/registration.PNG" alt="registration picture">
           <p>1. Select your Municipality.</p>
           <p>2. For username, enter "brgy" and then your barangay name. (Ex. brgybatongmalake)</p>
           <p>3. On first name, enter the word "Barangay" and last name is your barangay name. (Ex. Barangay Batong Malake)</p>
           <img class="w-[40rem]" src="user_manual_pic/select_muni.png" alt="select municipality picture">
-          <p>4. Enter your email in this format: "clustera" underscore your barangay, underscore "ekp" (Ex. clustera_batongmalake_ekp@gmail.com)</p>
+          <p>4. Enter your email in this format: "clustera" underscore your barangay, underscore "ekp" (Ex. clustera_BM_ekp@gmail.com)</p>
           <img class="w-[40rem]" src="user_manual_pic/email.png" alt="email field picture">
           <p>5. Enter your '11' digit number.</p>
           <img class="w-[40rem]" src="user_manual_pic/contact_number.png" alt="contact number field picture">
@@ -25,7 +24,6 @@ function loadRegistrationLoginContent() {
 
         <section class="flex flex-col gap-y-2">
           <h2 class="text-[2rem]">2. Login</h2>
-          <p>To login, go to the link <a class="text-blue-500 underline" href="https://ekpsystem.online/ekpsys/login.php">https://ekpsystem.online/ekpsys/login.php</a></p>
           <img class="w-[40rem]" src="user_manual_pic/login.png" alt="login picture">
            <p>1. Enter the email and password that you provided during the registration. Then click the Submit button.</p>
            <p>2. If the login is successful, it will redirect you to the dashboard, and a modal will pop up for security questions. Note that the security modal will only pop up if it is your first time logging in to your newly created account.</p>

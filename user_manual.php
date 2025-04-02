@@ -26,27 +26,28 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 
   <?php include "user_sidebar_header.php"; ?>
 
-  <div class="p-4 sm:ml-44 ">
+  <div class="sm:ml-44 sm:p-0 md:p-6">
     <div class="rounded-lg mt-16">
 
       <div class="bg-white h-fit w-full rounded-md p-4">
 
-      <h2 class="text-[2rem] font-thin">USER MANUAL</h2>
+        <h2 class="text-[2rem] font-thin">USER MANUAL</h2>
 
         <br>
         <br>
 
-        <nav class="sticky top-[4rem] bg-white overflow-x-auto">
+        <nav class="bg-white overflow-x-auto z-30">
           <ul class="flex">
-            <li id="um_registration" onclick="navigateTo('um_registration')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md border-1 border-white hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Registration/Login</li>
-            <li id="um_dashboard" onclick="navigateTo('um_dashboard')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Dashboard</li>
-            <li id="um_lupon" onclick="navigateTo('um_lupon')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Lupon</li>
-            <li id="um_complaint" onclick="navigateTo('um_complaint')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Complaint</li>
-            <li id="um_archive" onclick="navigateTo('um_archive')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Archive</li>
-            <li id="um_report" onclick="navigateTo('um_report')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Reports</li>
-            <li id="um_LTIA" onclick="navigateTo('um_LTIA')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">LTIA</li>
-            <li id="um_userlogs" onclick="navigateTo('um_userlogs')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">User logs</li>
-            <li id="um_settings" onclick="navigateTo('um_settings')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer text-nowrap">Settings</li>
+            <li id="um_registration" onclick="navigateTo('um_registration')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md border-1 border-white hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Reg/Login</li>
+            <li id="um_dashboard" onclick="navigateTo('um_dashboard')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Dashboard</li>
+            <li id="um_lupon" onclick="navigateTo('um_lupon')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer">Lupon</li>
+            <li id="um_complaint" onclick="navigateTo('um_complaint')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Complaint</li>
+            <li id="um_archive" onclick="navigateTo('um_archive')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Archive</li>
+            <li id="um_report" onclick="navigateTo('um_report')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Reports</li>
+            <li id="um_LTIA" onclick="navigateTo('um_LTIA')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer">LTIA</li>
+            <li id="um_userlogs" onclick="navigateTo('um_userlogs')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">User logs</li>
+            <li id="um_settings" onclick="navigateTo('um_settings')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Settings</li>
+            <li id="um_notif" onclick="navigateTo('um_notif')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Notification</li>
           </ul>
         </nav>
 
@@ -60,8 +61,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 
       </div>
 
+
+
     </div>
   </div>
+
+  <button id="goToTop" class="fixed bottom-4 right-4 p-3 bg-blue-600 text-white rounded-full hidden">
+    ↑ Top
+  </button>
+
 
   <script src="user_um_reglogin.js"></script>
   <script src="user_um_functions.js"></script>
@@ -106,6 +114,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
         case 'um_settings':
           content.innerHTML = loadSettingContent();
           break;
+        case 'um_notif':
+          content.innerHTML = loadNotificationContent();
+          break;
       }
     }
 
@@ -119,6 +130,29 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
     registrationTab.classList.add('bg-blue-100', 'text-black', 'rounded-tl-lg', 'rounded-tr-lg');
   </script>
 
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const goToTopButton = document.getElementById("goToTop");
+
+      // Show the button when the user scrolls down
+      window.onscroll = () => {
+        if (document.documentElement.scrollTop > 200) {
+          goToTopButton.classList.remove("hidden");
+        } else {
+          goToTopButton.classList.add("hidden");
+        }
+      };
+
+      // Scroll to the top when the button is clicked
+      goToTopButton.onclick = () => {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      };
+    });
+  </script>
 
 </body>
 

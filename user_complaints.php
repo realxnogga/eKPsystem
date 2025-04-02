@@ -105,145 +105,129 @@ function fetchMatchingRows($conn, $userID, $searchText, $whatYear)
 <html lang="en">
 
 <head>
-  <link rel="stylesheet" href="hide_show_icon.css">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Complaints</title>
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <!-- flowbite component -->
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  
+  <link href="./output.css" rel="stylesheet">
+
+
   <link rel="stylesheet" href="hide_show_icon.css">
-  <style>
-    table {
-      width: 100%;
-      table-layout: fixed;
-    }
 
-    th,
-    td {
-      padding: 8px;
-      text-align: center;
-      place-items: center;
-    }
-
-    .legend-color {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      margin-right: 5px;
-      border-radius: 50%;
-    }
-  </style>
 </head>
 
-<body class="bg-[#E8E8E7]">
+<body class="sm:bg-gray-200 bg-white">
+
   <?php include "user_sidebar_header.php"; ?>
-  <div class="p-4 sm:ml-44 ">
-    <div class="rounded-lg mt-16">
-      <div class="card">
-        <div class="card-body">
-          <section></section>
-          <details>
-            <summary>Color Legend</summary>
-            <br>
-            <div class="flex justify-between">
-             
-              <div class="flex items-center">
-              <img src="img/cluster.png" alt="Logo" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
-                <h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>
-              </div>
+  <div class="p-0 sm:p-6 sm:ml-44 text-gray-700">
 
-              <div style="padding: 15px; border: 1px solid #ccc; border-radius: 8px; font-family: Arial, sans-serif;">
-                <h4 class="mb-2" style="color: #333; font-size: 16px; font-weight: bold;">Color Legend</h4>
-                <ul style="list-style: none; margin: 0; padding: 0;">
-                  <li style="margin-bottom: 8px; display: flex; align-items: center;"> <span style="width: 20px; height: 20px; background-color: #dcfadf; border: 1px solid #999; display: inline-block; margin-right: 8px; border-radius: 4px;"></span> <span style="font-size: 14px; color: #555;">Settled</span> </li>
-                  <li style="margin-bottom: 8px; display: flex; align-items: center;"> <span style="width: 20px; height: 20px; background-color: #FFE181; border: 1px solid #999; display: inline-block; margin-right: 8px; border-radius: 4px;"></span> <span style="font-size: 14px; color: #555;">Pending (10-14 days)</span> </li>
-                  <li style="display: flex; align-items: center;"> <span style="width: 20px; height: 20px; background-color: #F88D96; border: 1px solid #999; display: inline-block; margin-right: 8px; border-radius: 4px;"></span> <span style="font-size: 14px; color: #555;">Unsettled (15-30 days)</span> </li>
-                </ul>
-              </div>
-
+    <div class="mt-16">
+      <div class="bg-white shadow-none rounded-0 sm:shadow-md sm:rounded-lg p-6">
+        <details class="mb-6">
+          <summary class="cursor-pointer text-lg font-semibold">Color Legend</summary>
+          <div class="mt-4 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center">
+              <img src="img/cluster.png" alt="Logo" class="w-24 h-24 mr-4">
+              <h5 class="text-lg font-semibold">Department of the Interior and Local Government</h5>
             </div>
-          </details>
-          <br>
-          <b>
-            <div class="flex gap-x-3">
+            <div class="p-4 border border-gray-300 rounded-lg w-full sm:w-fit">
+              <h4 class="text-base font-bold mb-2">Color Legend</h4>
+              <ul class="space-y-2">
+                <li class="flex items-center">
+                  <span class="w-5 h-5 bg-green-200 border border-gray-400 rounded-full mr-2"></span>
+                  <span class="text-sm text-gray-600">Settled</span>
+                </li>
+                <li class="flex items-center">
+                  <span class="w-5 h-5 bg-yellow-100 border border-gray-400 rounded-full mr-2"></span>
+                  <span class="text-sm text-gray-600">Pending (10-14 days)</span>
+                </li>
+                <li class="flex items-center">
+                  <span class="w-5 h-5 bg-red-300 border border-gray-400 rounded-full mr-2"></span>
+                  <span class="text-sm text-gray-600">Unsettled (15-30 days)</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </details>
 
-              <form id="myForm" method="POST" action="" class="w-full">
-                <input class="form-control w-full" type="text" id="inputField" name="inputField" placeholder="search by No, Title, Complainants, Respondents, Date, Status..." value="<?php echo isset($_SESSION['searchvalue']) ? $_SESSION['searchvalue'] : ''; ?>">
-              </form>
+        <div class="flex gap-4 mb-6">
+          <form id="myForm" method="POST" action="" class="flex-grow">
+            <input class="w-full p-2 border border-gray-300" type="text" id="inputField" name="inputField" placeholder="Search by No, Title, Complainants, Respondents, Date, Status..." value="<?php echo isset($_SESSION['searchvalue']) ? $_SESSION['searchvalue'] : ''; ?>">
+          </form>
 
-              <form method="POST" action="">
-                <select id="yearfilter" name="yearfilter" onchange="this.form.submit()">
+          <form method="POST" action="">
+            <select title="View complaints by year" id="yearfilter" name="yearfilter" onchange="this.form.submit()" class="p-2 border border-gray-300">
+              <?php
+              $currentYear = date('Y');
+              $startYear = $currentYear - 5;
+              for ($year = $startYear; $year <= $currentYear; $year++) {
+                echo "<option value='$year'" . ($year == $selectedYear ? " selected" : "") . ">$year</option>";
+              }
+              ?>
+            </select>
+          </form>
+
+          <form method="POST" action="" class="flex items-center">
+            <button title="View recently updated complaints" type="submit" name="seeUpdateRecently" class="p-2 bg-gray-200 hover:bg-gray-300">
+              <i class="ti ti-clock-24 text-xl"></i>
+            </button>
+          </form>
+
+          <button type="button" class="p-2 px-3 bg-blue-500 text-white rounded-md hover:bg-blue-600" onclick="location.href='user_add_complaint.php';">
+          <i class="ti ti-plus text-lg show-icon"></i>
+          <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p>
+          </button>
+        </div>
+
+        <div class="sm:max-h-[30rem] overflow-y-auto">
+          <table class="table-auto lg:table-fixed  w-full bg-white rounded-lg">
+            <thead class="bg-gray-200 sticky top-0">
+              <tr>
+                <th class="p-3 text-sm font-semibold text-gray-700 text-center">No.</th>
+                <th class="p-3 text-sm font-semibold text-gray-700 text-center">Title</th>
+                <th class="p-3 text-sm font-semibold text-gray-700 text-center">Complainants</th>
+                <th class="p-3 text-sm font-semibold text-gray-700 text-center">Respondents</th>
+                <th class="p-3 text-sm font-semibold text-gray-700 text-center">Date</th>
+                <th class="p-3 text-sm font-semibold text-gray-700 text-center">Status</th>
+                <th class="p-3 text-sm font-semibold text-gray-700 text-center">Hearing</th>
+                <th class="p-3 text-sm font-semibold text-gray-700 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody >
+              <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)): ?>
+                <?php
+                $isSettled = in_array($row['CMethod'], ['Mediation', 'Conciliation', 'Arbitration']);
+                $dateAdded = strtotime($row['Mdate']);
+                $currentDate = strtotime(date('Y-m-d'));
+                $elapsedDays = ($currentDate - $dateAdded) / (60 * 60 * 24);
+                $borderColor = $isSettled ? 'bg-green-200' : ($elapsedDays >= 10 && $elapsedDays <= 13 ? 'bg-yellow-100' : ($elapsedDays >= 14 && $elapsedDays <= 30 ? 'bg-red-300' : ''));
+                ?>
+                <tr class="<?= $borderColor; ?>">
+                  <td class="p-3 text-sm text-gray-600 text-center"><?= str_pad($row['CNum'], 11, '0', STR_PAD_LEFT) ?></td>
+                  <td class="p-3 text-sm text-gray-600 text-center"><?= $row['ForTitle'] ?></td>
+                  <td class="p-3 text-sm text-gray-600 text-center"><?= $row['CNames'] ?></td>
+                  <td class="p-3 text-sm text-gray-600 text-center"><?= $row['RspndtNames'] ?></td>
+                  <td class="p-3 text-sm text-gray-600 text-center"><?= date('Y-m-d', strtotime($row['Mdate'])) ?></td>
+                  <td class="p-3 text-sm text-gray-600 text-center"><?= $row['CMethod'] ?></td>
                   <?php
-                  $currentYear = date('Y');
-                  $startYear = $currentYear - 5;
-                  for ($year = $startYear; $year <= $currentYear; $year++) {
-                    echo "<option value='$year'" . ($year == $selectedYear ? " selected" : "") . ">$year</option>";
-                  }
-                  ?>
-                </select>
-              </form>
-
-              <form title="see recently updated complaint" method="POST" action="" class="flex">
-                <button type="submit" name="seeUpdateRecently">
-                  <i class="ti ti-clock-24 text-[2rem]"></i>
-                </button>
-              </form>
-
-              <button type="button" class="btn btn-primary bg-blue-500" value="Add complaint" onclick="location.href='user_add_complaint.php';">
-                <span>
-                  <i class="ti ti-plus text-lg show-icon"></i>
-                  <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p>
-                </span>
-              </button>
-            </div>
-            <br>
-            <div class="max-h-[30rem] overflow-y-scroll">
-              <table id="complaintTable" class="table">
-                <thead class="sticky top-0">
-                  <tr>
-                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">No.</th>
-                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Title</th>
-                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Complainants</th>
-                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Respondents</th>
-                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Date</th>
-                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Status</th>
-                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Hearing</th>
-                    <th style="padding: 8px; background-color: #d3d3d3; white-space: nowrap; text-align: center;">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)): ?>
-                    <?php
-                    $isSettled = in_array($row['CMethod'], ['Mediation', 'Conciliation', 'Arbitration']);
-                    $isUnsettled = in_array($row['CMethod'], ['Pending', 'Repudiated', 'Dismissed', 'Certified to file action in court', 'Dropped/Withdrawn']);
-                    $dateAdded = strtotime($row['Mdate']);
-                    $currentDate = strtotime(date('Y-m-d'));
-                    $elapsedDays = ($currentDate - $dateAdded) / (60 * 60 * 24);
-                    if ($isSettled) {
-                      $borderColor = 'bg-green-200';
-                    } elseif ($elapsedDays >= 10 && $elapsedDays <= 13) {
-                      $borderColor = 'bg-yellow-100';
-                    } elseif ($elapsedDays >= 14 && $elapsedDays <= 30 && !$isSettled) {
-                      $borderColor = 'bg-red-300';
-                    } else {
-                      $borderColor = 'border-none';
-                    }
-                    ?>
-                    <tr class="<?= $borderColor; ?>">
-                      <td><?= str_pad($row['CNum'], 11, '0', STR_PAD_LEFT) ?></td>
-                      <td><?= $row['ForTitle'] ?></td>
-                      <td><?= $row['CNames'] ?></td>
-                      <td><?= $row['RspndtNames'] ?></td>
-                      <td><?= date('Y-m-d', strtotime($row['Mdate'])) ?></td>
-                      <td><?= $row['CMethod'] ?></td>
-                      <?php
                       $complaintId = $row['id'];
                       $caseProgressQuery = "SELECT current_hearing FROM case_progress WHERE complaint_id = $complaintId";
                       $caseProgressResult = $conn->query($caseProgressQuery);
                       $caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
                       ?>
-                      <td>
+                      <td class="p-3 text-sm text-gray-600 text-center">
                         <?php if ($caseProgressRow): ?>
                           <?php $currentHearing = $caseProgressRow['current_hearing']; ?>
                           <?php if ($currentHearing === '0'): ?>
@@ -256,36 +240,35 @@ function fetchMatchingRows($conn, $userID, $searchText, $whatYear)
                           Not Set
                         <?php endif; ?>
                       </td>
+                  <td class="p-3 text-sm text-gray-600 text-center">
+                    <div class="flex justify-center gap-2">
+                      <form action="user_edit_complaint.php" method="get">
+                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                        <button type="submit" class="p-1 bg-blue-500 text-white rounded-sm hover:bg-blue-600" title="Edit">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                      </form>
+                      <form action="archive_complaint.php" method="get">
+                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                        <button type="submit" class="p-1 bg-red-500 text-white rounded-sm hover:bg-red-600" title="Archive">
+                          <i class="fas fa-archive"></i>
+                        </button>
+                      </form>
+                      <form action="user_manage_case.php" method="get">
+                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                        <button type="submit" class="p-1 bg-yellow-400 text-white rounded-sm hover:bg-yellow-500" title="Manage">
+                          <i class="fas fa-folder"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </td>
 
-                      <td class="border">
-                        <div class="h-full w-full flex flex-row items-center gap-x-2">
-                          <form action="user_edit_complaint.php" method="get" style="display: inline;">
-                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                            <button type="submit" class="btn btn-sm btn-secondary bg-blue-500 h-7" title="Edit" data-placement="top" >
-                              <i class="fas fa-edit"></i>
-                            </button>
-                          </form>
-                          <form action="archive_complaint.php" method="get" style="display: inline;">
-                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                            <button type="submit" class="btn btn-sm btn-danger bg-red-500 h-7" title="Archive" data-placement="top">
-                              <i class="fas fa-archive"></i> 
-                            </button>
-                          </form>
-                          <form action="user_manage_case.php" method="get" style="display: inline;">
-                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                            <button type="submit" class="btn btn-sm btn-warning bg-yellow-400 h-7" title="Manage" data-placement="top">
-                              <i class="fas fa-folder"></i>
-                             
-                            </button>
-                          </form>
-                        </div>
-                      </td>
+                </tr>
 
-                    </tr>
-                  <?php endwhile; ?>
-                </tbody>
-              </table>
-            </div>
+        
+              <?php endwhile; ?>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

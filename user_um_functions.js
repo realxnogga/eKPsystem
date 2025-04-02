@@ -146,6 +146,15 @@ function loadReportContent() {
     `;
 }
 
+function loadNotificationContent() {
+  return `
+        <section class="flex flex-col gap-y-2">
+          <h3 class="text-[2rem]">1. Notif Icon</h3>
+        </section>
+    `;
+}
+
+
 
 
 
