@@ -133,8 +133,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
   <!-- tabler support -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
-  <!-- tailwind cdn -->
-  <script src="https://cdn.tailwindcss.com"></script>
+ <!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
 
   <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 
@@ -296,7 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p id="message" class="hidden bg-green-100 text-green-700 p-4 rounded-md"></p>
         
         <form id="formAddComplaint" class="space-y-1">
-  <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2  gap-0 sm:gap-4">
     <div class="flex flex-col">
       <label class="block text-sm font-medium text-gray-700 mb-1">Case No.<span class="text-red-500">*</span></label>
       <input type="text" class="border rounded-md p-2" id="CNum" name="CNum" placeholder="MMYY - Case No." value="<?php echo $caseNum; ?>" onblur="validate(1)">
@@ -309,18 +309,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
     <div class="flex flex-col">
       <label class="block text-sm font-medium text-gray-700 mb-1">Complainants:<span class="text-red-500">*</span></label>
       <input type="text" class="border rounded-md p-2" id="CNames" name="CNames" placeholder="Enter name of complainants" onblur="validate(3)" required>
     </div>
+    
     <div class="flex flex-col">
       <label class="block text-sm font-medium text-gray-700 mb-1">Respondents:<span class="text-red-500">*</span></label>
       <input type="text" class="border rounded-md p-2" id="RspndtNames" name="RspndtNames" placeholder="Enter name of respondents" onblur="validate(4)" required>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
     <div class="flex flex-col">
       <label class="block text-sm font-medium text-gray-700 mb-1">Address of Complainants:<span class="text-red-500">*</span></label>
       <input type="text" class="border rounded-md p-2" id="CAddress" name="CAddress" placeholder="Enter address of complainants" onblur="validate(9)" required>
@@ -341,7 +342,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="text" class="border rounded-md p-2" id="Petition" name="Petition" placeholder="" onblur="validate(6)" required>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-0 sm:gap-4">
     <div class="flex flex-col">
       <label class="block text-sm font-medium text-gray-700 mb-1">Made:<span class="text-red-500">*</span></label>
       <input type="datetime-local" class="border rounded-md p-2" id="Mdate" name="Mdate" onblur="validate(7)" value="<?php echo date('Y-m-d\TH:i'); ?>" required>

@@ -126,7 +126,7 @@ if (isset($_POST['update'])) {
   <!-- tabler support -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
   <!-- tailwind cdn -->
-  <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="output.css">
 
 </head>
 

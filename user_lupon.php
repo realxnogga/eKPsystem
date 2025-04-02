@@ -39,28 +39,27 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_
   <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
   <!-- tabler support -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
- 
-  <link href="./output.css" rel="stylesheet">
   
+  <!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
+
 </head>
 
 <body class="bg-gray-200">
 
   <?php include "user_sidebar_header.php"; ?>
 
-  <div class="sm:ml-44 sm:p-6 text-gray-700">
+  <div class="sm:ml-44 sm:p-6">
     <div class="rounded-lg mt-16">
 
       <!-- First Card -->
       <div class="bg-white shadow-md rounded-lg">
         <div class="flex flex-col gap-y-3 p-6">
 
-           <div class="flex items-center">
-                <img src="img/cluster.png" alt="Logo" class="w-24 h-24 sm:w-30 sm:h-30 mr-4">
-                <div>
-                  <h5 class="text-lg font-semibold mb-2">Department of the Interior and Local Government</h5>
-                </div>
-           </div>
+          <div class="flex items-center">
+            <img src="img/cluster.png" alt="Logo" class="w-24 h-24 mr-4">
+            <h5 class="text-xl font-semibold">Department of the Interior and Local Government</h5>
+          </div>
 
           <h5 class="text-2xl font-semibold text-center sm:text-left"><?php echo ucfirst($_SESSION['language']); ?> Forms</h5>
 
@@ -104,7 +103,7 @@ $folderName =  ($_SESSION['language'] === 'english') ? 'forms_english' : 'forms_
               $languageFolder = ($_SESSION['language'] === 'english') ? 'forms_english/' : 'forms_tagalog/';
               $formPath = $languageFolder . $formFileName;
 
-              echo '<a href="' . $formPath . '" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-400 text-nowrap">' . $buttonText . '</a>';
+              echo '<a href="' . $formPath . '" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-400 whitespace-nowrap">' . $buttonText . '</a>';
             }
             ?>
           </div>

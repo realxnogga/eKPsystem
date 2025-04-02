@@ -191,6 +191,8 @@ if (isset($_GET['yearurl']) || isset($_GET['monthurl'])) {
   <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
   <!-- tabler support -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
 
 </head>
 
@@ -229,7 +231,7 @@ if (isset($_GET['yearurl']) || isset($_GET['monthurl'])) {
                 <div>
                   <h2 class="text-xl font-semibold">Annual Report (<?php echo isset($_GET['yearurl']) ? $_GET['yearurl'] : $latestYear; ?>)</h2>
                   <label class="block mt-2">Select Year:</label>
-                  <select name="selected_year" class="border rounded-md p-2 w-full">
+                  <select name="selected_year" class="border border-gray-300 rounded p-2 w-full">
                     <option value="" disabled <?php echo empty($selectedYear) ? 'selected' : ''; ?>>Select a year</option>
                     <?php foreach ($yearArray as $year) : ?>
                       <option value="<?php echo $year['year']; ?>" <?php echo ($selectedYear == $year['year']) ? 'selected' : ''; ?>>
@@ -243,7 +245,7 @@ if (isset($_GET['yearurl']) || isset($_GET['monthurl'])) {
                 <div>
                   <h2 class="text-xl font-semibold">Monthly Report (<?php echo isset($_GET['monthurl']) ? $_GET['monthurl'] : $latestMonth; ?>)</h2>
                   <label class="block mt-2">Select Month:</label>
-                  <select name="selected_month" class="border rounded-md p-2 w-full">
+                  <select name="selected_month" class="border border-gray-300 rounded p-2 w-full">
                     <option disabled value="" <?php echo empty($monthArray) ? 'selected' : ''; ?>>Select a Month</option>
                     <?php foreach ($monthArray as $month) : ?>
                       <option value="<?php echo $month['month_year']; ?>" <?php echo ($selectedMonth == $month['month_year']) ? 'selected' : ''; ?>>
@@ -358,39 +360,39 @@ if (isset($_GET['yearurl']) || isset($_GET['monthurl'])) {
                 <div class="grid grid-cols-1 gap-4">
                   <div>
                     <label for="mayor" class="block">Mayor:</label>
-                    <input type="text" id="mayor" name="mayor" class="border rounded-md p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['mayor'] : (!empty($lmrd) ? $lmrd['mayor'] : ''); ?>">
+                    <input type="text" id="mayor" name="mayor" class="border border-gray-300 rounded p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['mayor'] : (!empty($lmrd) ? $lmrd['mayor'] : ''); ?>">
                   </div>
                   <div>
                     <label for="region" class="block">Region:</label>
-                    <input type="text" id="region" name="region" class="border rounded-md p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['region'] : (!empty($lmrd) ? $lmrd['region'] : ''); ?>">
+                    <input type="text" id="region" name="region" class="border border-gray-300 rounded p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['region'] : (!empty($lmrd) ? $lmrd['region'] : ''); ?>">
                   </div>
                   <div>
                     <label for="budget" class="block">Budget Allocated:</label>
-                    <input type="text" id="budget" name="budget" class="border rounded-md p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['budget'] : (!empty($lmrd) ? $lmrd['budget'] : ''); ?>">
+                    <input type="text" id="budget" name="budget" class="border border-gray-300 rounded p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['budget'] : (!empty($lmrd) ? $lmrd['budget'] : ''); ?>">
                   </div>
                   <div>
                     <label for="popul" class="block">Population:</label>
-                    <input type="text" id="popul" name="population" class="border rounded-md p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['population'] : (!empty($lmrd) ? $lmrd['population'] : ''); ?>">
+                    <input type="text" id="popul" name="population" class="border border-gray-300 rounded p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['population'] : (!empty($lmrd) ? $lmrd['population'] : ''); ?>">
                   </div>
                   <div>
                     <label for="landarea" class="block">Land Area:</label>
-                    <input type="text" id="landarea" name="landarea" class="border rounded-md p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['landarea'] : (!empty($lmrd) ? $lmrd['landarea'] : ''); ?>">
+                    <input type="text" id="landarea" name="landarea" class="border border-gray-300 rounded p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['landarea'] : (!empty($lmrd) ? $lmrd['landarea'] : ''); ?>">
                   </div>
                   <div>
                     <label for="totalc" class="block">Total No. of Cases:</label>
-                    <input type="number" id="totalc" name="totalc" readonly class="border rounded-md p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['totalcase'] : (!empty($lmrd) ? $lmrd['totalcase'] : ''); ?>">
+                    <input type="number" id="totalc" name="totalc" readonly class="border border-gray-300 rounded p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['totalcase'] : (!empty($lmrd) ? $lmrd['totalcase'] : ''); ?>">
                   </div>
                   <div>
                     <label for="numlup" class="block">Number of Lupons:</label>
-                    <input type="number" id="numlup" name="numlup" class="border rounded-md p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['numlupon'] : (!empty($lmrd) ? $lmrd['numlupon'] : ''); ?>">
+                    <input type="number" id="numlup" name="numlup" class="border border-gray-300 rounded p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['numlupon'] : (!empty($lmrd) ? $lmrd['numlupon'] : ''); ?>">
                   </div>
                   <div>
                     <label for="male" class="block">Male:</label>
-                    <input type="number" id="male" name="male" class="border rounded-md p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['male'] : (!empty($lmrd) ? $lmrd['male'] : ''); ?>">
+                    <input type="number" id="male" name="male" class="border border-gray-300 rounded p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['male'] : (!empty($lmrd) ? $lmrd['male'] : ''); ?>">
                   </div>
                   <div>
                     <label for="female" class="block">Female:</label>
-                    <input type="number" id="female" name="female" class="border rounded-md p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['female'] : (!empty($lmrd) ? $lmrd['female'] : ''); ?>">
+                    <input type="number" id="female" name="female" class="border border-gray-300 rounded p-2 w-full" value="<?php echo !empty($reportData) ? $reportData['female'] : (!empty($lmrd) ? $lmrd['female'] : ''); ?>">
                   </div>
                 </div>
                 <button type="submit" name="submitEdit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-400 mt-4">

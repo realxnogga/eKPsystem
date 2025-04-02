@@ -91,56 +91,60 @@ $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Upload File for Lupon</title>
-  <link rel="shortcut icon" type="image/png" href="assets/images/logos/favicon.png" />
   
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico">
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <!-- flowbite component -->
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+    <!-- tabler icon -->
+    <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <!-- tailwind cdn -->
+  <link rel="stylesheet" href="output.css">
+
 </head>
 
-<body class="bg-[#E8E8E7]">
+<body class="bg-gray-200">
 
   <?php include "user_sidebar_header.php"; ?>
 
-  <div class="p-4 sm:ml-44 ">
+  <div class="p-4 sm:ml-44">
     <div class="rounded-lg mt-16">
 
-      <div class="row">
-        <div class="col-lg-8 align-items-strech">
-          <div class="card three-card">
-            <div class="card-body">
-              <h5 class="card-title fw-semibold" style="color: black;">Uploaded Files</h5>
-              <?php if (isset($deleteMessage)) echo '<p>' . $deleteMessage . '</p>'; ?>
-              <ul>
-                <?php foreach ($files as $file): ?>
-                  <li>
-                    <a href="<?php echo $file['file_path']; ?>" target="_blank"><?php echo $file['file_name']; ?></a>
-                    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="delete-form" style="display:inline;">
-                      <input type="hidden" name="file_id" value="<?php echo $file['id']; ?>">
-                      <button type="submit" class="bg-red-500 px-3 py-2 hover:bg-red-400 border rounded-md text-white" name="delete_file" onclick="return confirm('Are you sure you want to delete the file?')">Delete</button>
-                    </form>
-                  </li>
-                <?php endforeach; ?>
-              </ul>
-            </div>
+      <div class="flex flex-col lg:flex-row">
+        <div class="lg:w-2/3">
+          <div class="bg-white shadow-md rounded-lg p-6">
+            <h5 class="text-lg font-semibold text-black mb-4">Uploaded Files</h5>
+            <?php if (isset($deleteMessage)) echo '<p class="text-red-500">' . $deleteMessage . '</p>'; ?>
+            <ul class="space-y-2">
+              <?php foreach ($files as $file): ?>
+                <li class="flex items-center justify-between">
+                  <a href="<?php echo $file['file_path']; ?>" target="_blank" class="text-blue-500 hover:underline"><?php echo $file['file_name']; ?></a>
+                  <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="inline">
+                    <input type="hidden" name="file_id" value="<?php echo $file['id']; ?>">
+                    <button type="submit" class="bg-red-500 px-3 py-2 hover:bg-red-400 border rounded-md text-white" name="delete_file" onclick="return confirm('Are you sure you want to delete the file?')">Delete</button>
+                  </form>
+                </li>
+              <?php endforeach; ?>
+            </ul>
           </div>
           <br>
-          <div class="card three-card">
-            <div class="card-body">
-              <h5 class="card-title fw-semibold" style="color: black;">Upload File for Lupon</h5>
+          <div class="bg-white shadow-md rounded-lg p-6">
+            <h5 class="text-lg font-semibold text-black mb-4">Upload File for Lupon</h5>
 
-              <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
-
-                <div class="input-group">
-
-                  <input type="file" class="bg-white rounded-md text-black" name="file" id="file"><br><br>
-                  <input type="submit" class="bg-blue-500 px-2 hover:bg-blue-400 border rounded-md text-white" value="Upload" name="submit">
-
-                </div>
-              </form>       
-
-            </div>
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+              <div class="flex flex-row space-x-2">
+                <input type="file" class="w-full bg-white rounded-md text-black border border-gray-300" name="file" id="file">
+                <input type="submit" class="w-fit bg-blue-500 px-4 py-2 hover:bg-blue-400 border rounded-md text-white cursor-pointer " value="Upload" name="submit">
+              </div>
+            </form>       
           </div>
         </div>
       </div>
     </div>
+  </div>
 </body>
 
 </html>

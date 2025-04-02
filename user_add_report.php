@@ -132,8 +132,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
   <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
   <!-- tabler support -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
-  <!-- tailwind cdn -->
-  <script src="https://cdn.tailwindcss.com"></script>
+ <!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
 
 </head>
 
@@ -149,13 +149,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Left Column -->
         <div class="lg:col-span-2 col-span-3 bg-white shadow-none sm:shadow-md rounded-0 sm:rounded-lg p-6">
-         <div class="flex items-center">
-                <img src="img/cluster.png" alt="Logo" class="w-24 h-24 sm:w-30 sm:h-30 mr-4">
-                <div>
-                  <h5 class="text-lg font-semibold mb-2">Department of the Interior and Local Government</h5>
-                </div>
-           </div>
-          <br>
+          <div class="flex items-center mb-6">
+            <img src="img/cluster.png" alt="Logo" class="w-24 h-24 mr-4">
+            <div>
+              <h5 class="text-lg font-semibold">Department of the Interior and Local Government</h5>
+            </div>
+          </div>
           <h5 class="text-lg font-semibold mb-6">Add Existing Report</h5>
 
           <?php

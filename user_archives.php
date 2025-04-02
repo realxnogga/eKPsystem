@@ -76,9 +76,8 @@ function fetchArchiveFunc($conn, $userID, $whatYear)
   <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
   <!-- tabler support -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
-  
-  <link href="./output.css" rel="stylesheet">
-
+  <!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
 </head>
 
 <body class="sm:bg-gray-200 bg-white">

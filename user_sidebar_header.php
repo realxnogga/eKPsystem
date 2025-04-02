@@ -17,7 +17,7 @@ function isActive($path)
 {
   $currentPage = basename($_SERVER['SCRIPT_NAME']);
   $targetPage = basename($path);
-  return $currentPage == $targetPage ? '!bg-blue-400 text-white' : '';
+  return $currentPage == $targetPage ? 'bg-blue-400 hover:bg-blue-400 text-white' : '';
 }
 
 
@@ -69,8 +69,8 @@ function traverseDirectory()
           <a href="<?php echo traverseDirectory(); ?>user_notification.php">
             <section class="relative mr-5 cursor-pointer flex items-center justify-center">
               <i title="View complaint's notification" class="ti ti-bell text-3xl hover:text-blue-500"></i>
-              <div id="notifUi" class="<?php echo $notifCount == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-[-0px] -right-[-0px] rounded-[25px] flex items-center justify-center">
-                <p class="text-white text-xs px-[.3rem]"><?php echo $notifCount; ?></p>
+              <div id="notifUi" class="<?php echo $notifCount == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-0 -right-0 rounded-lg flex items-center justify-center">
+                <p class="text-white text-xs px-1"><?php echo $notifCount; ?></p>
               </div>
             </section>
           </a>

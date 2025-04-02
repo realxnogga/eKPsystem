@@ -116,6 +116,10 @@ function uploadFile($file, $directory)
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <!-- tailwind cdn -->
 
+
+  <!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
+
   <style>
     /* Hide the reveal password button in Internet Explorer */
     input[type='password']::-ms-reveal {

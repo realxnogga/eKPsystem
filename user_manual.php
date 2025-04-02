@@ -17,16 +17,23 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
 
   <link rel="icon" type="image/x-icon" href="img/favicon.ico">
 
-  <!-- might delete later -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- flowbite component -->
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
 
 </head>
 
-<body class="bg-[#E8E8E7]">
+<body class="bg-gray-200">
 
   <?php include "user_sidebar_header.php"; ?>
 
-  <div class="sm:ml-44 sm:p-0 md:p-6">
+  <div class="p-0 sm:p-6 sm:ml-44 ">
     <div class="rounded-lg mt-16">
 
       <div class="bg-white h-fit w-full rounded-md p-4">
@@ -36,18 +43,17 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'user') {
         <br>
         <br>
 
-        <nav class="bg-white overflow-x-auto z-30">
+        <nav class="bg-white overflow-x-auto">
           <ul class="flex">
-            <li id="um_registration" onclick="navigateTo('um_registration')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md border-1 border-white hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Reg/Login</li>
-            <li id="um_dashboard" onclick="navigateTo('um_dashboard')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Dashboard</li>
-            <li id="um_lupon" onclick="navigateTo('um_lupon')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer">Lupon</li>
-            <li id="um_complaint" onclick="navigateTo('um_complaint')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Complaint</li>
-            <li id="um_archive" onclick="navigateTo('um_archive')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Archive</li>
-            <li id="um_report" onclick="navigateTo('um_report')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Reports</li>
-            <li id="um_LTIA" onclick="navigateTo('um_LTIA')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer">LTIA</li>
-            <li id="um_userlogs" onclick="navigateTo('um_userlogs')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">User logs</li>
-            <li id="um_settings" onclick="navigateTo('um_settings')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Settings</li>
-            <li id="um_notif" onclick="navigateTo('um_notif')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-3 py-2 cursor-pointer text-nowrap">Notification</li>
+            <li id="um_registration" onclick="navigateTo('um_registration')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md border-1 border-white hover:bg-blue-100 px-4 py-2 cursor-pointer whitespace-nowrap">Registration/Login</li>
+            <li id="um_dashboard" onclick="navigateTo('um_dashboard')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer whitespace-nowrap">Dashboard</li>
+            <li id="um_lupon" onclick="navigateTo('um_lupon')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">Lupon</li>
+            <li id="um_complaint" onclick="navigateTo('um_complaint')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer whitespace-nowrap">Complaint</li>
+            <li id="um_archive" onclick="navigateTo('um_archive')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer whitespace-nowrap">Archive</li>
+            <li id="um_report" onclick="navigateTo('um_report')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer whitespace-nowrap">Reports</li>
+            <li id="um_LTIA" onclick="navigateTo('um_LTIA')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer">LTIA</li>
+            <li id="um_userlogs" onclick="navigateTo('um_userlogs')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer whitespace-nowrap">User logs</li>
+            <li id="um_settings" onclick="navigateTo('um_settings')" class="menu-item hover:rounded-tr-md hover:rounded-tl-md hover:bg-blue-100 px-4 py-2 cursor-pointer whitespace-nowrap">Settings</li>
           </ul>
         </nav>
 

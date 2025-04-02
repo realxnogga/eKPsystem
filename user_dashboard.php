@@ -1,4 +1,4 @@
-  <?php
+<?php
   session_start();
 
   include 'connection.php';
@@ -110,7 +110,8 @@
 <!-- tabler support -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
 
-<link href="output.css" rel="stylesheet">
+<!-- tailwind cdn -->
+<link rel="stylesheet" href="output.css">
 
   <title>Dashboard</title>
 </head>
@@ -130,21 +131,21 @@
       </div>
 
       <!-- Cards Section -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Settled Cases Card -->
-        <div class="bg-cover bg-center bg-[url('img/settled.png')] rounded-lg shadow-lg text-center text-white p-6">
+        <div style="background-image: url('img/settled.png');" class="bg-cover bg-center rounded-lg shadow-lg text-center text-white p-6">
           <h5 class="text-xl font-semibold mb-4">Settled Cases</h5>
           <p class="text-4xl font-bold"><?php echo $totalSettledCount; ?></p>
         </div>
 
         <!-- Unsettled Cases Card -->
-        <div class="bg-cover bg-center bg-[url('img/unsettled.png')] rounded-lg shadow-lg text-center text-white p-6">
+        <div style="background-image: url('img/unsettled.png');" class="bg-cover bg-center rounded-lg shadow-lg text-center text-white p-6">
           <h5 class="text-xl font-semibold mb-4">Unsettled Cases</h5>
           <p class="text-4xl font-bold"><?php echo $totalUnsettledCount; ?></p>
         </div>
 
         <!-- Pending Cases Card -->
-        <div class="bg-cover bg-center bg-[url('img/pending.png')] rounded-lg shadow-lg text-center text-white p-6">
+        <div style="background-image: url('img/pending.png');" class="bg-cover bg-center rounded-lg shadow-lg text-center text-white p-6">
           <h5 class="text-xl font-semibold mb-4">Pending Cases</h5>
           <p class="text-4xl font-bold"><?php echo $totalPendingCount; ?></p>
         </div>
@@ -227,35 +228,37 @@
         <div class="flex-grow border-t border-gray-400"></div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- References Card -->
-        <div class="bg-white cols-span-3 lg:col-span-2 rounded-lg shadow-lg p-6">
+        <div class="bg-white cols-span-3 md:col-span-2 rounded-lg shadow-lg p-6">
           <h5 class="text-xl font-semibold mb-4 text-gray-800">References</h5>
           <ul class="list-disc list-inside text-gray-600">
-                <a class="hover:text-blue-500" href="links/Related_Laws_Katarungang_Pambarangay_Handbook (1).pdf" download>Related Laws KP Handbook</a><br>
-                <a class="hover:text-blue-500" href="links/OFFENSES WITHIN KP_Jurisdiction_for Admin.pptx.pdf" download>Offenses within KP Jurisdiction for Admin</a><br>
-                <a class="hover:text-blue-500" href="links/LTIA-FORMS-6-7-1.docx.pdf" download>LTIA-FORMS-6-7-1</a><br>
-                <a class="hover:text-blue-500" href="links/KP-for-Atty-Ver.ppt.pdf" download>Revised KP Law</a><br>
-                <a class="hover:text-blue-500" href="links/template-conso-report-KP (1).xlsx - Sheet1.pdf" download>Consolidated KP Compliance Report</a><br>
-                <a class="hover:text-blue-500" href="links/KATARUNGANG PAMBARANGAY.pptx.pdf" download>DILG Laguna Cluster-A SUB LGRC</a><br>
-                <a class="hover:text-blue-500" href="links/KP-Flowchart-with-link-to-KP-Forms_atty-ver.pptx.pdf" download>KP Flowchart with Links</a><br>
-                <a class="hover:text-blue-500" href="links/KP actual process_Jurusdictional aspect.pptx.pdf" download>KP Actual Process Jurisdictional Aspect</a><br>
-                <a class="hover:text-blue-500" href="links/Katarungang-Pambarangay-2018-v2.pptx.pdf" download>KP 2018 V2</a><br>
-                <a class="hover:text-blue-500" href="links/criminal-cases-under-the-jurisdiction-of-KP_atty-ver.pptx.pdf" download>Criminal Cases Under the Jurisdiction of KP</a><br>
-                <a class="hover:text-blue-500" href="links/KP-IRR.pdf" download>KP Forms English</a><br>
-                <a class="hover:text-blue-500" href="links/543442409-KP-Forms-Tagalog-1.pdf" download>KP Forms Tagalog</a>
+          <a href="links/Related_Laws_Katarungang_Pambarangay_Handbook (1).pdf" download>Related Laws KP Handbook</a><br>
+                <a href="links/OFFENSES WITHIN KP_Jurisdiction_for Admin.pptx.pdf" download>Offenses within KP Jurisdiction for Admin</a><br>
+                <a href="links/LTIA-FORMS-6-7-1.docx.pdf" download>LTIA-FORMS-6-7-1</a><br>
+                <a href="links/KP-for-Atty-Ver.ppt.pdf" download>Revised KP Law</a><br>
+                <a href="links/template-conso-report-KP (1).xlsx - Sheet1.pdf" download>Consolidated KP Compliance Report</a><br>
+                <a href="links/KATARUNGANG PAMBARANGAY.pptx.pdf" download>DILG Laguna Cluster-A SUB LGRC</a><br>
+                <a href="links/KP-Flowchart-with-link-to-KP-Forms_atty-ver.pptx.pdf" download>KP Flowchart with Links</a><br>
+                <a href="links/KP actual process_Jurusdictional aspect.pptx.pdf" download>KP Actual Process Jurisdictional Aspect</a><br>
+                <a href="links/Katarungang-Pambarangay-2018-v2.pptx.pdf" download>KP 2018 V2</a><br>
+                <a href="links/criminal-cases-under-the-jurisdiction-of-KP_atty-ver.pptx.pdf" download>Criminal Cases Under the Jurisdiction of KP</a><br>
+                <a href="links/KP-IRR.pdf" download>KP Forms English</a><br>
+                <a href="links/543442409-KP-Forms-Tagalog-1.pdf" download>KP Forms Tagalog</a>
+            <!-- Add more links as needed -->
           </ul>
         </div>
 
         <!-- External Links -->
-        <div class="grid cols-span-3 lg:grid-cols-1  gap-4">
-          <a href="https://www.dilg.gov.ph/" class="block bg-contain bg-center bg-[url('img/official.png')] rounded-lg shadow-lg h-40" target="_blank"></a>
-          <a href="https://www.facebook.com/dilglaguna.clustera.7" class="block bg-contain bg-center bg-[url('img/fb.png')] rounded-lg shadow-lg h-40" target="_blank"></a>
-          <a href="https://www.instagram.com/dilgr4a/" class="block bg-cover bg-contain bg-[url('img/ig.png')] rounded-lg shadow-lg h-40" target="_blank"></a>
+        <div class="grid cols-span-3 md:cols-span-1 gap-4">
+          <a style="background-image: url('img/official.png');" href="https://www.dilg.gov.ph/" class="block bg-contain bg-center rounded-lg shadow-lg h-40" target="_blank"></a>
+          <a style="background-image: url('img/fb.png');" href="https://www.facebook.com/dilglaguna.clustera.7" class="block bg-contain rounded-lg shadow-lg h-40" target="_blank"></a>
+          <a style="background-image: url('img/ig.png');" href="https://www.instagram.com/dilgr4a/" class="block bg-cover bg-contain rounded-lg shadow-lg h-40" target="_blank"></a>
         </div>
       </div>
     </div>
   </div>
+
 </body>
 
 </html>

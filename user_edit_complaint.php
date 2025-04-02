@@ -148,6 +148,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $updateComplaintstmt->execute();
 // ------------------------------
 
+    // if update successfull update the "complaint_updated_date" table
+    $curdate = date("Y-m-d H:i:s");
+    $updateComplaintquery = "UPDATE complaints SET complaint_updated_date = '$curdate' WHERE id = $complaintId";
+    $updateComplaintstmt = $conn->prepare($updateComplaintquery);
+    $updateComplaintstmt->execute();
+    // ------------------------------
+
     echo json_encode(['status' => 'success', 'message' => 'Complaint Updated Successfully!']);
 
     // Fetch the updated complaint data from the database
@@ -182,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <!-- tabler support -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
   <!-- tailwind cdn -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="output.css">
 
   <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
 

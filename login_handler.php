@@ -2,6 +2,7 @@
 <?php
 session_start();
 include 'connection.php';
+include 'user_set_timezone.php';
 
 include 'user_set_timezone.php';
 
@@ -41,10 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['last_name'] = $user['last_name'];   // Store last name
                     $_SESSION['barangay_id'] = $user['barangay_id']; // Store barangay ID
                     $_SESSION['isloggedin'] = true;
+                    
                     // Log user activity
-
-                    $dateTemp = date('Y-m-d H:i:s');
-                    logUserActivity($user['id'], $dateTemp, "User logged in");
+                    $logcurdate = date('Y-m-d H:i:s');
+                    logUserActivity($user['id'], $logcurdate, "User logged in");
 
 
                     // Fetch additional user information like municipality_name and barangay_name
@@ -101,15 +102,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Function to log user activity
-function logUserActivity($user_id, $dateTemp, $activity)
+function logUserActivity($user_id, $logcurdate, $activity)
 {
     global $conn; // Assuming $conn is your database connection variable
 
     $query = "INSERT INTO user_logs (user_id, timestamp, activity) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bindParam(1, $user_id, PDO::PARAM_INT); // Bind the first parameter
-    $stmt->bindParam(2, $dateTemp, PDO::PARAM_STR); // Bind the second parameter (timestamp)
-    $stmt->bindParam(3, $activity, PDO::PARAM_STR); // Bind the third parameter (activity)
+    $stmt->bindParam(1, $user_id, PDO::PARAM_INT);
+    $stmt->bindParam(2, $logcurdate, PDO::PARAM_STR);
+    $stmt->bindParam(3, $activity, PDO::PARAM_STR);
     $stmt->execute();
 }
 

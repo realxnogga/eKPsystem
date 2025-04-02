@@ -147,6 +147,21 @@ exit;
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
+
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <!-- flowbite component -->
+  <script src="../node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="../node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="../node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+ <!-- tailwind cdn -->
+<script src="https://cdn.tailwindcss.com"> </script>
+
 </head>
 <style>
     .form-container {

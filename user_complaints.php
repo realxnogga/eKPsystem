@@ -120,9 +120,9 @@ function fetchMatchingRows($conn, $userID, $searchText, $whatYear)
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-  
-  <link href="./output.css" rel="stylesheet">
 
+  <!-- tailwind cdn -->
+  <link rel="stylesheet" href="output.css">
 
   <link rel="stylesheet" href="hide_show_icon.css">
 
@@ -138,23 +138,26 @@ function fetchMatchingRows($conn, $userID, $searchText, $whatYear)
         <details class="mb-6">
           <summary class="cursor-pointer text-lg font-semibold">Color Legend</summary>
           <div class="mt-4 flex flex-wrap justify-between items-center gap-4">
+            <!-- Department Information -->
             <div class="flex items-center">
-              <img src="img/cluster.png" alt="Logo" class="w-24 h-24 mr-4">
+              <img src="img/cluster.png" alt="Department Logo" class="w-24 h-24 mr-4">
               <h5 class="text-lg font-semibold">Department of the Interior and Local Government</h5>
             </div>
-            <div class="p-4 border border-gray-300 rounded-lg w-full sm:w-fit">
+
+            <!-- Color Legend Section -->
+            <div class="p-4 border border-gray-300 rounded-lg w-full sm:w-auto">
               <h4 class="text-base font-bold mb-2">Color Legend</h4>
               <ul class="space-y-2">
                 <li class="flex items-center">
-                  <span class="w-5 h-5 bg-green-200 border border-gray-400 rounded-full mr-2"></span>
+                  <span class="w-5 h-5 bg-green-200 border border-gray-400 rounded-full mr-2" aria-hidden="true"></span>
                   <span class="text-sm text-gray-600">Settled</span>
                 </li>
                 <li class="flex items-center">
-                  <span class="w-5 h-5 bg-yellow-100 border border-gray-400 rounded-full mr-2"></span>
+                  <span class="w-5 h-5 bg-yellow-100 border border-gray-400 rounded-full mr-2" aria-hidden="true"></span>
                   <span class="text-sm text-gray-600">Pending (10-14 days)</span>
                 </li>
                 <li class="flex items-center">
-                  <span class="w-5 h-5 bg-red-300 border border-gray-400 rounded-full mr-2"></span>
+                  <span class="w-5 h-5 bg-red-300 border border-gray-400 rounded-full mr-2" aria-hidden="true"></span>
                   <span class="text-sm text-gray-600">Unsettled (15-30 days)</span>
                 </li>
               </ul>
@@ -186,8 +189,8 @@ function fetchMatchingRows($conn, $userID, $searchText, $whatYear)
           </form>
 
           <button type="button" class="p-2 px-3 bg-blue-500 text-white rounded-md hover:bg-blue-600" onclick="location.href='user_add_complaint.php';">
-          <i class="ti ti-plus text-lg show-icon"></i>
-          <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p>
+            <i class="ti ti-plus text-lg show-icon"></i>
+            <p style="white-space: nowrap;" class="hide-icon hidden">Add complaint</p>
           </button>
         </div>
 
@@ -205,7 +208,7 @@ function fetchMatchingRows($conn, $userID, $searchText, $whatYear)
                 <th class="p-3 text-sm font-semibold text-gray-700 text-center">Actions</th>
               </tr>
             </thead>
-            <tbody >
+            <tbody>
               <?php while ($row = $result->fetch(PDO::FETCH_ASSOC)): ?>
                 <?php
                 $isSettled = in_array($row['CMethod'], ['Mediation', 'Conciliation', 'Arbitration']);
@@ -222,24 +225,24 @@ function fetchMatchingRows($conn, $userID, $searchText, $whatYear)
                   <td class="p-3 text-sm text-gray-600 text-center"><?= date('Y-m-d', strtotime($row['Mdate'])) ?></td>
                   <td class="p-3 text-sm text-gray-600 text-center"><?= $row['CMethod'] ?></td>
                   <?php
-                      $complaintId = $row['id'];
-                      $caseProgressQuery = "SELECT current_hearing FROM case_progress WHERE complaint_id = $complaintId";
-                      $caseProgressResult = $conn->query($caseProgressQuery);
-                      $caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
-                      ?>
-                      <td class="p-3 text-sm text-gray-600 text-center">
-                        <?php if ($caseProgressRow): ?>
-                          <?php $currentHearing = $caseProgressRow['current_hearing']; ?>
-                          <?php if ($currentHearing === '0'): ?>
-                            Not Set
-                          <?php else: ?>
-                            <?php $ordinalHearing = str_replace('th', getOrdinalSuffix((int)$currentHearing), $currentHearing); ?>
-                            <?= $ordinalHearing ?> Hearing
-                          <?php endif; ?>
-                        <?php else: ?>
-                          Not Set
-                        <?php endif; ?>
-                      </td>
+                  $complaintId = $row['id'];
+                  $caseProgressQuery = "SELECT current_hearing FROM case_progress WHERE complaint_id = $complaintId";
+                  $caseProgressResult = $conn->query($caseProgressQuery);
+                  $caseProgressRow = $caseProgressResult->fetch(PDO::FETCH_ASSOC);
+                  ?>
+                  <td class="p-3 text-sm text-gray-600 text-center">
+                    <?php if ($caseProgressRow): ?>
+                      <?php $currentHearing = $caseProgressRow['current_hearing']; ?>
+                      <?php if ($currentHearing === '0'): ?>
+                        Not Set
+                      <?php else: ?>
+                        <?php $ordinalHearing = str_replace('th', getOrdinalSuffix((int)$currentHearing), $currentHearing); ?>
+                        <?= $ordinalHearing ?> Hearing
+                      <?php endif; ?>
+                    <?php else: ?>
+                      Not Set
+                    <?php endif; ?>
+                  </td>
                   <td class="p-3 text-sm text-gray-600 text-center">
                     <div class="flex justify-center gap-2">
                       <form action="user_edit_complaint.php" method="get">
@@ -265,7 +268,8 @@ function fetchMatchingRows($conn, $userID, $searchText, $whatYear)
 
                 </tr>
 
-        
+
+
               <?php endwhile; ?>
             </tbody>
           </table>

@@ -165,6 +165,7 @@ if (isset($_POST['rev_number_select']) && !empty($_POST['rev_number_select'])) {
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
+
     <style>
         .spacingtabs {
             padding-left: 2em;

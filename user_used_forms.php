@@ -63,9 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <!-- tabler support -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
   <!-- tailwind cdn -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-    <style>
+<link rel="stylesheet" href="output.css">
+
+<style>
     .truncate-text {
       white-space: nowrap;
       overflow: hidden;
@@ -79,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       z-index: 1;
     }
   </style>
-  
 </head>
 
 <body class="bg-gray-200">
@@ -195,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
               $buttonID = 'formButton_' . $formID;
 
-              echo '<div id="toHide" class="flex items-center justify-between bg-white rounded-md mb-2">';
+                echo '<div id="toHide" class="flex items-center justify-between bg-white rounded-md mb-2">';
               echo '<button class="truncate-text open-form bg-green-500 text-white text-sm h-full px-2 py-2 rounded-sm w-full" id="' . $buttonID . '" data-form-id="' . $formID . '" data-form-used="' . $i . '"> ' . $buttonText . ' </button>';
               echo '<button class="delete-form bg-white text-red-500 px-2 py-1 rounded-md" data-form-id="' . $formID . '"><i class="ti ti-trash"></i></button>';
               echo '</div>';
