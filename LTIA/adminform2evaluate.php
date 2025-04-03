@@ -92,6 +92,29 @@ try {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LTIA</title>
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+  <link rel="stylesheet" href="../assets/css/styles.min.css" />
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="LTIAassest/jquery-3.6.0.min.js"></script>
+<script src="LTIAassest/bootstrap.min.js"></script>
+ <link rel="stylesheet" href="css/td_hover.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="../node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="../node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="../node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+
+  <link href="../output.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="hide_show_icon.css">
+
+  
 <style>
   .verify-btn {
     min-width: 80px;
@@ -145,15 +168,6 @@ textarea[disabled] {
 }
 
 </style>
-<link rel="stylesheet" href="../assets/css/styles.min.css" />
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- <script src="LTIAassest/jquery-3.6.0.min.js"></script>
-<script src="LTIAassest/bootstrap.min.js"></script>
- <link rel="stylesheet" href="css/td_hover.css">
-
-
 <script>
 $(document).ready(function () {
     // Function to show modal with message
@@ -255,8 +269,6 @@ $(document).ready(function () {
             'border-color': '#ef5350'
         });
     }
-
-    
 
     // Handle barangay selection
     $('#barangay_select').on('change', function () {
@@ -581,7 +593,6 @@ $(document).ready(function () {
             });
             return;
         }
-
         // Remove any existing messages
         $('.save-success, .save-error').remove();
 
@@ -1238,14 +1249,20 @@ if (classification === "City") {
                 </button>
                </td>
             <td>  
-              <input type="number" value="" name="IA_1a_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
+            <select name="IA_1a_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0 - None</option>
+                <option value="2.5">2.5 - Partial</option>
+                <option value="5">5 - Complete</option>
+            </select>
+              <!-- <input type="number" value="" name="IA_1a_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"> -->
             <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
           </td>
             <td><textarea name="IA_1a_pdf_remark" placeholder="Remarks"></textarea></td>
           </tr>
           <tr>
             <td><details>
-        <summary><b>b) Sending of Notices/Summons to Parties within the Prescribed Period (within the next working day upon receipt of complaint)</b></summary>
+        <summary><b>b) Sending of Notice and Summons with complete and accurate information to the parties within the prescribed period (within the next working day upon receipt of complaint)</b></summary>
         <p><br>
           <b>Scoring Details:</b> <br><br>
           <b>5 points</b> - Submitted/presented 80-100% of summons with complete and accurate information issued within the prescribed period.<br>
@@ -1267,7 +1284,13 @@ if (classification === "City") {
         </button>
     </td>
             <td>
-            <input type="number" value="" name="IA_1b_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
+            <select name="IA_1b_pdf_rate" min="0" max="5" class="score-input" placeholder="Rate">
+                <option value="0">0</option>
+                <option value="5">5</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+            </select>
+            <!-- <input type="number" value="" name="IA_1b_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"> -->
           <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
             </td>
             <td><textarea name="IA_1b_pdf_remark" placeholder="Remarks"></textarea></td>
@@ -1304,7 +1327,12 @@ if (classification === "City") {
                 Verify
             </button>
           </td>
-            <td><input type="number" value="" name="IA_2a_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td>
+            <select name="IA_2a_pdf_rate" min="0" max="5" class="score-input" placeholder="Rate">
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select>    
+            <!-- <input type="number" value="" name="IA_2a_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td> -->
             <td><textarea name="IA_2a_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1318,7 +1346,12 @@ if (classification === "City") {
                 Verify
             </button>
             </td>
-            <td><input type="number" value="" name="IA_2b_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td>
+            <select name="IA_2b_pdf_rate" min="0" max="5" class="score-input" placeholder="Rate">
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select>
+            <!-- <input type="number" value="" name="IA_2b_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td> -->
             <td><textarea name="IA_2b_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1406,9 +1439,9 @@ if (classification === "City") {
             <td ><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr id="municipality-row" style="display:none;">
-              <td>For Municipalities:
+              <td>
               <details>
-        <summary><b>For Municipalities:</b></summary>
+        <summary><b>For Municipalities - Manual Records and/or Digital Record Filling</b></summary>
         <p><br>
           <b>Scoring Details:</b> <br><br>
           <b>1 point</b> - if presented copy/photo of the manual record.          <br>
@@ -1506,9 +1539,10 @@ if (classification === "City") {
               <tr>
                 <td>
                 <details>
-              <summary><b>1. To the Court: Submitted/presented copies of settlement agreement to the Court</b></summary>
+              <summary><b>1. To the Court</b></summary>
               <p><br>
-                <b>Criteria Description:</b> <br>
+              <p>: Submitted/presented copies of settlement agreement to the Court</p>
+            <b>Criteria Description:</b> <br>
                 Copies of the settlement agreement must be submitted to the Court within the following periods: 
                 <ul>
                   <li>After the lapse of the ten-day period repudiating the mediation/conciliation settlement agreement</li>
@@ -1542,7 +1576,7 @@ if (classification === "City") {
               </tr>
               <tr>
                 <td><details>
-                <summary><b>2. To the DILG (Monthly): Submission of required report to the DILG</b></summary>
+                <summary><b>2. To the DILG (Monthly and Qualterly): Submission of required report to the DILG</b></summary>
                 <p><br>
                   2 points - Submitted/presented the required report to the DILG within the prescribed period<br>
                   1 point - Submitted/presented a partial report to the DILG within the prescribed period<br>
@@ -1599,6 +1633,7 @@ if (classification === "City") {
                 <summary><b>Minutes of the Meeting</b></summary>
                 <p><br>
                   <b>Number of months with KP-related meetings with minutes and attendance sheets conducted:</b><br><br>
+                  <p>  Twelve (12) minutes of meeting providing basic details on the meeting, duly signed by the Lupon Secretary and duly note by the Lupon Chairperson</p>
                   <b>8.0 points</b> - 12 months.<br>
                   <b>6.0 points</b> - 9-11 months.<br>
                   <b>4.0 points</b> - 6-8 months.<br>

@@ -92,6 +92,28 @@ try {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LTIA</title>
   <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+  <link rel="stylesheet" href="../assets/css/styles.min.css" />
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="LTIAassest/jquery-3.6.0.min.js"></script>
+<script src="LTIAassest/bootstrap.min.js"></script>
+ <link rel="stylesheet" href="css/td_hover.css">
+ <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+
+  <link href="output.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="hide_show_icon.css">
+
 <style>
   .verify-btn {
     min-width: 80px;
@@ -145,14 +167,6 @@ textarea[disabled] {
 }
 
 </style>
-<link rel="stylesheet" href="../assets/css/styles.min.css" />
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- <script src="LTIAassest/jquery-3.6.0.min.js"></script>
-<script src="LTIAassest/bootstrap.min.js"></script>
- <link rel="stylesheet" href="css/td_hover.css">
-
 
 <script>
 $(document).ready(function () {

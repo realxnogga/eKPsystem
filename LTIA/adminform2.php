@@ -108,6 +108,21 @@ function getAdjectivalRating($total)
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+<script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+<link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+
+<!-- tabler icon -->
+<link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+
+<!-- tabler support -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+
+<link href="output.css" rel="stylesheet">
+
+<link rel="stylesheet" href="hide_show_icon.css">
+
     <style>
         .custom-button {
                 background-color: white;
