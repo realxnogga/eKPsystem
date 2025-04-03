@@ -94,23 +94,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
 
-<script src="node_modules/flowbite/dist/flowbite.min.js"></script>
-<link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
 
-<!-- tabler icon -->
-<link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
 
-<!-- tabler support -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
 
-<link href="output.css" rel="stylesheet">
+  <link href="output.css" rel="stylesheet">
 
-<link rel="stylesheet" href="hide_show_icon.css">
+  <link rel="stylesheet" href="hide_show_icon.css">
 
 
 </head>
 
 <!-- filepath: c:\xampp\htdocs\eKPsystem\admin_acc_req.php -->
+
 <body class="bg-gray-200">
 
   <?php include "admin_sidebar_header.php"; ?>
@@ -122,30 +123,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="bg-white shadow-md rounded-lg">
         <div class="p-6">
 
-        <div class="flex items-center mb-6">
-        <img src="img/cluster.png" alt="Logo" class="w-24 h-24 mr-4">
-        <div>
-          <h5 class="text-lg font-semibold">Department of the Interior and Local Government</h5>
-        </div>
-      </div>
- 
+          <div class="flex items-center mb-6">
+            <img src="img/cluster.png" alt="Logo" class="w-24 h-24 mr-4">
+            <div>
+              <h5 class="text-lg font-semibold">Department of the Interior and Local Government</h5>
+            </div>
+          </div>
+
           <h5 class="text-lg font-semibold mb-4">Account Request</h5>
           <hr class="mb-6">
 
-            <form id="myForm" method="POST" action="" class="w-full">
-              <input class="form-control w-full border border-gray-300 p-2" type="text" id="inputField" name="inputField" placeholder="Search" value="<?php echo isset($_SESSION['requestingBarangay']) ? $_SESSION['requestingBarangay'] : ''; ?>">
-            </form>
+          <form id="myForm" method="POST" action="" class="w-full">
+            <input class="form-control w-full border border-gray-300 p-2" type="text" id="inputField" name="inputField" placeholder="Search" value="<?php echo isset($_SESSION['requestingBarangay']) ? $_SESSION['requestingBarangay'] : ''; ?>">
+          </form>
 
-            <br>
+          <br>
 
-            <?php
+          <?php
 
-            echo '<div id="account-requests" class="block">';
+          echo '<div id="account-requests" class="block">';
 
-            if (!empty($accountRequests)) {
-              echo '<div class="overflow-x-auto">';
-              echo '<table id="brgyReqTable" class="border table-auto lg:table-fixed w-full bg-white rounded-lg"';
-              echo '<thead>
+          if (!empty($accountRequests)) {
+            echo '<div class="overflow-x-auto">';
+            echo '<table id="brgyReqTable" class="border table-auto lg:table-fixed w-full bg-white rounded-lg"';
+            echo '<thead>
               <tr class="bg-gray-200">
                   <th class="whitespace-nowrap p-3 text-sm font-semibold text-gray-700 text-center">Username</th>
                   <th class="whitespace-nowrap p-3 text-sm font-semibold text-gray-700 text-center">Secretary</th>
@@ -155,21 +156,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <th class="whitespace-nowrap p-3 text-sm font-semibold text-gray-700 text-center">Actions</th>
               </tr>
             </thead>';
-              echo '<tbody>';
+            echo '<tbody>';
 
-              foreach ($accountRequests as $user) {
-                echo '<tr class="text-center">';
-                echo '<td class="break-all px-4 py-2">' . $user['username'] . '</td>';
-                echo '<td class="break-all px-4 py-2">' . $user['first_name'] . ' ' . $user['last_name'] . '</td>';
-                echo '<td class="break-all px-4 py-2">' . $user['email'] . '</td>';
-                echo '<td class="break-all px-4 py-2">' . $user['contact_number'] . '</td>';
-                echo '<td class="break-all px-4 py-2">' . $user['barangay_name'] . '</td>';
+            foreach ($accountRequests as $user) {
+              echo '<tr class="text-center">';
+              echo '<td class="break-all px-4 py-2">' . $user['username'] . '</td>';
+              echo '<td class="break-all px-4 py-2">' . $user['first_name'] . ' ' . $user['last_name'] . '</td>';
+              echo '<td class="break-all px-4 py-2">' . $user['email'] . '</td>';
+              echo '<td class="break-all px-4 py-2">' . $user['contact_number'] . '</td>';
+              echo '<td class="break-all px-4 py-2">' . $user['barangay_name'] . '</td>';
 
-                echo '<td class="py-4">';
+              echo '<td class="py-4">';
 
-                if (!isset($user['verified']) || !$user['verified']) {
+              if (!isset($user['verified']) || !$user['verified']) {
 
-                  echo <<<HTML
+                echo <<<HTML
                   <form class="flex flex-col items-center space-y-2" method="post" action="{$_SERVER['PHP_SELF']}">
                       <input type="hidden" name="user_id" value="{$user['id']}">
                       <button class="bg-green-500 hover:bg-green-400 w-fit px-3 py-1 rounded-md text-white" type="submit" name="action" value="verify">
@@ -192,21 +193,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                       </button>
                   </form>
                   HTML;
-                }
-
-                echo '</td>';
-                echo '</tr>';
               }
 
-              echo '</tbody>';
-              echo '</table>';
-              echo '</div>';
-            } else {
-              echo '<p class="text-center text-lg">There are no account requests as of the moment.</p>';
+              echo '</td>';
+              echo '</tr>';
             }
 
+            echo '</tbody>';
+            echo '</table>';
             echo '</div>';
-            ?>
+          } else {
+            echo '<p class="text-center text-lg">There are no account requests as of the moment.</p>';
+          }
+
+          echo '</div>';
+          ?>
 
           </b>
 

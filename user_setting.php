@@ -176,15 +176,21 @@ function uploadFile($file, $directory)
           </div>
           <h5 class="text-lg font-semibold mt-6">Account Settings</h5>
           <hr class="my-4">
-          <?php if (isset($_GET['update_account_message'])): ?>
-            <div id="alertMessage" class="alert <?php echo $_GET['update_account_message'] === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'; ?> p-4 rounded-md">
-              <?php
-              if ($_GET['update_account_message'] === 'success') echo "Updated successfully.";
-              if ($_GET['update_account_message'] === 'emailalreadyinuse') echo "Email already in use.";
-              if ($_GET['update_account_message'] === 'passwordeightlong') echo "Password should be at least 8 characters long.";
-              ?>
-            </div>
-          <?php endif; ?>
+
+          <?php
+          if (isset($_GET['update_account_message'])) {
+            if ($_GET['update_account_message'] === 'success') {
+              echo "<div id='alertMessage' class='bg-green-100 text-green-700 p-4 rounded-md'>Updated successfully.</div>";
+            }
+            if ($_GET['update_account_message'] === 'emailalreadyinuse') {
+              echo "<div id='alertMessage' class='bg-red-100 text-red-700 p-4 rounded-md'>Email already in use. Please try a different email.</div>";
+            }
+            if ($_GET['update_account_message'] === 'passwordeightlong') {
+              echo "<div id='alertMessage' class='bg-red-100 text-red-700 p-4 rounded-md'>Password should be at least 8 characters long.</div>";
+            }
+          }
+          ?>
+
           <form id="userSettingsForm" method="post" action="general_handler.php" class="space-y-1">
             <div>
               <label for="username" class="block text-sm font-medium">Username:</label>
@@ -230,14 +236,18 @@ function uploadFile($file, $directory)
         <div class="bg-white shadow-none sm:shadow-md rounded-lg p-6 h-fit">
           <h5 class="text-lg font-semibold">Update Security Settings</h5>
           <hr class="my-4">
-          <?php if (isset($_GET['update_securityquestion_message'])): ?>
-            <div id="alertMessage" class="alert <?php echo $_GET['update_securityquestion_message'] === 'SQupdatedsuccessfully' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'; ?> p-4 rounded-md">
-              <?php
-              if ($_GET['update_securityquestion_message'] === 'SQupdatedsuccessfully') echo "Security answer updated successfully.";
-              if ($_GET['update_securityquestion_message'] === 'SQupdatederror') echo "Updating security answer failed.";
-              ?>
-            </div>
-          <?php endif; ?>
+
+          <?php
+          if (isset($_GET['update_securityquestion_message'])) {
+            if ($_GET['update_securityquestion_message'] === 'SQupdatedsuccessfully') {
+              echo "<div id='alertMessage' class='bg-green-100 text-green-700 p-4 rounded-md'>Security answer updated successfully.</div>";
+            }
+            if ($_GET['update_securityquestion_message'] === 'SQupdatederror') {
+              echo "<div id='alertMessage' class='bg-red-100 text-red-700 p-4 rounded-md'>Updating security answer failed.</div>";
+            }
+          }
+          ?>
+
           <form id="securityForm" method="post" action="security_handler.php" class="space-y-6">
             <div>
               <label for="question1" class="block text-sm font-medium">Security Question 1:</label>

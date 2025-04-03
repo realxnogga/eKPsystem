@@ -225,8 +225,6 @@ if (isset($_GET['yearurl']) || isset($_GET['monthurl'])) {
                 (+) Add existing Report
               </a>
 
-
-
               <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <h2 class="text-xl font-semibold">Annual Report (<?php echo isset($_GET['yearurl']) ? $_GET['yearurl'] : $latestYear; ?>)</h2>
@@ -346,6 +344,7 @@ if (isset($_GET['yearurl']) || isset($_GET['monthurl'])) {
               <hr class="mb-6">
 
               <?php
+              
               if (isset($_GET['update_info_message'])) {
                 if ($_GET['update_info_message'] === 'success') {
                   echo "<div id='alertMessage' class='bg-green-100 text-green-700 p-4 rounded-md'>Updated successfully.</div>";

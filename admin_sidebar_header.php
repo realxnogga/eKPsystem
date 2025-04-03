@@ -58,8 +58,6 @@ function countAccountRequests($conn, $currentMunicipalityID, $userType)
 
   return $statement->fetchColumn();
 }
-
-
 ?>
 
 <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -145,12 +143,13 @@ function countAccountRequests($conn, $currentMunicipalityID, $userType)
           <span>Secretaries Corner</span>
         </a>
       </li>
+
       <li>
-        <a href="<?php echo traverseDirectory(); ?>admin_acc_req.php" class="<?php echo isActive('admin_acc_req.php') . ' ' . isActive('admin_manage_acc_req.php'); ?> flex gap-x-2 items-center px-2 py-1 rounded-lg hover:bg-blue-100 group">
+        <a href="<?php echo traverseDirectory(); ?>admin_acc_req.php" class="<?php echo isActive('admin_acc_req.php') . ' ' . isActive('admin_manage_acc_req.php'); ?> flex gap-x-2 items-center px-2 py-1 rounded-lg hover:bg-blue-100 group relative">
           <i class="ti ti-user text-2xl"></i>
           <span>Account Requests</span>
           <?php $tempBrgy = countAccountRequests($conn, $currentMunicipalityID, 'user'); ?>
-          <div class="<?php echo $tempBrgy == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-1 -right-1 rounded-[25px] flex items-center justify-center">
+          <div class="<?php echo $tempBrgy == 0 ? 'hidden' : ''; ?> px-1 absolute bg-green-500 -top-1 -right-1 rounded-lg flex items-center justify-center">
             <p class="text-white text-xs px-[.3rem]"><?php echo $tempBrgy; ?></p>
           </div>
         </a>
@@ -165,12 +164,12 @@ function countAccountRequests($conn, $currentMunicipalityID, $userType)
       </li>
 
       <li>
-        <a href="<?php echo traverseDirectory(); ?>admin_ltia_assessor_req.php" class="<?php echo isActive('admin_ltia_assessor_req.php') . ' ' . isActive('admin_manage_ltia_acc_req.php'); ?> flex gap-x-2 items-center px-2 py-1 rounded-lg hover:bg-blue-100 group">
+        <a href="<?php echo traverseDirectory(); ?>admin_ltia_assessor_req.php" class="<?php echo isActive('admin_ltia_assessor_req.php') . ' ' . isActive('admin_manage_ltia_acc_req.php'); ?> relative flex gap-x-2 items-center px-2 py-1 rounded-lg hover:bg-blue-100 group">
           <i class="ti ti-user-exclamation text-2xl"></i>
           <span>LTIA assesor request</span>
           <p class="absolute top-1 right-2">
             <?php $tempAssessor = countAccountRequests($conn, $currentMunicipalityID, 'assessor'); ?>
-            <div class="<?php echo $tempAssessor == 0 ? 'hidden' : ''; ?> absolute bg-green-500 -top-1 -right-1 rounded-[25px] flex items-center justify-center">
+            <div class="<?php echo $tempAssessor == 0 ? 'hidden' : ''; ?> px-1 absolute bg-green-500 -top-1 -right-1 rounded-lg flex items-center justify-center">
               <p class="text-white text-xs px-[.3rem]"><?php echo $tempAssessor; ?></p>
             </div>
           </p>

@@ -173,7 +173,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <form method="post" action="admin_viewreport.php">
                     <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
                     <input type="hidden" name="barangay_id" value="<?= $user['barangay_id'] ?>">
-                    <button class="bg-blue-500 hover:bg-blue-400 px-3 py-1 ml-2 rounded-md text-white <?= $user['user_type'] === 'assessor' ? 'disabled:opacity-50 disabled:cursor-not-allowed' : '' ?>"
+                    <button class="bg-blue-500 hover:bg-blue-400 px-3 py-1 ml-2 rounded-md text-white <?= $user['user_type'] === 'assessor' ? 'opacity-50 cursor-not-allowed' : '' ?>"
                       type="submit"
                       name="viewreport"
                       formaction="admin_viewreport.php?user_id=<?= $user['id'] ?>"

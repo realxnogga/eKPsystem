@@ -47,6 +47,21 @@ if ($securityQuestions) {
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+
+  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
+
+  <!-- tabler icon -->
+  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
+
+  <!-- tabler support -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
+
+  <link href="output.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="hide_show_icon.css">
+
   <style>
     /* Hide the reveal password button in Internet Explorer */
     input[type='password']::-ms-reveal {
@@ -69,189 +84,158 @@ if ($securityQuestions) {
 
 </head>
 
-<body class="bg-[#E8E8E7]">
+<body class="sm:bg-gray-200 bg-white">
 
   <?php include "admin_sidebar_header.php"; ?>
 
-  <div class="p-4 sm:ml-44 ">
+  <div class="p-0 sm:p-6 sm:ml-44 text-gray-700">
     <div class="rounded-lg mt-16">
 
-      <!--  Row 1 -->
-      <div class="row">
-        <div class="col-lg-4 d-flex align-items-strech">
-          <div class="card w-100">
-            <div class="card-body">
-              <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
-                <div class="mb-3 mb-sm-0">
-
-                  <div class="d-flex align-items-center" class="prof-container">
-                    <img src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>" alt="" class="d-block ui-w-80" style="max-width: 120px; max-height: 120px; margin-right: 10px;" class="align-middle">
-                    <input type="file" id="fileInput" name="profile_pic" style="display: none;">
-                    <!--<h5 class="card-title mb-2 fw-semibold">Department of the Interior and Local Government</h5>-->
-
-                    <!-- <button type="button" id="uploadButton" class="bg-blue-500 hover:bg-blue-4  00 px-3 py-2 rounded-md text-white">Upload a picture</button> -->
-
-                    <a href="crop_profile_pic.php">
-                      <button class="bg-blue-500 hover:bg-blue-400 px-3 py-2 rounded-md text-white">
-                        Upload a picture
-                      </button>
-                    </a>
-
-
-                    <div>
-
-                    </div>
-                  </div>
-                  <br>
-
-                  <h5 class="card-title mb-9 fw-semibold">Account Settings</h5>
-                  <hr>
-                  <br>
-                  <b>
-                    <?php
-
-                    if (isset($_GET['update_account_message'])) {
-                      if ($_GET['update_account_message'] === 'success') {
-                        echo "<div id='alertMessage' class='alert alert-success' role='alert'>Updated successfully.</div>";
-                      }
-                      if ($_GET['update_account_message'] === 'emailalreadyinuse') {
-                        echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Email already in use.</div>";
-                      }
-                      if ($_GET['update_account_message'] === 'passwordeightlong') {
-                        echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Password should be at least 8 characters long.</div>";
-                      }
-                    }
-
-                    ?>
-
-                    <form id="userSettingsForm" method="post" action="general_handler.php">
-                      <div class="form-group">
-                        <label for="first_name">Username:</label>
-                        <input type="text" class="form-control" id="username" name="username" value="<?php echo $user['username']; ?>">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="first_name">First Name:</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="last_name">Last Name:</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="contact_number">Contact Number:</label>
-                        <input type="text" class="form-control" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="email">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" value="<?php echo $user['email']; ?>">
-                      </div>
-                      <div class="form-group">
-                        <label for="new_password">New Password (Leave empty to keep current password):</label>
-
-                        <!-- <input type="password" class="form-control" title="Password must be at least 8 characters long" id="new_password" name="new_password" placeholder=""> -->
-
-                        <div class="input-group">
-                          <input type="password" class="form-control" name="new_password" id="new_password" title="Password must be at least 8 characters long">
-
-                          <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" id="toggle-new-password"><i class="fas fa-eye"></i></button>
-                          </div>
-                        </div>
-
-
-                      </div> <input type="hidden" name="active_tab" value="general"><br>
-                      <button type="submit" name="general_settings" class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white">Save Changes</button>
-                    </form>
-
-                </div>
-              </div>
-
-            </div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Account Settings -->
+        <div class="bg-white shadow-none sm:shadow-md rounded-lg p-6 h-fit">
+          <div class="flex items-center space-x-4">
+            <img
+              src="profile_pictures/<?php echo $user['profile_picture'] ?: 'defaultpic.jpg'; ?>?t=<?php echo time(); ?>"
+              alt=""
+              class="w-24 h-24 object-contain">
+            <input type="file" id="fileInput" name="profile_pic" class="hidden">
+            <a href="crop_profile_pic.php">
+              <button class="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-md">
+                Upload a picture
+              </button>
+            </a>
           </div>
-        </div></b>
+          <h5 class="text-lg font-semibold mt-6">Account Settings</h5>
+          <hr class="my-4">
 
-        <div class="col-lg-4">
-          <div class="row">
-            <div class="col-lg-12">
-              <!-- Yearly Breakup -->
-              <div class="card overflow-hidden">
-                <div class="card-body p-4">
-                  <h5 class="card-title mb-9 fw-semibold">Update Security Settings</h5>
-                  <hr>
-                  <br>
+          <?php
+          if (isset($_GET['update_account_message'])) {
+            if ($_GET['update_account_message'] === 'success') {
+              echo "<div id='alertMessage' class='bg-green-100 text-green-700 p-4 rounded-md'>Updated successfully.</div>";
+            }
+            if ($_GET['update_account_message'] === 'emailalreadyinuse') {
+              echo "<div id='alertMessage' class='bg-red-100 text-red-700 p-4 rounded-md'>Email already in use. Please try a different email.</div>";
+            }
+            if ($_GET['update_account_message'] === 'passwordeightlong') {
+              echo "<div id='alertMessage' class='bg-red-100 text-red-700 p-4 rounded-md'>Password should be at least 8 characters long.</div>";
+            }
+          }
+          ?>
 
-                  <form id="securityForm" method="post" action="security_handler.php">
-                    <div class="tab-pane fade <?php echo !isset($_POST['security_settings']) ? 'active show' : ''; ?>" id="account-security">
-                      <b>
-                        <h6>
 
-                          <?php
-                          if (isset($_GET['update_securityquestion_message'])) {
-                            if ($_GET['update_securityquestion_message'] === 'SQupdatedsuccessfully') {
-                              echo "<div id='alertMessage' class='alert alert-success' role='alert'>Security answer updated successfully.</div>";
-                            }
-                            if ($_GET['update_securityquestion_message'] === 'SQupdatederror') {
-                              echo "<div id='alertMessage' class='alert alert-danger' role='alert'>Updating security answer failed.</div>";
-                            }
-                          }
-                          ?>
-
-                        </h6>
-
-                        <div class="form-group">
-                          <label for="question1">Security Question 1:</label>
-                          <select class="form-control" id="question1" name="question1" required>
-                            <option value="" <?php echo ($question1 == '') ? 'selected' : ''; ?>>Select a Question</option>
-                            <option value="1" <?php echo ($question1 == 1) ? 'selected' : ''; ?>>What is the name of your pet?</option>
-                            <option value="2" <?php echo ($question1 == 2) ? 'selected' : ''; ?>>What is your mother's maiden name?</option>
-                            <option value="3" <?php echo ($question1 == 3) ? 'selected' : ''; ?>>What city were you born in?</option>
-                            <option value="4" <?php echo ($question1 == 4) ? 'selected' : ''; ?>>What is your favorite book?</option>
-                          </select>
-
-                          <label for="answer1">Answer:</label>
-                          <input type="password" class="form-control" id="answer1" name="answer1" required>
-                        </div>
-                        <div class="form-group">
-                          <label for="question1">Security Question 2:</label>
-
-                          <select class="form-control" id="question2" name="question2" required>
-                            <option value="" <?php echo ($question2 == '') ? 'selected' : ''; ?>>Select a Question</option>
-                            <option value="1" <?php echo ($question2 == 1) ? 'selected' : ''; ?>>What is the name of your pet?</option>
-                            <option value="2" <?php echo ($question2 == 2) ? 'selected' : ''; ?>>What is your mother's maiden name?</option>
-                            <option value="3" <?php echo ($question2 == 3) ? 'selected' : ''; ?>>What city were you born in?</option>
-                            <option value="4" <?php echo ($question2 == 4) ? 'selected' : ''; ?>>What is your favorite book?</option>
-                          </select>
-
-                          <label for="answer2">Answer:</label>
-                          <input type="password" class="form-control" id="answer2" name="answer2" required>
-                        </div>
-                        <div class="form-group">
-                          <label for="question3">Security Question 3:</label>
-                          <select class="form-control" id="question3" name="question3" required>
-                            <option value="" <?php echo ($question3 == '') ? 'selected' : ''; ?>>Select a Question</option>
-
-                            <option value="1" <?php echo ($question3 == 1) ? 'selected' : ''; ?>>What is the name of your pet?</option>
-                            <option value="2" <?php echo ($question3 == 2) ? 'selected' : ''; ?>>What is your mother's maiden name?</option>
-                            <option value="3" <?php echo ($question3 == 3) ? 'selected' : ''; ?>>What city were you born in?</option>
-                            <option value="4" <?php echo ($question3 == 4) ? 'selected' : ''; ?>>What is your favorite book?</option>
-                          </select>
-
-                          <label for="answer3">Answer:</label>
-                          <input type="password" class="form-control" id="answer3" name="answer3" required>
-                        </div><br>
-                        <button type="submit" class="bg-green-500 hover:bg-green-400 px-3 py-2 rounded-md text-white" name="security_settings">Save Security Settings</button>
-                        <input type="hidden" name="active_tab" value="security">
-                    </div>
-                  </form>
-                </div>
+          <form id="userSettingsForm" method="post" action="general_handler.php" class="space-y-1">
+            <div>
+              <label for="username" class="block text-sm font-medium">Username:</label>
+              <input type="text" id="username" name="username" value="<?php echo $user['username']; ?>" class="w-full border rounded-md p-2">
+            </div>
+            <div>
+              <label for="first_name" class="block text-sm font-medium">First Name:</label>
+              <input type="text" id="first_name" name="first_name" value="<?php echo $user['first_name']; ?>" class="w-full border rounded-md p-2">
+            </div>
+            <div>
+              <label for="last_name" class="block text-sm font-medium">Last Name:</label>
+              <input type="text" id="last_name" name="last_name" value="<?php echo $user['last_name']; ?>" class="w-full border rounded-md p-2">
+            </div>
+            <div>
+              <label for="contact_number" class="block text-sm font-medium">Contact Number:</label>
+              <input type="text" id="contact_number" name="contact_number" value="<?php echo $user['contact_number']; ?>" class="w-full border rounded-md p-2">
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-medium">Email:</label>
+              <input type="email" id="email" name="email" value="<?php echo $user['email']; ?>" class="w-full border rounded-md p-2">
+            </div>
+            <div>
+              <label for="new_password" class="block text-sm font-medium">New Password (Leave empty to keep current password):</label>
+              <div class="relative">
+                <input type="password" id="new_password" name="new_password" class="w-full border rounded-md p-2">
+                <button type="button" id="toggle-new-password" class="absolute right-2 top-2 text-gray-500">
+                  <i class="fas fa-eye"></i>
+                </button>
               </div>
             </div>
-          </div>
+            <br>
+            <div>
+              <input type="hidden" name="active_tab" value="general">
+              <button type="submit" name="general_settings" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-md">
+                Save Changes
+              </button>
+            </div>
+
+          </form>
         </div>
-      </div>
 
-      <!-- <script>
+        <div class="bg-white shadow-none sm:shadow-md rounded-lg p-6 h-fit">
+          <h5 class="text-lg font-semibold">Update Security Settings</h5>
+          <hr class="my-4">
+
+          <?php
+          if (isset($_GET['update_securityquestion_message'])) {
+            if ($_GET['update_securityquestion_message'] === 'SQupdatedsuccessfully') {
+              echo "<div id='alertMessage' class='bg-green-100 text-green-700 p-4 rounded-md'>Security answer updated successfully.</div>";
+            }
+            if ($_GET['update_securityquestion_message'] === 'SQupdatederror') {
+              echo "<div id='alertMessage' class='bg-red-100 text-red-700 p-4 rounded-md'>Updating security answer failed.</div>";
+            }
+          }
+          ?>
+
+          <form id="securityForm" method="post" action="security_handler.php" class="space-y-6">
+            <div>
+              <label for="question1" class="block text-sm font-medium">Security Question 1:</label>
+              <select id="question1" name="question1" class="w-full border rounded-md p-2" required>
+                <option value="" <?php echo ($question1 == '') ? 'selected' : ''; ?>>Select a Question</option>
+                <option value="1" <?php echo ($question1 == 1) ? 'selected' : ''; ?>>What is the name of your pet?</option>
+                <option value="2" <?php echo ($question1 == 2) ? 'selected' : ''; ?>>What is your mother's maiden name?</option>
+                <option value="3" <?php echo ($question1 == 3) ? 'selected' : ''; ?>>What city were you born in?</option>
+                <option value="4" <?php echo ($question1 == 4) ? 'selected' : ''; ?>>What is your favorite book?</option>
+              </select>
+              <label for="answer1" class="block text-sm font-medium">Answer:</label>
+              <input type="password" id="answer1" name="answer1" class="w-full border rounded-md p-2" required>
+            </div>
+            <div>
+              <label for="question2" class="block text-sm font-medium">Security Question 2:</label>
+              <select id="question2" name="question2" class="w-full border rounded-md p-2" required>
+                <option value="" <?php echo ($question2 == '') ? 'selected' : ''; ?>>Select a Question</option>
+                <option value="1" <?php echo ($question2 == 1) ? 'selected' : ''; ?>>What is the name of your pet?</option>
+                <option value="2" <?php echo ($question2 == 2) ? 'selected' : ''; ?>>What is your mother's maiden name?</option>
+                <option value="3" <?php echo ($question2 == 3) ? 'selected' : ''; ?>>What city were you born in?</option>
+                <option value="4" <?php echo ($question2 == 4) ? 'selected' : ''; ?>>What is your favorite book?</option>
+              </select>
+              <label for="answer2" class="block text-sm font-medium">Answer:</label>
+              <input type="password" id="answer2" name="answer2" class="w-full border rounded-md p-2" required>
+            </div>
+            <div>
+              <label for="question3" class="block text-sm font-medium">Security Question 3:</label>
+              <select id="question3" name="question3" class="w-full border rounded-md p-2" required>
+                <option value="" <?php echo ($question3 == '') ? 'selected' : ''; ?>>Select a Question</option>
+                <option value="1" <?php echo ($question3 == 1) ? 'selected' : ''; ?>>What is the name of your pet?</option>
+                <option value="2" <?php echo ($question3 == 2) ? 'selected' : ''; ?>>What is your mother's maiden name?</option>
+                <option value="3" <?php echo ($question3 == 3) ? 'selected' : ''; ?>>What city were you born in?</option>
+                <option value="4" <?php echo ($question3 == 4) ? 'selected' : ''; ?>>What is your favorite book?</option>
+              </select>
+              <label for="answer3" class="block text-sm font-medium">Answer:</label>
+              <input type="password" id="answer3" name="answer3" class="w-full border rounded-md p-2" required>
+            </div>
+
+            <div>
+              <input type="hidden" name="active_tab" value="security">
+              <button type="submit" name="security_settings" class="bg-green-500 hover:bg-green-400 text-white px-4 py-2 rounded-md">
+                Save Security Settings
+              </button>
+            </div>
+
+
+          </form>
+        </div>
+
+
+
+
+        <!--  Row 1 -->
+
+
+        <!-- <script>
         document.addEventListener('DOMContentLoaded', function() {
           const fileInput = document.getElementById('fileInput');
           const uploadButton = document.getElementById('uploadButton');
@@ -317,35 +301,37 @@ if ($securityQuestions) {
         });
       </script> -->
 
+      </div>
     </div>
-  </div>
 
-  <script src="hide_toast.js"></script>
+    <script src="hide_toast.js"></script>
 
-  <script>
-    $(document).ready(function() {
-      // // Initially disable the toggle button
-      // $('#toggle-login-password').prop('disabled', true);
+    <script>
+      $(document).ready(function() {
+        // // Initially disable the toggle button
+        // $('#toggle-login-password').prop('disabled', true);
 
-      // // Enable the toggle button only if there is text in the password field
-      // $('#login-password').keyup(function() {
-      //   $('#toggle-login-password').prop('disabled', this.value === "" ? true : false);
-      // });
+        // // Enable the toggle button only if there is text in the password field
+        // $('#login-password').keyup(function() {
+        //   $('#toggle-login-password').prop('disabled', this.value === "" ? true : false);
+        // });
 
-      // Password toggle for the login password field
-      $('#toggle-new-password').click(function() {
-        var passwordInput = document.getElementById('new_password');
-        var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
+        // Password toggle for the login password field
+        $('#toggle-new-password').click(function() {
+          var passwordInput = document.getElementById('new_password');
+          var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+          passwordInput.setAttribute('type', type);
 
-        // Selecting the icon within the button that was clicked
-        var eyeIcon = $(this).find('i');
+          // Selecting the icon within the button that was clicked
+          var eyeIcon = $(this).find('i');
 
-        // Toggle the class to change the icon
-        eyeIcon.toggleClass('fa-eye fa-eye-slash');
+          // Toggle the class to change the icon
+          eyeIcon.toggleClass('fa-eye fa-eye-slash');
+        });
       });
-    });
-  </script>
+    </script>
+
+  </div>
 
 </body>
 
