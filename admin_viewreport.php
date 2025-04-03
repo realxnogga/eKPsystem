@@ -167,12 +167,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="rounded-lg mt-16 bg-white shadow-md p-6">
 
 
-      <div class="flex items-center mb-6">
-            <img src="img/cluster.png" alt="Logo" class="w-24 h-24 mr-4">
-            <div>
-              <h5 class="text-lg font-semibold">Department of the Interior and Local Government</h5>
-            </div>
-</div>
+        <div class="flex items-center mb-6">
+          <img src="img/cluster.png" alt="Logo" class="w-24 h-24 mr-4">
+          <div>
+            <h5 class="text-lg font-semibold">Department of the Interior and Local Government</h5>
+          </div>
+        </div>
 
         <h5 class="text-lg font-semibold mb-4">Account Request</h5>
         <hr class="mb-6">
