@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Prepare the SQL statement to select the user with the given email
-        $stmt = $conn->prepare("SELECT id, email, password, user_type, municipality_id, verified, first_name, last_name, barangay_id FROM users WHERE email = :email");
+        $stmt = $conn->prepare("SELECT id, email, password, user_type, assessor_type, contact_number, municipality_id, verified, first_name, last_name, barangay_id FROM users WHERE email = :email");
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $logcurdate = date('Y-m-d H:i:s');
                     logUserActivity($user['id'], $logcurdate, "User logged in");
 
-
                     // Fetch additional user information like municipality_name and barangay_name
                     $additionalInfoStmt = $conn->prepare("SELECT municipality_name FROM municipalities WHERE id = :municipality_id");
                     $additionalInfoStmt->bindParam(':municipality_id', $user['municipality_id'], PDO::PARAM_INT);
@@ -61,6 +60,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $_SESSION['municipality_name'] = $municipality['municipality_name'];
                     $_SESSION['barangay_name'] = $barangay['barangay_name'];
+
+                     // for lspu attendace
+                     $u_id = $user['id'];
+                     $name = $user['first_name'] . " " . $user['last_name'];
+                     $address = $municipality['municipality_name'] . '/' . $barangay['barangay_name'];
+                     $con_num = $user['contact_number'];
+                     $logdate = date('Y-m-d H:i:s');
+                     LSPUAttendanceSheet($u_id, $name, $address, $con_num, $logdate);
 
                     // Redirect the user based on their user_type
                     if ($user['user_type'] === 'admin') {
@@ -112,6 +119,21 @@ function logUserActivity($user_id, $logcurdate, $activity)
     $stmt->bindParam(2, $logcurdate, PDO::PARAM_STR);
     $stmt->bindParam(3, $activity, PDO::PARAM_STR);
     $stmt->execute();
+}
+
+function LSPUAttendanceSheet($u_id, $name, $address, $con_num, $logdate)
+{
+    global $conn; // Assuming $conn is your database connection variable
+
+    $query = "INSERT INTO lspu_attendance_sheet (user_id, name, address, contact_number, login_date) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(1, $u_id, PDO::PARAM_INT);
+    $stmt->bindParam(2, $name, PDO::PARAM_STR);
+    $stmt->bindParam(3, $address, PDO::PARAM_STR);
+    $stmt->bindParam(4, $con_num, PDO::PARAM_STR);
+    $stmt->bindParam(5, $logdate, PDO::PARAM_STR);
+    $stmt->execute();
+
 }
 
 ?>
