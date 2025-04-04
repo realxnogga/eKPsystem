@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 //     header("Location: login.php?login_message=account_already_open");
                 //     exit;
                 // }
-                
+
 
 
                 // Check if the provided password matches the hashed password
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['last_name'] = $user['last_name'];   // Store last name
                     $_SESSION['barangay_id'] = $user['barangay_id']; // Store barangay ID
                     $_SESSION['isloggedin'] = true;
-                    
+
                     // Log user activity
                     $logcurdate = date('Y-m-d H:i:s');
                     logUserActivity($user['id'], $logcurdate, "User logged in");
@@ -61,13 +61,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['municipality_name'] = $municipality['municipality_name'];
                     $_SESSION['barangay_name'] = $barangay['barangay_name'];
 
-                     // for lspu attendace
-                     $u_id = $user['id'];
-                     $name = $user['first_name'] . " " . $user['last_name'];
-                     $address = $municipality['municipality_name'] . '/' . $barangay['barangay_name'];
-                     $con_num = $user['contact_number'];
-                     $logdate = date('Y-m-d H:i:s');
-                     LSPUAttendanceSheet($u_id, $name, $address, $con_num, $logdate);
+                    // identify user already in the db fofr today
+                    $countrowquery = "SELECT COUNT(*) FROM lspu_attendance_sheet WHERE DAY(login_date) = DAY(CURDATE()) AND user_id = :user_id";
+                    $checkRowStmt = $conn->prepare($countrowquery);
+                    $checkRowStmt->bindParam(':user_id', $user['id'], PDO::PARAM_INT);
+                    $checkRowStmt->execute();
+                    $rowCount = (int) $checkRowStmt->fetchColumn();
+
+                    // for lspu attendace
+                    if ($rowCount === 0) {
+                        $u_id = $user['id'];
+                        $name = $user['first_name'] . " " . $user['last_name'];
+                        $address = $municipality['municipality_name'] . '/' . $barangay['barangay_name'];
+                        $con_num = $user['contact_number'];
+                        $logdate = date('Y-m-d H:i:s');
+                        LSPUAttendanceSheet($u_id, $name, $address, $con_num, $logdate);
+                    }
+
 
                     // Redirect the user based on their user_type
                     if ($user['user_type'] === 'admin') {
@@ -133,7 +143,6 @@ function LSPUAttendanceSheet($u_id, $name, $address, $con_num, $logdate)
     $stmt->bindParam(4, $con_num, PDO::PARAM_STR);
     $stmt->bindParam(5, $logdate, PDO::PARAM_STR);
     $stmt->execute();
-
 }
 
 ?>
