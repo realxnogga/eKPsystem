@@ -10,6 +10,9 @@ module.exports = {
             // 'custom-fb': "url('img/fb.png')",
             // 'custom-ig': "url('img/ig.png')",
           },
+          minHeight: {
+           '5/6': '13.333rem', 
+          },
       },
     },
     plugins: [],
