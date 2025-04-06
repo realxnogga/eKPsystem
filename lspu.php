@@ -136,6 +136,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <script>
         function printTable() {
             const tableContent = document.getElementById('attendanceTable').outerHTML;
@@ -164,6 +166,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             };
         }
     </script>
+    <!-- <script>
+        function printTable() {
+            // Extract the table content
+            const tableContent = document.getElementById('attendanceTable').outerHTML;
+
+            // Temporarily replace the body content with the table content for printing
+            const originalContent = document.body.innerHTML;
+            document.body.innerHTML = tableContent;
+
+            // Trigger the print function
+            window.print();
+
+            // Restore the original content after printing
+            document.body.innerHTML = originalContent;
+        }
+    </script> -->
+
+
 
 </head>
 
@@ -171,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <section class="">
         <!-- Button section -->
         <section class="flex items-center justify-end gap-x-3 mb-4">
-            <form method="POST" class="flex items-center gap-x-3">
+            <form title="Filter by date" method="POST" class="flex items-center gap-x-3">
                 <input
                     class="px-2 py-2 rounded-md"
                     type="date"
@@ -183,6 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form method="POST" class="flex items-center gap-x-3">
                 <input
+                    title="Filter by month"
                     class="px-2 py-2 rounded-md"
                     type="month"
                     id="filter_month"
@@ -192,17 +213,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <button
+                title="Print Attendance Sheet"
                 class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 onclick="printTable()">
                 Print
             </button>
 
+            <button id="export-btn" title="Export to Excel" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Export to Excel</button>
+
             <button
-                class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                title="Update table header"
+                class="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
                 type="button"
                 onclick="document.getElementById('lspuForm').submit()">
                 Submit
             </button>
+
+
 
         </section>
 
@@ -245,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <b>ATTENDANCE SHEET</b>
 
                 <!-- Attendance table -->
-                <table class="table-auto w-full border-collapse border border-gray-800 font-sans text-gray-900 text-sm">
+                <table id="data-table" class="table-auto w-full border-collapse border border-gray-800 font-sans text-gray-900 text-sm">
                     <thead>
                         <tr class="bg-gray-200">
                             <th class="px-2 py-0 border border-gray-600">No.</th>
@@ -291,6 +318,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </section>
     </section>
+
+    <!-- excel code -->
+    <script>
+        document.getElementById("export-btn").addEventListener("click", function() {
+
+            const workbook = XLSX.utils.book_new();
+
+            const table = document.getElementById("data-table");
+            const worksheet = XLSX.utils.table_to_sheet(table);
+
+            const columnWidths = [];
+            const tableRows = table.querySelectorAll("tr");
+
+            tableRows.forEach(row => {
+                const cells = row.querySelectorAll("th, td");
+                cells.forEach((cell, index) => {
+                    const cellContent = cell.innerText || "";
+                    const cellLength = cellContent.length;
+
+                    columnWidths[index] = Math.max(columnWidths[index] || 10, cellLength + 2);
+                });
+            });
+
+            worksheet['!cols'] = columnWidths.map(width => ({
+                wch: width
+            }));
+
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+            XLSX.writeFile(workbook, "ExportedData.xlsx");
+        });
+    </script>
+    <!-- excel code -->
 
     <script>
         month
