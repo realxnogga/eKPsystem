@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Sheet</title>
+    <title>ETS-SF-11-rev 2</title>
     <link rel="icon" type="image/x-icon" href="img/lspulogo.png">
     <!-- <link rel="stylesheet" href="output.css"> -->
 

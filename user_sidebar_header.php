@@ -109,7 +109,15 @@ function traverseDirectory()
               </li>
 
               <li>
+                <a href="<?php echo traverseDirectory(); ?>user_flowchart.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100" role="menuitem">Flowchart</a>
+              </li>
+
+              <li>
                 <a href="<?php echo traverseDirectory(); ?>user_setting.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100" role="menuitem">Settings</a>
+              </li>
+
+              <li>
+                <a target="_blank" href="<?php echo traverseDirectory(); ?>home.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100" role="menuitem">About devs</a>
               </li>
 
               <li>
