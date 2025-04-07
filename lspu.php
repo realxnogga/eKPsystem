@@ -138,11 +138,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-    <script>
+    <!-- <script>
         function printTable() {
-            const tableContent = document.getElementById('attendanceTable').outerHTML;
-            const printWindow = window.open('', '_blank');
 
+            const printWindow = window.open('', '_blank');
+        
             printWindow.document.write(`
             <!DOCTYPE html>
             <html lang="en">
@@ -153,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <link rel="stylesheet" type="text/css" href="output.css">
                 </head>
                 <body>
-                    ${tableContent}
+                    ${document.getElementById('attendanceTable').outerHTML}
                 </body>
             </html>
         `);
@@ -165,8 +165,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 printWindow.close();
             };
         }
-    </script>
-    <!-- <script>
+    </script> -->
+    <script>
         function printTable() {
             // Extract the table content
             const tableContent = document.getElementById('attendanceTable').outerHTML;
@@ -178,10 +178,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Trigger the print function
             window.print();
 
-            // Restore the original content after printing
-            document.body.innerHTML = originalContent;
+             // Restore the original content after printing
+             document.body.innerHTML = originalContent;
+           
         }
-    </script> -->
+    </script>
 
 
 
@@ -219,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 Print
             </button>
 
-            <button id="export-btn" title="Export to Excel" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Export to Excel</button>
+            <button  onclick="exportExcel()" id="export-btn" title="Export to Excel" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Export to Excel</button>
 
             <button
                 title="Update table header"
@@ -321,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- excel code -->
     <script>
-        document.getElementById("export-btn").addEventListener("click", function() {
+        function exportExcel() {
 
             const workbook = XLSX.utils.book_new();
 
@@ -348,7 +349,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
             XLSX.writeFile(workbook, "ExportedData.xlsx");
-        });
+        };
     </script>
     <!-- excel code -->
 
