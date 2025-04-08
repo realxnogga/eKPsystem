@@ -79,7 +79,6 @@ if (!empty($municipalityID)) {
     $municipalityStmt->execute();
     $municipalityName = $municipalityStmt->fetchColumn() ?: 'Unknown';
 }
-
 ?>  
 
 <!doctype html>

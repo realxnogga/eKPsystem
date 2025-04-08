@@ -240,7 +240,7 @@ if (!empty($municipalityID)) {
                         <td><input type="file" id="IC_1_pdf_File" name="IC_1_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
                     </tr>
                     <tr>
-                        <td>2. To the DILG (Quarterly)</td>
+                        <td>2. To the DILG (Quarterly and Monthly)</td>
                         <td><input type="file" id="IC_2_pdf_File" name="IC_2_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
                     </tr>
                     <tr>
@@ -258,7 +258,7 @@ if (!empty($municipalityID)) {
                         <th colspan="2">II. EFFECTIVENESS IN SECURING THE SETTLEMENT OF INTERPERSONAL DISPUTE OBJECTIVE OF THE KATARUNGANG PAMBARANGAY</th>
                     </tr>
                     <tr>
-                        <td>A. Quantity of settled cases against filed</td>
+                        <td>A. Quantity of settled cases against filed (minimum of 10 cases settled)</td>
                         <td><input type="file" id="IIA_pdf_File" name="IIA_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
                     </tr>
                     <tr>
@@ -296,7 +296,7 @@ if (!empty($municipalityID)) {
                     <tr id="city-row">
                         <td>
                             <ul>
-                                <li>&emsp;&emsp;&emsp;IEC materials developed</li>
+                                <li>&emsp;&emsp;&emsp;IEC materials developed/produced</li>
                             </ul>
                         </td>
                         <td><input type="file" id="IIIC_1forcities_pdf_File" name="IIIC_1forcities_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
@@ -323,7 +323,7 @@ if (!empty($municipalityID)) {
                     <tr id="municipality-row">
                         <td>
                             <ul>
-                                <li>&emsp;&emsp;&emsp; IEC materials developed</li>
+                                <li>&emsp;&emsp;&emsp; IEC materials developed/produced</li>
                             </ul>
                         </td>
                         <td><input type="file" id="IIIC_2formuni1_pdf_File" name="IIIC_2formuni1_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
@@ -345,7 +345,7 @@ if (!empty($municipalityID)) {
                         <td><input type="file" id="IIIC_2formuni3_pdf_File" name="IIIC_2formuni3_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
                     </tr>
                     <tr>
-                        <td>D. KP Training or seminar within the assessment period<br />
+                        <td>D. KP Training or seminar within the assessment period. <br />
                             Organized skills training participated by the Lupong Tagapamayapa</td>
                         <td><input type="file" id="IIID_pdf_File" name="IIID_pdf_File" accept=".pdf" onchange="validateFileType(this)" /></td>
                     </tr>

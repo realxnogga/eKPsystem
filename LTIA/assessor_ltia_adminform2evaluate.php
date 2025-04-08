@@ -1801,12 +1801,12 @@ if (classification === "City") {
               <summary><b>A. Quantity of settled cases against filed</b></summary>
               <p><br>
                 <b>With a minimum of 10 cases settled, the percentage of cases received by the Lupon resulting in settlement:</b><br><br>
-                <b>10.0 points</b> - 100%.<br>
-                <b>8.0 points</b> - 80%-99%.<br>
-                <b>6.0 points</b> - 60%-79%.<br>
-                <b>4.0 points</b> - 40%-59%.<br>
-                <b>2.0 points</b> - 1%-39%.<br>
-                <b>0 point</b> - 0%.
+                <b>10.0 points</b> - 100% cases settled                <br>
+                <b>8.0 points</b> - 80%-99% cases settled<br>
+                <b>6.0 points</b> - 60%-79% cases settled<br>
+                <b>4.0 points</b> - 40%-59% cases settled<br>
+                <b>2.0 points</b> - 1%-39% cases settled<br>
+                <b>0 point</b> - 0% no settled cases
               </p>
             </details>
                     </td>
@@ -2014,7 +2014,7 @@ if (classification === "City") {
               <tr id="city-row" style="display:none;">
                 <td>
                 <details>
-        <summary><b>1. For Cities</b></summary>
+        <summary><b>For Cities</b></summary>
         <p><br>
           <b>Scoring Details:</b> <br><br>
           <b>2 points</b> - IEC materials produced <br>
@@ -2103,7 +2103,7 @@ if (classification === "City") {
               <tr id="municipality-row" style="display:none;">
                 <td>
                 <details>
-        <summary><b>2. For Municipalities</b></summary>
+        <summary><b>For Municipalities</b></summary>
         <p><br>
           <b>Scoring Details:</b> <br><br>
           <b>2 points</b> - IEC materials produced          <br>

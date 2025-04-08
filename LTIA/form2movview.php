@@ -709,7 +709,7 @@ input[type="file"] {
                         <td colspan="5">A. Observance of Settlement Procedure and Settlement Deadlines</td>
                     </tr>
                     <tr>
-            <td><b>1. a) Proper Recording of every dispute/complaint</b></td>
+            <td><b>1. <br> a) Proper Recording of every dispute/complaint</b></td>
             <td>
             <input type="text" name="IA_1a_pdf_verify" style="display: none;" value="<?php echo $verificationData['IA_1a_pdf_verify'] ?? ''; ?>" readonly/>  
               <?php if (!empty($row['IA_1a_pdf_File'])) : ?>
@@ -739,7 +739,7 @@ input[type="file"] {
           </tr>
 <!-- ___________________________________________________ -->
           <tr>
-            <td>b) Sending of Notices and Summons</td>
+            <td>b) Sending of Notices and Summons with complete and accurate information to the parties within the prescribed period (within the next working day upon receipt of complaint)</td>
             <td>
             <input type="text" name="IA_1b_pdf_verify" style="display: none;" value="<?php echo $verificationData['IA_1b_pdf_verify'] ?? ''; ?>" readonly/>  
               <?php if (!empty($row['IA_1b_pdf_File'])) : ?>
@@ -769,7 +769,7 @@ input[type="file"] {
           </tr>
 <!-- ___________________________________________________ -->
           <tr>
-                <td colspan="6">2. Settlement and Award Period (with at least 10 settled cases within the assessment period)</td>
+                <td colspan="6"><b>2. Settlement and Award Period (with at least 10 settled cases within the assessment period) </b></td>
               </tr>
                <tr>
                 <td>a) Mediation (within 15 days from initial confrontation with the Lupon Chairman)</td>
@@ -1176,7 +1176,7 @@ input[type="file"] {
           </tr>
 <!-- ___________________________________________________ -->
               <tr>
-                <td>2. To the DILG (Quarterly)</td>
+                <td>2. To the DILG (Quarterly and monthly)</td>
                 <td>
                 <input type="text" name="IC_2_pdf_verify" style="display: none;" value="<?php echo $verificationData['IC_2_pdf_verify'] ?? ''; ?>" readonly/>  
                 <?php if (!empty($row['IC_2_pdf_File'])) : ?>
