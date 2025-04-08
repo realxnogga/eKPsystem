@@ -327,7 +327,7 @@ $(document).ready(function () {
                         var fileKey = type + '_pdf_File';
                         var verifyBtn = $('button[data-field="' + type + '_pdf_verify"]');
                         var $row = fileColumn.closest('tr');
-                        var $rateInput = $row.find(`input[name="${type}_pdf_rate"]`);
+                        var $rateInput = $row.find(`select[name="${type}_pdf_rate"]`);
                         var $remarkTextarea = $row.find(`textarea[name="${type}_pdf_remark"]`);
                         
                         if (data[fileKey]) {
@@ -394,46 +394,75 @@ $(document).ready(function () {
                         }
                     });
 
+                    // Add this code right before you set the values of the select elements
+                    $('select.score-input').each(function() {
+                        // Enable the default option for programmatic selection
+                        $(this).find('option:first-child').prop('disabled', false);
+                    });
+                    
+
                     // Handle rates
                     if (data.rates) {
-                        $('input[name="IA_1a_pdf_rate"]').val(data.rates.IA_1a_pdf_rate || '');
-                        $('input[name="IA_1b_pdf_rate"]').val(data.rates.IA_1b_pdf_rate || '');
-                        $('input[name="IA_2a_pdf_rate"]').val(data.rates.IA_2a_pdf_rate || '');
-                        $('input[name="IA_2b_pdf_rate"]').val(data.rates.IA_2b_pdf_rate || '');
-                        $('input[name="IA_2c_pdf_rate"]').val(data.rates.IA_2c_pdf_rate || '');
-                        $('input[name="IA_2d_pdf_rate"]').val(data.rates.IA_2d_pdf_rate || '');
-                        $('input[name="IA_2e_pdf_rate"]').val(data.rates.IA_2e_pdf_rate || '');
-                        $('input[name="IB_1forcities_pdf_rate"]').val(data.rates.IB_1forcities_pdf_rate || '');
-                        $('input[name="IB_1aformuni_pdf_rate"]').val(data.rates.IB_1aformuni_pdf_rate || '');
-                        $('input[name="IB_1bformuni_pdf_rate"]').val(data.rates.IB_1bformuni_pdf_rate || '');
-                        $('input[name="IB_2_pdf_rate"]').val(data.rates.IB_2_pdf_rate || '');
-                        $('input[name="IB_3_pdf_rate"]').val(data.rates.IB_3_pdf_rate || '');
-                        $('input[name="IB_4_pdf_rate"]').val(data.rates.IB_4_pdf_rate || '');
-                        $('input[name="IC_1_pdf_rate"]').val(data.rates.IC_1_pdf_rate || '');
-                        $('input[name="IC_2_pdf_rate"]').val(data.rates.IC_2_pdf_rate || '');
-                        $('input[name="ID_1_pdf_rate"]').val(data.rates.ID_1_pdf_rate || '');
-                        $('input[name="ID_2_pdf_rate"]').val(data.rates.ID_2_pdf_rate || '');
-                        $('input[name="IIA_pdf_rate"]').val(data.rates.IIA_pdf_rate || '');
-                        $('input[name="IIB_1_pdf_rate"]').val(data.rates.IIB_1_pdf_rate || '');
-                        $('input[name="IIB_2_pdf_rate"]').val(data.rates.IIB_2_pdf_rate || '');
-                        $('input[name="IIC_pdf_rate"]').val(data.rates.IIC_pdf_rate || '');
-                        $('input[name="IIIA_pdf_rate"]').val(data.rates.IIIA_pdf_rate || '');
-                        $('input[name="IIIB_pdf_rate"]').val(data.rates.IIIB_pdf_rate || '');
-                        $('input[name="IIIC_1forcities_pdf_rate"]').val(data.rates.IIIC_1forcities_pdf_rate || '');
-                        $('input[name="IIIC_1forcities2_pdf_rate"]').val(data.rates.IIIC_1forcities2_pdf_rate || '');
-                        $('input[name="IIIC_1forcities3_pdf_rate"]').val(data.rates.IIIC_1forcities3_pdf_rate || '');
-                        $('input[name="IIIC_2formuni1_pdf_rate"]').val(data.rates.IIIC_2formuni1_pdf_rate || '');
-                        $('input[name="IIIC_2formuni2_pdf_rate"]').val(data.rates.IIIC_2formuni2_pdf_rate || '');
-                        $('input[name="IIIC_2formuni3_pdf_rate"]').val(data.rates.IIIC_2formuni3_pdf_rate || '');
-                        $('input[name="IIID_pdf_rate"]').val(data.rates.IIID_pdf_rate || '');
-                        $('input[name="IV_forcities_pdf_rate"]').val(data.rates.IV_forcities_pdf_rate || '');
-                        $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate || '');
-                        $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || '');
-                        $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || '');
+                        console.log('Rates from database:', data.rates); // Debug log
+                        
+                        // Step 1: Enable default options for programmatic selection
+                        $('select.score-input').each(function() {
+                            $(this).find('option:first-child').prop('disabled', false);
+                        });
+                        
+                        // Step 2: Set values from database
+                        $('select[name="IA_1a_pdf_rate"]').val(data.rates.IA_1a_pdf_rate || '');
+                        $('select[name="IA_1b_pdf_rate"]').val(data.rates.IA_1b_pdf_rate || '');
+                        // [all your other selects...]
+                        
+                        // Step 3: Run closest match logic for any values that didn't match
+                        $('select.score-input').each(function() {
+                            var $select = $(this);
+                            var currentVal = $select.val();
+                            
+                            // If the select wasn't set to a value, check if we can find a closest match
+                            if (!currentVal) {
+                                var fieldName = $select.attr('name');
+                                var dataValue = data.rates[fieldName];
+                                
+                                if (dataValue !== null && dataValue !== undefined && dataValue !== '') {
+                                    // Try to convert to string and match again
+                                    $select.val(String(dataValue));
+                                    
+                                    // If still no match, find the closest numerical option
+                                    if (!$select.val() && !isNaN(parseFloat(dataValue))) {
+                                        var numValue = parseFloat(dataValue);
+                                        var closestOption = null;
+                                        var closestDiff = Infinity;
+                                        
+                                        $select.find('option').each(function() {
+                                            if ($(this).val()) {  // Skip empty option
+                                                var optValue = parseFloat($(this).val());
+                                                var diff = Math.abs(optValue - numValue);
+                                                if (diff < closestDiff) {
+                                                    closestDiff = diff;
+                                                    closestOption = $(this).val();
+                                                }
+                                            }
+                                        });
+                                        
+                                        if (closestOption) {
+                                            $select.val(closestOption);
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // Re-disable the first option if it wasn't selected
+                            if ($select.val() !== $select.find('option:first-child').val()) {
+                                $select.find('option:first-child').prop('disabled', true);
+                            }
+                        });
+                        
                         $('#status_rate').text(data.rates.status_rate || 'Rate Status: Pending');
                         
                         // After setting all the rates, check for empty ones and highlight them
-                        $('input[type="number"].score-input').each(function() {
+                        $('select.score-input').each(function() {
                             var value = $(this).val();
                             if (value === '' || value === null) {
                                 $(this).css('background-color', '#ffebee'); // Light red background
@@ -561,7 +590,7 @@ $(document).ready(function () {
     }
 
     // Add event listeners for rate inputs and remark textareas
-    $('input[type="number"].score-input, textarea[placeholder="Remarks"]').on('change input', function(event) {
+    $('select.score-input, textarea[placeholder="Remarks"]').on('change input', function(event) {
         // Check if a barangay is selected
         var selectedBarangay = $('#barangay_select').val();
         if (!selectedBarangay) {
@@ -668,9 +697,9 @@ $(document).ready(function () {
         var form = this;
         
         // Get the last modified input
-        var lastModifiedInput = $('input[type="number"]:focus');
+        var lastModifiedInput = $('select:focus');
         if (!lastModifiedInput.length) {
-            lastModifiedInput = $('input[type="number"]').filter(function() {
+            lastModifiedInput = $('select').filter(function() {
                 return $(this).val() !== '';
             }).last();
         }
@@ -824,7 +853,7 @@ $(document).ready(function () {
                     baseFieldName = field.replace('_verify', '');
                 }
                 
-                var $rateInput = $row.find(`input[name="${baseFieldName}_rate"]`);
+                var $rateInput = $row.find(`select[name="${baseFieldName}_rate"]`);
                 var $remarkTextarea = $row.find(`textarea[name="${baseFieldName}_remark"]`);
                 
                 // Disable and style inputs if no MOV or not verified
@@ -1251,9 +1280,9 @@ if (classification === "City") {
             <td>  
             <select name="IA_1a_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
                 <option value="" disabled selected>Select</option>
-                <option value="0">0 - None</option>
-                <option value="2.5">2.5 - Partial</option>
-                <option value="5">5 - Complete</option>
+                <option value="0">0</option>
+                <option value="2.5">2.5</option>
+                <option value="5">5</option>
             </select>
               <!-- <input type="number" value="" name="IA_1a_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"> -->
             <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
