@@ -1068,7 +1068,7 @@ $(document).on('click', '.verify-btn', function() {
 </script>
 </head>
 <body class="bg-[#E8E8E7]">
-<?php include "../assessor_ltia_admin_dashboard.php"; ?>
+  <?php include "../assessor_sidebar_header.php"; ?>
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
     <div class="card">
