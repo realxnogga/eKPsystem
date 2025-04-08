@@ -99,21 +99,22 @@ try {
  <script src="LTIAassest/jquery-3.6.0.min.js"></script>
 <script src="LTIAassest/bootstrap.min.js"></script>
  <link rel="stylesheet" href="css/td_hover.css">
- <script src="node_modules/jquery/dist/jquery.min.js"></script>
-
-  <script src="node_modules/flowbite/dist/flowbite.min.js"></script>
-  <link href="node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="../node_modules/flowbite/dist/flowbite.min.js"></script>
+  <link href="../node_modules/flowbite/dist/flowbite.min.css" rel="stylesheet" />
   <!-- tabler icon -->
-  <link rel="stylesheet" href="node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
-
+  <link rel="stylesheet" href="../node_modules/@tabler/icons-webfont/dist/tabler-icons.min.css">
   <!-- tabler support -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css" />
 
-  <link href="output.css" rel="stylesheet">
+  <link href="../output.css" rel="stylesheet">
 
   <link rel="stylesheet" href="hide_show_icon.css">
 
+  
 <style>
   .verify-btn {
     min-width: 80px;
@@ -167,7 +168,6 @@ textarea[disabled] {
 }
 
 </style>
-
 <script>
 $(document).ready(function () {
     // Function to show modal with message
@@ -270,8 +270,6 @@ $(document).ready(function () {
         });
     }
 
-    
-
     // Handle barangay selection
     $('#barangay_select').on('change', function () {
         var selectedBarangayName = $(this).val();
@@ -329,7 +327,7 @@ $(document).ready(function () {
                         var fileKey = type + '_pdf_File';
                         var verifyBtn = $('button[data-field="' + type + '_pdf_verify"]');
                         var $row = fileColumn.closest('tr');
-                        var $rateInput = $row.find(`input[name="${type}_pdf_rate"]`);
+                        var $rateInput = $row.find(`select[name="${type}_pdf_rate"]`);
                         var $remarkTextarea = $row.find(`textarea[name="${type}_pdf_remark"]`);
                         
                         if (data[fileKey]) {
@@ -396,46 +394,75 @@ $(document).ready(function () {
                         }
                     });
 
+                    // Add this code right before you set the values of the select elements
+                    $('select.score-input').each(function() {
+                        // Enable the default option for programmatic selection
+                        $(this).find('option:first-child').prop('disabled', false);
+                    });
+                    
+
                     // Handle rates
                     if (data.rates) {
-                        $('input[name="IA_1a_pdf_rate"]').val(data.rates.IA_1a_pdf_rate || '');
-                        $('input[name="IA_1b_pdf_rate"]').val(data.rates.IA_1b_pdf_rate || '');
-                        $('input[name="IA_2a_pdf_rate"]').val(data.rates.IA_2a_pdf_rate || '');
-                        $('input[name="IA_2b_pdf_rate"]').val(data.rates.IA_2b_pdf_rate || '');
-                        $('input[name="IA_2c_pdf_rate"]').val(data.rates.IA_2c_pdf_rate || '');
-                        $('input[name="IA_2d_pdf_rate"]').val(data.rates.IA_2d_pdf_rate || '');
-                        $('input[name="IA_2e_pdf_rate"]').val(data.rates.IA_2e_pdf_rate || '');
-                        $('input[name="IB_1forcities_pdf_rate"]').val(data.rates.IB_1forcities_pdf_rate || '');
-                        $('input[name="IB_1aformuni_pdf_rate"]').val(data.rates.IB_1aformuni_pdf_rate || '');
-                        $('input[name="IB_1bformuni_pdf_rate"]').val(data.rates.IB_1bformuni_pdf_rate || '');
-                        $('input[name="IB_2_pdf_rate"]').val(data.rates.IB_2_pdf_rate || '');
-                        $('input[name="IB_3_pdf_rate"]').val(data.rates.IB_3_pdf_rate || '');
-                        $('input[name="IB_4_pdf_rate"]').val(data.rates.IB_4_pdf_rate || '');
-                        $('input[name="IC_1_pdf_rate"]').val(data.rates.IC_1_pdf_rate || '');
-                        $('input[name="IC_2_pdf_rate"]').val(data.rates.IC_2_pdf_rate || '');
-                        $('input[name="ID_1_pdf_rate"]').val(data.rates.ID_1_pdf_rate || '');
-                        $('input[name="ID_2_pdf_rate"]').val(data.rates.ID_2_pdf_rate || '');
-                        $('input[name="IIA_pdf_rate"]').val(data.rates.IIA_pdf_rate || '');
-                        $('input[name="IIB_1_pdf_rate"]').val(data.rates.IIB_1_pdf_rate || '');
-                        $('input[name="IIB_2_pdf_rate"]').val(data.rates.IIB_2_pdf_rate || '');
-                        $('input[name="IIC_pdf_rate"]').val(data.rates.IIC_pdf_rate || '');
-                        $('input[name="IIIA_pdf_rate"]').val(data.rates.IIIA_pdf_rate || '');
-                        $('input[name="IIIB_pdf_rate"]').val(data.rates.IIIB_pdf_rate || '');
-                        $('input[name="IIIC_1forcities_pdf_rate"]').val(data.rates.IIIC_1forcities_pdf_rate || '');
-                        $('input[name="IIIC_1forcities2_pdf_rate"]').val(data.rates.IIIC_1forcities2_pdf_rate || '');
-                        $('input[name="IIIC_1forcities3_pdf_rate"]').val(data.rates.IIIC_1forcities3_pdf_rate || '');
-                        $('input[name="IIIC_2formuni1_pdf_rate"]').val(data.rates.IIIC_2formuni1_pdf_rate || '');
-                        $('input[name="IIIC_2formuni2_pdf_rate"]').val(data.rates.IIIC_2formuni2_pdf_rate || '');
-                        $('input[name="IIIC_2formuni3_pdf_rate"]').val(data.rates.IIIC_2formuni3_pdf_rate || '');
-                        $('input[name="IIID_pdf_rate"]').val(data.rates.IIID_pdf_rate || '');
-                        $('input[name="IV_forcities_pdf_rate"]').val(data.rates.IV_forcities_pdf_rate || '');
-                        $('input[name="IV_muni_pdf_rate"]').val(data.rates.IV_muni_pdf_rate || '');
-                        $('input[name="V_1_pdf_rate"]').val(data.rates.V_1_pdf_rate || '');
-                        $('input[name="threepeoplesorg_rate"]').val(data.rates.threepeoplesorg_rate || '');
+                        console.log('Rates from database:', data.rates); // Debug log
+                        
+                        // Step 1: Enable default options for programmatic selection
+                        $('select.score-input').each(function() {
+                            $(this).find('option:first-child').prop('disabled', false);
+                        });
+                        
+                        // Step 2: Set values from database
+                        $('select[name="IA_1a_pdf_rate"]').val(data.rates.IA_1a_pdf_rate || '');
+                        $('select[name="IA_1b_pdf_rate"]').val(data.rates.IA_1b_pdf_rate || '');
+                        // [all your other selects...]
+                        
+                        // Step 3: Run closest match logic for any values that didn't match
+                        $('select.score-input').each(function() {
+                            var $select = $(this);
+                            var currentVal = $select.val();
+                            
+                            // If the select wasn't set to a value, check if we can find a closest match
+                            if (!currentVal) {
+                                var fieldName = $select.attr('name');
+                                var dataValue = data.rates[fieldName];
+                                
+                                if (dataValue !== null && dataValue !== undefined && dataValue !== '') {
+                                    // Try to convert to string and match again
+                                    $select.val(String(dataValue));
+                                    
+                                    // If still no match, find the closest numerical option
+                                    if (!$select.val() && !isNaN(parseFloat(dataValue))) {
+                                        var numValue = parseFloat(dataValue);
+                                        var closestOption = null;
+                                        var closestDiff = Infinity;
+                                        
+                                        $select.find('option').each(function() {
+                                            if ($(this).val()) {  // Skip empty option
+                                                var optValue = parseFloat($(this).val());
+                                                var diff = Math.abs(optValue - numValue);
+                                                if (diff < closestDiff) {
+                                                    closestDiff = diff;
+                                                    closestOption = $(this).val();
+                                                }
+                                            }
+                                        });
+                                        
+                                        if (closestOption) {
+                                            $select.val(closestOption);
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // Re-disable the first option if it wasn't selected
+                            if ($select.val() !== $select.find('option:first-child').val()) {
+                                $select.find('option:first-child').prop('disabled', true);
+                            }
+                        });
+                        
                         $('#status_rate').text(data.rates.status_rate || 'Rate Status: Pending');
                         
                         // After setting all the rates, check for empty ones and highlight them
-                        $('input[type="number"].score-input').each(function() {
+                        $('select.score-input').each(function() {
                             var value = $(this).val();
                             if (value === '' || value === null) {
                                 $(this).css('background-color', '#ffebee'); // Light red background
@@ -563,7 +590,7 @@ $(document).ready(function () {
     }
 
     // Add event listeners for rate inputs and remark textareas
-    $('input[type="number"].score-input, textarea[placeholder="Remarks"]').on('change input', function(event) {
+    $('select.score-input, textarea[placeholder="Remarks"]').on('change input', function(event) {
         // Check if a barangay is selected
         var selectedBarangay = $('#barangay_select').val();
         if (!selectedBarangay) {
@@ -595,7 +622,6 @@ $(document).ready(function () {
             });
             return;
         }
-
         // Remove any existing messages
         $('.save-success, .save-error').remove();
 
@@ -671,9 +697,9 @@ $(document).ready(function () {
         var form = this;
         
         // Get the last modified input
-        var lastModifiedInput = $('input[type="number"]:focus');
+        var lastModifiedInput = $('select:focus');
         if (!lastModifiedInput.length) {
-            lastModifiedInput = $('input[type="number"]').filter(function() {
+            lastModifiedInput = $('select').filter(function() {
                 return $(this).val() !== '';
             }).last();
         }
@@ -827,7 +853,7 @@ $(document).ready(function () {
                     baseFieldName = field.replace('_verify', '');
                 }
                 
-                var $rateInput = $row.find(`input[name="${baseFieldName}_rate"]`);
+                var $rateInput = $row.find(`select[name="${baseFieldName}_rate"]`);
                 var $remarkTextarea = $row.find(`textarea[name="${baseFieldName}_remark"]`);
                 
                 // Disable and style inputs if no MOV or not verified
@@ -1042,7 +1068,7 @@ $(document).on('click', '.verify-btn', function() {
 </script>
 </head>
 <body class="bg-[#E8E8E7]">
-  <?php include "../assessor_ltia_admin_dashboard.php"; ?>
+<?php include "../assessor_ltia_admin_dashboard.php"; ?>
   <div class="p-4 sm:ml-44 ">
     <div class="rounded-lg mt-16">
     <div class="card">
@@ -1157,9 +1183,9 @@ if (classification === "City") {
 </script>
 
 <h2 class="text-left text-2xl font-semibold" id="mov_year" hidden></h2>
-          <div class="form-group mt-4">
+          <!-- <div class="form-group mt-4">
     <label for="year_select" class="block text-lg font-medium text-gray-700">Select Year</label>
-    <!-- <select id="year_select" name="year" class="form-control">
+    <select id="year_select" name="year" class="form-control">
         <?php 
         $currentYear = date('Y');
         // Show last 5 years including current year
@@ -1252,14 +1278,20 @@ if (classification === "City") {
                 </button>
                </td>
             <td>  
-              <input type="number" value="" name="IA_1a_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
+            <select name="IA_1a_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2.5">2.5</option>
+                <option value="5">5</option>
+            </select>
+              <!-- <input type="number" value="" name="IA_1a_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"> -->
             <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
           </td>
             <td><textarea name="IA_1a_pdf_remark" placeholder="Remarks"></textarea></td>
           </tr>
           <tr>
             <td><details>
-        <summary><b>b) Sending of Notices/Summons to Parties within the Prescribed Period (within the next working day upon receipt of complaint)</b></summary>
+        <summary><b>b) Sending of Notice and Summons with complete and accurate information to the parties within the prescribed period (within the next working day upon receipt of complaint)</b></summary>
         <p><br>
           <b>Scoring Details:</b> <br><br>
           <b>5 points</b> - Submitted/presented 80-100% of summons with complete and accurate information issued within the prescribed period.<br>
@@ -1281,7 +1313,14 @@ if (classification === "City") {
         </button>
     </td>
             <td>
-            <input type="number" value="" name="IA_1b_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings">
+            <select name="IA_1b_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+            </select>
+            <!-- <input type="number" value="" name="IA_1b_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"> -->
           <div class="error-message" style="color: red; display: none;">Please enter a number between 0 and 5.</div>
             </td>
             <td><textarea name="IA_1b_pdf_remark" placeholder="Remarks"></textarea></td>
@@ -1318,7 +1357,13 @@ if (classification === "City") {
                 Verify
             </button>
           </td>
-            <td><input type="number" value="" name="IA_2a_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td>
+            <select name="IA_2a_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select>
+            <!-- <input type="number" value="" name="IA_2a_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td> -->
             <td><textarea name="IA_2a_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1332,7 +1377,13 @@ if (classification === "City") {
                 Verify
             </button>
             </td>
-            <td><input type="number" value="" name="IA_2b_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td>
+            <select name="IA_2b_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select>
+            <!-- <input type="number" value="" name="IA_2b_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td> -->
             <td><textarea name="IA_2b_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1346,7 +1397,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IA_2c_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td>
+            <!-- <input type="number" value="" name="IA_2c_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"> -->
+            <select name="IA_2c_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select></td>
+            
             <td><textarea name="IA_2c_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1360,7 +1418,13 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IA_2d_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td>
+            <!-- <input type="number" value="" name="IA_2d_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"> -->
+            <select name="IA_2d_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select></td>
             <td><textarea name="IA_2d_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1374,7 +1438,13 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IA_2e_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
+            <td>
+            <!-- <input type="number" value="" name="IA_2e_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"> -->
+            <select name="IA_2e_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select></td>
             <td><textarea name="IA_2e_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1416,13 +1486,20 @@ if (classification === "City") {
                     Verify
                 </button>
                 </td>
-            <td><input type="number" value="" name="IB_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IB_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"> -->
+            <select name="IB_1forcities_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select>
+        </td>
             <td ><textarea name="IB_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr id="municipality-row" style="display:none;">
-              <td>For Municipalities:
+              <td>
               <details>
-        <summary><b>For Municipalities:</b></summary>
+        <summary><b>For Municipalities - Manual Records and/or Digital Record Filling</b></summary>
         <p><br>
           <b>Scoring Details:</b> <br><br>
           <b>1 point</b> - if presented copy/photo of the manual record.          <br>
@@ -1450,7 +1527,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IB_1aformuni_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IB_1aformuni_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"> -->
+                <select name="IB_1aformuni_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+        </td>
             <td><textarea name="IB_1aformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr id="municipality-row" style="display:none;">
@@ -1464,7 +1548,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IB_1bformuni_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IB_1bformuni_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"> -->
+                <select name="IB_1bformuni_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+        </td>
             <td><textarea name="IB_1bformuni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1478,7 +1569,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IB_2_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IB_2_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"> -->
+                <select name="IB_2_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+        </td>
             <td><textarea name="IB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1492,7 +1590,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IB_3_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IB_3_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"> -->
+                <select name="IB_3_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+            </td>
             <td><textarea name="IB_3_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1506,7 +1611,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IB_4_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IB_4_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"> -->
+                <select name="IB_4_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+            </td>
             <td><textarea name="IB_4_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1520,9 +1632,10 @@ if (classification === "City") {
               <tr>
                 <td>
                 <details>
-              <summary><b>1. To the Court: Submitted/presented copies of settlement agreement to the Court</b></summary>
+              <summary><b>1. To the Court</b></summary>
               <p><br>
-                <b>Criteria Description:</b> <br>
+              <p>: Submitted/presented copies of settlement agreement to the Court</p>
+            <b>Criteria Description:</b> <br>
                 Copies of the settlement agreement must be submitted to the Court within the following periods: 
                 <ul>
                   <li>After the lapse of the ten-day period repudiating the mediation/conciliation settlement agreement</li>
@@ -1551,12 +1664,23 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IC_1_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IC_1_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"> -->
+                <select name="IC_1_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            </td>
             <td><textarea name="IC_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
                 <td><details>
-                <summary><b>2. To the DILG (Monthly): Submission of required report to the DILG</b></summary>
+                <summary><b>2. To the DILG (Monthly and Qualterly): Submission of required report to the DILG</b></summary>
                 <p><br>
                   2 points - Submitted/presented the required report to the DILG within the prescribed period<br>
                   1 point - Submitted/presented a partial report to the DILG within the prescribed period<br>
@@ -1573,7 +1697,15 @@ if (classification === "City") {
                     Verify
                 </button>
             </td>
-            <td><input type="number" value="" name="IC_2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IC_2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"> -->
+                <select name="IC_2_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+            </td>
             <td><textarea name="IC_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1604,7 +1736,15 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="ID_1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="ID_1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"> -->
+                 <select name="ID_1_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+            </select>
+        </td>
             <td><textarea name="ID_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1613,6 +1753,7 @@ if (classification === "City") {
                 <summary><b>Minutes of the Meeting</b></summary>
                 <p><br>
                   <b>Number of months with KP-related meetings with minutes and attendance sheets conducted:</b><br><br>
+                  <p>  Twelve (12) minutes of meeting providing basic details on the meeting, duly signed by the Lupon Secretary and duly note by the Lupon Chairperson</p>
                   <b>8.0 points</b> - 12 months.<br>
                   <b>6.0 points</b> - 9-11 months.<br>
                   <b>4.0 points</b> - 6-8 months.<br>
@@ -1632,7 +1773,18 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="ID_2_pdf_rate" min="0" max="8" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="ID_2_pdf_rate" min="0" max="8" class="score-input" placeholder="Ratings"> -->
+                 <select name="ID_2_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+            </select>
+        </td>
             <td><textarea name="ID_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1667,7 +1819,19 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIA_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIA_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"> -->
+                 <select name="IIA_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="10">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+                <option value="10">10</option>
+            </select>
+            </td>
             <td><textarea name="IIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1697,7 +1861,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIB_1_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIB_1_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"> -->
+                 <select name="IIB_1_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="1">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+            </td>
             <td><textarea name="IIB_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1711,7 +1882,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIB_2_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIB_2_pdf_rate" min="0" max="1" class="score-input" placeholder="Ratings"> -->
+                 <select name="IIB_2_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="1">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+            </td>
             <td><textarea name="IIB_2_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1736,7 +1914,18 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIC_pdf_rate" min="0" max="8" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIC_pdf_rate" min="0" max="8" class="score-input" placeholder="Ratings"> -->
+                 <select name="IIC_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="8">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+            </select>
+            </td>
             <td><textarea name="IIC_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1771,7 +1960,18 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIIA_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIIA_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"> -->
+                 <select name="IIIA_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="10">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+                <option value="10">10</option>
+            </select>
+        </td>
             <td><textarea name="IIIA_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1793,7 +1993,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIIB_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings" ></td>
+            <td>
+                <!-- <input type="number" value="" name="IIIB_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings" > -->
+                 <select name="IIIB_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="5">5</option>
+            </select>
+            </td>
             <td><textarea name="IIIB_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -1833,7 +2040,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIIC_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIIC_1forcities_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"> -->
+                 <select name="IIIC_1forcities_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="2">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select>
+            </td>
             <td><textarea name="IIIC_1forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="city-row" style="display:none;">
@@ -1851,7 +2065,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIIC_1forcities2_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIIC_1forcities2_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"> -->
+                 <select name="IIIC_1forcities2_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="2">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select>
+            </td>
             <td><textarea name="IIIC_1forcities2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="city-row" style="display:none;">
@@ -1869,7 +2090,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIIC_1forcities3_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIIC_1forcities3_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"> -->
+                 <select name="IIIC_1forcities3_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="2">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select>
+            </td>
             <td><textarea name="IIIC_1forcities3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="municipality-row" style="display:none;">
@@ -1906,7 +2134,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIIC_2formuni1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIIC_2formuni1_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"> -->
+                 <select name="IIIC_2formuni1_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="2">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select>
+            </td>
             <td><textarea name="IIIC_2formuni1_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="municipality-row" style="display:none;">
@@ -1924,7 +2159,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIIC_2formuni2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIIC_2formuni2_pdf_rate" min="0" max="2" class="score-input"placeholder="Ratings"> -->
+                 <select name="IIIC_2formuni2_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="2">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+            </select>
+            </td>
             <td><textarea name="IIIC_2formuni2_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="municipality-row" style="display:none;">
@@ -1942,7 +2184,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIIC_2formuni3_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIIC_2formuni3_pdf_rate" min="0" max="1" class="score-input"placeholder="Ratings"> -->
+                <select name="IIIC_2formuni3_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="1">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+            </select>
+            </td>
             <td><textarea name="IIIC_2formuni3_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr>
@@ -1973,7 +2222,18 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IIID_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IIID_pdf_rate" min="0" max="10" class="score-input" placeholder="Ratings"> -->
+                 <select name="IIID_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="10">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+                <option value="10">10</option>
+            </select>
+            </td>
             <td><textarea name="IIID_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -2013,7 +2273,15 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IV_forcities_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IV_forcities_pdf_rate" min="0" max="5" class="score-input" placeholder="Ratings"> -->
+                 <select name="IV_forcities_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+                <option value="5">5</option>
+            </select>
+            </td>
             <td><textarea name="IV_forcities_pdf_remark" placeholder="Remarks"></textarea></td>
             </tr>
               <tr id="municipality-row" style="display:none;">
@@ -2027,7 +2295,15 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="IV_muni_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="IV_muni_pdf_rate" min="0" max="5" class="score-input"placeholder="Ratings"> -->
+                 <select name="IV_muni_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="5">
+                <option value="" disabled selected>Select</option>
+                <option value="0">0</option>
+                <option value="2">2</option>
+                <option value="5">5</option>
+            </select>
+            </td>
             <td><textarea name="IV_muni_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -2062,7 +2338,15 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="V_1_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="V_1_pdf_rate" min="0" max="2" class="score-input" placeholder="Ratings"> -->
+                 <select name="V_1_pdf_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="2">
+                 <option value="" disabled selected>Select</option>
+                 <option value="0">0</option>
+                 <option value="1.5">1.5</option>
+                 <option value="2">2</option>
+             </select>
+            </td>
             <td><textarea name="V_1_pdf_remark" placeholder="Remarks"></textarea></td>
               </tr>
               <tr>
@@ -2086,7 +2370,14 @@ if (classification === "City") {
             Verify
         </button>
     </td>
-            <td><input type="number" value="" name="threepeoplesorg_rate" min="0" max="1" class="score-input" placeholder="Ratings"></td>
+            <td>
+                <!-- <input type="number" value="" name="threepeoplesorg_rate" min="0" max="1" class="score-input" placeholder="Ratings"> -->
+                 <select name="threepeoplesorg_rate" class="form-control score-input custom-select" style="width: 100px;" data-min="0" data-max="1">
+                 <option value="" disabled selected>Select</option>
+                 <option value="0">0</option>
+                 <option value="1">1</option>
+             </select>
+            </td>
             <td><textarea name="threepeoplesorg_remark" placeholder="Remarks"></textarea></td>
               </tr>
             </tbody>
