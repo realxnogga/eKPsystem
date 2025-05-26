@@ -71,10 +71,15 @@ function loadArchiveContent() {
 
 function loadLTIAContent() {
   return `
-        <section class="w-full text-center">
-          <p>No data yet!</p>
-        </section>
-    `;
+    <section class="w-full">
+      <h3 class="text-left text-[2rem]">Account Profile</h3>
+      <div><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;"><iframe src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DWv4TyfzZs_c&key=925108d922be940af814f71907a7df4b" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen scrolling="no" allow="accelerometer *; clipboard-write *; encrypted-media *; gyroscope *; picture-in-picture *; web-share *;"></iframe></div><a href="https://aitohumanizetextconverter.com/" rel="noopener" target="_blank" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">aitohumanizetextconverter.com</a></div>
+
+      <br><br>
+      <h3 class="text-left text-[2rem]">How to upload MOV</h3>
+      <div><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;"><iframe src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fyoutu.be%2FecVlQexbjnY&key=925108d922be940af814f71907a7df4b" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen scrolling="no" allow="accelerometer *; clipboard-write *; encrypted-media *; gyroscope *; picture-in-picture *; web-share *;"></iframe></div><a href="https://embedcodesgenerator.com" rel="noopener" target="_blank" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">embedcodesgenerator.com</a></div>
+    </section>
+`;
 }
 
 function loadLuponContent() {
