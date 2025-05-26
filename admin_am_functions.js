@@ -84,7 +84,16 @@ function loadSettingContent() {
 function loadLTIAContent() {
   return `
  <section class="h-full text-center">
-    <p>No data yet!</p>
+        <h3 class="text-left text-[2rem]">About Assessors Registration</h3>
+        <div><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;"><iframe src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fyoutu.be%2FWv4TyfzZs_c&key=925108d922be940af814f71907a7df4b" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen scrolling="no" allow="accelerometer *; clipboard-write *; encrypted-media *; gyroscope *; picture-in-picture *; web-share *;"></iframe></div><a href="https://aitohumanizetextconverter.com/" rel="noopener" target="_blank" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">aitohumanizetextconverter.com</a></div>
+
+        <br><br>
+        <h3 class="text-left text-[2rem]">Assessors Account how to rate MOV</h3>
+        <div><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;"><iframe src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fyoutu.be%2FoqDgFsoaL-c&key=925108d922be940af814f71907a7df4b" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen scrolling="no" allow="accelerometer *; clipboard-write *; encrypted-media *; gyroscope *; picture-in-picture *; web-share *;"></iframe></div><a href="https://aitohumanizetextconverter.com/" rel="noopener" target="_blank" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">aitohumanizetextconverter.com</a></div>
+
+        <br><br>
+        <h3 class="text-left text-[2rem]">Admin Manual about LTIA account</h3>
+        <div><div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;"><iframe src="https://cdn.iframe.ly/api/iframe?url=https%3A%2F%2Fyoutu.be%2FYbMNTO-XQGY&key=925108d922be940af814f71907a7df4b" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen scrolling="no" allow="accelerometer *; clipboard-write *; encrypted-media *; gyroscope *; picture-in-picture *; web-share *;"></iframe></div><a href="https://embedcodesgenerator.com/tools/youtube-embed-code?gad_source=1&gad_campaignid=22458335448&gbraid=0AAAAA_LxlSgoA2oA_bSWYQCiX15xHeoBG&gclid=Cj0KCQjw0LDBBhCnARIsAMpYlAqvf5Dn-QHop7IovwFTxpgeLcgf6CoOtrlU-hCNh7UykcsSvOdJdtgaAkhSEALw_wcB" rel="noopener" target="_blank" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">youtube embed code</a></div>
  </section>
 `;
 }
